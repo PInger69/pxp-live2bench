@@ -248,12 +248,15 @@
             _liveLight.hidden           = YES;
             _rangeCancelButton.hidden   = YES;
             self.playPauseButton.enabled = YES;
+            self.slider.enabled             = YES;
+
             break;
         case RicoPlayerStateLive:
             _liveLight.hidden           = NO;
             _rangeCancelButton.hidden   = YES;
             _playPauseButton.paused     = NO;
             self.playPauseButton.enabled = YES;
+            self.slider.enabled             = YES;
             self.rightLabel.text = NSLocalizedString(@"LIVE", nil);
             self.slider.value = 1.0f;
             [self.rightLabel setNeedsDisplay];
@@ -262,11 +265,20 @@
         case RicoPlayerStateRange:
             _liveLight.hidden               = YES;
             _rangeCancelButton.hidden       = NO;
+            self.slider.enabled             = YES;
             self.playPauseButton.enabled = YES;
             self.container.backgroundColor  = [self.tintColor colorWithAlphaComponent:0.5];
-            
+            self.playPauseButton.paused     = NO;            
             break;
             
+        case RicoPlayerStateTelestrationStill:
+            _liveLight.hidden               = YES;
+            _rangeCancelButton.hidden       = NO;
+            self.playPauseButton.enabled    = YES;
+            self.slider.enabled             = NO;
+            self.container.backgroundColor  = [self.tintColor colorWithAlphaComponent:0.5];
+            self.playPauseButton.paused     = YES;
+            break;
         default:
             break;
     }

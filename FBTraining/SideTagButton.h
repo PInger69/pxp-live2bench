@@ -23,6 +23,7 @@ typedef NS_OPTIONS (NSInteger,SideTagButtonModes){
 @property (nonatomic,strong) NSString               *durationID;
 @property (nonatomic,assign) BOOL                   isOpen;
 @property (nonatomic,assign) SideTagButtonModes     mode;
+@property (nonatomic,assign) BOOL                   isBusy;
 
 
 @end

@@ -12,10 +12,10 @@
 
 @implementation Feed
 {
-
-    NSDictionary    * _qualities;
-    NSURL           * _urlPath;
-    NSMutableDictionary *_assets;
+    NSDictionary        * _qualities;
+    NSURL               * _urlPath;
+    NSMutableDictionary * _assets;
+    
 }
 
 
@@ -43,6 +43,7 @@
         NSArray             * keys          = [aDict allKeys];
         NSMutableDictionary * tempDict      = [[NSMutableDictionary alloc]init];
         NSURL               * defaultURL;
+        self.offsetDict        = [NSMutableDictionary dictionaryWithDictionary:@{LOW_QUALITY:@0,HIGH_QUALITY:@0}];
         
         _assetsReady = NO;
         _assets = [NSMutableDictionary dictionary];
@@ -55,13 +56,6 @@
                     tempDict[k] = url;
                     
                     _assets[k] = [AVURLAsset URLAssetWithURL:url options:nil];
-                    
-                    // Richard
-//                    NSArray *requestedKeys = @[@"playable"];
-//                    [_assets[k] loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
-//                        
-//                    }];
-                    // End Richard
                     
                     if (defaultURL == nil) {
                         defaultURL = [tempDict objectForKey:[k lowercaseString]];
@@ -93,20 +87,13 @@
         NSURL *url = [NSURL URLWithString:aPath];
 
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-        // Richard
-//        NSArray *requestedKeys = @[@"playable"];
-//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
-//            
-//        }];
-        // End Richard
+        self.offsetDict        = [NSMutableDictionary dictionaryWithDictionary:@{LOW_QUALITY:@0,HIGH_QUALITY:@0}];
         
-        
-        _qualities = @{correctedQuality:url};
-        _assetsReady = NO;
-        _assets = [NSMutableDictionary dictionaryWithDictionary:@{correctedQuality:asset}];
-        
-        _urlPath = [_qualities objectForKey:correctedQuality];
-        self.type =FEED_TYPE_ENCODER;
+        _qualities      = @{correctedQuality:url};
+        _assetsReady    = NO;
+        _assets         = [NSMutableDictionary dictionaryWithDictionary:@{correctedQuality:asset}];
+        _urlPath        = [_qualities objectForKey:correctedQuality];
+        self.type       = FEED_TYPE_ENCODER;
     }
     return self;
 }
@@ -120,48 +107,9 @@
         NSURL *url = [NSURL fileURLWithPath: fileURL];
         
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
- 
+        self.offsetDict        = [NSMutableDictionary dictionaryWithDictionary:@{LOW_QUALITY:@0,HIGH_QUALITY:@0}];
         __block NSError *error = nil;
-        // Richard
-//        NSArray *requestedKeys = @[@"playable",@"duration"];
-//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
-//            
-//            
-//            AVKeyValueStatus playableStatus = [asset statusOfValueForKey:@"playable" error:&error];
-//            switch (playableStatus) {
-//                case AVKeyValueStatusLoaded:
-//                    //go on
-//                    break;
-//                default:
-//                    return;
-//            }
-//            
-//            AVKeyValueStatus durationStatus = [asset statusOfValueForKey:@"duration" error:&error];
-//            switch (durationStatus) {
-//                case AVKeyValueStatusLoaded:
-//
-//                   
-//                    break;
-//                default:
-//                    return;
-//            }
-//             Float64 ttt=  CMTimeGetSeconds(asset.duration);
-//            
-//            NSLog(@"");
-//        }];
-        
-        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
-//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
-//         ^{
-//             dispatch_async( dispatch_get_main_queue(),
-//                            ^{
-//                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-//                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
-//                                
-//                            });
-//         }];
-        
-        // End Richard
+
         _qualities = @{HIGH_QUALITY: url};
         _assets = [NSMutableDictionary dictionaryWithDictionary:@{HIGH_QUALITY: asset}];
         _urlPath = [_qualities objectForKey: HIGH_QUALITY];
@@ -266,6 +214,19 @@
     
     
     return (_qualities[HIGH_QUALITY])?_qualities[HIGH_QUALITY]:_qualities[LOW_QUALITY];
+}
+
+
+-(NSInteger)offset
+{
+
+    if (self.quality == 0) {
+        return [self.offsetDict[LOW_QUALITY]integerValue];
+    } else if (self.quality == 1) {
+        return [self.offsetDict[HIGH_QUALITY]integerValue];
+    }
+    
+    return 0;
 }
 
 @end

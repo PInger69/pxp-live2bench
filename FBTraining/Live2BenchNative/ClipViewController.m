@@ -505,7 +505,7 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 
-
+#pragma mark - MAKE CELL
 //create le thumbnail cell
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -518,7 +518,6 @@ static void * encoderTagContext = &encoderTagContext;
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
     cell.backgroundView = nil;
     cell.data           = tagSelect;
-    //    cell.thumbColour.backgroundColor = [Utility colorWithHexString:[tagSelect objectForKey:@"colour"]];
     [cell.thumbColour changeColor:[Utility colorWithHexString: tagSelect.colour] withRect:cell.thumbColour.frame];
     
     NSString *thumbNameStr = tagSelect.name;
@@ -539,8 +538,32 @@ static void * encoderTagContext = &encoderTagContext;
     
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
     
+    if (tagSelect.type == TagTypeTele) {
+        NSLog(@"");//selectedCell.data.telestration.sourceName
+        
+        
+        PxpTelestration *tele = cell.data.telestration;
+        [cell.data.thumbnails objectForKey:tele.sourceName];
+        
+        NSString * checkName = (!tele.sourceName)?[cell.data.thumbnails allKeys][0]:tele.sourceName;
+        
+        
+        NSString * imageURL = ([cell.data.thumbnails objectForKey:checkName])?[cell.data.thumbnails objectForKey:checkName]:[NSString stringWithFormat:@"%@.png",[[NSUUID UUID]UUIDString]];
+        
+        if (![Utility hasWiFi] && ![[ImageAssetManager getInstance].arrayOfClipImages objectForKey:imageURL]) {
+            UIImage * img = [tagSelect thumbnailForSource:checkName];
+           if (img) [[ImageAssetManager getInstance].arrayOfClipImages setObject:img forKey:imageURL];
+        }
+        
+        
+        [[ImageAssetManager getInstance] imageForURL: imageURL
+                                         atImageView:cell.imageView withTelestration:tele];
+        
 
-    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+        
+        
+        
+    } else if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
         cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
         [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
@@ -551,88 +574,24 @@ static void * encoderTagContext = &encoderTagContext;
     //
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         //Background Thread
-        
-        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-            //            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-        } else {
-            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-        }
-        
-        if (!weakThumb) {
-            weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
+        if (tagSelect.type != TagTypeTele){
+            if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+                weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+                //            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+            } else {
+                [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
+            }
             
-            cell.imageView.image = weakThumb;
-            if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
-        });
+            if (!weakThumb) {
+                weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
+            }
+       
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                cell.imageView.image = weakThumb;
+                if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
+            });
+         }
     });
-    //
-
-    
-//    UIImage * thumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-    
-    
-    
-//    if (!thumb) {
-//        cell.imageView.image = [UIImage imageNamed:@"live.png"];
-////        __block UIImage * weakThumb;
-//        
-////        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-//            //Background Thread
-//
-//            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-////            if (!weakThumb) {
-////                weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
-////            }
-////            
-////            dispatch_async(dispatch_get_main_queue(), ^(void){
-////                cell.imageView.image = weakThumb;
-////
-////            });
-////        });
-//    
-//    } else {
-//        cell.imageView.image = thumb;
-//    }
-    
-//    __block UIImage * weakThumb;
-//    
-//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-//        //Background Thread
-//
-//        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-//            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-////            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-//        } else {
-//            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-//        }
-//        
-//        if (!weakThumb) {
-//            weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
-//        }
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^(void){
-//
-//            cell.imageView.image = weakThumb;
-//            if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
-//        });
-//    });
-    
-    ///
-    
-    
-//    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-//        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-//    } else {
-//        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-//    }
-//
-//    if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
-//    
-
     
     [cell setDeletingMode: self.isEditing];
     
@@ -809,6 +768,11 @@ static void * encoderTagContext = &encoderTagContext;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
+    Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+    
+    
     if (self.isEditing) {
         thumbnailCell *cell = (thumbnailCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
         cell.checkmarkOverlay.hidden = !cell.checkmarkOverlay.hidden;
@@ -825,7 +789,7 @@ static void * encoderTagContext = &encoderTagContext;
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     [sourceSelectPopover clear];
     
-    if (selectedCell.data.event.feeds.count >=2) { // if is new
+     if (selectedCell.data.event.feeds.count >=2 && !tagSelect.telestration) { // if is new
         NSArray * listOfScource = [[selectedCell.data.event.feeds allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
         [sourceSelectPopover setListOfButtonNames:listOfScource];
@@ -878,7 +842,27 @@ static void * encoderTagContext = &encoderTagContext;
             
         
         
-    } else {
+    } else if (tagSelect.telestration) {
+        
+        Feed *feed = selectedCell.data.event.feeds[tagSelect.telestration.sourceName];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
+                                                           object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        
+        //NSString * key =        listOfScource[0];
+        
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        userInfo[@"context"] = STRING_LIVE2BENCH_CONTEXT;
+        userInfo[@"feed"] = feed;
+        userInfo[@"time"] = [NSString stringWithFormat:@"%f", selectedCell.data.startTime ];
+        userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
+        userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
+        
+        if (selectedCell.data) {
+            userInfo[@"tag"] = selectedCell.data;
+        }
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
+    }  else {
         
         Feed *feed = [[selectedCell.data.event.feeds allValues] firstObject];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
@@ -899,6 +883,7 @@ static void * encoderTagContext = &encoderTagContext;
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
     }
+
     
     [selectedCell setSelected:NO];
     

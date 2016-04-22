@@ -173,12 +173,12 @@
 
 - (void)setPlayerViewController:(RicoPlayerViewController *)playerViewController {
     
-    [_playerViewController removeObserver:self forKeyPath:@"primaryPlayers.avPlayer.rate" context:_playRateObserverContext];
+//    [_playerViewController removeObserver:self forKeyPath:@"primaryPlayers.avPlayer.rate" context:_playRateObserverContext];
 //    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
     
     _playerViewController = playerViewController;
     
-    [_playerViewController addObserver:self forKeyPath:@"primaryPlayers.avPlayer.rate" options:0 context:_playRateObserverContext];
+//    [_playerViewController addObserver:self forKeyPath:@"primaryPlayers.avPlayer.rate" options:0 context:_playRateObserverContext];
 //    [_playerViewController.telestrationViewController addObserver:self forKeyPath:@"telestration" options:0 context:_telestrationObserverContext];
 }
 

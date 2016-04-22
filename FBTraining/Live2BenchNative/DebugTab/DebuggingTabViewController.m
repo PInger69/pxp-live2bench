@@ -25,6 +25,10 @@
 
 #import "UIDrawer.h"
 
+#import "PostOperation.h"
+#import "LogoutOperation.h"
+#import "LoginOperation.h"
+#import "TestGroupOperation.h"
 
 @interface DebuggingTabViewController () <RicoJogDialJogDialDelegate,AnalyzeLoaderDelegate,UIDrawerDelegate>
 {
@@ -49,6 +53,9 @@
     
        RicoPlayerControlBar        * controlBar;
     BOOL                        isHeld;
+    
+    
+    PostOperation * post;
 }
 
 @property (nonatomic,strong)  RicoPlayerViewController    * playerViewController;
@@ -160,7 +167,44 @@ static void *  debugContext = &debugContext;
     [self.view addSubview:openButton];
     [self.view addSubview:closeButton];
     drawer.delegate = self;
+ 
+    NSURLRequest * req= [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.ca"]];
     
+    
+    
+    
+    TestGroupOperation * testOp = [TestGroupOperation new];
+    
+   __block TestGroupOperation * weakSelf = testOp;
+    
+    [testOp setCompletionBlock:^{
+        
+        
+        NSLog(@"%@",weakSelf.name);
+    }];
+
+    
+    NSBlockOperation * blkS = [NSBlockOperation blockOperationWithBlock:^{
+          NSLog(@"start blocks");
+    }];
+
+    
+    
+    NSBlockOperation * blkE = [NSBlockOperation blockOperationWithBlock:^{
+       NSLog(@"finish blocks");
+    }];
+
+    
+    [testOp addDependency:blkS];
+    
+    [blkE addDependency:testOp];
+    
+    
+    [[NSOperationQueue mainQueue]addOperation:blkS];
+    [[NSOperationQueue mainQueue]addOperation:testOp];
+    [[NSOperationQueue mainQueue]addOperation:blkE];
+    
+//    [[NSOperationQueue mainQueue]addOperation:logout];
 }
 
 

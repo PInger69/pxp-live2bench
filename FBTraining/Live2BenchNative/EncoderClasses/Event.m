@@ -23,6 +23,7 @@
 @synthesize date        = _date;
 @synthesize hid         = _hid;
 @synthesize feeds       = _feeds;
+@synthesize advancedfeeds       = _advancedfeeds;
 @synthesize originalFeeds = _originalFeeds;
 @synthesize mp4s        = _mp4s;
 @synthesize rawData     = _rawData;
@@ -57,7 +58,7 @@
         localPath           = path;
         _downloadedSources  = [NSMutableArray array]; // depricated
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
-        
+        _advancedfeeds      = [NSMutableArray array];
         
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:isLocal] copy];
@@ -173,6 +174,7 @@
     }
     
     
+    
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
                                                         object:self
@@ -183,14 +185,7 @@
     if ((newtag.type == TagTypeCloseDuration
          || newtag.type == TagTypeTele
          || newtag.type == TagTypeNormal
-//         || newtag.type == TagTypeHockeyStrengthStart
-//         || newtag.type == TagTypeHockeyStartOLine
-//         || newtag.type == TagTypeHockeyStopOLine
-//         || newtag.type == TagTypeHockeyStartDLine
-//         || newtag.type == TagTypeHockeyStopDLine
-//         || newtag.type == TagTypeSoccerZoneStart
-//         || newtag.type == TagTypeSoccerZoneStop
-//         || newtag.type == TagTypeFootballDownTags
+
          )&& _primary && notifPost ) {
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{

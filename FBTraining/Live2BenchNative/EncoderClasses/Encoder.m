@@ -21,6 +21,8 @@
 #import "DownloadItem.h"
 #import "ImageAssetManager.h"
 #import "ParseModuleDefault.h"
+#import "FeedMapController.h"
+
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -419,9 +421,9 @@
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
         encoderSync     = [[EncoderDataSync alloc]init];
-   
-//        _eventContext   = [PxpEventContext context];
         _parseModule    = [ParseModuleDefault new];
+        _postedTagIDs   = [NSMutableSet new];
+        self.cameraResource = [[CameraResource alloc]initEncoder:self];
     }
     return self;
 }
@@ -919,9 +921,10 @@
  */
 -(void)buildEncoderRequest
 {
+    [self issueCommand:CAMERAS_GET      priority:4 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
     [self issueCommand:TEAMS_GET        priority:3 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
     [self issueCommand:BUILD            priority:2 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
-    [self issueCommand:CAMERAS_GET      priority:1 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    
 
 }
 
@@ -1172,6 +1175,9 @@
 
 -(void)camerasGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    EncoderOperation * testOp =  [[EncoderOperationCameraStartTimes alloc]initEncoder:self data:nil];
+    [self runOperation:testOp];
+    
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getcameras",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
@@ -1302,6 +1308,9 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = START_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
+    
+    
+
 }
 
 
@@ -1681,7 +1690,7 @@
                 
 //                [teamTempHIDPool setObject:owningTeam forKey:tHID];
 //                NSLog(@"Player does not have a team, Making a new one");
-                 NSLog(@"Player does not have a team %@",tHID);
+//                 NSLog(@"Player does not have a team %@",tHID);
             }
             [owningTeam addPlayer:aPlayer];
             
@@ -1811,11 +1820,18 @@
             Event * encoderEvent = [checkEventDic objectForKey:@"non-local"];
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
+
             
-            if (self.event == encoderEvent) {
-                [encoderEvent addTag:newTag extraData:true];
-            }else{
-                [encoderEvent addTag:newTag extraData:false];
+            
+            if ( ![self.postedTagIDs containsObject:newTag.ID] ){
+                [self.postedTagIDs addObject:newTag.ID];
+                if (self.event == encoderEvent) {
+                    [encoderEvent addTag:newTag extraData:true];
+                }else{
+                    [encoderEvent addTag:newTag extraData:false];
+                }
+            } else {
+                [self.postedTagIDs removeObject:newTag.ID];
             }
             
             if (localEvent && newTag.type != TagTypeOpenDuration) {
@@ -1824,7 +1840,7 @@
                 [localEvent.parentEncoder writeToPlist];
             }
             
-            
+        
             // Download Thumbnail for new tags
 
             [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
@@ -1900,11 +1916,20 @@
                 newTag.telestration = [PxpTelestration telestrationFromData:[tData objectForKey:@"telestration"]];
             }
         
-            if (self.event == encoderEvent) {
-                [encoderEvent addTag:newTag extraData:true];
-            }else{
-                [encoderEvent addTag:newTag extraData:false];
+            
+            if ( ![self.postedTagIDs containsObject:newTag.ID] ){
+                [self.postedTagIDs addObject:newTag.ID];
+                if (self.event == encoderEvent) {
+                    [encoderEvent addTag:newTag extraData:true];
+                }else{
+                    [encoderEvent addTag:newTag extraData:false];
+                }
+            } else {
+                [self.postedTagIDs removeObject:newTag.ID];
             }
+
+            
+
             
             if (localEvent && newTag.type != TagTypeOpenDuration) {
                 Tag *localTag = [[Tag alloc] initWithData:tData event:localEvent];
@@ -1934,8 +1959,18 @@
         if ( [results objectForKey: @"tags"]) {
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
-                
-                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine ||  [tag[@"type"]intValue] == TagTypeSoccerZoneStop) {
+//                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine ||  [tag[@"type"]intValue] == TagTypeSoccerZoneStop) {
+                if (   [tag[@"type"]intValue]  == TagTypeHockeyStrengthStop
+                    || [tag[@"type"]intValue]  == TagTypeHockeyStopOLine
+                    || [tag[@"type"]intValue]  == TagTypeHockeyStopDLine
+                    || [tag[@"type"]intValue]  == TagTypeSoccerZoneStop
+                    || [tag[@"type"]intValue]  == TagTypeTele
+                    || [tag[@"type"]intValue]  == TagTypeNormal
+                    || [tag[@"type"]intValue]  == TagTypeCloseDuration
+                    || [tag[@"type"]intValue]  == TagTypeOpenDuration
+                    ) {
+                  
+                    
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
                     }else if([tag[@"modified"]boolValue]){
@@ -1943,9 +1978,8 @@
                     }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
                         [self onModifyTags:tag];
                     }else if ([tag[@"type"]intValue] == TagTypeTele){
-                        [self onTeleTags:tag];
-                    }
-                    else{
+                        [self onTeleTags:tag]; // its showing double
+                    }else{
                         [self onNewTags:tag];
                     }
 
@@ -2143,21 +2177,26 @@
     NSArray * list = [results[@"camlist"]allValues];
     _cameraCount = list.count;
     self.cameraData = results;
-    NSMutableArray *camerasAvailableList = [[NSMutableArray alloc]init];
+    NSMutableDictionary *camerasAvailableList = [NSMutableDictionary new];
     
     
     for (NSDictionary *dic in list) {
        // if ([dic[@"cameraPresent"]boolValue])_cameraCount++;
-        
-       [camerasAvailableList addObject:[[CameraDetails alloc]initWithDictionary:dic encoderOwner:self]];
+        if ([dic[@"mac"] isKindOfClass:[NSString class]] ){
+            CameraDetails * camD = [[CameraDetails alloc]initWithDictionary:dic encoderOwner:self];
+            [camerasAvailableList setObject:camD forKey:dic[@"deviceURL"]];
+//            [camerasAvailableList setObject:camD forKey:dic[@"ip"]];
+//            [camerasAvailableList setObject:camD forKey:dic[@"mac"]];
+            [self.cameraResource addCameraDetails:camD];
+        }
         
     }
- //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
+  
+    
+    self.cameraData = [camerasAvailableList copy];
     
     PXPLog(@"%@ has %@ cameras",self.name ,[NSString stringWithFormat:@"%ld",(long)_cameraCount ]);
-//    PXPLog(@"JSON OUTPUT:");
-//    PXPLog(@"%@",results);
-//    PXPLog(@" ");
+    [[FeedMapController instance]getCameraDetailsFromServer];
 }
 
 
@@ -2302,6 +2341,7 @@
             
         }
     }
+    
     _isBuild = YES;
 }
 

@@ -23,20 +23,23 @@
 @property (nonatomic, assign) BOOL                  syncronizePlayers;
 @property (nonatomic, assign) BOOL                  slomo;
 @property (nonatomic, assign) CGRect                frame;
-
+@property (nonatomic, assign) BOOL                  isPlaying;
 @property (nonatomic, strong)           UITextView          * debugOutput;
 
 -(void)addPlayers:(RicoPlayer *)aPlayer;
 -(void)removePlayers:(RicoPlayer *)aPlayer;
 
--(void)play;
--(void)playAtStartWhenReady;
--(void)playTag:(Tag*)tag;
--(void)live;
--(void)seekToTime:(CMTime)seekTime toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void(^)(BOOL finished))completionHandler;
--(void)stepByCount:(NSInteger)stepCount;
+-(void)play;//
+-(void)pause;//
+-(void)playAtStartWhenReady;//
+-(void)playTag:(Tag*)tag;//
+-(void)live;//
+-(void)seekToTime:(CMTime)seekTime toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void(^)(BOOL finished))completionHandler;//
+-(void)stepByCount:(NSInteger)stepCount;//
+-(CMTime)currentTimeFromSourceName:(NSString*)feedName;//
 
+-(void)cancelPressed:(RicoPlayerControlBar *)playerControlBar;//
+-(void)setPrimaryPlayerByFeedName:(NSString*)feedName;
 
--(void)cancelPressed:(RicoPlayerControlBar *)playerControlBar;
 
 @end

@@ -41,7 +41,7 @@
 #define COMMENTBOX_HEIGHT           200
 #define COMMENTBOX_WIDTH            530//560
 
-@interface BookmarkViewController () <RicoBaseFullScreenDelegate>
+@interface BookmarkViewController () <RicoBaseFullScreenDelegate,PxpTelestrationViewControllerDelegate,PxpTimeProvider>
 
 @property (strong, nonatomic) Clip                          * currentClip;
 @property (strong, nonatomic) BookmarkTableViewController   * tableViewController;
@@ -49,11 +49,12 @@
 @property (strong, nonatomic) UIButton                      * filterButton;
 @property (strong, nonatomic) UIButton                      * userSortButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
-@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
-//@property (strong, nonatomic, nonnull) PxpMyClipViewFullscreenViewController *fullscreenViewController;
+//@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
 @property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
 
+
+@property (strong, nonatomic, nonnull) PxpTelestrationViewController    * telestrationViewController;
 @property (strong, nonatomic) RicoPlayer                  * ricoPlayer;
 @property (strong, nonatomic) RicoPlayerControlBar        * ricoPlayerControlBar;
 @property (strong, nonatomic) RicoPlayerViewController    * ricoPlayerController;
@@ -72,6 +73,7 @@
     ScreenController                    * externalControlScreen;
     ClipDataContentDisplay              * clipContentDisplay;
     NSMutableArray                      * _tagsToDisplay;
+    BOOL                                _wasPausedBeforeTele;
 }
 
 #pragma mark - General Methods
@@ -100,13 +102,13 @@
         [_pxpFilterTab addTab:        [[PxpFilterMyClipTabViewController alloc]init]];
         _tagsToDisplay                          = [NSMutableArray new];
         
-        _playerViewController                   = [[PxpPlayerViewController alloc] init];
+//        _playerViewController                   = [[PxpPlayerViewController alloc] init];
         self.ricoPlayerController               = [RicoPlayerViewController new];
 //        _fullscreenViewController               = [[PxpMyClipViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
        
         
         
-        [self addChildViewController:_playerViewController];
+//        [self addChildViewController:_playerViewController];
 //        [self addChildViewController:_fullscreenViewController];
         
         _videoBar       = [[PxpVideoBar alloc] init];
@@ -150,9 +152,9 @@
     
     const CGFloat width = COMMENTBOX_WIDTH, height = width / (16.0 / 9.0);
     
-    _playerViewController.view.frame = CGRectMake(0, 768 - height - 44.0, width, height);
-    _playerViewController.telestrationViewController.stillMode = YES;
-    _videoBar.playerViewController = _playerViewController;
+//    _playerViewController.view.frame = CGRectMake(0, 768 - height - 44.0, width, height);
+//    _playerViewController.telestrationViewController.stillMode = YES;
+//    _videoBar.playerViewController = _playerViewController;
     
     // Rico Player
     
@@ -185,10 +187,12 @@
     [_fullscreenViewController.bottomBar addSubview:_ricoFullScreenControlBar];
     
     
+    [self.ricoPlayerControlBar.playPauseButton addTarget:self action:@selector(onPlayPause:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.ricoFullScreenControlBar.backwardSeekButton addTarget: self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.forwardSeekButton addTarget:  self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.slomoButton addTarget:        self action:@selector(slomoPressed:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.controlBar.playPauseButton addTarget:self action:@selector(onPlayPause:) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.nextTagButton        addTarget:self.tableViewController action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.previousTagButton    addTarget:self.tableViewController action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
@@ -203,9 +207,14 @@
 
     self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
 
+// Telestartion
+    self.telestrationViewController = [PxpTelestrationViewController new];
+    self.telestrationViewController.stillMode   = YES;
+    self.telestrationViewController.delegate    = self;
+    self.telestrationViewController.view.frame = self.ricoPlayerController.view.frame;
+    self.telestrationViewController.timeProvider = self;
 
-
-
+    [self.view addSubview:self.telestrationViewController.view];
 }
 
 
@@ -214,6 +223,8 @@
 // Selected clip to play
 -(void)clipSelectedToPlay:(NSNotification*)note
 {
+    
+    self.telestrationViewController.telestration = nil;
     Clip *clipToPlay = note.userInfo[@"clip"];
     self.currentClip = clipToPlay;
     NSString *source = note.userInfo[@"source"];
@@ -229,7 +240,7 @@
         [weakSelf.tableViewController reloadData];
     };
 
-    [_playerViewController zeroControlBarTimes];
+//    [_playerViewController zeroControlBarTimes];
     [_videoBar setSelectedTag:clipToPlay];
     [_videoBar.tagExtendEndButton setHidden:YES];
     [_videoBar.tagExtendStartButton setHidden:YES];
@@ -388,7 +399,11 @@
 }
 
 
+-(void)onPlayPause:(id)sender
+{
 
+    self.telestrationViewController.telestration = nil;
+}
 
 #pragma mark - Richard Sort from headder
 -(void)sortFromHeaderBar:(id)sender
@@ -487,7 +502,7 @@
             [_clipContext.mainPlayer pause];
             [_clipContext.mainPlayer replaceCurrentItemWithPlayerItem:nil];
             [clipContentDisplay displayClip:nil];
-            [_playerViewController zeroControlBarTimes];
+//            [_playerViewController zeroControlBarTimes];
             [_videoBar clear];
         }
 
@@ -506,15 +521,63 @@
 {
         self.ricoPlayerController.playerControlBar     = self.ricoPlayerControlBar;
         self.ricoPlayerControlBar.delegate             = self.ricoPlayerController;
+    
+    [self.telestrationViewController.view setFrame:self.ricoPlayerController.frame];
 }
 
 -(void)onFullScreenShow:(RicoBaseFullScreenViewController *)fullscreenController
 {
     self.ricoPlayerController.playerControlBar = self.ricoFullScreenControlBar.controlBar;
     self.ricoFullScreenControlBar.controlBar.delegate = self.ricoPlayerController;
+    
+    
+    // moving to telestartion to full screen
+    
+
+    //    self.telestrationViewController.view.layer.borderWidth = 2;
+    //    self.telestrationViewController.view.layer.borderColor = [UIColor greenColor].CGColor;
+    // temp fix
+    CGRect tempRect = CGRectMake(
+                                 self.ricoPlayerController.primaryPlayers.frame.origin.x,
+                                 self.ricoPlayerController.primaryPlayers.frame.origin.y+130,
+                                 self.ricoPlayerController.primaryPlayers.frame.size.width,
+                                 self.ricoPlayerController.primaryPlayers.frame.size.height-50
+                                 );
+    [self.telestrationViewController.view setFrame:tempRect];
+    
 
 }
 
+#pragma mark -
+#pragma mark PxpTimeProvider Protocol Methods
+
+- (NSTimeInterval)currentTimeInSeconds
+{
+    return CMTimeGetSeconds(self.ricoPlayerController.primaryPlayers.currentTime);
+}
+
+#pragma mark -
+#pragma mark PxpTelestrationViewControllerDelegate Protocol Methods
+
+- (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController
+{
+    
+    
+    _wasPausedBeforeTele = !self.ricoPlayerController.isPlaying;
+    
+    [self.ricoPlayerController pause];
+    self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = YES;
+    self.ricoPlayerControlBar.playPauseButton.paused =YES;
+}
+
+- (void)telestration:(nonnull PxpTelestration *)tele didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController
+{
+    if (!_wasPausedBeforeTele){
+        [self.ricoPlayerController play];
+        self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = NO;
+        self.ricoPlayerControlBar.playPauseButton.paused = NO;
+    }
+}
 
 
 

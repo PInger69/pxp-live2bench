@@ -249,17 +249,64 @@
 
 
 
+/*
+ @interface RicoPlayerChecker : NSObject
+ 
+ @property (strong,nonatomic) NSTimer            * timer;
+ @property (assign,nonatomic) NSInteger          maxCoolDownTick;
+ @property (assign,nonatomic) NSInteger          currentCoolDownTick;
+ @property (assign,nonatomic) NSTimeInterval     tick;
+ 
+ @property (strong,nonatomic) RicoPlayer         * player;
+ 
+ -(void)start;
+ -(void)stop;
+ -(void)refreshCoolDown;
+ 
+ @end
+ 
+ @implementation RicoPlayerChecker
+ 
+ - (instancetype)initWithRicoPlayer:(RicoPlayer*)player
+ {
+ self = [super init];
+ if (self) {
+ self.player                 = player;
+ self.maxCoolDownTick        = 3;
+ self.currentCoolDownTick    = self.maxCoolDownTick;
+ self.tick                   = 1.0;
+ }
+ return self;
+ }
+ 
+ 
+ 
+ -(void)start
+ {
+
+ }
+ 
+ -(void)stop
+ {
+ [self.timer invalidate];
+ }
+ 
+ -(void)refreshCoolDown
+ {
+ self.currentCoolDownTick = self.maxCoolDownTick;
+ }
+ 
+
+ 
+ @end
 
 
-
-
+*/
 
 // RicoSeekOperation
 
 @interface RicoSeekOperation ()
 
-//@property (nonatomic,assign) BOOL dynamicIsExecuting;
-//@property (nonatomic,assign) BOOL dynamicIsFinished;
 
 @end
 
@@ -277,6 +324,13 @@
         executing               = NO;
         finished                = NO;
         self.name               = @"Seek Op";
+ 
+        self.maxCoolDownTick        = 3;
+        self.currentCoolDownTick    = self.maxCoolDownTick;
+        self.tick                   = 1.0;
+
+        
+        
     }
     return self;
 }
@@ -303,30 +357,55 @@
     __block AVPlayer        * avp = self.player;
     __block AVPlayerItem    * avi = self.player.currentItem;
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
+    });
+    
     
     if (self.player.status == AVPlayerStatusReadyToPlay && self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
         [avp cancelPendingPrerolls];
         [avi cancelPendingSeeks];
         
-        NSLog(@"Start Rico Seek");
+//        NSLog(@"Start Rico Seek");
         [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
             weakself.success = afinished;
             if (weakself.completionHandler != nil) {
                 weakself.completionHandler(finished);
                 
             }
-            NSLog(@"Finish Rico Seek");
+//            NSLog(@"Finish Rico Seek");
 //             dispatch_async(dispatch_get_main_queue(),^{
-
+            
                  [weakself completeOperation];
-                
+            
 //              });
-            NSLog(@"Seeking Complete %@",(afinished)?@"PASS":@"FAIL");
+//            NSLog(@"Seeking Complete %@",(afinished)?@"PASS":@"FAIL");
         }];
     } else {
         [self completeOperation];
         NSLog(@"Seeking Complete FAIL");
     }
+}
+
+-(void)cancel
+{
+    [super cancel];
+    [self completeOperation];
+}
+
+-(void)update
+{
+    if (self.currentCoolDownTick == 0 && self.player.rate !=0) {
+        
+        // something is wrong
+        [self reSeek];
+         self.currentCoolDownTick = self.maxCoolDownTick;
+        
+        
+    } else {
+        self.currentCoolDownTick--;
+    }
+    
 }
 
 
@@ -340,74 +419,55 @@
     
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];
+    [self.timer invalidate];
+}
+
+
+-(void)reSeek
+{
+      [self.timer invalidate];
+    if ([self isCancelled]) return;
+    
+    if (!finished && executing) {
+        
+        __block RicoSeekOperation* weakself = self;
+        
+        __block AVPlayer        * avp = self.player;
+        __block AVPlayerItem    * avi = self.player.currentItem;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
+        });
+        
+        
+        if (self.player.status == AVPlayerStatusReadyToPlay && self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+            [avp cancelPendingPrerolls];
+            [avi cancelPendingSeeks];
+            
+            //        NSLog(@"Start Rico Seek");
+            [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
+                weakself.success = afinished;
+                if (weakself.completionHandler != nil) {
+                    weakself.completionHandler(finished);
+                    
+                }
+                [weakself completeOperation];
+            }];
+        } else {
+            [self completeOperation];
+            NSLog(@"Seeking Complete FAIL op");
+        }
+
+    
+    
+    }
+
+
 }
 
 
 
 
-
-
-/*
- -(void)start
- {
- 
- if ([self isCancelled]) {
- [self willChangeValueForKey:@"isFinished"];
- //        [self willChangeValueForKey:@"isExecuting"];
- finished = YES;
- //        executing = NO;
- [self didChangeValueForKey:@"isFinished"];
- //        [self didChangeValueForKey:@"isExecuting"];
- return;
- }
- 
- [self willChangeValueForKey:@"isExecuting"];
- executing = YES;
- [self didChangeValueForKey:@"isExecuting"];
- 
- 
- //    self.dynamicIsExecuting = YES;
- __block RicoSeekOperation* weakself = self;
- 
- __block AVPlayer        * avp = self.player;
- __block AVPlayerItem    * avi = self.player.currentItem;
- 
- [avp cancelPendingPrerolls];
- [avi cancelPendingSeeks];
- 
- if (self.player.status == AVPlayerStatusReadyToPlay && self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
- NSLog(@"Start Rico Seek");
- [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
- weakself.success = afinished;
- if (weakself.completionHandler != nil) {
- weakself.completionHandler(finished);
- 
- }
- NSLog(@"Finish Rico Seek");
- //        NSLog(@"%@ %f  %@" ,self.player ,CMTimeGetSeconds(avi.currentTime), (afinished)?@"Pass":@"FAIL");
- dispatch_async(dispatch_get_main_queue(),^{
- [weakself willChangeValueForKey:@"isFinished"];
- [weakself willChangeValueForKey:@"isExecuting"];
- finished = YES;
- executing = NO;
- [weakself didChangeValueForKey:@"isExecuting"];
- [weakself didChangeValueForKey:@"isFinished"];
- 
- });
- NSLog(@"Seeking Complete %@",(afinished)?@"PASS":@"FAIL");
- }];
- } else {
- [weakself willChangeValueForKey:@"isFinished"];
- [weakself willChangeValueForKey:@"isExecuting"];
- finished = YES;
- executing = NO;
- [weakself didChangeValueForKey:@"isExecuting"];
- [weakself didChangeValueForKey:@"isFinished"];
- NSLog(@"Seeking Complete FAIL");
- }
- }
-
- */
 
 
 -(BOOL)isConcurrent
@@ -500,7 +560,7 @@
     
     [self.player.avPlayer play];
     [self.player.avPlayer seekToTime:self.player.avPlayer.currentTime completionHandler:^(BOOL finished) {
-        NSLog(@"PLAY SEEK %@",(finished)?@"pass":@"fail");
+//        NSLog(@"PLAY SEEK %@",(finished)?@"pass":@"fail");
         
     }];
     
@@ -563,6 +623,99 @@
 
 
 
+@implementation RicoPrerollOperation
+{
+    float _rate;
+}
+
+- (instancetype)initWithRicoPlayer:(RicoPlayer*)player rate:(float)rate
+{
+    self = [super init];
+    if (self) {
+        self.player = player;
+        _rate = rate;
+        self.name = @"Preroll Op";
+    }
+    return self;
+}
+
+-(void)start
+{
+    NSLog(@"RicoOperation Preroll");
+    if ([self isCancelled]  ||  self.player.avPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay) {
+        [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
+        finished = YES;
+        executing = NO;
+        [self didChangeValueForKey:@"isFinished"];
+        [self didChangeValueForKey:@"isExecuting"];
+        
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isExecuting"];
+    executing = YES;
+    [self didChangeValueForKey:@"isExecuting"];
+    
+    
+           __block RicoPrerollOperation* weakself = self;
+    [self.player.avPlayer prerollAtRate:_rate completionHandler:^(BOOL afinished) {
+        weakself.success = afinished;
+        
+        [weakself completeOperation];
+        
+
+    }];
+    
+
+    
+}
+
+
+
+- (void)completeOperation {
+    [self willChangeValueForKey:@"isFinished"];
+    [self willChangeValueForKey:@"isExecuting"];
+    
+    executing = NO;
+    finished = YES;
+    
+    [self didChangeValueForKey:@"isExecuting"];
+    [self didChangeValueForKey:@"isFinished"];
+}
+
+
+
+-(void)cancel
+{
+    [super cancel];
+    [self completeOperation];
+}
+
+-(BOOL)isConcurrent
+{
+    return YES;
+}
+
+-(BOOL)isExecuting
+{
+    return executing;
+}
+
+-(BOOL)isFinished
+{
+    return finished;
+}
+
+-(void)dealloc
+{
+    
+}
+
+
+
+
+@end
 
 
 

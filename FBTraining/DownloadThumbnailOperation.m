@@ -126,7 +126,7 @@
 #pragma mark - NSURLSession Methods
 -(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
-    NSLog(@"Receiving...");
+//    NSLog(@"Receiving...");
     if (self.cumulatedData == nil){
         self.cumulatedData = [NSMutableData dataWithData:data];
     } else {
@@ -136,7 +136,7 @@
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    NSLog(@"Connection finished");
+//    NSLog(@"Connection finished");
 
     UIImage *receivedImage = [UIImage imageWithData:self.cumulatedData];
     

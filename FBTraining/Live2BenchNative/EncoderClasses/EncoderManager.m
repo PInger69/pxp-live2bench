@@ -62,7 +62,7 @@ static EncoderManager * instance;
     
     self = [super init];
     if (self){
-        
+        self.feedMapController          = [FeedMapController instance];
         _authenticatedEncoders          = [[NSMutableArray alloc]init];
         dictOfEncoders                  = [[NSMutableDictionary alloc]init];
         bonjourModule                   = [[BonjourModule alloc]initWithDelegate:self];
@@ -183,7 +183,7 @@ static EncoderManager * instance;
 {
     
     
-
+ [[ImageAssetManager getInstance]thumbnailsUnloadAll];
     
     // if the event is current event then it needs to be closed to save space
     // This will convert all tags to dicts on the event and remove tag observers
@@ -194,7 +194,7 @@ static EncoderManager * instance;
 //        [[ImageAssetManager getInstance]thumbnailsUnload:grabAllThumbNamesFromEvent([self.primaryEncoder event])];
         
         // just remove all thumbs instead
-        [[ImageAssetManager getInstance]thumbnailsUnloadAll];
+//        [[ImageAssetManager getInstance]thumbnailsUnloadAll];
     }
     
         [self.primaryEncoder event].primary = false;
@@ -287,7 +287,9 @@ static EncoderManager * instance;
         [_authenticatedEncoders addObject:registerEncoder];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         
-        
+        if (!self.primaryEncoder ) {
+            self.primaryEncoder = registerEncoder;
+        }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// THIS IS TEMP FOR IVANS MEETING ///////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,7 +741,8 @@ static EncoderManager * instance;
     if (searchForEncoders == _searchForEncoders)return;
     if (searchForEncoders) {
         bonjourModule.searching = YES;
-        [[UserCenter getInstance] updateTagInfoFromCloud];
+        
+        if (![[UserCenter getInstance].customerID isEqualToString:@"Guest"])[[UserCenter getInstance] updateTagInfoFromCloud];
     } else{
         bonjourModule.searching = NO;
     }

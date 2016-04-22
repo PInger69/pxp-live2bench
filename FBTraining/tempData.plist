@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>authorization</key>
+	<string>44fbc8602fb295ab0e438c40ace582e82e8c6971</string>
+	<key>customer</key>
+	<string>4d134bc072212ace2df385dae143139da74ec0ef</string>
+	<key>emailAddress</key>
+	<string>eoin.toolan@melbournerebels.com.au</string>
+	<key>hid</key>
+	<string>b1b986990332a28a0a8011eb538f1ded941bb5ad</string>
+	<key>password</key>
+	<string>5f5dc41f11f8c45cc924516a6a6052e6368983d0aa6a267030c2db51437279ad</string>
+	<key>requrl</key>
+	<string>activate</string>
+	<key>sender</key>
+	<string>.max</string>
+	<key>success</key>
+	<string>1</string>
+	<key>tagColour</key>
+	<string>0cee18</string>
+	<key>tagnames</key>
+	<dict>
+		<key>Halftime Clip</key>
+		<dict>
+			<key>order</key>
+			<integer>5</integer>
+			<key>side</key>
+			<string>left</string>
+		</dict>
+		<key>Opp Linebreak</key>
+		<dict>
+			<key>order</key>
+			<integer>3</integer>
+			<key>side</key>
+			<string>right</string>
+		</dict>
+		<key>Opp Lineout</key>
+		<dict>
+			<key>order</key>
+			<integer>0</integer>
+			<key>side</key>
+			<string>right</string>
+		</dict>
+		<key>Opp Restart</key>
+		<dict>
+			<key>order</key>
+			<integer>2</integer>
+			<key>side</key>
+			<string>right</string>
+		</dict>
+		<key>Opp Scrum</key>
+		<dict>
+			<key>order</key>
+			<integer>1</integer>
+			<key>side</key>
+			<string>right</string>
+		</dict>
+		<key>Opp Try</key>
+		<dict>
+			<key>order</key>
+			<integer>4</integer>
+			<key>side</key>
+			<string>right</string>
+		</dict>
+		<key>Rebel Lineout</key>
+		<dict>
+			<key>order</key>
+			<integer>0</integer>
+			<key>side</key>
+			<string>left</string>
+		</dict>
+		<key>Rebel Restart</key>
+		<dict>
+			<key>order</key>
+			<integer>2</integer>
+			<key>side</key>
+			<string>left</string>
+		</dict>
+		<key>Rebel Scrum</key>
+		<dict>
+			<key>order</key>
+			<integer>1</integer>
+			<key>side</key>
+			<string>left</string>
+		</dict>
+		<key>Rebels Linebreak</key>
+		<dict>
+			<key>order</key>
+			<integer>3</integer>
+			<key>side</key>
+			<string>left</string>
+		</dict>
+		<key>Rebels Try</key>
+		<dict>
+			<key>order</key>
+			<integer>4</integer>
+			<key>side</key>
+			<string>left</string>
+		</dict>
+	</dict>
+	<key>url</key>
+	<string>activate</string>
+</dict>
+</plist>

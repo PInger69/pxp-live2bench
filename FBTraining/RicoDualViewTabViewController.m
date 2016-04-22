@@ -31,6 +31,9 @@
 #import "DebugOutput.h"
 #import "EncoderOperation.h"
 
+#import "FeedMapController.h"
+
+
 #define BOTTOM_BAR_HEIGHT 70
 #define PLAYHEAD_HEIGHT 44
 #define PINCH_VELOCITY 1
@@ -98,6 +101,10 @@
 
 @end
 
+
+static BOOL hasUserInteracted;
+
+
 @implementation RicoDualViewTabViewController
 
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
@@ -146,6 +153,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
         
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFeedMapChange:) name:FeedMapControllerDidSubmitChangeNotification object:nil];
+        
         // BEGIN RICO PLAYER
         self.topPlayer              = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
         self.topPlayer.name         = @"topPlayer";
@@ -181,6 +190,8 @@
         
         _resumeTime = kCMTimeInvalid;
         _resumeRate = 1.0;
+        
+        
     }
     return self;
 }
@@ -229,13 +240,35 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         self.feeds = [[NSMutableArray arrayWithArray:[_currentEvent.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
         
+        
+
+        
         self.topViewFeedSelectionController.feeds = self.feeds;
         self.bottomViewFeedSelectionController.feeds = self.feeds;
         
-        Feed *feedA = self.feeds.count > 0 ? self.feeds[0] : nil;
-        Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;
-            [feedA setQuality:1];
-            [feedB setQuality:1];
+        NSString * topSource = [[FeedMapController instance]getSourceFromPlayerLocation:kTopDual];
+        NSString * botSource = [[FeedMapController instance]getSourceFromPlayerLocation:kBottomDual];
+        
+        if (topSource) {
+            Feed * tFeed = [_currentEvent.feeds objectForKey:topSource];
+            [self feedSelectionController:self.topViewFeedSelectionController didSelectFeed:tFeed];
+        }
+        
+        
+        if (botSource) {
+            Feed * bFeed = [_currentEvent.feeds objectForKey:topSource];
+            [self feedSelectionController:self.bottomViewFeedSelectionController didSelectFeed:bFeed];
+
+        }
+        
+      
+        
+
+        
+//        Feed *feedA = self.feeds.count > 0 ? self.feeds[0] : nil;
+//        Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;
+//            [feedA setQuality:1];
+//            [feedB setQuality:1];
         
         self.liveButton.enabled = (_appDel.encoderManager.liveEvent)?YES:NO;
         
@@ -258,6 +291,14 @@
         }
 
     }
+    
+    // on the event changed set the videos to default source
+    
+    
+
+    
+    
+    
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -296,6 +337,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_EVENT_FEEDS_READY object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:FeedMapControllerDidSubmitChangeNotification object:nil];
 }
 
 - (void)viewDidLoad {
@@ -422,18 +464,7 @@
     
     self.playerViewController.playerControlBar  = self.playerControls;
     self.playerControls.delegate              = self.playerViewController;
-//    self.playerViewController.syncronizePlayers = YES;
-    
 
-    
-//    NSArray * oldPLayers = [self.playerViewController.players allValues];
-//
-//     for (RicoPlayer * pp in oldPLayers) {
-//         [self.playerViewController removePlayers:pp];
-//     }
-//
-    
-    
     // Getting user preferences
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString * mode =  [defaults objectForKey:@"mode"];
@@ -454,19 +485,63 @@
           [self.playerViewController addPlayers:    self.bottomShowArea];
     } else {
      
+        if (!hasUserInteracted){
+            
+            if ([[RicoPlayerPool instance].pooledPlayers count]) {
+                
+                RicoPlayer * fPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+                
+                self.topShowArea.player = fPlayer.avPlayer;
+                self.bottomShowArea.player = fPlayer.avPlayer;
+                
+                if ([[RicoPlayerPool instance].pooledPlayers count] >1){
+                    RicoPlayer * nPlayer = [RicoPlayerPool instance].pooledPlayers[1];
+                    self.bottomShowArea.player = nPlayer.avPlayer;
+                }
+            }
+
+            
+            Encoder * enc = (Encoder *)_currentEvent.parentEncoder;
+            
+          
+        ////
+        ////
+        ////
+ 
+            
         
-               if ([[RicoPlayerPool instance].pooledPlayers count]) {
-                   
-                   RicoPlayer * fPlayer = [RicoPlayerPool instance].pooledPlayers[0];
-                   
-                   self.topShowArea.player = fPlayer.avPlayer;
-                   self.bottomShowArea.player = fPlayer.avPlayer;
-                   
-                   if ([[RicoPlayerPool instance].pooledPlayers count] >1){
-                       RicoPlayer * nPlayer = [RicoPlayerPool instance].pooledPlayers[1];
-                       self.bottomShowArea.player = nPlayer.avPlayer;
-                   }
-               }
+            Feed * tFeed =  [enc.cameraResource getFeedByLocation:kTopDual event:_currentEvent];
+            [self feedSelectionController:self.topViewFeedSelectionController didSelectFeed:tFeed];
+    
+        
+        
+
+            Feed * bFeed = [enc.cameraResource getFeedByLocation:kBottomDual event:_currentEvent];
+            [self feedSelectionController:self.bottomViewFeedSelectionController didSelectFeed:bFeed];
+                
+            
+        ////
+        ////
+        ////
+            
+                 } else {
+        
+//            if ([[RicoPlayerPool instance].pooledPlayers count]) {
+//                
+//                RicoPlayer * fPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+//                
+//                self.topShowArea.player = fPlayer.avPlayer;
+//                self.bottomShowArea.player = fPlayer.avPlayer;
+//                
+//                if ([[RicoPlayerPool instance].pooledPlayers count] >1){
+//                    RicoPlayer * nPlayer = [RicoPlayerPool instance].pooledPlayers[1];
+//                    self.bottomShowArea.player = nPlayer.avPlayer;
+//                }
+//            }
+        
+        }
+        
+        
 
      
      }
@@ -668,50 +743,7 @@
 }
 
 - (void)setBottomFullscreen:(BOOL)fullscreen animated:(BOOL)animated {
-//    if (fullscreen && !self.fullscreenView) {
-//        self.fullscreenView = self.bottomPlayerView;
-//        self.fullscreenInitialRect = self.bottomPlayerView.frame;
-//        
-//        if (animated) {
-//            [UIView animateWithDuration:ANIMATION_DURATION
-//                             animations:^() {
-//                                 self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-//                                 self.topPlayerView.alpha = 0.0;
-//                                 self.view.backgroundColor = [UIColor blackColor];
-//                             }
-//                             completion:^(BOOL finished) {
-//                                 self.topPlayerView.hidden = YES;
-//                             }];
-//        } else {
-//            self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-//            self.bottomPlayerView.showsControlBar = YES;
-//            self.topPlayerView.alpha = 0.0;
-//            self.topPlayerView.hidden = YES;
-//            self.view.backgroundColor = [UIColor blackColor];
-//        }
-//    } else if (!fullscreen && self.fullscreenView == self.bottomPlayerView) {
-//        
-//        self.fullscreenView = nil;
-//        
-//        self.topPlayerView.hidden = NO;
-//        
-//        if (animated) {
-//            
-//            [UIView animateWithDuration:ANIMATION_DURATION
-//                             animations:^() {
-//                                 self.bottomPlayerView.frame = self.fullscreenInitialRect;
-//                                 self.topPlayerView.alpha = 1.0;
-//                                 self.view.backgroundColor = [UIColor whiteColor];
-//                             }
-//                             completion:^(BOOL finished) {
-//                                 self.topPlayerView.hidden = NO;
-//                             }];
-//        } else {
-//            self.bottomPlayerView.frame = self.fullscreenInitialRect;
-//            self.topPlayerView.alpha = 1.0;
-//            self.view.backgroundColor = [UIColor whiteColor];
-//        }
-//    }
+
 }
 
 #pragma mark - Gesture Recognizers
@@ -822,7 +854,10 @@
 #pragma mark - FeedSelectionControllerDelegate
 
 - (void)feedSelectionController:(nonnull FeedSelectionController *)feedSelectionController didSelectFeed:(nonnull Feed *)feed {
-
+    
+    hasUserInteracted = YES; // this keep trach if the user has changed something
+    
+    
     BOOL wasLive = (self.playerControls.state == RicoPlayerStateLive);
     [self.playerViewController cancelPressed:self.playerControls];
     
@@ -909,31 +944,7 @@
         }
     
     
-    
-    
-//    RicoPlayer * aplayer;
-//    
-//    if (feedSelectionController == self.topViewFeedSelectionController) {
-//        aplayer = self.topPlayer;
-//    } else if (feedSelectionController == self.bottomViewFeedSelectionController) {
-//        aplayer = self.bottomPlayer;
-//    }
-//    
-//    CMTime time = aplayer.currentTime;
 
-//    aplayer.feed = feed;
-//    [aplayer loadFeed:feed];
-//    [[aplayer loadFeed:feed] setCompletionBlock:^{
-//        NSLog(@"PRessessssssssssss");
-//    }];
-//    [aplayer loadFeed:feed];
-
-//    [aplayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
-    
-    
-//    if (aplayer.isPlaying) {
-//        [aplayer play];
-//    }
 
     if (wasLive){
      self.playerControls.state = RicoPlayerStateLive;
@@ -1057,6 +1068,14 @@
     return [NSString stringWithFormat:@"%02lu:%02lu:%02lu",(unsigned long) hour, (unsigned long) minute, (unsigned long)second];
 }
 
+
+-(void)onFeedMapChange:(NSNotification*)nnotification
+{
+
+
+
+
+}
 
 
 @end

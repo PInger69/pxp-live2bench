@@ -10,7 +10,10 @@
 
 #import "RicoPlayer.h"
 #import "DebugOutput.h"
+#import "CustomAlertControllerQueue.h"
 #include <stdlib.h>
+
+
 
 
 @interface RicoPlayer ()
@@ -19,8 +22,8 @@
 @property (strong, nonatomic, nullable) id rangeObserver;
 @property (strong, nonatomic, nonnull) UIActivityIndicatorView *activityIndicator;
 @property (strong, nonatomic) NSMapTable * observerMap;
-
-
+//@property (strong, nonatomic) RicoPlayerChecker * checker; // check to see if the player is stuck seeking
+@property (strong, nonatomic) NSTimer  * checkTimer;
 @end
 
 
@@ -35,6 +38,7 @@ NSString* const RicoPlayerDidPlayerItemFailNotification             = @"RicoPlay
 @synthesize avPlayer        = _avPlayer;
 @synthesize avPlayerLayer   = _avPlayerLayer;
 @synthesize range           = _range;
+
 
 static void * feedContext = &feedContext;
 static void * itemContext = &itemContext;
@@ -74,6 +78,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         
         _observerMap    = [NSMapTable strongToStrongObjectsMapTable];
         _offsetTime     = kCMTimeZero;
+//        self.checker    = [[RicoPlayerChecker alloc]initWithRicoPlayer:self];
+        
     }
     return self;
 }
@@ -106,6 +112,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         
         _observerMap = [NSMapTable strongToStrongObjectsMapTable];
         _offsetTime     = kCMTimeZero;
+//        self.checker    = [[RicoPlayerChecker alloc]initWithRicoPlayer:self];
     }
     return self;
 }
@@ -180,15 +187,15 @@ static NSInteger playerCounter = 0; // count the number of players created and g
                 
 //                [weakSelf.avPlayer seekToTime:seekTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
                 [weakSelf.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
-                    NSLog(@"PLAY SEEK %@",(finished)?@"pass":@"fail");
+//                    NSLog(@"PLAY SEEK %@",(finished)?@"pass":@"fail");
 
                 }];
             }
                 weakSelf.isPlaying = YES;
-             NSLog(@"PLAY %@",weakSelf.name);
+//             NSLog(@"PLAY %@",weakSelf.name);
         }
 //         });
-        NSLog(@"PLAY BLOCK FINISHED");
+//        NSLog(@"PLAY BLOCK FINISHED");
     }];
     playOp.name = @"Play Block";
     [self.operationQueue addOperation:playOp];
@@ -227,14 +234,32 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(NSOperation*)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
-    CMTime timeWithOffset = CMTimeAdd(time, self.offsetTime);
     
+    BOOL check = NO;
+    NSLog(@"");
+    if (check){
+        
+        CGFloat tt = 1;
+        NSLog(@"");
+        
+        self.offsetTime = CMTimeMakeWithSeconds(tt, NSEC_PER_SEC);
+    }
+    
+    CMTime timeWithOffset = CMTimeAdd(time, self.offsetTime);
+
+    NSLog(@"Seeking to: %f   tolerance: %f / %f ",CMTimeGetSeconds(time),CMTimeGetSeconds(toleranceBefore),CMTimeGetSeconds(toleranceAfter));
+    NSLog(@"offsetWitj:     %f      %f",CMTimeGetSeconds(timeWithOffset),CMTimeGetSeconds(self.offsetTime));
     NSOperation * seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:timeWithOffset toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
+    
+    [seeker setCompletionBlock:^{
+            NSLog(@"Seek finished: %f",CMTimeGetSeconds(self.currentTime));
+    }];
 //    seeker.completionBlock = completionHandler;
     if (self.syncronized) {
           __weak RicoPlayer * weakSelf = self;
         [seeker setCompletionBlock:^{
-                weakSelf.waitingForSynchronization = YES;
+            weakSelf.waitingForSynchronization = YES;
+            NSLog(@"%@ Seek finished: %f",self.name,CMTimeGetSeconds(self.currentTime));
             dispatch_async(dispatch_get_main_queue(),^{
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:RicoPlayerWillWaitForSynchronizationNotification object:weakSelf ];
@@ -245,6 +270,16 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
     return seeker;
 }
+
+-(NSOperation*)preroll:(float)rate
+{
+
+    NSOperation * preroll = [[RicoPrerollOperation alloc]initWithRicoPlayer:self rate:rate];
+    [self.operationQueue addOperation:preroll];
+    return preroll;
+}
+
+
 
 -(NSOperation*)loadFeed:(Feed *)feed
 {
@@ -257,10 +292,15 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     _feed = feed;
     [self didChangeValueForKey: NSStringFromSelector(@selector(feed))];
     
-    
+        [self.checkTimer invalidate];
     if (_feed){
-//        [_feed addObserver:self forKeyPath:NSStringFromSelector(@selector(quality)) options:0 context:&feedContext];
         
+        self.offsetTime = CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC);
+        
+//        [_feed addObserver:self forKeyPath:NSStringFromSelector(@selector(quality)) options:0 context:&feedContext];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.checkTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateCheck) userInfo:nil repeats:YES];
+        });
         NSURL * url = [_feed path];
         
             _avPlayer               = [AVPlayer playerWithPlayerItem:[[AVPlayerItem alloc] initWithURL:url]];
@@ -314,7 +354,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
         
         dispatch_async(dispatch_get_main_queue(),^ {
-            [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 80)];
+            [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 90)];
             [weakSelf addSubview:_debugOutput];
             [weakSelf updateDebugOutput];
         });
@@ -324,7 +364,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         
     }
     dispatch_async(dispatch_get_main_queue(),^ {
-        [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 80)];
+        [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 90)];
         [self addSubview:_debugOutput];
         [self updateDebugOutput];
     });
@@ -335,43 +375,20 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 -(void)reset
 {
     // get the time
-//    CMTime time = _avPlayer.currentTime;
-//    
-//    self.feed = _feed;
-//    [self seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-//       //Somthing
-//    }];
+    CMTime time = _avPlayer.currentTime;
+    BOOL wasPlaying = (_avPlayer.rate > 0);
+    Feed * feed = _feed;
+
+        [self clear];
+    //
+    self.feed = feed;
+    NSOperation * seekOp = [self seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+       //Somthing
+    }];
     
-    
-    // clear clear
-    [self.operationQueue cancelAllOperations];
-    self.operationQueue.suspended = NO;
-//    self.operationQueue = nil;
-//    self.operationQueue = [NSOperationQueue new];
-    
-    
-    // remove old player
-    if (_avPlayer){
-        [self.avPlayer pause];
-        [self.avPlayer.currentItem cancelPendingSeeks];
-        [self.avPlayer.currentItem.asset cancelLoading];
-        
-        [self removePlayerTimeObserver];
-        [_avPlayer.currentItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&itemContext];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
-        _avPlayer               = nil;        
-    }
-    
-    // remove old feed
-    if (_feed) {
-//        [_feed removeObserver:self forKeyPath:NSStringFromSelector(@selector(quality)) context:&feedContext];
-        _feed = nil;
-    }
-    
-    // remove old layer
-    if (_avPlayerLayer){
-        [_avPlayerLayer removeFromSuperlayer];
-        _avPlayerLayer = nil;
+    if (wasPlaying) {
+        NSOperation * playOp = [self play];
+        [playOp addDependency:seekOp];
     }
 
 }
@@ -380,6 +397,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 // this destroy
 -(void)clear
 {
+    
+    self.offsetTime = kCMTimeZero;
     _range = kCMTimeRangeInvalid;
     if (self.rangeObserver) {
         [self.avPlayer removeTimeObserver:self.rangeObserver];
@@ -425,8 +444,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 -(void)setFeed:(Feed *)feed
 {
 //    [feed setQuality:0];
-    
-    
+
     // clear player
     [self clear];
     
@@ -436,9 +454,17 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     _feed = feed;
     [self didChangeValueForKey: NSStringFromSelector(@selector(feed))];
     
-    
+    [self.checkTimer invalidate];
     if (_feed){
-//        [_feed addObserver:self forKeyPath:NSStringFromSelector(@selector(quality)) options:0 context:&feedContext];
+        
+        self.offsetTime = CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC);
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.checkTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateCheck) userInfo:nil repeats:YES];
+        });
+        
+
         _avPlayer               = [AVPlayer playerWithPlayerItem:[[AVPlayerItem alloc] initWithURL:[_feed path]]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
         [_avPlayer.currentItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:0 context:&itemContext];
@@ -458,10 +484,10 @@ static NSInteger playerCounter = 0; // count the number of players created and g
             NSLog(@"LOAD %@-%@",weakSelf.name,[weakSelf.feed path]);
             [weakSelf addPeriodicTimeObserver];
         }];
-        [self.operationQueue addOperations:@[self.isReadyOperation] waitUntilFinished:NO];
+        [self.operationQueue addOperations:@[self.isReadyOperation] waitUntilFinished:YES];
         
         dispatch_async(dispatch_get_main_queue(),^ {
-            [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 80)];
+            [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 90)];
             [weakSelf addSubview:_debugOutput];
             [weakSelf updateDebugOutput];
         });
@@ -553,6 +579,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)removePlayerTimeObserver
 {
+//    [self.checker stop];
     id pObserver = [self.observerMap objectForKey:self.avPlayer];
     
     if (pObserver)
@@ -567,6 +594,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)addPeriodicTimeObserver
 {
+//    [self.checker start];
+    
     double                      interval        = 0.5f;
     __weak RicoPlayer          * weakSelf      = self;
 
@@ -575,11 +604,14 @@ static NSInteger playerCounter = 0; // count the number of players created and g
                                                           usingBlock:^(CMTime time)
                     {
                         
-                        weakSelf.debugValues[@"rate"] = [NSString stringWithFormat:@"%f",weakSelf.avPlayer.rate];
-                        weakSelf.debugValues[@"now"] = [NSString stringWithFormat:@"CT: %f", CMTimeGetSeconds(weakSelf.avPlayer.currentTime)];
-                        weakSelf.debugValues[@"dur"] = [NSString stringWithFormat:@"DT: %f", CMTimeGetSeconds(weakSelf.duration)];
-                        weakSelf.debugValues[@"op"] = [NSString stringWithFormat:@"OpC: %lu", (unsigned long)weakSelf.operationQueue.operationCount];
+                        weakSelf.debugValues[@"rate"]   = [NSString stringWithFormat:@"%f",weakSelf.avPlayer.rate];
+                        weakSelf.debugValues[@"now"]    = [NSString stringWithFormat:@"CT: %f", CMTimeGetSeconds(weakSelf.avPlayer.currentTime)];
+                        weakSelf.debugValues[@"dur"]    = [NSString stringWithFormat:@"DT: %f", CMTimeGetSeconds(weakSelf.duration)];
+                        weakSelf.debugValues[@"op"]     = [NSString stringWithFormat:@"OpC: %lu", (unsigned long)weakSelf.operationQueue.operationCount];
+                        weakSelf.debugValues[@"offset"] = [NSString stringWithFormat:@"offest: %f", CMTimeGetSeconds(weakSelf.offsetTime)];
+                        
                         [weakSelf updateDebugOutput];
+//                        [weakSelf.checker refreshCoolDown];
                         if (weakSelf.delegate) {
                             [weakSelf.delegate tick:weakSelf];
                         }
@@ -649,24 +681,23 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         [self didChangeValueForKey:@"range"];
         return;
     }
-    
-//   if (!CMTimeRangeEqual(range, _range)) {
-    
-       [self willChangeValueForKey:@"range"];
-       _range = range;
-       [self didChangeValueForKey:@"range"];
-       
-       CMTime start = range.start, end = CMTimeAdd(start, range.duration);
-       
-       // create a boundary observer at the range end points
-       __block RicoPlayer *weakself = self;
-       
-       self.rangeObserver = [self.avPlayer addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:end]] queue:NULL usingBlock:^() {
-           [weakself seekToTime:start toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:nil];
-       }];
 
-       [self seekToTime:start toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:nil];
-//   }
+    [self willChangeValueForKey:@"range"];
+    _range = range;
+    [self didChangeValueForKey:@"range"];
+
+    CMTime start = range.start, end = CMTimeAdd(start, range.duration);
+
+    // create a boundary observer at the range end points
+    __block RicoPlayer *weakself = self;
+
+    self.rangeObserver = [self.avPlayer addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:end]] queue:NULL usingBlock:^() {
+       [weakself seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+    }];
+
+    [self seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+    [self seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+
 }
 
 
@@ -693,13 +724,14 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 -(void)updateDebugOutput
 {
       dispatch_async(dispatch_get_main_queue(),^ {
-    _debugOutput.text = [NSString stringWithFormat:@"%@\n%@\nrate: %@ \n%@\n%@\n%@",
+    _debugOutput.text = [NSString stringWithFormat:@"%@\n%@\nrate: %@ \n%@\n%@\n%@\n%@",
                          self.name,
                          _debugValues[@"itemStatus"],
                          _debugValues[@"rate"],
                          _debugValues[@"now"],
                          _debugValues[@"dur"],
-                         _debugValues[@"op"]
+                         _debugValues[@"op"],
+                         _debugValues[@"offset"]
                          
                          ];
   });
@@ -740,6 +772,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     [super setFrame:frame];
 }
 
+
+
 -(void)dealloc
 {
     NSLog(@"Rico dealloc %@",self.name);
@@ -748,145 +782,37 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 #pragma mark - RJL play methods
 
 #pragma mark -
-//- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
-//{
-//    /* Make sure that the value of each key has loaded successfully. */
-//    for (NSString *thisKey in requestedKeys)
-//    {
-//        NSError *error = nil;
-//        AVKeyValueStatus keyStatus = [asset statusOfValueForKey:thisKey error:&error];
-//        if (keyStatus == AVKeyValueStatusFailed)
-//        {
-//            [self assetFailedToPrepareForPlayback:error];
-//            return;
-//        }
-//        /* If you are also implementing -[AVAsset cancelLoading], add your code here to bail out properly in the case of cancellation. */
-//    }
-//    
-//    /* Use the AVAsset playable property to detect whether the asset can be played. */
-//    if (!asset.playable)
-//    {
-//        /* Generate an error describing the failure. */
-//        NSString *localizedDescription = NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
-//        NSString *localizedFailureReason = NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
-//        NSDictionary *errorDict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                   localizedDescription, NSLocalizedDescriptionKey,
-//                                   localizedFailureReason, NSLocalizedFailureReasonErrorKey,
-//                                   nil];
-//        NSError *assetCannotBePlayedError = [NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
-//        
-//        /* Display the error to the user. */
-//        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
-//        
-//        return;
-//    }
-//    
-//    /* At this point we're ready to set up for playback of the asset. */
-//    
-//    /* Stop observing our prior AVPlayerItem, if we have one. */
-//    if (self.playerItem)
-//    {
-//        /* Remove existing player item key value observers and notifications. */
-//        
-//        [self.playerItem removeObserver:self forKeyPath:@"status"];
-//        
-//        [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                        name:AVPlayerItemDidPlayToEndTimeNotification
-//                                                      object:self.playerItem];
-//    }
-//    
-//    /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
-//    self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
-//    
-//    
-//    
-//    /* Observe the player item "status" key to determine when it is ready to play. */
-//    [self.playerItem addObserver:self
-//                      forKeyPath:@"status"
-//                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-//                         context:&ViewControllerStatusObservationContext];
-//    
-//    /* When the player item has played to its end time we'll toggle
-//     the movie controller Pause button to be the Play button */
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(playerItemDidReachEnd:)
-//                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-//                                               object:self.playerItem];
-//    
-//    //Why????????????????????????No?????????
-//    seekToZeroBeforePlay = NO;
-//    
-//    /* Create new player, if we don't already have one. */
-//    if (!self.avPlayer)
-//    {
-//        /* Get a new AVPlayer initialized to play the specified player item. */
-//        //[self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
-//        
-//        
-//        //[self.playBackView setPlayer:self.avPlayer];
-//        
-//        /* Observe the AVPlayer "currentItem" property to find out when any
-//         AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
-//         occur.*/
-//        [self.avPlayer addObserver:self
-//                        forKeyPath:@"currentItem"
-//                           options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-//                           context:ViewControllerCurrentItemObservationContext];
-//        
-//        /* Observe the AVPlayer "rate" property to update the scrubber control. */
-//        [self.avPlayer addObserver:self
-//                        forKeyPath:@"rate"
-//                           options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-//                           context:ViewControllerRateObservationContext];
-//        self.avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndPause;
-//    }
-//    
-//    [self.playBackView setPlayer:self.avPlayer];
-//    
-//    /* Make our new AVPlayerItem the AVPlayer's current item. */
-//    if (self.avPlayer.currentItem != self.playerItem)
-//    {
-//        /* Replace the player item with a new player item. The item replacement occurs
-//         asynchronously; observe the currentItem property to find out when the
-//         replacement will/did occur
-//         
-//         If needed, configure player item here (example: adding outputs, setting text style rules,
-//         selecting media options) before associating it with a player
-//         */
-//        [self.avPlayer replaceCurrentItemWithPlayerItem:self.playerItem];
-//        
-//        //        [self syncPlayPauseButtons];
-//    }
-//    
-//    //    [self.mScrubber setValue:0.0];
-//    
-//    _status = _status | RJLPS_Play;
-//    
-//    if (onFeedReadyBlock) {
-//        onFeedReadyBlock();
-//    }// if there is a place to seek to when ready
-//    
-//}
-//
-//-(void)assetFailedToPrepareForPlayback:(NSError *)error
-//{
-//    [self removePlayerTimeObserver];
-//    //    [self syncControlBar];
-//    //    [self disableScrubber];
-//    //    [self disablePlayerButtons];
-//    //
-//    /* Display the error. */
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
-//                                                        message:[error localizedFailureReason]
-//                                                       delegate:nil
-//                                              cancelButtonTitle:@"OK"
-//                                              otherButtonTitles:nil];
-//    [alertView show];
-//    
-//    PXPLog(@"*** VIDEO PLAYER ERROR");
-//    PXPLog(@"%@",error);
-//    PXPLog(@"**********");
-//}
+
+-(void)updateCheck
+{
+    BOOL i = NO;
+    
+    
+    if ((CMTimeGetSeconds(self.duration) == 0 && self.isReadyOperation.isFinished)|| i) {
+        NSLog(@"PLAYER CRASH");
+        PXPLog(@"PLAYER CRASH");
+        
+        
+        
+        if (DEBUG_MODE){
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pxp Player Alert"
+                                                                            message:@"Player lost connection, attempting to reconnect"
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:@"OK"
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:[UIApplication sharedApplication].keyWindow.rootViewController animated:YES style:AlertImportant completion:nil];
+        }
+        [self reset];
+    }
+}
 
 -(void)refresh
 {
@@ -894,4 +820,37 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     _avPlayerLayer.player =self.avPlayer;
 }
 
+
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"RicoPlayer %@: FeedName:%@",self.name,self.feed.sourceName ];
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

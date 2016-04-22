@@ -18,6 +18,9 @@
     NSArray * _listNonTagObject;
     NSArray * _eventObject;
     NSArray * _bookmarkObject;
+    
+    NSArray * _teleStill;
+    NSArray * _teleAnimated;
 }
 
 @synthesize mode = _mode;
@@ -129,6 +132,10 @@
         _listObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel];
         _listNonTagObject = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton];
         _bookmarkObject   = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton,_previousTagButton,_nextTagButton,_currentTagLabel];
+        
+        _teleStill        = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _currentTagLabel];
+        _teleAnimated     = @[];
+        
         self.mode = RicoFullScreenModeDisable;
     }
     return self;
@@ -168,6 +175,16 @@
             _controlBar.state = RicoPlayerStateNormal;
             obj = _listNonTagObject;
             break;
+            
+        case RicoFullScreenModeTeleStill:
+            _controlBar.state = RicoPlayerStateTelestrationStill;
+            obj = _teleStill;
+            break;
+        case RicoFullScreenModeTeleAnimated:
+            _controlBar.state = RicoPlayerStateTelestrationAnimated;
+            obj = _teleAnimated;
+            break;
+            
         case RicoFullScreenModeDisable:
             obj = _disabledObject;
             [self.controlBar clear];

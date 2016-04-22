@@ -130,7 +130,7 @@
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    NSLog(@"Connection finished");
+//    NSLog(@"Connection finished");
     if (stream)[stream close];
     
     if (error) {

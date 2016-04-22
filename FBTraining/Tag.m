@@ -88,6 +88,9 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
+        
+        if (tagData[@"dtagid"]) self.durationID = tagData[@"dtagid"];
+        
        [self builtTelestration:tagData];
         if ([tagData objectForKey:@"period"]) {
             self.period          = tagData[@"period"];
@@ -111,6 +114,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         NSString *teleData = tagData[@"telestration"];
         if (teleData) {
             _telestration = [PxpTelestration telestrationFromData:teleData];
+            _telestration.sourceName = tagData[@"telesrc"];
         }
         
         // only add the timer if its your tag not someone elses

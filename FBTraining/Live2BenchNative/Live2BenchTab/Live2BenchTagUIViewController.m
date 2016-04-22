@@ -638,16 +638,30 @@
         }
     }
     
+    
+    
+    
+    
 }
 
 // enable all the buttons again
 -(void)enableButton:(NSNotification*)note
 {
-     NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
+    Tag * tag = note.userInfo[@"tags"][0];
+    
+    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
     for (SideTagButton * btn1 in tempList){
-        if (btn1.mode == SideTagButtonModeToggle) {
-            btn1.userInteractionEnabled = true;
+        
+        
+        
+        if (btn1.mode == SideTagButtonModeToggle && [btn1.durationID isEqualToString:tag.durationID]) {
+            btn1.isBusy = NO;
         }
+    }
+    
+    
+    if (!self.isBusy && self.delegate && [self.delegate respondsToSelector:@selector(onFinishBusy:)]) {
+        [self.delegate onFinishBusy:self];
     }
 }
 
@@ -662,6 +676,19 @@
         }
     }
 }*/
+
+-(BOOL)isBusy
+{
+    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.isBusy) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 
 -(void)closeAllOpenTagButtons
 {

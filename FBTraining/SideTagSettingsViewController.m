@@ -140,6 +140,13 @@
         display.button.tag  = i;
         display.order = [NSNumber numberWithInteger:i];
         display.position = (holder.frame.origin.x > 100)?@"right":@"left";
+        
+        
+        display.typeLabel.text = @"None";
+        display.typeLabel.textColor = [UIColor grayColor];
+        [display.button setTitle:@"" forState:UIControlStateNormal];
+        display.enabled = ![self.currentTagSetName isEqualToString:DEFAULT_TAG_SET];
+        
         [holder removeFromSuperview];
         [self.view addSubview:display];
         createdList[i] = display;
@@ -296,7 +303,7 @@
     
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = @"Enter some name";
+        textField.text = @"";
     }];
     
 

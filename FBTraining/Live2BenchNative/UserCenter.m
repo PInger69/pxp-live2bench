@@ -529,86 +529,6 @@ static UserCenter * instance;
 
 }
 
-/*-(void)enableObservers:(BOOL)isObserve
-{
-    if (observering && !isObserve){
-        [[NSNotificationCenter defaultCenter]removeObserver:tagNameObserver];
-    } else if (!observering && isObserve) {
-        NSLog(@"UserCenter see data from Cloud Encoder");
-    
-        tagNameObserver     =    [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_TAG_NAMES_FROM_CLOUD object:nil queue:nil usingBlock:^(NSNotification *note) {
-        
-       NSMutableDictionary         * tgnames = [note.userInfo mutableCopy];
-           
-        // this is clearing out all the illigal NULL in the dict, so the plist can be written
-        NSMutableDictionary         * onlyTags = [[tgnames objectForKey:@"tagbuttons"]mutableCopy];
-        [tgnames setObject:onlyTags forKey:@"tagbuttons"];
-            
-        for (NSString * theKey in [onlyTags allKeys]) {
-            NSMutableDictionary * checkedTag =  [[onlyTags objectForKey:theKey]mutableCopy];
-            [onlyTags setObject:checkedTag forKey:theKey];
-            [checkedTag removeObjectForKey:@"subtags"];
-//            if ([checkedTag objectForKey:@"subtags"]) {
-//                NSMutableArray * listSubtags = [checkedTag objectForKey:@"subtags"];
-//                for (int i=0; i<[listSubtags count]; i++) {
-//                    NSLog(@"");
-//                    if ([listSubtags objectAtIndex:i] == [NSNull null]  ){
-//                        [listSubtags replaceObjectAtIndex:i withObject:@""];
-//                    }
-//                }
-//            }
-        }
-            
-        // get user info plist
-        NSString                * plistPath   = [_localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
-        NSMutableDictionary     * userInfo    = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-        
-        if (tgnames){// no respoince from cloud
-            
-            // convert new tags for Live to bench
-            _tagNames = [self convertToL2BReadable: tgnames key:@"tagbuttons"];
-            
-      
-            // delete old tags if there
-            if ([userInfo objectForKey:@"tagnames"]){
-                [userInfo removeObjectForKey:@"tagnames"];
-            }
-            
-            // write new tags
-            [userInfo setObject:[tgnames objectForKey:@"tagbuttons"] forKey:@"tagnames"];
-            
-//             save data
-            if ([[userInfo copy] writeToFile:plistPath atomically: YES]) {
-                NSLog(@"WRITE");
-            } else {
-                NSLog(@"Fail");
-            }
-
-        } else {
-            
-            _tagNames =[self convertToL2BReadable: rawResponce key:@"tagnames"];
-//                _tagNames = [self _buildTagNames:localPath];
-        }
-        }];
-    }
-    observering = isObserve;
-}*/
-
-
-
-//-(NSMutableArray*)_buildTagNames:(NSString*)aLocalPath
-//{
-//
-//    
-//    
-//    
-//    
-//    NSString        * tagFilePath   = [aLocalPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
-//    NSDictionary    * userInfo      =  [[NSDictionary alloc] initWithContentsOfFile:tagFilePath];
-//    NSDictionary    * tagnames      = [userInfo objectForKey:@"tagnames"];
-//    return  tagnames;
-//}
-
 
 -(NSMutableArray*)convertToL2BReadable:(NSDictionary *)toConvert key:(NSString*)key
 {
@@ -673,6 +593,91 @@ static UserCenter * instance;
 {
     [rawResponce writeToFile: _accountInfoPath atomically:YES];
 }
+
+
+
+
+
+
+
+-(NSDictionary*)namedCamerasByUser
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if ([defaults objectForKey:@"cameraNames"]) {
+    
+        return [defaults objectForKey:@"cameraNames"];
+    } else {
+    
+        return @{};
+    }
+    
+
+
+}
+-(void)addCameraName:(NSString*)name camID:(NSString*)camID
+{
+
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    
+    
+    NSMutableDictionary * dict = [[defaults objectForKey:@"cameraNames"] mutableCopy];
+    if (!dict) {
+        [defaults setObject:[NSMutableDictionary new] forKey:@"cameraNames"];
+        
+        
+         dict = [[defaults objectForKey:@"cameraNames"]mutableCopy];
+    }
+    
+    
+    [dict setObject:name forKey:camID];    
+    
+    [defaults setObject:dict forKey:@"cameraNames"];
+    [defaults synchronize];
+    
+
+
+}
+
+
+
+-(void)savePickByCameraLocation:(NSString*)camLocation pick:(NSString*)userPick
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSMutableDictionary * dict = [[defaults objectForKey:@"cameraPicks"] mutableCopy];
+    if (!dict) {
+        [defaults setObject:[NSMutableDictionary new] forKey:@"cameraPicks"];
+        dict = [[defaults objectForKey:@"cameraPicks"]mutableCopy];
+    }
+    
+    [dict setObject:userPick forKey:camLocation];
+    [defaults setObject:dict forKey:@"cameraPicks"];
+    [defaults synchronize];
+    
+}
+
+-(NSString*)getPickByCameraLocation:(NSString*)camLocation
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSMutableDictionary * dict;
+    
+    if ([defaults objectForKey:@"cameraPicks"]) {
+        dict = [defaults objectForKey:@"cameraPicks"];
+    } else {
+        return nil;
+    }
+    
+    
+    return [dict objectForKey:camLocation];
+
+}
+
+
+
 
 -(id<ActionListItem>)checkLoginPlistAction
 {

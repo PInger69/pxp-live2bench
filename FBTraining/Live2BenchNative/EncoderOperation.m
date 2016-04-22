@@ -10,6 +10,7 @@
 #import "Tag.h"
 #import "PxpURLProtocol.h"
 #import "MockURLProtocol.h"
+#import "Feed.h"
 #define EO_DEFAULT_TIMEOUT 5
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
@@ -144,7 +145,7 @@
 #pragma mark - NSURLSession Methods
 -(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
-    NSLog(@"Receiving...");
+//    NSLog(@"Receiving...");
     if (self.cumulatedData == nil){
         self.cumulatedData = [NSMutableData dataWithData:data];
     } else {
@@ -154,7 +155,7 @@
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    NSLog(@"Connection finished");
+//    NSLog(@"Connection finished");
     
 
     if (error) {
@@ -246,6 +247,32 @@
 }
 
 @end
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation EncoderOperationGetEventTags
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    
+//    {
+//        device = "6FF220F1-E4CE-4FE8-9F2F-179FCD9750D4";
+//        event = live;
+//        requesttime = "158103.0717805834";
+//        user = ae1e7198bc3074ff1b2e9ff520c30bc1898d038e;
+//    }
+   NSString *jsonString                    = [Utility dictToJSON:aData];
+    NSURL * checkURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@://%@/min/ajax/gametags/%@",self.encoder.urlProtocol,self.encoder.ipAddress,jsonString]  ];
+    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+    
+    [self.encoder.parseModule parse:data mode:ParseModeGetEventTags for:self.encoder];
+    [super parseDataToEncoder:data];
+}
+
+@end
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -505,10 +532,17 @@
 -(void)parseDataToEncoder:(NSData*)data
 {
     NSDictionary * dict = [self.encoder.parseModule parse:data mode:ParseModeTagSet for:self.encoder];
-  
     
-    Tag * tag = [self.encoder onNewTagsEO:dict];
-    if (tag)self.userInfo = @{@"tag":tag};
+//    if ( ![self.encoder.postedTagIDs containsObject:newTag.ID] ){
+//        [self.encoder.postedTagIDs addObject:newTag.ID];
+//        Tag * tag = [self.encoder.encoder onNewTagsEO:dict];
+//        if (tag)self.userInfo = @{@"tag":tag};
+//        
+//    } else {
+//        [self.encoder.postedTagIDs removeObject:newTag.ID];
+//    }
+
+    
     
     [super parseDataToEncoder:data];
 
@@ -517,6 +551,138 @@
 }
 @end
 
+
+
+#pragma mark - Telestation
+
+@implementation EncoderOperationMakeTelestration
+
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    self.timeout = 60;
+    
+    NSMutableDictionary * tData = [NSMutableDictionary new];
+
+    NSLog(@"Time Getting sent to server: %@",[aData objectForKey:@"time"]);
+    [tData addEntriesFromDictionary:@{
+
+//
+                                        @"colour"           : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                        @"deviceid"         : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                        @"duration"         : [aData objectForKey:@"duration"],
+                                        @"event"            : (self.encoder.event.live)?LIVE_EVENT:self.encoder.event.name,
+                                        @"name"             : @"Telestration",//[Utility encodeSpecialCharacters:[aData objectForKey:@"name"]],
+                                        @"telestration"     : [aData objectForKey:@"telestration"],
+                                        @"telesrc"          : [aData objectForKey:@"telesrc"],
+                                        @"time"             : [aData objectForKey:@"time"],
+                                        @"type"             : [NSNumber numberWithInteger:TagTypeTele],
+                                        @"user"             : [UserCenter getInstance].userHID
+                                        }];
+    
+    // build default data
+//    NSData *teleData = [data objectForKey:@"telestration"];
+//    NSString *period = [data objectForKey:@"period"];
+    
+    // build JSON data
+
+    NSString *jsonString    = [Utility dictToJSON:tData];
+    jsonString              = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    PXPLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    PXPLog(@"TIME OF TAG SENT TO SERVER: %@",[aData objectForKey:@"time"]);
+    PXPLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    
+    // Create a transparent Image to send to server (duct tape to work with legacy code)
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(1.0, 1.0), NO, 1.0);
+    UIImage *ductTape   = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData *imageData   = UIImagePNGRepresentation(ductTape);
+    
+
+
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/teleset",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
+
+    NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    [someUrlRequest setHTTPMethod:@"POST"];
+    
+    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    [someUrlRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
+    NSMutableData *body = [NSMutableData data];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary]  dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=tag\r\n\r\n"   dataUsingEncoding:NSUTF8StringEncoding]];
+    //[body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we need to append the different data 'segments'. We first start by adding the boundary.
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary]  dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=file; filename=picture.png\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // We now need to tell the receiver what content type we have
+    // In my case it's a png image. If you have a jpg, set it to 'image/jpg'
+    [body appendData:[@"Content-Type: image/png\r\n\r\n"                    dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we append the actual image data
+    //NSData *myData = [NSKeyedArchiver archivedDataWithRootObject:tData];
+    //[body appendData:myData];
+    [body appendData:[NSData dataWithData:imageData]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    // and again the delimiting boundary
+    //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
+    [someUrlRequest setHTTPBody:body];
+    
+    return someUrlRequest;
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+   
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
+    
+    NSMutableDictionary *tData = [[NSMutableDictionary alloc]initWithDictionary:results];
+    [tData removeObjectForKey:@"telefull"];//
+    [tData removeObjectForKey:@"teleurl"];
+    
+    PXPLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    PXPLog(@"TIME OF TAG FROM SERVER: %@",[results objectForKey:@"time"]);
+    PXPLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+    
+    if ([tData objectForKey:@"id"]) {
+        
+        NSMutableDictionary *checkEventDic = [self.encoder.allEvents objectForKey:[tData objectForKey:@"event"]];
+        Event * encoderEvent    = [checkEventDic objectForKey:@"non-local"];
+        Event * localEvent      = [checkEventDic objectForKey:@"local"];
+
+
+        
+        Tag *newTag = [[Tag alloc] initWithData: tData event:encoderEvent];
+        if ([tData objectForKey:@"telestration"]) {
+            newTag.telestration = [PxpTelestration telestrationFromData:[tData objectForKey:@"telestration"]];
+        }
+        
+        
+        if ( ![self.encoder.postedTagIDs containsObject:newTag.ID] ){
+            [self.encoder.postedTagIDs addObject:newTag.ID];
+            if (self.encoder.event == encoderEvent) {
+                [encoderEvent addTag:newTag extraData:true];
+            }else{
+                [encoderEvent addTag:newTag extraData:false];
+            }
+        } else {
+            [self.encoder.postedTagIDs removeObject:newTag.ID];
+        }
+
+        
+
+        
+        if (localEvent && newTag.type != TagTypeOpenDuration) {
+            Tag *localTag = [[Tag alloc] initWithData:tData event:localEvent];
+            [localEvent addTag:localTag extraData:false];
+            [localEvent.parentEncoder writeToPlist];
+        }
+
+    }
+    [super parseDataToEncoder:data];
+}
+@end
 
 
 
@@ -544,3 +710,95 @@
 }
 @end
 
+#pragma mark - Camera Data
+
+@implementation EncoderOperationCameraStartTimes
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    self.timeout = 60;
+    
+    NSString *jsonString    = [Utility dictToJSON:@{@"sidx":@"*",@"event":@"live"}];
+//    http://localhost/min/ajax/rec_stat/{"sidx":"00hq","event":"live"}
+    
+    NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/rec_stat/%@",self.encoder.urlProtocol,self.encoder.ipAddress,jsonString] ];
+    NSURLRequest * req  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+    
+    return req;
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
+    NSArray * list = [results allKeys];
+    
+    NSMutableDictionary * dict =  [NSMutableDictionary new];
+    
+    for (NSString * key in list) {
+        if([key rangeOfString:@"ctime-"].location != NSNotFound) {
+            NSString * k = [key substringFromIndex:6];
+            NSLog(@"%@",[key substringFromIndex:6]);
+            [dict setObject:results[key] forKey:k];
+        }
+    }
+    
+    NSInteger lowestNumber   = NSIntegerMax;
+     NSArray * list2 = [dict allKeys];
+    
+    for (NSString * key in list2) {
+        if ( lowestNumber > [dict[key]intValue])
+        {
+            lowestNumber = [dict[key]intValue];
+        }
+    }
+    
+    
+    for (NSString * key2 in list2) {
+        dict[key2] = [NSNumber numberWithInteger:-([dict[key2]intValue] - lowestNumber) ];
+    }
+    
+    
+    PXPLog(@"Player Feed offsets:");
+    
+    NSArray * allKey = [dict allKeys];
+    allKey = [allKey sortedArrayUsingSelector:@selector(compare:)];
+    
+    [allKey enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PXPLog(@"  %@ %@",obj,dict[obj]);
+    }];
+    
+    
+    
+    
+    Encoder * enc = self.encoder;
+    Event * liveEvent = enc.liveEvent;
+    
+    if (liveEvent) {
+        NSArray         * kList     = [enc.liveEvent.feeds allKeys];
+        NSDictionary    * dictFeeds = enc.liveEvent.feeds;
+        
+        for (NSString * key3 in list2) {
+            
+            NSString * source   = [key3 substringToIndex:2];
+            NSString * quality  = [key3 substringFromIndex:2];
+            
+            NSString * makeKey = [NSString stringWithFormat:@"s_%@",source];
+            Feed * feed = dictFeeds[makeKey];
+            
+            [feed.offsetDict setObject:dict[key3] forKey:quality];
+            
+            
+            NSLog(@"");
+         }
+        
+        
+    }
+    
+    
+    
+   
+    
+    [super parseDataToEncoder:data];
+}
+@end

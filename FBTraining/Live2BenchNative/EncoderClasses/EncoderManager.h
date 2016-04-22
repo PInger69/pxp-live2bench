@@ -17,7 +17,7 @@
 #import "LocalMediaManager.h"
 #import "BonjourModule.h"
 #import "CustomAlertControllerQueue.h"
-
+#import "FeedMapController.h"
 @class Encoder;
 
 
@@ -71,7 +71,7 @@
 @property (nonatomic,strong)            id <EncoderProtocol>    primaryEncoder;
 
 @property (nonatomic,strong)            Encoder                 * deviceEncoder;
-
+@property (nonatomic,weak)              FeedMapController       * feedMapController;
 
 #pragma mark - Encoder Manager Methods
 

@@ -1330,10 +1330,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                          context:ViewControllerCurrentItemObservationContext];
         
         /* Observe the AVPlayer "rate" property to update the scrubber control. */
-        [self.avPlayer addObserver:self
-                      forKeyPath:@"rate"
-                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                         context:ViewControllerRateObservationContext];
+//        [self.avPlayer addObserver:self
+//                      forKeyPath:@"rate"
+//                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+//                         context:ViewControllerRateObservationContext];
         self.avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndPause;
     }
     

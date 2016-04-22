@@ -18,7 +18,7 @@
 @synthesize durationID = _durationID;
 @synthesize isOpen      =_isOpen;
 @synthesize mode        = _mode;
-
+@synthesize isBusy      = _isBusy;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -108,16 +108,22 @@
         switch (mode) {
             case SideTagButtonModeDisable :
                 [self setEnabled:false];
+                self.alpha = 1;
                 break;
             case SideTagButtonModeRegular :
                 prevMode = SideTagButtonModeRegular;
                 _durationID = nil;
+                self.alpha = 1;
+                self.userInteractionEnabled = YES;
                 [self setEnabled:true];
                 break;
             case SideTagButtonModeToggle :
                 prevMode = SideTagButtonModeToggle;
+                self.alpha = 1;
+                self.userInteractionEnabled = YES;
                 [self setEnabled:true];
                 break;
+             
             default:
                 break;
         }
@@ -142,8 +148,24 @@
     _isOpen = isOpen;
 }
 
+-(void)setIsBusy:(BOOL)isBusy
+{
+    _isBusy = isBusy;
+    if (_isBusy) {
+        self.alpha = 0.6;
+        self.userInteractionEnabled = NO;
+    } else {
+        self.alpha = 1;
+        self.userInteractionEnabled = YES;
+    }
+}
 
 
+
+-(BOOL)isBusy
+{
+    return _isBusy;
+}
 
 
 @end

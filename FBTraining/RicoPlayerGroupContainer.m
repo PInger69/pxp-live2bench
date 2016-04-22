@@ -8,7 +8,7 @@
 //
 
 #import "RicoPlayerGroupContainer.h"
-
+#import "RicoPlayer.h"
 // This holds x players and when resized it change the size of all the subviews
 
 
@@ -42,31 +42,38 @@
         NSUInteger count =        [self.subviews count];
 
         
-        // add necessary views
-//        while (count < rows * columns) {
-//            PxpPlayerSingleView *playerView = [[PxpPlayerSingleView alloc] init];
-//            [self.playerViews addObject:playerView];
-//            [self.containerView addSubview:playerView];
-//            
-//            [self.delegate playerView:playerView didLoadInGridView:self];
-//        }
+
         
         // update views
+        NSUInteger i=0;
         CGFloat width = self.bounds.size.width / columns;
         CGFloat height = self.bounds.size.height / rows;
         
         for (NSUInteger r = 0; r < rows; r++) {
             for (NSUInteger c = 0; c < columns; c++) {
                 
-                NSUInteger i = (c * rows + r) % (rows * columns);
-                if ([self.subviews count]<=i) {
+                
+                        //                i = (c * rows + r) % (rows * columns);
+                if (i>=[self.subviews count]) {
                     return;
                 }
+                
+                
+
+                
                 UIView *playerView = self.subviews[i];
+                
+                
                 playerView.hidden = NO;
-                playerView.frame = CGRectMake(c * width, r * height, width, height);
+                
+                CGFloat x = c * width;
+                CGFloat y = r * height;
+   
+                
+                
+                playerView.frame = CGRectMake(x ,y , width, height);
                 NSLog(@"");
-//                playerView.player = self.dataSource ? self.context.players[[self.dataSource contextIndexForPlayerGridView:self forRow:r column:c]] : self.context.players.firstObject;
+                i = i + 1;
             }
         }
     } else {

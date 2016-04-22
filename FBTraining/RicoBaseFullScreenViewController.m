@@ -128,23 +128,11 @@
             _targetView = _movingView.superview;
             _targetIndex = [_targetView.subviews indexOfObject:_movingView];
             _targetFrame = _movingView.frame;
-
-            
             [_movingView removeFromSuperview];
-
             self.view.frame = _targetFrame;
             _movingView.frame = _playerContainer.bounds;
-
             [_playerContainer addSubview:_movingView];
-         
-            
             self.view.hidden = NO;
-            
-//            if (self.delegate) {
-//                [self.delegate onFullScreenShow:self];
-//            }
-            
-            
         }
         
         [self.view layoutIfNeeded];
@@ -166,12 +154,14 @@
                     _movingView.frame = _targetFrame;
                     [_targetView insertSubview:_movingView atIndex:_targetIndex];
                 }
-//                [self.parentViewController addChildViewController:_playerViewController];
+                self.view.hidden = YES;
+                _fullscreen = NO;
                 if (self.delegate) {
                     [self.delegate onFullScreenLeave:self];
                 }
-                self.view.hidden = YES;
+                
             } else {
+                _fullscreen = YES;
                 if (self.delegate) {
                     [self.delegate onFullScreenShow:self];
                 }

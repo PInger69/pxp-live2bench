@@ -9,7 +9,7 @@
 		<key>EncoderControls</key>
 		<true/>
 		<key>Welcome</key>
-		<true/>
+		<false/>
 		<key>Preference</key>
 		<true/>
 		<key>BitRate</key>
@@ -17,7 +17,7 @@
 		<key>ScreenMirroring</key>
 		<true/>
 		<key>ToastObserver</key>
-		<true/>
+		<false/>
 		<key>Alerts</key>
 		<false/>
 		<key>Information</key>

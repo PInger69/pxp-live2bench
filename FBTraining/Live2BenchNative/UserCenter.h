@@ -62,6 +62,14 @@
 -(id<ActionListItem>)logoutAction;
 -(id<ActionListItem>)checkLoginPlistAction;
 
+-(NSDictionary*)namedCamerasByUser;
+-(void)addCameraName:(NSString*)name camID:(NSString*)camID;
+
+-(void)savePickByCameraLocation:(NSString*)camLocation pick:(NSString*)userPick;
+-(NSString*)getPickByCameraLocation:(NSString*)camLocation;
+
+
+
 
 
 

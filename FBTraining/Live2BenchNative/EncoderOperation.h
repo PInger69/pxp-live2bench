@@ -68,14 +68,20 @@
 @interface EncoderOperationGetPastEvents : EncoderOperation
 @end
 
+@interface EncoderOperationGetEventTags : EncoderOperation
+@end
+
 
 @interface EncoderOperationDeleteEvent : EncoderOperation
 @end
+
+
 
 @interface EncoderOperationModTag : EncoderOperation
 @property (nonatomic,weak) Tag * tag;
 - (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag;
 @end
+
 
 @interface EncoderOperationMakeMP4fromTag : EncoderOperation
 @end
@@ -83,8 +89,15 @@
 @interface EncoderOperationMakeTag : EncoderOperation
 @end
 
-@interface EncoderOperationCameraData : EncoderOperation
+
+@interface EncoderOperationMakeTelestration : EncoderOperation
+
 @end
 
 
+@interface EncoderOperationCameraData : EncoderOperation
+@end
+
+@interface EncoderOperationCameraStartTimes : EncoderOperation
+@end
 

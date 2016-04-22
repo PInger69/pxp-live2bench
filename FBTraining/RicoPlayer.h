@@ -11,7 +11,7 @@
 #import <AVFoundation/AVPlayerItem.h>
 #import "Feed.h"
 #import "PxpReadyPlayerItemOperation.h"
-#import "RicoPreRollOperation.h"
+
 #import "RicoOperations.h"
 #import "RicoView.h"
 
@@ -59,7 +59,6 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 
 @property (nonatomic, assign)           CMTimeRange         range;
 @property (nonatomic, assign)           CMTime              offsetTime;// this will offset all seektimes and 
-
 @property (nonatomic, strong)           NSMutableArray      * linkedRenderViews;
 
 
@@ -67,6 +66,7 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 
 -(NSOperation*)play;
 -(NSOperation*)pause;
+-(NSOperation*)preroll:(float)rate;
 -(NSOperation*)loadFeed:(Feed *)feed;
 -(NSOperation*)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 

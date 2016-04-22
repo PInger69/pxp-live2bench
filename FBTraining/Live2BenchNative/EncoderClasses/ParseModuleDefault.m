@@ -267,7 +267,7 @@
                 
                 //                [teamTempHIDPool setObject:owningTeam forKey:tHID];
                 //                NSLog(@"Player does not have a team, Making a new one");
-                NSLog(@"Player does not have a team %@",tHID);
+//                NSLog(@"Player does not have a team %@",tHID);
             }
             [owningTeam addPlayer:aPlayer];
             

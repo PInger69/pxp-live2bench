@@ -82,6 +82,7 @@
 // Rico Player Notif
 #define NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE @"NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE"
 
+#define NOTIF_RELOAD_PLAYERS                @"NOTIF_RELOAD_PLAYERS"
 // Log Comments
 
 #define LOG_HASH                            @"######################################################"

@@ -16,7 +16,9 @@
 typedef NS_ENUM (NSInteger, RicoPlayerState){
     RicoPlayerStateLive,           // Live means that the bar will not update the position of the head and endtime is fixed to live
     RicoPlayerStateNormal,         // The bar will update normally
-    RicoPlayerStateRange,          // The player will be Primarty color with cancel button
+    RicoPlayerStateRange,// The player will be Primarty color with cancel button
+    RicoPlayerStateTelestrationStill,
+    RicoPlayerStateTelestrationAnimated,
     RicoPlayerStateDisabled        // bar will not respond and will look inactive
 };
 

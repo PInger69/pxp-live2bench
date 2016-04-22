@@ -94,31 +94,31 @@
     const CGFloat contentWidth = _contentView.bounds.size.width, contentHeight = _contentView.bounds.size.height;
     
     // player
-    const CGFloat playerWidth = contentWidth, playerHeight = playerWidth / (16.0 / 9.0);
-    const CGFloat playerX = 0.0, playerY = (contentHeight - playerHeight) / 2.0;
+    const CGFloat playerWidth   = contentWidth, playerHeight = playerWidth / (16.0 / 9.0);
+    const CGFloat playerX       = 0.0, playerY = (contentHeight - playerHeight) / 2.0;
     
-    _playerContainer.frame = CGRectMake(playerX, playerY, playerWidth, playerHeight);
-    _topBar.frame = CGRectMake(0.0, 0.0, playerWidth, playerY);
-    _bottomBar.frame = CGRectMake(0.0, playerY + playerHeight, playerWidth, playerY);
+    _playerContainer.frame      = CGRectMake(playerX, playerY, playerWidth, playerHeight);
+    _topBar.frame               = CGRectMake(0.0, 0.0, playerWidth, playerY);
+    _bottomBar.frame            = CGRectMake(0.0, playerY + playerHeight, playerWidth, playerY);
     
     if ([_playerViewController.view isDescendantOfView:_playerContainer]) {
         _playerViewController.frame = _playerContainer.bounds;
     }
-    _controlBar.frame = CGRectMake(0.0,playerY + playerHeight-45, playerWidth, 45);
+    _controlBar.frame           = CGRectMake(0.0,playerY + playerHeight-45, playerWidth, 45);
     // button size
-    const CGFloat buttonHeight = contentHeight - playerY - playerHeight;
+    const CGFloat buttonHeight  = contentHeight - playerY - playerHeight;
     
     // seek buttons
-    const CGFloat seekButtonY = playerY + playerHeight;
+    const CGFloat seekButtonY   = playerY + playerHeight;
     
-    _backwardSeekButton.frame = CGRectMake(1.0 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
-    _forwardSeekButton.frame = CGRectMake(contentWidth - buttonHeight - 1.0 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
+    _backwardSeekButton.frame   = CGRectMake(1.0 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
+    _forwardSeekButton.frame    = CGRectMake(contentWidth - buttonHeight - 1.0 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
     
     // bottom bar buttons
-    const CGFloat margin = 8.0;
+    const CGFloat margin        = 8.0;
     
-    _slomoButton.frame = CGRectMake(2.5 * buttonHeight + margin, margin, 1.5 * buttonHeight - 2.0 * margin, buttonHeight - 2.0 * margin);
-    _fullscreenButton.frame = CGRectMake(contentWidth - buttonHeight - 2.75 * buttonHeight + margin, margin, buttonHeight - 2.0 * margin, buttonHeight - 2.0 * margin);
+    _slomoButton.frame          = CGRectMake(2.5 * buttonHeight + margin, margin, 1.5 * buttonHeight - 2.0 * margin, buttonHeight - 2.0 * margin);
+    _fullscreenButton.frame     = CGRectMake(contentWidth - buttonHeight - 2.75 * buttonHeight + margin, margin, buttonHeight - 2.0 * margin, buttonHeight - 2.0 * margin);
 }
 
 

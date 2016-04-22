@@ -13,7 +13,7 @@
 #import "Event.h"
 #import "ActionListItem.h"
 #import "EncoderParseProtocol.h"
-
+#import "CameraResource.h"
 
 @class EncoderManager;
 
@@ -66,7 +66,7 @@
     EncoderStatusMonitor    * statusMonitor;
     NSDictionary            * rawEncoderData; // Data from getpastevents
 }
-
+@property (nonatomic,strong) CameraResource * cameraResource;
 @property (nonatomic,assign )  BOOL            authenticated;
 @property (nonatomic,strong)    PxpEventContext * eventContext;
 @property (nonatomic,strong)    NSString        * name;
@@ -88,6 +88,7 @@
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
 
+
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 
@@ -99,6 +100,7 @@
 
 @property (nonatomic,strong)    NSString        *urlProtocol;//http
 
+@property (nonatomic,strong)    NSMutableSet    *postedTagIDs;
 
 @property (nonatomic,strong)    id <EncoderParseProtocol> parseModule;
 

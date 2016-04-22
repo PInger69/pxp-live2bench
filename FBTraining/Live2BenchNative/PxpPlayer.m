@@ -86,7 +86,7 @@ static CMClockRef _pxpPlayerMasterClock;
     _currentItemObserverContext = &_currentItemObserverContext;
     
     [self addObserver:self forKeyPath:@"currentItem.status" options:0 context:_statusObserverContext];
-    [self addObserver:self forKeyPath:@"rate" options:0 context:_rateObserverContext];
+//    [self addObserver:self forKeyPath:@"rate" options:0 context:_rateObserverContext];
     [self addObserver:self forKeyPath:@"currentItem.seekableTimeRanges" options:0 context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(motionObserved:) name:NOTIF_MOTION_ALARM object:nil];
@@ -130,7 +130,7 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"currentItem.status" context:_statusObserverContext];
-    [self removeObserver:self forKeyPath:@"rate" context:_rateObserverContext];
+//    [self removeObserver:self forKeyPath:@"rate" context:_rateObserverContext];
     [self removeObserver:self forKeyPath:@"currentItem.seekableTimeRanges" context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_MOTION_ALARM object:nil];

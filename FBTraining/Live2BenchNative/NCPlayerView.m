@@ -173,13 +173,13 @@
 }
 
 - (void)setPlayer:(nullable NCPlayer *)player {
-    [self.player removeObserver:self forKeyPath:@"rate" context:_rateObserverContext];
+//    [self.player removeObserver:self forKeyPath:@"rate" context:_rateObserverContext];
     [self.player removeObserver:self forKeyPath:@"loopRange" context:_rangeObserverContext];
     [self.player removeTimeObserver:self.periodicObserver];
     self.periodicObserver = nil;
     
     self.periodicObserver = [player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:self.periodicObserverBlock];
-    [player addObserver:self forKeyPath:@"rate" options:0 context:_rateObserverContext];
+//    [player addObserver:self forKeyPath:@"rate" options:0 context:_rateObserverContext];
     [player addObserver:self forKeyPath:@"loopRange" options:0 context:_rangeObserverContext];
     
     self.layer.player = player;

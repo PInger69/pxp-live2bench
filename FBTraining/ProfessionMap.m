@@ -58,7 +58,7 @@ static NSDictionary * _professionMapData;
     return (Profession*) _professionMapData[professionName];
 }
 
-
+#pragma mark -
 +(Profession*)buildHockey
 {
 
@@ -100,7 +100,11 @@ static NSDictionary * _professionMapData;
     [hockey setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
         
-        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
+        
+         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
         
         
         
@@ -116,6 +120,7 @@ static NSDictionary * _professionMapData;
     return hockey;
 }
 
+#pragma mark -
 +(Profession*)buildSoccer
 {
 
@@ -138,7 +143,9 @@ static NSDictionary * _professionMapData;
     // this is for extra styling for
     [soccer setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
-        
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
         
         
@@ -157,7 +164,7 @@ static NSDictionary * _professionMapData;
     
     return soccer;
 }
-
+#pragma mark -
 +(Profession*)buildFootball
 {
     
@@ -170,7 +177,9 @@ static NSDictionary * _professionMapData;
     // this is for extra styling for
     [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
-        
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Quarter: %d",[tagForData.period intValue]+1];
         
     }];
@@ -186,6 +195,7 @@ static NSDictionary * _professionMapData;
     return profession;
 }
 
+#pragma mark -
 +(Profession*)buildRugby
 {
     
@@ -198,7 +208,9 @@ static NSDictionary * _professionMapData;
     // this is for extra styling for
     [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
-        
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
         
     }];
@@ -215,6 +227,7 @@ static NSDictionary * _professionMapData;
     return profession;
 }
 
+#pragma mark -
 +(Profession*)buildFootballTraining
 {
     
@@ -235,7 +248,9 @@ static NSDictionary * _professionMapData;
     // this is for extra styling for
     [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
-        
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
         
         
@@ -251,6 +266,7 @@ static NSDictionary * _professionMapData;
     return profession;
 }
 
+#pragma mark -
 +(Profession*)buildCricket
 {
     
@@ -271,7 +287,9 @@ static NSDictionary * _professionMapData;
     // this is for extra styling for
     [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
-        
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
         
         
@@ -287,6 +305,7 @@ static NSDictionary * _professionMapData;
     return profession;
 }
 
+#pragma mark -
 +(Profession*)buildBlank
 {
     

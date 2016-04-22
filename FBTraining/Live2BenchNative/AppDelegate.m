@@ -184,8 +184,8 @@
                                     }];
     [alert addAction:cancelButtons];
     
-    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-    
+//    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+     [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:self.tabBarController animated:YES style:AlertImportant completion:nil];
     lostWifiIsRun = true;
     [_encoderManager declareCurrentEvent:nil];
 }

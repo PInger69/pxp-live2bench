@@ -10,8 +10,13 @@
 
 @interface CameraDetails : NSObject
 
-@property (nonatomic, readonly)     NSString        *name;
+@property (nonatomic, strong)     NSString        *name;
+@property (nonatomic, readonly)     NSString        *cameraID;
+@property (nonatomic, readonly)     NSString        *ipAddress;
+@property (nonatomic, readonly)     NSString        *source;
 @property (nonatomic, readonly)     NSString        *type;
+@property (nonatomic, strong)       NSString        *recommendedPositionDual;
+@property (nonatomic, strong)       NSString        *recommendedPositionQuad;
 @property (nonatomic, readonly)     NSNumber        *fps;
 @property (nonatomic, weak)         Encoder         *encoder;
 

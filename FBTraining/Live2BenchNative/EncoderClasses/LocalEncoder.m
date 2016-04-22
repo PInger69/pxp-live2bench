@@ -797,14 +797,42 @@ static LocalEncoder * instance;
         
         
         [self modTag:dict];
+    } else if ([operation isKindOfClass:[EncoderOperationMakeTelestration class]]) { // NOTIF_CREATE_TELE_TAG
+        NSLog(@"TELE");
+        NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:operation.argData];
+        
+        NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+        
+        // This is the starndard info that is collected from the encoder
+        NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                         @{
+                                           @"event"         : self.event.name,
+                                           @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                           @"user"          : [UserCenter getInstance].userHID,
+                                           @"time"          : tagTime,
+                                           @"name"          : @"Telestration",
+                                           @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                           @"type"          : @"4"
+                                           }];
+        
+        [tagData addEntriesFromDictionary:data];
+        
+        if ([[data objectForKey:@"type"] integerValue] == TagTypeOpenDuration) {
+            [tagData addEntriesFromDictionary:@{ @"type": [data objectForKey:@"type"]}];
+        }
+        
+     
+
+        [self teleTag:tagData];
+        
+        
     }
+    
 //    else if ([operation isKindOfClass:[EncoderOperation class]]) { // NOTIF_DELETE_TAG
 //        
 //    } else if ([operation isKindOfClass:[EncoderOperation class]]) { // NOTIF_EM_DOWNLOAD_CLIP
 //        
-//    } else if ([operation isKindOfClass:[EncoderOperation class]]) { // NOTIF_CREATE_TELE_TAG
-//        
-//    }
+
     
     
     
