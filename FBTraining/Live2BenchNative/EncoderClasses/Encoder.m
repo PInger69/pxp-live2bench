@@ -2288,7 +2288,7 @@
                     
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
-                        
+                        anEvent.cameraResource = self.cameraResource; // this is to replace the camera resource that was made with feed data
                         if ([_allEvents objectForKey:anEvent.name]){
                             NSLog(@" *** Is already on encoder %@",anEvent.name);
                         } else {

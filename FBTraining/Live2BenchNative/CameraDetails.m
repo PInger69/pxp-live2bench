@@ -19,6 +19,7 @@
 @synthesize type        = _type;
 @synthesize fps         = _fps;
 @synthesize ipAddress   = _ipAddress;
+@synthesize rtsp        =_rtsp;
 
 -(id)initWithDictionary:(NSDictionary *)dict encoderOwner:(Encoder *)encoder
 {
@@ -34,6 +35,7 @@
         _cameraID       = ([details objectForKey:@"mac"])?  [details objectForKey:@"mac"]:@"";
         _ipAddress      = ([details objectForKey:@"ip"])?   [details objectForKey:@"ip"]:@"######";
         _name           = ([details objectForKey:@"name"])? [details objectForKey:@"name"]:_cameraID;
+        _rtsp            = ([details objectForKey:@"url"])? [details objectForKey:@"url"]:@"";
     }
     return self;
 }

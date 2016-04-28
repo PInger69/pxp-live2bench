@@ -13,6 +13,7 @@
 #import "FeedMapController.h"
 #import "NameCameraCellView.h"
 #import "EncoderManager.h"
+#import "NullCameraDetails.h"
 
 #define BOX_WIDTH 615
 
@@ -100,8 +101,12 @@
     
     for (NSInteger  i=0; i<[camIdList count]; i++) {
         
-        NameCameraCellView * cell       = [NameCameraCellView new];
         CameraDetails * details         = camIdList[i];
+        
+        if ([details isKindOfClass:[NullCameraDetails class]]) continue;
+        
+        NameCameraCellView * cell       = [NameCameraCellView new];
+        
         cell.camIDLabel.text            = details.cameraID;
         cell.UserInputField.text        = details.name;
         cell.UserInputField.delegate    = self;
@@ -161,9 +166,10 @@
             NSString * camID = c.cameraID;
             
             if ([camID isEqualToString:loc]) {
-                  [p selectRow:i inComponent:0 animated:NO];
+                [p selectRow:i inComponent:0 animated:NO];
                 [p reloadAllComponents];
-                
+                fmd.cameraDetails = c;
+                [fmd refresh];
                 [fmc.camDataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     CameraDetails * cc = obj;
                     NSLog(@"%@",cc.name);
@@ -173,28 +179,31 @@
             }
         }
         
-        
-        
+
+    
       
     };
     
     
-    NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4,kTopDual,kBottomDual];
+    NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];//,kTopDual,kBottomDual
     
     for (NSInteger i =0; i<[list count]; i++) {
         NSString * k = list[i];
         FeedMapDisplay* fmd = self.feedMapController.feedMapDisplaysDict[k];
         [self.stackViewTop addArrangedSubview:fmd];
         preSelect(fmd,k);
+         [fmd refresh];
     }
-
+    
     self.stackViewTop.axis      = UILayoutConstraintAxisVertical;
     self.stackViewTop.alignment = UIStackViewAlignmentTop;
     self.stackViewTop.spacing   = 3;
     
+  [self.stackViewTop addArrangedSubview:[UIView new]];
     scrollView.contentSize = CGSizeMake(BOX_WIDTH, self.stackViewTop.frame.size.height);
     [scrollView addSubview:self.stackViewTop];
     [self.cameraNameStackView addArrangedSubview:scrollView];
+    
 }
 
 
@@ -205,8 +214,6 @@
     [textField resignFirstResponder];
    
     if (textField.tag == 2) {
-    
-        
         [self.cameraNameStackView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             if ([obj isKindOfClass:[NameCameraCellView class]]){
@@ -244,12 +251,19 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     if (self.hasUserInteracted && [EncoderManager getInstance].liveEvent){
-        
         Encoder * enc = (Encoder *)[EncoderManager getInstance].liveEvent.parentEncoder;
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:enc];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_RELOAD_PLAYERS object:enc];
-        
     }
+    
+    NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];//,kTopDual,kBottomDual
+    
+    for (NSInteger i =0; i<[list count]; i++) {
+        NSString * k = list[i];
+        FeedMapDisplay* fmd = self.feedMapController.feedMapDisplaysDict[k];
+        [fmd stop];
+    }
+    
+    
     [super viewDidDisappear:animated];
 }
 

@@ -15,7 +15,6 @@ UIImageView *debug;
     NSString *string;
 }
 
-@property UIImageView *debug;
-@property NSString *string;
+
 
 @end

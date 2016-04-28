@@ -14,6 +14,9 @@
 @class Feed;
 
 @interface CameraResource : NSObject
+
+@property (nonatomic,strong) NSMutableArray * cameraDataPool;
+
 - (instancetype)initEncoder:(Encoder*)encoder;
 -(void)addCameraDetails:(CameraDetails*)cameraDetails;
 -(Feed*)getFeedByLocation:(NSString*)cameraLocation event:(Event*)event;

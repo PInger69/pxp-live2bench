@@ -46,6 +46,7 @@
 // Preferences
 @property (atomic,assign) NSInteger              * preferenceLiveBuffer;
 
+@property (nonatomic,strong) NSString               * l2bMode;
 
 
 +(instancetype)getInstance;

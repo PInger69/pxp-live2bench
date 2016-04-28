@@ -12,17 +12,14 @@
 #import "StreamViewVideoKit.h"
 @interface FeedMapDisplay ()
 
-
-
-
 @end
 
 
 @implementation FeedMapDisplay
 
 
-@synthesize cameraDetails = _cameraDetails;
-@synthesize pickedCamID = _pickedCamID;
+@synthesize cameraDetails   = _cameraDetails;
+@synthesize pickedCamID     = _pickedCamID;
 
 - (instancetype)init
 {
@@ -36,12 +33,8 @@
         [self.streamViewPlaceHolder removeFromSuperview];
         [self addSubview:self.streamViewController.view];
         self.sourcePicker.delegate      = self;
-
-        self.offset = 0.0;
-        
-//        [self setBackgroundColor:[UIColor clearColor]];
-//        self.layer.cornerRadius = 3;
-        self.view.layer.cornerRadius = 3;
+        self.offset                     = 0.0;
+        self.view.layer.cornerRadius    = 3;
         [self.view setBackgroundColor:[UIColor whiteColor]];
 
     }
@@ -68,8 +61,6 @@
 
         [self.heightAnchor constraintEqualToConstant:self.frame.size.height].active = YES;
         [self.widthAnchor constraintEqualToConstant: self.frame.size.width].active  = YES;
-        
-//         self.data = @[@{@"src":@"A",@"url":@"http:A"},@{@"src":@"B",@"url":@"http:B"},@{@"src":@"C",@"url":@"http:C"},@{@"src":@"D",@"url":@"http:D"}];
        self.layer.cornerRadius = 3;
     }
     return self;
@@ -132,7 +123,19 @@
     
     
     [[UserCenter getInstance]savePickByCameraLocation:self.feedMapLocation pick:self.cameraDetails.cameraID];
-    if (self.streamViewController) [self.streamViewController url:@""];
+    if (self.streamViewController) [self.streamViewController url:cameraDtails.rtsp];
+}
+
+-(void)refresh
+{
+//    [[UserCenter getInstance]savePickByCameraLocation:self.feedMapLocation pick:self.cameraDetails.cameraID];
+    if (self.streamViewController) [self.streamViewController url:self.cameraDetails.rtsp];
+
+}
+
+-(void)stop
+{
+    if (self.streamViewController) [self.streamViewController clear];
 }
 
 -(NSString*)currentPick

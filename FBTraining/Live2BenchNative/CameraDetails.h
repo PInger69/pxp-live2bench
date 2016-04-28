@@ -15,6 +15,7 @@
 @property (nonatomic, readonly)     NSString        *ipAddress;
 @property (nonatomic, readonly)     NSString        *source;
 @property (nonatomic, readonly)     NSString        *type;
+@property (nonatomic, readonly)     NSString        *rtsp;
 @property (nonatomic, strong)       NSString        *recommendedPositionDual;
 @property (nonatomic, strong)       NSString        *recommendedPositionQuad;
 @property (nonatomic, readonly)     NSNumber        *fps;

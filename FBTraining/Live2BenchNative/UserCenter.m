@@ -692,5 +692,12 @@ static UserCenter * instance;
 }
 
 
+-(NSString*)l2bMode
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString * mode =  [defaults objectForKey:@"mode"];
+    return mode;
+}
+
 
 @end

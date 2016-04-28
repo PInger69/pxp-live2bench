@@ -408,16 +408,13 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     // Clear all Queued operations
     [self.operationQueue cancelAllOperations];
     self.operationQueue.suspended = NO;
-//    self.operationQueue = nil;
-//    self.operationQueue = [NSOperationQueue new];
+
     // remove old player
     if (_avPlayer){
         [self removePlayerTimeObserver];
         [self.avPlayer pause];
         [self.avPlayer.currentItem cancelPendingSeeks];
         [self.avPlayer.currentItem.asset cancelLoading];
-        
-
         [_avPlayer.currentItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&itemContext];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
         _avPlayer               = nil;

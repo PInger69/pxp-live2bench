@@ -234,6 +234,28 @@
 		D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */; };
 		D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEF1AAF283C002D682D /* AccountsViewController.m */; };
 		D73CDC4A1CC7E3570006AE72 /* CameraResource.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDC491CC7E3570006AE72 /* CameraResource.m */; };
+		D73CDD4B1CCA74A70006AE72 /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D73CDC4D1CCA74A60006AE72 /* cmdutils.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD4C1CCA74A80006AE72 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDCCD1CCA74A60006AE72 /* libavcodec.a */; };
+		D73CDD4D1CCA74A80006AE72 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDCCE1CCA74A60006AE72 /* libavformat.a */; };
+		D73CDD4E1CCA74A80006AE72 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDCCF1CCA74A60006AE72 /* libavutil.a */; };
+		D73CDD4F1CCA74A80006AE72 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDCD01CCA74A60006AE72 /* libswresample.a */; };
+		D73CDD501CCA74A80006AE72 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDCD11CCA74A60006AE72 /* libswscale.a */; };
+		D73CDD511CCA74A80006AE72 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD211CCA74A70006AE72 /* libcrypto.a */; };
+		D73CDD521CCA74A80006AE72 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD221CCA74A70006AE72 /* libssl.a */; };
+		D73CDD531CCA74A80006AE72 /* VKReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD251CCA74A70006AE72 /* VKReachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD541CCA74A80006AE72 /* VKPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD281CCA74A70006AE72 /* VKPlayerController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD551CCA74A80006AE72 /* VKPlayerControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD2A1CCA74A70006AE72 /* VKPlayerControllerBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD561CCA74A80006AE72 /* VideoKitCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD2C1CCA74A70006AE72 /* VideoKitCore.a */; };
+		D73CDD571CCA74A80006AE72 /* VKAVDecodeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD2F1CCA74A70006AE72 /* VKAVDecodeManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD5E1CCA74A80006AE72 /* license-form.plist in Resources */ = {isa = PBXBuildFile; fileRef = D73CDD411CCA74A70006AE72 /* license-form.plist */; };
+		D73CDD5F1CCA74A80006AE72 /* VKPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD441CCA74A70006AE72 /* VKPlayerViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD601CCA74A80006AE72 /* VKGLES2View.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD471CCA74A70006AE72 /* VKGLES2View.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD611CCA74A80006AE72 /* VKStreamInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDD491CCA74A70006AE72 /* VKStreamInfoView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D73CDD621CCA74A80006AE72 /* VKImages.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D73CDD4A1CCA74A70006AE72 /* VKImages.bundle */; };
+		D73CDD641CCA785E0006AE72 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD631CCA785E0006AE72 /* libz.tbd */; };
+		D73CDD661CCA78750006AE72 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD651CCA78750006AE72 /* libiconv.tbd */; };
+		D73CDD681CCA78A60006AE72 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD671CCA78A60006AE72 /* OpenGLES.framework */; };
+		D73CDD6A1CCA78BA0006AE72 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD691CCA78BA0006AE72 /* AudioToolbox.framework */; };
 		D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */; };
 		D73FE3331A41DBF000341D57 /* L2BFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE3321A41DBF000341D57 /* L2BFullScreenViewController.m */; };
 		D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7424B96183FEA5A00034F05 /* UploadButton.m */; };
@@ -452,6 +474,8 @@
 		D7A2E5F119B7711E00022795 /* FullVideoBarMyClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A2E5F019B7711E00022795 /* FullVideoBarMyClipViewController.m */; };
 		D7A391721A6959DF00BFD353 /* ActionList.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A391711A6959DF00BFD353 /* ActionList.m */; };
 		D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A391841A6EA23E00BFD353 /* MultiPip.m */; };
+		D7A4406B1CD107C900DC5CC1 /* NullCameraDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A4406A1CD107C700DC5CC1 /* NullCameraDetails.m */; };
+		D7A440941CD2856100DC5CC1 /* CameraResourceNonLive.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A440931CD2856100DC5CC1 /* CameraResourceNonLive.m */; };
 		D7A49124170CAB850070A7DB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A49123170CAB850070A7DB /* MessageUI.framework */; };
 		D7A5E5A91A9F7A1F00E3D4DB /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A5E5A81A9F7A1F00E3D4DB /* DownloadItem.m */; };
 		D7A673DA180EC8A1001C68D1 /* BookmarkViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A673D7180EC8A1001C68D1 /* BookmarkViewCell.m */; };
@@ -1004,6 +1028,45 @@
 		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
 		D73CDC481CC7E3570006AE72 /* CameraResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraResource.h; sourceTree = "<group>"; };
 		D73CDC491CC7E3570006AE72 /* CameraResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraResource.m; sourceTree = "<group>"; };
+		D73CDC4D1CCA74A60006AE72 /* cmdutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmdutils.c; sourceTree = "<group>"; };
+		D73CDCCD1CCA74A60006AE72 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavcodec.a; sourceTree = "<group>"; };
+		D73CDCCE1CCA74A60006AE72 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavformat.a; sourceTree = "<group>"; };
+		D73CDCCF1CCA74A60006AE72 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
+		D73CDCD01CCA74A60006AE72 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswresample.a; sourceTree = "<group>"; };
+		D73CDCD11CCA74A60006AE72 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswscale.a; sourceTree = "<group>"; };
+		D73CDD211CCA74A70006AE72 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
+		D73CDD221CCA74A70006AE72 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
+		D73CDD241CCA74A70006AE72 /* VKReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKReachability.h; sourceTree = "<group>"; };
+		D73CDD251CCA74A70006AE72 /* VKReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKReachability.m; sourceTree = "<group>"; };
+		D73CDD271CCA74A70006AE72 /* VKPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKPlayerController.h; sourceTree = "<group>"; };
+		D73CDD281CCA74A70006AE72 /* VKPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKPlayerController.m; sourceTree = "<group>"; };
+		D73CDD291CCA74A70006AE72 /* VKPlayerControllerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKPlayerControllerBase.h; sourceTree = "<group>"; };
+		D73CDD2A1CCA74A70006AE72 /* VKPlayerControllerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKPlayerControllerBase.m; sourceTree = "<group>"; };
+		D73CDD2C1CCA74A70006AE72 /* VideoKitCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = VideoKitCore.a; sourceTree = "<group>"; };
+		D73CDD2D1CCA74A70006AE72 /* VKAudioDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKAudioDecoder.h; sourceTree = "<group>"; };
+		D73CDD2E1CCA74A70006AE72 /* VKAVDecodeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKAVDecodeManager.h; sourceTree = "<group>"; };
+		D73CDD2F1CCA74A70006AE72 /* VKAVDecodeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKAVDecodeManager.m; sourceTree = "<group>"; };
+		D73CDD301CCA74A70006AE72 /* VKClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKClock.h; sourceTree = "<group>"; };
+		D73CDD311CCA74A70006AE72 /* VKClockManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKClockManager.h; sourceTree = "<group>"; };
+		D73CDD321CCA74A70006AE72 /* VKDecodeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKDecodeManager.h; sourceTree = "<group>"; };
+		D73CDD331CCA74A70006AE72 /* VKDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKDecoder.h; sourceTree = "<group>"; };
+		D73CDD341CCA74A70006AE72 /* VKManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKManager.h; sourceTree = "<group>"; };
+		D73CDD351CCA74A70006AE72 /* VKPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKPacket.h; sourceTree = "<group>"; };
+		D73CDD361CCA74A70006AE72 /* VKQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKQueue.h; sourceTree = "<group>"; };
+		D73CDD371CCA74A70006AE72 /* VKVideoDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKVideoDecoder.h; sourceTree = "<group>"; };
+		D73CDD381CCA74A70006AE72 /* VKVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKVideoFrame.h; sourceTree = "<group>"; };
+		D73CDD411CCA74A70006AE72 /* license-form.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "license-form.plist"; sourceTree = "<group>"; };
+		D73CDD431CCA74A70006AE72 /* VKPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKPlayerViewController.h; sourceTree = "<group>"; };
+		D73CDD441CCA74A70006AE72 /* VKPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKPlayerViewController.m; sourceTree = "<group>"; };
+		D73CDD461CCA74A70006AE72 /* VKGLES2View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKGLES2View.h; sourceTree = "<group>"; };
+		D73CDD471CCA74A70006AE72 /* VKGLES2View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKGLES2View.m; sourceTree = "<group>"; };
+		D73CDD481CCA74A70006AE72 /* VKStreamInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VKStreamInfoView.h; sourceTree = "<group>"; };
+		D73CDD491CCA74A70006AE72 /* VKStreamInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VKStreamInfoView.m; sourceTree = "<group>"; };
+		D73CDD4A1CCA74A70006AE72 /* VKImages.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKImages.bundle; sourceTree = "<group>"; };
+		D73CDD631CCA785E0006AE72 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		D73CDD651CCA78750006AE72 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		D73CDD671CCA78A60006AE72 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		D73CDD691CCA78BA0006AE72 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderStatusMonitorProtocol.h; sourceTree = "<group>"; };
 		D73FE32E1A40882600341D57 /* L2BVideoBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BVideoBarViewController.h; path = Live2BenchTab/L2BVideoBarViewController.h; sourceTree = "<group>"; };
 		D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BVideoBarViewController.m; path = Live2BenchTab/L2BVideoBarViewController.m; sourceTree = "<group>"; };
@@ -1362,6 +1425,10 @@
 		D7A391711A6959DF00BFD353 /* ActionList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ActionList.m; path = Live2BenchNative/UtilityClasses/ActionList.m; sourceTree = "<group>"; };
 		D7A391831A6EA23E00BFD353 /* MultiPip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiPip.h; path = Live2BenchNative/MultiPip.h; sourceTree = "<group>"; };
 		D7A391841A6EA23E00BFD353 /* MultiPip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultiPip.m; path = Live2BenchNative/MultiPip.m; sourceTree = "<group>"; };
+		D7A440691CD107C600DC5CC1 /* NullCameraDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NullCameraDetails.h; sourceTree = "<group>"; };
+		D7A4406A1CD107C700DC5CC1 /* NullCameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NullCameraDetails.m; sourceTree = "<group>"; };
+		D7A440921CD2856000DC5CC1 /* CameraResourceNonLive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraResourceNonLive.h; sourceTree = "<group>"; };
+		D7A440931CD2856100DC5CC1 /* CameraResourceNonLive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraResourceNonLive.m; sourceTree = "<group>"; };
 		D7A49123170CAB850070A7DB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		D7A5E5A71A9F7A1F00E3D4DB /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadItem.h; path = Live2BenchNative/UtilityClasses/DownloadItem.h; sourceTree = "<group>"; };
 		D7A5E5A81A9F7A1F00E3D4DB /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadItem.m; path = Live2BenchNative/UtilityClasses/DownloadItem.m; sourceTree = "<group>"; };
@@ -1609,25 +1676,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D73CDD6A1CCA78BA0006AE72 /* AudioToolbox.framework in Frameworks */,
+				D73CDD681CCA78A60006AE72 /* OpenGLES.framework in Frameworks */,
+				D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */,
+				D73CDD661CCA78750006AE72 /* libiconv.tbd in Frameworks */,
+				D73CDD641CCA785E0006AE72 /* libz.tbd in Frameworks */,
 				D72FC94F1C457700007C15FF /* PhotosUI.framework in Frameworks */,
 				D72FC94D1C4576FF007C15FF /* Photos.framework in Frameworks */,
 				AA0FED2919587D6A001D25EB /* Foundation.framework in Frameworks */,
 				BD3105031835920A0094AE6D /* Security.framework in Frameworks */,
 				BDD2D2EE17ECB1F5004D5D9A /* Accelerate.framework in Frameworks */,
 				D7B5235B1760D4C100BF92EB /* CoreMedia.framework in Frameworks */,
+				D73CDD4E1CCA74A80006AE72 /* libavutil.a in Frameworks */,
 				D71B46B3170E1DCD00D402B5 /* AdSupport.framework in Frameworks */,
+				D73CDD511CCA74A80006AE72 /* libcrypto.a in Frameworks */,
 				D797CCF7170DB9D300A6E62B /* Accounts.framework in Frameworks */,
 				D797CCF5170DB9CB00A6E62B /* Social.framework in Frameworks */,
+				D73CDD501CCA74A80006AE72 /* libswscale.a in Frameworks */,
 				D7A49124170CAB850070A7DB /* MessageUI.framework in Frameworks */,
+				D73CDD4F1CCA74A80006AE72 /* libswresample.a in Frameworks */,
 				D7581EDF196342A50029C5DD /* Crashlytics.framework in Frameworks */,
 				D7A7B63A16D3CD1B000D3A84 /* MobileCoreServices.framework in Frameworks */,
+				D73CDD521CCA74A80006AE72 /* libssl.a in Frameworks */,
 				D7A7B63816D3CD0D000D3A84 /* CFNetwork.framework in Frameworks */,
+				D73CDD4D1CCA74A80006AE72 /* libavformat.a in Frameworks */,
 				D7B4865216CBF05C000AA878 /* ImageIO.framework in Frameworks */,
 				D7B0F39116C58DF6009D8099 /* CoreData.framework in Frameworks */,
 				D7B1EA2C16C5585400DD35B0 /* SystemConfiguration.framework in Frameworks */,
+				D73CDD561CCA74A80006AE72 /* VideoKitCore.a in Frameworks */,
 				D7A0681C16B041F0002A2892 /* QuartzCore.framework in Frameworks */,
 				D7A939B316ADD875006CBAB2 /* AVFoundation.framework in Frameworks */,
-				D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */,
+				D73CDD4C1CCA74A80006AE72 /* libavcodec.a in Frameworks */,
 				D7A9394416ADA65E006CBAB2 /* UIKit.framework in Frameworks */,
 				D7A9394816ADA65E006CBAB2 /* CoreGraphics.framework in Frameworks */,
 			);
@@ -2294,6 +2373,128 @@
 			name = BreadCrumbs;
 			sourceTree = "<group>";
 		};
+		D73CDC4B1CCA74A60006AE72 /* videokit */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDC4C1CCA74A60006AE72 /* 3rd-party */,
+				D73CDD261CCA74A70006AE72 /* Controller */,
+				D73CDD2B1CCA74A70006AE72 /* Core */,
+				D73CDD411CCA74A70006AE72 /* license-form.plist */,
+				D73CDD421CCA74A70006AE72 /* ViewController */,
+				D73CDD451CCA74A70006AE72 /* Views */,
+				D73CDD4A1CCA74A70006AE72 /* VKImages.bundle */,
+			);
+			path = videokit;
+			sourceTree = "<group>";
+		};
+		D73CDC4C1CCA74A60006AE72 /* 3rd-party */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDC4D1CCA74A60006AE72 /* cmdutils.c */,
+				D73CDC4E1CCA74A60006AE72 /* ffmpeg */,
+				D73CDCD21CCA74A60006AE72 /* openSSL */,
+				D73CDD231CCA74A70006AE72 /* Reachability */,
+			);
+			path = "3rd-party";
+			sourceTree = "<group>";
+		};
+		D73CDC4E1CCA74A60006AE72 /* ffmpeg */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDCCC1CCA74A60006AE72 /* lib */,
+			);
+			path = ffmpeg;
+			sourceTree = "<group>";
+		};
+		D73CDCCC1CCA74A60006AE72 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDCCD1CCA74A60006AE72 /* libavcodec.a */,
+				D73CDCCE1CCA74A60006AE72 /* libavformat.a */,
+				D73CDCCF1CCA74A60006AE72 /* libavutil.a */,
+				D73CDCD01CCA74A60006AE72 /* libswresample.a */,
+				D73CDCD11CCA74A60006AE72 /* libswscale.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		D73CDCD21CCA74A60006AE72 /* openSSL */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD201CCA74A70006AE72 /* lib */,
+			);
+			path = openSSL;
+			sourceTree = "<group>";
+		};
+		D73CDD201CCA74A70006AE72 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD211CCA74A70006AE72 /* libcrypto.a */,
+				D73CDD221CCA74A70006AE72 /* libssl.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		D73CDD231CCA74A70006AE72 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD241CCA74A70006AE72 /* VKReachability.h */,
+				D73CDD251CCA74A70006AE72 /* VKReachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		D73CDD261CCA74A70006AE72 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD271CCA74A70006AE72 /* VKPlayerController.h */,
+				D73CDD281CCA74A70006AE72 /* VKPlayerController.m */,
+				D73CDD291CCA74A70006AE72 /* VKPlayerControllerBase.h */,
+				D73CDD2A1CCA74A70006AE72 /* VKPlayerControllerBase.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D73CDD2B1CCA74A70006AE72 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD2C1CCA74A70006AE72 /* VideoKitCore.a */,
+				D73CDD2D1CCA74A70006AE72 /* VKAudioDecoder.h */,
+				D73CDD2E1CCA74A70006AE72 /* VKAVDecodeManager.h */,
+				D73CDD2F1CCA74A70006AE72 /* VKAVDecodeManager.m */,
+				D73CDD301CCA74A70006AE72 /* VKClock.h */,
+				D73CDD311CCA74A70006AE72 /* VKClockManager.h */,
+				D73CDD321CCA74A70006AE72 /* VKDecodeManager.h */,
+				D73CDD331CCA74A70006AE72 /* VKDecoder.h */,
+				D73CDD341CCA74A70006AE72 /* VKManager.h */,
+				D73CDD351CCA74A70006AE72 /* VKPacket.h */,
+				D73CDD361CCA74A70006AE72 /* VKQueue.h */,
+				D73CDD371CCA74A70006AE72 /* VKVideoDecoder.h */,
+				D73CDD381CCA74A70006AE72 /* VKVideoFrame.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		D73CDD421CCA74A70006AE72 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD431CCA74A70006AE72 /* VKPlayerViewController.h */,
+				D73CDD441CCA74A70006AE72 /* VKPlayerViewController.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		D73CDD451CCA74A70006AE72 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D73CDD461CCA74A70006AE72 /* VKGLES2View.h */,
+				D73CDD471CCA74A70006AE72 /* VKGLES2View.m */,
+				D73CDD481CCA74A70006AE72 /* VKStreamInfoView.h */,
+				D73CDD491CCA74A70006AE72 /* VKStreamInfoView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		D749B7611A792F3A00258D63 /* RJLVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -2728,6 +2929,9 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7A440921CD2856000DC5CC1 /* CameraResourceNonLive.h */,
+				D7A440931CD2856100DC5CC1 /* CameraResourceNonLive.m */,
+				D73CDC4B1CCA74A60006AE72 /* videokit */,
 				D73CDC481CC7E3570006AE72 /* CameraResource.h */,
 				D73CDC491CC7E3570006AE72 /* CameraResource.m */,
 				D746D2C31CC532A100F14FE6 /* FakeEncoderBitrate.h */,
@@ -2820,6 +3024,8 @@
 				D78093B01B6ACA25006488A9 /* TabView.m */,
 				D78093B11B6ACA25006488A9 /* TabView.xib */,
 				D75F2D211CB2C9B30059678F /* FeedMapCell.xib */,
+				D7A440691CD107C600DC5CC1 /* NullCameraDetails.h */,
+				D7A4406A1CD107C700DC5CC1 /* NullCameraDetails.m */,
 				D7525D9C1CBC29630074F590 /* NameCameraCellView.xib */,
 				D7525D9E1CBC31D30074F590 /* NameCameraCellView.h */,
 				D7525D9F1CBC31D30074F590 /* NameCameraCellView.m */,
@@ -2971,6 +3177,10 @@
 		D7A9394216ADA65E006CBAB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D73CDD691CCA78BA0006AE72 /* AudioToolbox.framework */,
+				D73CDD671CCA78A60006AE72 /* OpenGLES.framework */,
+				D73CDD651CCA78750006AE72 /* libiconv.tbd */,
+				D73CDD631CCA785E0006AE72 /* libz.tbd */,
 				D72FC94E1C4576FF007C15FF /* PhotosUI.framework */,
 				D72FC94A1C4574EC007C15FF /* Photos.framework */,
 				D72FC9481C45648E007C15FF /* AssetsLibrary.framework */,
@@ -3513,6 +3723,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7EE1E4B1828596300CA36CF /* gotolive@2x.png in Resources */,
+				D73CDD5E1CCA74A80006AE72 /* license-form.plist in Resources */,
 				D7581F2D196461ED0029C5DD /* InfoPlist.strings in Resources */,
 				D7EE1E4C1828596400CA36CF /* clipTab@2x.png in Resources */,
 				94B28D7E193380F40000E804 /* teleButtonSelect.png in Resources */,
@@ -3648,6 +3859,7 @@
 				D79F9B7717F5C2E10081C5E9 /* vertical_myplayXplay_case.png in Resources */,
 				BDD2D2F817ECDD11004D5D9A /* clip-back-old@2x.png in Resources */,
 				D797CCFB170DD8D400A6E62B /* logo@2x.png in Resources */,
+				D73CDD621CCA74A80006AE72 /* VKImages.bundle in Resources */,
 				BD8C368417F330360094CBAD /* mailselected@2x.png in Resources */,
 				BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */,
 				D7A0223C1B6A7A6000959EBE /* ortriright.png in Resources */,
@@ -3831,6 +4043,7 @@
 				AEDD7C7A1B4AB717003C82F3 /* PxpPlayer.m in Sources */,
 				D72FC9471C4561D5007C15FF /* DeviceAssetLibrary.m in Sources */,
 				AE7DCBD61B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m in Sources */,
+				D73CDD531CCA74A80006AE72 /* VKReachability.m in Sources */,
 				BD5D6BBC17FA01A100B422EE /* NSArray+BinarySearch.m in Sources */,
 				D7A9395D16ADA65E006CBAB2 /* Live2BenchViewController.m in Sources */,
 				D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */,
@@ -3885,6 +4098,7 @@
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D767EEED1B724CC600DDD815 /* PxpFilterRangeSlider.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
+				D73CDD541CCA74A80006AE72 /* VKPlayerController.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
 				AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */,
 				D7E1A18A1C07AD8C001055E2 /* RicoPlayerViewController.m in Sources */,
@@ -3979,6 +4193,7 @@
 				D75F2D251CB457130059678F /* FeedMapController.m in Sources */,
 				D72363E11C98617600A34B76 /* RicoSourcePickerButtons.m in Sources */,
 				D70A66871C5284D4003CA163 /* RicoFullScreenViewController.m in Sources */,
+				D73CDD4B1CCA74A70006AE72 /* cmdutils.c in Sources */,
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
@@ -3986,6 +4201,7 @@
 				D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */,
 				D743D47C1B6962BD00533070 /* TempPxpFilterTabUI.m in Sources */,
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
+				D73CDD571CCA74A80006AE72 /* VKAVDecodeManager.m in Sources */,
 				AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */,
 				D7F9966E1C7F706600CD528A /* DownloadThumbnailOperation.m in Sources */,
 				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
@@ -3999,6 +4215,7 @@
 				D738306F19915B3B0053F0A1 /* UserColourView.m in Sources */,
 				D7525DA71CC14DD20074F590 /* InternetOperation.m in Sources */,
 				D706AC961B2735610091C02C /* CameraDetails.m in Sources */,
+				D7A4406B1CD107C900DC5CC1 /* NullCameraDetails.m in Sources */,
 				D79BC1DC19E8720100ECD8DB /* Pip.m in Sources */,
 				D738307B199580DD0053F0A1 /* FilterProcessorFBTforPlayers.m in Sources */,
 				D7F443761C73BD83007F6924 /* MockURLProtocol.m in Sources */,
@@ -4009,6 +4226,7 @@
 				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
+				D73CDD551CCA74A80006AE72 /* VKPlayerControllerBase.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */,
 				D784D9411C61103500E5B946 /* RicoL2BVideoBar.m in Sources */,
@@ -4018,6 +4236,7 @@
 				AED484B91B56A23600769EEF /* PxpTelestrationCaptureArea.m in Sources */,
 				D7A7B61216D3C6C3000D3A84 /* LogoViewController.m in Sources */,
 				D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */,
+				D7A440941CD2856100DC5CC1 /* CameraResourceNonLive.m in Sources */,
 				D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */,
 				D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */,
 				D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */,
@@ -4057,6 +4276,8 @@
 				D7E0EDB91BFE20CD003F4F94 /* PxpReadyPlayerItemOperation.m in Sources */,
 				D746D2C51CC532A100F14FE6 /* FakeEncoderBitrate.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
+				D73CDD5F1CCA74A80006AE72 /* VKPlayerViewController.m in Sources */,
+				D73CDD611CCA74A80006AE72 /* VKStreamInfoView.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
 				AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */,
@@ -4095,6 +4316,7 @@
 				D749B7641A7931A200258D63 /* RJLVideoPlayer.m in Sources */,
 				D7525DB01CC174330074F590 /* LoginOperation.m in Sources */,
 				D78126FC1C209FF2008B8B16 /* PxpPreference.m in Sources */,
+				D73CDD601CCA74A80006AE72 /* VKGLES2View.m in Sources */,
 				D7A673DA180EC8A1001C68D1 /* BookmarkViewCell.m in Sources */,
 				AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */,
 				D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */,
@@ -4259,6 +4481,12 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"VK_CORE_BINARY=1",
+				);
+				HEADER_SEARCH_PATHS = "./videokit/3rd-party/ffmpeg/include";
 				INFOPLIST_FILE = "Live2BenchNative/Live2BenchNative-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -4266,6 +4494,9 @@
 					"$(PROJECT_DIR)/3rd-party/ffmpeg/lib",
 					"$(PROJECT_DIR)/3rd-party/openSSL/lib",
 					"$(PROJECT_DIR)/Core",
+					"$(PROJECT_DIR)/videokit/3rd-party/ffmpeg/lib",
+					"$(PROJECT_DIR)/videokit/3rd-party/openSSL/lib",
+					"$(PROJECT_DIR)/videokit/Core",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -4305,6 +4536,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "VK_CORE_BINARY=1";
+				HEADER_SEARCH_PATHS = "./videokit/3rd-party/ffmpeg/include";
 				INFOPLIST_FILE = "Live2BenchNative/Live2BenchNative-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -4312,6 +4545,9 @@
 					"$(PROJECT_DIR)/3rd-party/ffmpeg/lib",
 					"$(PROJECT_DIR)/3rd-party/openSSL/lib",
 					"$(PROJECT_DIR)/Core",
+					"$(PROJECT_DIR)/videokit/3rd-party/ffmpeg/lib",
+					"$(PROJECT_DIR)/videokit/3rd-party/openSSL/lib",
+					"$(PROJECT_DIR)/videokit/Core",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "EncoderProtocol.h"
+#import "CameraResource.h"
+#import "CameraResourceNonLive.h"
 
 @class Tag;
 
@@ -41,6 +43,8 @@
 @property (nonatomic,assign) BOOL                   local;
 @property (nonatomic,assign) BOOL                   live;
 @property (nonatomic,assign) BOOL                   primary;
+
+@property (nonatomic,strong) CameraResource         * cameraResource;
 
 @property (nonatomic, strong) NSMutableDictionary  * downloadingItemsDictionary;
 

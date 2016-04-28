@@ -10,6 +10,7 @@
 #import "FeedMapDisplay.h"
 #import "EncoderManager.h"
 #import "Encoder.h"
+#import "NullCameraDetails.h"
 
 
 // This class will hold all camData from the current encoder
@@ -164,7 +165,7 @@ static FeedMapController * _instance;
             
         }];
         
-        
+//        [uniqueCamsDetails addObject:[NullCameraDetails new]];
         self.camDataList = uniqueCamsDetails;
         // refresh UI?
         if ([self.delegate respondsToSelector:@selector(onRefresh:)]){

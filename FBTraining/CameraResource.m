@@ -14,7 +14,7 @@
 #import "Event.h"
 @interface CameraResource ()
 
-@property (nonatomic,strong) NSMutableArray * cameraDataPool;
+
 @property (nonatomic,strong) Encoder * encoder;
 
 @end

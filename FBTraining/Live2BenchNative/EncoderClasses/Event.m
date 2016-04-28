@@ -63,6 +63,8 @@
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:isLocal] copy];
         _tags               = [self buildTags:_rawData];
+        
+        _cameraResource     = [[CameraResourceNonLive alloc]initWithFeeds:[_feeds allValues]];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDownloaded:) name:NOTIF_EVENT_DOWNLOADED object:nil];
@@ -93,7 +95,7 @@
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:path != nil];
         _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:path!= nil] copy];
 
-        
+        _cameraResource     = [[CameraResourceNonLive alloc]initWithFeeds:[_feeds allValues]];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDownloaded:) name:NOTIF_EVENT_DOWNLOADED object:nil];

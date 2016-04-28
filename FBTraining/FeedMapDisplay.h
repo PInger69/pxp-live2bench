@@ -46,4 +46,6 @@
 
 -(NSString*)currentPick;
 
+-(void)refresh;
+-(void)stop;
 @end
