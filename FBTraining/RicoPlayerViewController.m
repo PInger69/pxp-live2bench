@@ -63,7 +63,7 @@ static CMClockRef _masterClock;
 {
     self.players[aPlayer.name] = aPlayer;
     [self.depedencyPlayers addObject:aPlayer];
-    if (!self.primaryPlayers) self.primaryPlayers = aPlayer;
+    if (!self.primaryPlayer) self.primaryPlayer = aPlayer;
     aPlayer.delegate = self;
     aPlayer.avPlayer.masterClock = _masterClock;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onPlayerFail:) name:RicoPlayerDidPlayerItemFailNotification object:aPlayer];
@@ -225,7 +225,8 @@ static CMClockRef _masterClock;
     NSOperation * blk = [NSBlockOperation blockOperationWithBlock:^{}];
     
     for (RicoPlayer * player in [self.players allValues]) {
-//        [player.operationQueue cancelAllOperations];
+
+        if(player.reliable) liveTime = kCMTimePositiveInfinity;
         
         NSOperation * seekOp  = [player seekToTime:liveTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
         NSOperation * playOp  = [player play];
@@ -281,8 +282,8 @@ static CMClockRef _masterClock;
 
 -(void)tick:(RicoPlayer*)player
 {
-
-    RicoPlayer * primaryPLayer = [[self.depedencyPlayers allObjects]firstObject];
+    [self makeUnreliable];
+    RicoPlayer * primaryPLayer = self.primaryPlayer;
     
     CMTime mainTime = self.currentTime;
     
@@ -292,6 +293,9 @@ static CMClockRef _masterClock;
         [self.playerControlBar update:primaryPLayer.currentTime duration:primaryPLayer.duration];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:self];
     }
+    
+    
+    
     if (_debugOutput.superview){
         NSMutableString * output = [NSMutableString new];
         
@@ -398,7 +402,7 @@ static CMClockRef _masterClock;
 {
     
     // get a time  from a player
-    RicoPlayer * primaryPLayer = [[self.depedencyPlayers allObjects]firstObject];
+    RicoPlayer * primaryPLayer = self.primaryPlayer;
     CMTimeRange range;
     if (CMTIMERANGE_IS_VALID(primaryPLayer.range)){
         range = primaryPLayer.range;
@@ -524,8 +528,16 @@ static CMClockRef _masterClock;
 }
 
 
--(RicoPlayer*)primaryPlayers
+-(RicoPlayer*)primaryPlayer
 {
+  
+    for (RicoPlayer*p in [self.depedencyPlayers allObjects]) {
+        if (p.reliable){
+            return p;
+        }
+    }
+    
+    
     return [[self.depedencyPlayers allObjects]firstObject];
 }
 
@@ -556,7 +568,7 @@ static CMClockRef _masterClock;
     
     for (RicoPlayer* p in playerList) {
         if ([p.feed.sourceName isEqualToString:feedName]) {
-            self.primaryPlayers = p;
+            self.primaryPlayer = p;
             return;
         }
     }
@@ -573,7 +585,7 @@ static CMClockRef _masterClock;
 
 -(CMTime)currentTime
 {
-    RicoPlayer * player = self.primaryPlayers;
+    RicoPlayer * player = self.primaryPlayer;
     if (!player) {
         return kCMTimeZero;
     }
@@ -592,6 +604,32 @@ static CMClockRef _masterClock;
     RicoPlayer * player = [[self.depedencyPlayers allObjects]firstObject];
     return player.currentTime;
 }
+
+// check players and see
+-(void)makeUnreliable
+{
+// get highest player
+    
+    
+    NSArray * list = [self.depedencyPlayers allObjects];
+    RicoPlayer * highestPlayer = ( RicoPlayer * )[list firstObject];
+    for (RicoPlayer * player in list) {
+        if (CMTimeGetSeconds(player.duration) > CMTimeGetSeconds(highestPlayer.duration)) {
+            highestPlayer = player;
+        }
+    }
+    
+    
+    for (RicoPlayer * player in list) {
+        if (CMTimeGetSeconds(player.duration) < (CMTimeGetSeconds(highestPlayer.duration) - 10 )) {
+            player.reliable = NO;
+//            [self.depedencyPlayers removeObject:player];
+        }
+    }
+    
+
+}
+
 
 
 @end

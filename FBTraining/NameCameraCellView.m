@@ -23,8 +23,8 @@
         self.view.layer.cornerRadius = 3;
         self.camIDLabel.text = @"x";
         self.UserInputField.text = @"x";
-        [self.heightAnchor constraintEqualToConstant:self.bounds.size.height].active = YES;
-        [self.widthAnchor constraintEqualToConstant:self.bounds.size.width].active  = YES;
+        [self.heightAnchor constraintEqualToConstant:self.view.bounds.size.height].active = YES;
+        [self.widthAnchor constraintEqualToConstant:self.view.bounds.size.width].active  = YES;
     }
     return self;
 }

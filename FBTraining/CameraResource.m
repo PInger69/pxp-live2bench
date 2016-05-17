@@ -34,27 +34,38 @@
 }
 
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+                self.cameraDataPool = [NSMutableArray new];
+    }
+    return self;
+}
+
 -(void)addCameraDetails:(CameraDetails*)cameraDetails
 {
     [self.cameraDataPool addObject:cameraDetails];
 }
 
 
--(Feed*)getFeedByLocation:(NSString*)cameraLocation event:(Event*)event;
+-(Feed*)getFeedByLocation:(NSString*)cameraLocation event:(Event*)event
 {
     
+    
+    // this get the camera based of a location
     NSString * camID = [[UserCenter getInstance]getPickByCameraLocation:cameraLocation];
     
     CameraDetails* pickCam;
     for (CameraDetails* cd in self.cameraDataPool) {
         if ([cd.cameraID isEqualToString:camID]) {
             pickCam = cd;
-            NSLog(@"CamName: %@",cd.name);
+            NSLog(@"CamName: %@  %@ camID %@",cd.name,cd.cameraID,camID);
+            NSLog(@" ");
             break;
         }
     }
-    
-    
+ 
     NSString * sourceKey = pickCam.source;
     
     Feed* selectedFeed = [event.feeds objectForKey:sourceKey];
@@ -63,6 +74,12 @@
     NSLog(@"%@",selectedFeed.sourceName);
     return selectedFeed;
 }
+
+
+
+
+
+
 
 -(NSString*)getCameraNameBy:(NSString*)cameraLocation
 {

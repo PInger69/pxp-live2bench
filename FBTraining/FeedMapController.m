@@ -73,6 +73,7 @@ static FeedMapController * _instance;
             [fm1.icon setType:type];
             fm1.cellName.text = label;
             fm1.feedMapLocation = locationName;
+            fm1.sourcePicker.delegate = fm1;
             fm1.sourcePicker.dataSource = self;
             return fm1;
         };
@@ -137,7 +138,7 @@ static FeedMapController * _instance;
             
         }
         
-        
+              self.camDataList = uniqueCamsDetails;
         
         // attatch cam data to UI
         
@@ -166,7 +167,7 @@ static FeedMapController * _instance;
         }];
         
 //        [uniqueCamsDetails addObject:[NullCameraDetails new]];
-        self.camDataList = uniqueCamsDetails;
+  
         // refresh UI?
         if ([self.delegate respondsToSelector:@selector(onRefresh:)]){
             [self.delegate onRefresh:self];
@@ -207,13 +208,23 @@ static FeedMapController * _instance;
             FeedMapDisplay * fm = (FeedMapDisplay *)obj;
             
 //            fm
-            
+            NSLog(@"");
         }];
 
 
     
 }
 
+
+-(void)reloadStreams
+{
+    NSArray * feedMapDisplays = [self.feedMapDisplaysDict allValues];
+
+    for (FeedMapDisplay* display in feedMapDisplays) {
+        [display refresh];
+    }
+    
+}
 
 -(void)refresh
 {
@@ -273,6 +284,8 @@ static FeedMapController * _instance;
 
 }
 
+
+
 -(void)submitChanges
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:FeedMapControllerDidSubmitChangeNotification object:self];
@@ -309,12 +322,6 @@ static FeedMapController * _instance;
     
     FeedMapDisplay* fm = [self.feedMapDisplaysDict objectForKey:playerLocation];
     CameraDetails * camD = fm.cameraDetails;
-    
-    
-    
-    
-    
-//    self.feedMapDisplays
     
     NSString* result = camD.source;
     

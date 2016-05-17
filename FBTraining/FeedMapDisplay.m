@@ -25,17 +25,6 @@
 {
     self = [super init];
     if (self) {
-        [[NSBundle mainBundle]loadNibNamed:@"FeedMapCell" owner:self options:nil];
-        self.bounds = self.view.bounds;
-        [self addSubview:self.view];
-        
-        self.streamViewController = [[StreamViewVideoKit alloc]initWithFrame:self.streamViewPlaceHolder.frame];
-        [self.streamViewPlaceHolder removeFromSuperview];
-        [self addSubview:self.streamViewController.view];
-        self.sourcePicker.delegate      = self;
-        self.offset                     = 0.0;
-        self.view.layer.cornerRadius    = 3;
-        [self.view setBackgroundColor:[UIColor whiteColor]];
 
     }
     return self;
@@ -50,45 +39,23 @@
         [[NSBundle mainBundle]loadNibNamed:@"FeedMapCell" owner:self options:nil];
         self.bounds = self.view.bounds;
         [self addSubview:self.view];
-        
         self.streamViewController = [[StreamViewVideoKit alloc]initWithFrame:self.streamViewPlaceHolder.frame];
-        
+        NSInteger index = [self.view.subviews indexOfObject:self.streamViewPlaceHolder];
+        [self.view insertSubview:self.streamViewController.view atIndex:index];
         [self.streamViewPlaceHolder removeFromSuperview];
         self.offset = 0.0;
-        [self addSubview:self.streamViewController.view];
-//        self.feedName.delegate = self;
-        self.sourcePicker.delegate      = self;
+        
+        NSLog(@"%@",NSStringFromCGRect(self.view.frame));
 
-        [self.heightAnchor constraintEqualToConstant:self.frame.size.height].active = YES;
-        [self.widthAnchor constraintEqualToConstant: self.frame.size.width].active  = YES;
-       self.layer.cornerRadius = 3;
+            [self.heightAnchor constraintEqualToConstant:self.view.frame.size.height].active = YES;
+            [self.widthAnchor constraintEqualToConstant: self.view.frame.size.width].active  = YES;
+
+             self.layer.cornerRadius = 3;
     }
+    
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-        [[NSBundle mainBundle]loadNibNamed:@"FeedMapCell" owner:self options:nil];
-        
-        self.offset = 0.0;
-        [self addSubview:self.view];
-        
-        self.streamViewController = [[StreamViewVideoKit alloc]initWithFrame:self.streamViewPlaceHolder.frame];
-        
-        [self.streamViewPlaceHolder removeFromSuperview];
-        
-        [self addSubview:self.streamViewController.view];
-//        self.feedName.delegate = self;
-        self.sourcePicker.delegate      = self;
-        
-        
-        self.layer.cornerRadius = 3;
-//        self.data = @[@{@"src":@"A",@"url":@"http:A"},@{@"src":@"B",@"url":@"http:B"},@{@"src":@"C",@"url":@"http:C"},@{@"src":@"D",@"url":@"http:D"}];
-    }
-    return self;
-}
 
 #pragma mark - UITextField Delegate Methods
 
@@ -104,13 +71,33 @@
 
 
 #pragma mark - UIPicker Delegate methods
-- (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+//- (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+//{
+//    FeedMapController * fmc =  (FeedMapController *) pickerView.dataSource;
+//    NSArray * camDataList = fmc.camDataList;
+//    CameraDetails * cameraDtails = camDataList[row];
+//    
+//
+//    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:cameraDtails.name attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+//
+//      return cameraDtails.name;
+////    return attString;
+//}
+
+-(NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     FeedMapController * fmc =  (FeedMapController *) pickerView.dataSource;
     NSArray * camDataList = fmc.camDataList;
     CameraDetails * cameraDtails = camDataList[row];
-    return cameraDtails.name;
+    
+    
+    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:cameraDtails.name attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    
+//    return cameraDtails.name;
+        return attString;
+
 }
+
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
@@ -121,9 +108,10 @@
     self.cameraDetails = cameraDtails;
     
     
-    
     [[UserCenter getInstance]savePickByCameraLocation:self.feedMapLocation pick:self.cameraDetails.cameraID];
     if (self.streamViewController) [self.streamViewController url:cameraDtails.rtsp];
+    [fmc reloadStreams];
+
 }
 
 -(void)refresh

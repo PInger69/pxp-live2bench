@@ -392,7 +392,11 @@
         
             // This picks out local to non local
             if (isLocal) {
+                
+                NSString *removeS = [keys[i] substringFromIndex:1];
+                
                 NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
+                name = [NSString stringWithFormat:@"main%@hq.mp4",removeS];
                 NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:name];
                 createdFeed = [[Feed alloc]initWithFileURL:filePath];
                 createdFeed.type = FEED_TYPE_LOCAL;

@@ -30,7 +30,7 @@
 
 #import "RicoBaseFullScreenViewController.h"
 #import "RicoFullScreenControlBar.h"
-
+#import "RicoPlayerGroupContainer.h"
 
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
@@ -60,6 +60,7 @@
 @property (strong, nonatomic) RicoPlayerViewController    * ricoPlayerController;
 @property (strong, nonatomic) RicoZoomContainer           * ricoZoomer;
 @property (strong, nonatomic) RicoFullScreenControlBar    * ricoFullScreenControlBar;
+@property (strong, nonatomic, nonnull) RicoPlayerGroupContainer         * ricoZoomGroup;
 
 @property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController *fullscreenViewController;
 
@@ -123,6 +124,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+   
+    
    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSelectedToPlay:) name:NOTIF_CLIP_SELECTED object:nil];
     
@@ -152,9 +156,8 @@
     
     const CGFloat width = COMMENTBOX_WIDTH, height = width / (16.0 / 9.0);
     
-//    _playerViewController.view.frame = CGRectMake(0, 768 - height - 44.0, width, height);
-//    _playerViewController.telestrationViewController.stillMode = YES;
-//    _videoBar.playerViewController = _playerViewController;
+
+    
     
     // Rico Player
     
@@ -171,7 +174,7 @@
     
     self.ricoZoomer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
     
-    [self.ricoZoomer addToContainer:self.ricoPlayer];
+//    [self.ricoZoomer addToContainer:self.ricoPlayer];
 
     [self.view addSubview:self.ricoZoomer];
     
@@ -207,6 +210,17 @@
 
     self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
 
+    
+    
+    
+    // Build Quad player
+    self.ricoZoomGroup              = [[RicoPlayerGroupContainer alloc]initWithFrame:CGRectMake(0, 0, width, height)];
+    [self.ricoZoomGroup setBackgroundColor:[UIColor greenColor]];
+    [self.ricoZoomGroup addSubview:self.ricoPlayer];
+    
+    [self.ricoZoomer addToContainer:self.ricoZoomGroup];
+    
+    
 // Telestartion
     self.telestrationViewController = [PxpTelestrationViewController new];
     self.telestrationViewController.stillMode   = YES;
@@ -268,6 +282,19 @@
         }
         
     }
+    
+    
+//    if (videos.allKeys.count > 1) {
+//        // reveal the multi player
+//        
+//        self.ricoZoomGroup.hidden = NO;
+//    } else {
+//        // hide the multi player
+//        self.ricoZoomGroup.hidden = YES;
+//    }
+    
+    
+    
  
 }
 
@@ -384,7 +411,7 @@
 -(void)onSeekButtonPress:(SeekButton *)sender
 {
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
-    CMTime  cTime = self.ricoPlayerController.primaryPlayers.currentTime;
+    CMTime  cTime = self.ricoPlayerController.primaryPlayer.currentTime;
     
     if (sender.speed < 0.2 && sender.speed > -0.2) {
         [self.ricoPlayerController stepByCount:(sender.speed>0)?1:-1];
@@ -538,10 +565,10 @@
     //    self.telestrationViewController.view.layer.borderColor = [UIColor greenColor].CGColor;
     // temp fix
     CGRect tempRect = CGRectMake(
-                                 self.ricoPlayerController.primaryPlayers.frame.origin.x,
-                                 self.ricoPlayerController.primaryPlayers.frame.origin.y+130,
-                                 self.ricoPlayerController.primaryPlayers.frame.size.width,
-                                 self.ricoPlayerController.primaryPlayers.frame.size.height-50
+                                 self.ricoPlayerController.primaryPlayer.frame.origin.x,
+                                 self.ricoPlayerController.primaryPlayer.frame.origin.y+130,
+                                 self.ricoPlayerController.primaryPlayer.frame.size.width,
+                                 self.ricoPlayerController.primaryPlayer.frame.size.height-50
                                  );
     [self.telestrationViewController.view setFrame:tempRect];
     
@@ -553,7 +580,7 @@
 
 - (NSTimeInterval)currentTimeInSeconds
 {
-    return CMTimeGetSeconds(self.ricoPlayerController.primaryPlayers.currentTime);
+    return CMTimeGetSeconds(self.ricoPlayerController.primaryPlayer.currentTime);
 }
 
 #pragma mark -

@@ -210,15 +210,29 @@
         
         [enc runOperation:camOp];
         __weak Encoder * weakEncoder = enc;
-        [camOp setCompletionBlock:^{
+        
+        [camOp setOnRequestComplete:^(NSData *d, EncoderOperation *op) {
             if (!weakEncoder.cameraData){
                 PXPLog(@"No primaryEncoder Found");
                 PXPLog(@"   Check if an Event is playing");
             } else {
-                PXPLog(@"%@",weakEncoder.cameraData);
+                
+                NSDictionary    * results =[Utility JSONDatatoDict:d];
+                NSArray * list = [results[@"camlist"]allValues];
+                PXPLog(@"%@",list);
             }
-            
         }];
+        
+        
+//        [camOp setCompletionBlock:^{
+//            if (!weakEncoder.cameraData){
+//                PXPLog(@"No primaryEncoder Found");
+//                PXPLog(@"   Check if an Event is playing");
+//            } else {
+//                PXPLog(@"%@",weakEncoder.cameraData);
+//            }
+//            
+//        }];
         
     } else {
     
@@ -234,7 +248,20 @@
     if ( [encoderManager.authenticatedEncoders count] && !enc){
         PXPLog(@"Displaying other cam data found on network...");
         for (Encoder * encItem in encoderManager.authenticatedEncoders) {
-            PXPLog(@"%@",encItem.cameraData);
+            PXPLog(@"%@",encItem);
+            EncoderOperation * camOp1 = [[EncoderOperationCameraData alloc]initEncoder:encItem data:nil];
+            
+            [encItem runOperation:camOp1];
+
+            [camOp1 setOnRequestComplete:^(NSData *d, EncoderOperation *op) {
+                
+                    NSDictionary    * results =[Utility JSONDatatoDict:d];
+                    NSArray * list = [results[@"camlist"]allValues];
+                    PXPLog(@"%@",list);
+ 
+            }];
+
+            
         }
     
     }

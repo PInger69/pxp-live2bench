@@ -258,6 +258,7 @@
 		D73CDD6A1CCA78BA0006AE72 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73CDD691CCA78BA0006AE72 /* AudioToolbox.framework */; };
 		D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */; };
 		D73FE3331A41DBF000341D57 /* L2BFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE3321A41DBF000341D57 /* L2BFullScreenViewController.m */; };
+		D7413B651CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7413B641CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m */; };
 		D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7424B96183FEA5A00034F05 /* UploadButton.m */; };
 		D743D4761B69213000533070 /* PxpFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = D743D4751B69213000533070 /* PxpFilter.m */; };
 		D743D4791B6950EE00533070 /* SamplePxpFilterModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D743D4781B6950EE00533070 /* SamplePxpFilterModule.m */; };
@@ -276,6 +277,7 @@
 		D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7691A800AE800258D63 /* RJLFreezeCounter.m */; };
 		D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */; };
 		D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7AB1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */; };
+		D74F39A71CDA84E800627E3A /* RicoPlayerMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D74F39A61CDA84E600627E3A /* RicoPlayerMonitor.m */; };
 		D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */; };
 		D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */; };
 		D7525D9D1CBC29630074F590 /* NameCameraCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7525D9C1CBC29630074F590 /* NameCameraCellView.xib */; };
@@ -1072,6 +1074,8 @@
 		D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BVideoBarViewController.m; path = Live2BenchTab/L2BVideoBarViewController.m; sourceTree = "<group>"; };
 		D73FE3311A41DBF000341D57 /* L2BFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BFullScreenViewController.h; path = Live2BenchTab/L2BFullScreenViewController.h; sourceTree = "<group>"; };
 		D73FE3321A41DBF000341D57 /* L2BFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BFullScreenViewController.m; path = Live2BenchTab/L2BFullScreenViewController.m; sourceTree = "<group>"; };
+		D7413B631CEB7E3D0060FB57 /* RicoBookmarkPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoBookmarkPlayerController.h; sourceTree = "<group>"; };
+		D7413B641CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoBookmarkPlayerController.m; sourceTree = "<group>"; };
 		D7424B95183FEA5A00034F05 /* UploadButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadButton.h; sourceTree = "<group>"; };
 		D7424B96183FEA5A00034F05 /* UploadButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadButton.m; sourceTree = "<group>"; };
 		D743D4731B69203B00533070 /* PxpFilterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterDelegate.h; sourceTree = "<group>"; };
@@ -1108,6 +1112,8 @@
 		D749B7A91A82AC0800258D63 /* PxpVideoPlayerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PxpVideoPlayerProtocol.h; path = Live2BenchNative/VideoPlayerClasses/PxpVideoPlayerProtocol.h; sourceTree = SOURCE_ROOT; };
 		D749B7AA1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RJLVideoPlayer+RJLVideoPlayer_Gesture.h"; path = "Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer+RJLVideoPlayer_Gesture.h"; sourceTree = "<group>"; };
 		D749B7AB1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RJLVideoPlayer+RJLVideoPlayer_Gesture.m"; path = "Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer+RJLVideoPlayer_Gesture.m"; sourceTree = "<group>"; };
+		D74F39A51CDA84E600627E3A /* RicoPlayerMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoPlayerMonitor.h; sourceTree = "<group>"; };
+		D74F39A61CDA84E600627E3A /* RicoPlayerMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoPlayerMonitor.m; sourceTree = "<group>"; };
 		D75042AC19F9640C00D9851D /* CheckEncoderShutdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckEncoderShutdown.h; path = EncoderClasses/CheckEncoderShutdown.h; sourceTree = "<group>"; };
 		D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckEncoderShutdown.m; path = EncoderClasses/CheckEncoderShutdown.m; sourceTree = "<group>"; };
 		D75042AF19FA966F00D9851D /* EncoderStatusMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderStatusMonitor.h; path = EncoderClasses/EncoderStatusMonitor.h; sourceTree = "<group>"; };
@@ -2929,6 +2935,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7413B631CEB7E3D0060FB57 /* RicoBookmarkPlayerController.h */,
+				D7413B641CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m */,
 				D7A440921CD2856000DC5CC1 /* CameraResourceNonLive.h */,
 				D7A440931CD2856100DC5CC1 /* CameraResourceNonLive.m */,
 				D73CDC4B1CCA74A60006AE72 /* videokit */,
@@ -2995,15 +3003,7 @@
 				D7B560521C1260F00093F00B /* FeedMappingView.xib */,
 				D7B5604F1C1260600093F00B /* FeedMappingViewController.h */,
 				D7B560501C1260610093F00B /* FeedMappingViewController.m */,
-				D7B560471C10E6FC0093F00B /* RicoZoomContainer.h */,
-				D7B560481C10E6FC0093F00B /* RicoZoomContainer.m */,
-				D7DA051F1C0F4401009F0B87 /* RicoPlayerControlBar.h */,
 				D7E3C4B21C1744E8004F2A8C /* Analyze */,
-				D7DA05201C0F4402009F0B87 /* RicoPlayerControlBar.m */,
-				D7DA051C1C0DEE94009F0B87 /* RicoOperations.h */,
-				D7DA051D1C0DEE95009F0B87 /* RicoOperations.m */,
-				D7E1A1881C07AD8C001055E2 /* RicoPlayerViewController.h */,
-				D7E1A1891C07AD8C001055E2 /* RicoPlayerViewController.m */,
 				D7CC7C7D1C0622A0009AEFD3 /* RicoPlayer */,
 				D7D619331BDFF1BC003F9B39 /* PxpPlayerRebooter.h */,
 				D7D619341BDFF1BC003F9B39 /* PxpPlayerRebooter.m */,
@@ -3493,8 +3493,18 @@
 		D7CC7C7D1C0622A0009AEFD3 /* RicoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D7B560471C10E6FC0093F00B /* RicoZoomContainer.h */,
+				D7B560481C10E6FC0093F00B /* RicoZoomContainer.m */,
+				D7DA051F1C0F4401009F0B87 /* RicoPlayerControlBar.h */,
+				D7DA05201C0F4402009F0B87 /* RicoPlayerControlBar.m */,
+				D7DA051C1C0DEE94009F0B87 /* RicoOperations.h */,
+				D7DA051D1C0DEE95009F0B87 /* RicoOperations.m */,
+				D7E1A1881C07AD8C001055E2 /* RicoPlayerViewController.h */,
+				D7E1A1891C07AD8C001055E2 /* RicoPlayerViewController.m */,
 				D7CC7C7E1C062342009AEFD3 /* RicoPlayer.h */,
 				D7CC7C7F1C062342009AEFD3 /* RicoPlayer.m */,
+				D74F39A51CDA84E600627E3A /* RicoPlayerMonitor.h */,
+				D74F39A61CDA84E600627E3A /* RicoPlayerMonitor.m */,
 			);
 			name = RicoPlayer;
 			sourceTree = "<group>";
@@ -4231,6 +4241,7 @@
 				AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */,
 				D784D9411C61103500E5B946 /* RicoL2BVideoBar.m in Sources */,
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
+				D7413B651CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m in Sources */,
 				AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */,
 				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
 				AED484B91B56A23600769EEF /* PxpTelestrationCaptureArea.m in Sources */,
@@ -4293,6 +4304,7 @@
 				D7E3C4AC1C162BC2004F2A8C /* PopUpTagSetButtonEditViewController.m in Sources */,
 				D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
+				D74F39A71CDA84E800627E3A /* RicoPlayerMonitor.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
 				D7B95BC21B9627940042A613 /* ProtoTypeEncoderTaskQueue.m in Sources */,
 				D799748216F8C37700CAAABB /* playerCell.m in Sources */,

@@ -30,7 +30,7 @@
 @property (strong,nonatomic) NSString * feedMapLocation;
 
 
-@property (weak, nonatomic) IBOutlet UIPickerView *sourcePicker;
+@property (strong, nonatomic) IBOutlet UIPickerView *sourcePicker;
 
 @property (weak, nonatomic) IBOutlet UILabel *offestLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *offsetStepper;

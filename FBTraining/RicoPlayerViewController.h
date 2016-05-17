@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) NSOperationQueue      * operationQueue;
 @property (nonatomic, strong) NSMutableDictionary   * players;
-@property (nonatomic, strong) RicoPlayer            * primaryPlayers;
+@property (nonatomic, strong) RicoPlayer            * primaryPlayer;
 @property (nonatomic, strong) RicoPlayerControlBar  * playerControlBar;
 @property (nonatomic, assign) BOOL                  syncronizePlayers;
 @property (nonatomic, assign) BOOL                  slomo;

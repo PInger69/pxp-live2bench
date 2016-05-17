@@ -679,13 +679,13 @@
 
 - (void)seekPressed:(SeekButton *)sender {
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
-    CMTime  cTime = self.ricoPlayerViewController.primaryPlayers.currentTime;
+    CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
 //    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
    
     
     // so you get seek past bounds
-    if (CMTIMERANGE_IS_VALID(self.ricoPlayerViewController.primaryPlayers.range) &&
-       CMTimeRangeContainsTime(self.ricoPlayerViewController.primaryPlayers.range,CMTimeAdd(cTime, sTime))) {
+    if (CMTIMERANGE_IS_VALID(self.ricoPlayerViewController.primaryPlayer.range) &&
+       CMTimeRangeContainsTime(self.ricoPlayerViewController.primaryPlayer.range,CMTimeAdd(cTime, sTime))) {
         
           [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
     }
@@ -1100,7 +1100,7 @@
         endTime = endTime + 5;
         //if new end time is greater the duration of video, set it to the video's duration
         
-        RicoPlayer * mainPlayer =         self.ricoPlayerViewController.primaryPlayers;
+        RicoPlayer * mainPlayer =         self.ricoPlayerViewController.primaryPlayer;
         
         if (endTime > CMTimeGetSeconds(mainPlayer.duration)) {
             endTime = CMTimeGetSeconds(mainPlayer.duration);

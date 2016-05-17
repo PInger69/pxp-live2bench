@@ -819,7 +819,7 @@ static BOOL hasUserInteracted;
 //    [self.mainPlayer seekBy:CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC)];
     
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
-    CMTime  cTime = self.playerViewController.primaryPlayers.currentTime;
+    CMTime  cTime = self.playerViewController.primaryPlayer.currentTime;
     self.playerControls.state = RicoPlayerStateNormal;
     [self.playerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
 }
@@ -957,7 +957,7 @@ static BOOL hasUserInteracted;
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
     self.recording                      = YES;
-    self.startTime                      = CMTimeGetSeconds(self.playerViewController.primaryPlayers.currentTime);
+    self.startTime                      = CMTimeGetSeconds(self.playerViewController.primaryPlayer.currentTime);
     self.backSeekButton.enabled         = NO;
     self.forwardSeekButton.enabled      = NO;
     self.slomoButton.enabled            = NO;
@@ -1004,7 +1004,7 @@ static BOOL hasUserInteracted;
         [self.topViewFeedSelectionController present:YES];
     }
     
-    NSTimeInterval endTime = CMTimeGetSeconds(self.playerViewController.primaryPlayers.currentTime);
+    NSTimeInterval endTime = CMTimeGetSeconds(self.playerViewController.primaryPlayer.currentTime);
 
     Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
 
@@ -1047,7 +1047,7 @@ static BOOL hasUserInteracted;
 //    
     if (self.recording) {
         
-        NSTimeInterval clipDuration = CMTimeGetSeconds(self.playerViewController.primaryPlayers.currentTime) - self.startTime;
+        NSTimeInterval clipDuration = CMTimeGetSeconds(self.playerViewController.primaryPlayer.currentTime) - self.startTime;
         
         self.timeLabel.text = [self recordingTimeStringForSeconds:clipDuration];
     } else {

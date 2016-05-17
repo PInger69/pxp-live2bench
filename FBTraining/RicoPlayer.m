@@ -11,6 +11,7 @@
 #import "RicoPlayer.h"
 #import "DebugOutput.h"
 #import "CustomAlertControllerQueue.h"
+#import "RicoPlayerMonitor.h"
 #include <stdlib.h>
 
 
@@ -24,6 +25,7 @@
 @property (strong, nonatomic) NSMapTable * observerMap;
 //@property (strong, nonatomic) RicoPlayerChecker * checker; // check to see if the player is stuck seeking
 @property (strong, nonatomic) NSTimer  * checkTimer;
+@property (strong, nonatomic) RicoPlayerMonitor * monitor;
 @end
 
 
@@ -38,7 +40,8 @@ NSString* const RicoPlayerDidPlayerItemFailNotification             = @"RicoPlay
 @synthesize avPlayer        = _avPlayer;
 @synthesize avPlayerLayer   = _avPlayerLayer;
 @synthesize range           = _range;
-
+@synthesize live;
+@synthesize reliable        = _reliable;
 
 static void * feedContext = &feedContext;
 static void * itemContext = &itemContext;
@@ -78,7 +81,16 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         
         _observerMap    = [NSMapTable strongToStrongObjectsMapTable];
         _offsetTime     = kCMTimeZero;
-//        self.checker    = [[RicoPlayerChecker alloc]initWithRicoPlayer:self];
+
+        self.monitor = [[RicoPlayerMonitor alloc]initWithPlayer:self];
+        self.streamStatus = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 92, 12)];
+        [self.streamStatus setTextAlignment:NSTextAlignmentCenter];
+        self.streamStatus.text = @"Corrupted Stream";
+        [self.streamStatus setTextColor:[UIColor redColor]];
+        [self.streamStatus setBackgroundColor:[UIColor blackColor]];
+        [self.streamStatus setFont:[UIFont systemFontOfSize:10.0f]];
+        [self.streamStatus setHidden:YES];
+        self.reliable = YES;
         
     }
     return self;
@@ -112,7 +124,16 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         
         _observerMap = [NSMapTable strongToStrongObjectsMapTable];
         _offsetTime     = kCMTimeZero;
-//        self.checker    = [[RicoPlayerChecker alloc]initWithRicoPlayer:self];
+        self.monitor = [[RicoPlayerMonitor alloc]initWithPlayer:self];
+        
+        self.streamStatus = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 92, 12)];
+        [self.streamStatus setHidden:YES];
+        [self.streamStatus setTextAlignment:NSTextAlignmentCenter];
+        [self.streamStatus  setTextColor:[UIColor redColor]];
+        [self.streamStatus setBackgroundColor:[UIColor blackColor]];
+        [self.streamStatus setFont:[UIFont systemFontOfSize:10.0f]];
+        self.streamStatus.text = @"Corrupted Stream";
+        self.reliable = YES;
     }
     return self;
 }
@@ -171,11 +192,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     __weak RicoPlayer * weakSelf = self;
     
     
-//    NSOperation * playOp = [[RicoPlayOperation alloc]initWithRicoPlayer:self];
-    
-    
     NSBlockOperation * playOp =  [NSBlockOperation blockOperationWithBlock:^{
-//        dispatch_async(dispatch_get_main_queue(), ^{
+
 
         if (weakSelf.avPlayer.status == AVPlayerStatusReadyToPlay) {
         
@@ -183,19 +201,14 @@ static NSInteger playerCounter = 0; // count the number of players created and g
             if (CMTIME_IS_VALID(weakSelf.avPlayer.currentTime)){
                 
                 CMTime seekTime = weakSelf.avPlayer.currentTime;
-                
-                
-//                [weakSelf.avPlayer seekToTime:seekTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
                 [weakSelf.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
 //                    NSLog(@"PLAY SEEK %@",(finished)?@"pass":@"fail");
 
                 }];
             }
                 weakSelf.isPlaying = YES;
-//             NSLog(@"PLAY %@",weakSelf.name);
+
         }
-//         });
-//        NSLog(@"PLAY BLOCK FINISHED");
     }];
     playOp.name = @"Play Block";
     [self.operationQueue addOperation:playOp];
@@ -208,11 +221,9 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     [self updateDebugOutput];
     __weak RicoPlayer * weakSelf = self;
     NSBlockOperation * pauseOp =  [NSBlockOperation blockOperationWithBlock:^{
-//        dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"PAUSE %@",self.name);
             [_avPlayer pause];
             weakSelf.isPlaying = NO;
-//        });            
     }];
     
     if (self.syncronized) {
@@ -293,8 +304,10 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     [self didChangeValueForKey: NSStringFromSelector(@selector(feed))];
     
         [self.checkTimer invalidate];
+    
+    [self.monitor stop];
     if (_feed){
-        
+        [self.monitor start];
         self.offsetTime = CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC);
         
 //        [_feed addObserver:self forKeyPath:NSStringFromSelector(@selector(quality)) options:0 context:&feedContext];
@@ -320,6 +333,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         _activityIndicator.hidden = NO;
         [self addSubview:_activityIndicator];
         
+        
+        [self addSubview:self.streamStatus];
         if (CMTIMERANGE_IS_VALID(oldTimeRange)){
             self.range = oldTimeRange;
         }
@@ -481,7 +496,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
             NSLog(@"LOAD %@-%@",weakSelf.name,[weakSelf.feed path]);
             [weakSelf addPeriodicTimeObserver];
         }];
-        [self.operationQueue addOperations:@[self.isReadyOperation] waitUntilFinished:YES];
+        [self.operationQueue addOperations:@[self.isReadyOperation] waitUntilFinished:NO];
         
         dispatch_async(dispatch_get_main_queue(),^ {
             [_debugOutput setFrame:CGRectMake(0, 10, self.frame.size.width, 90)];
@@ -606,9 +621,14 @@ static NSInteger playerCounter = 0; // count the number of players created and g
                         weakSelf.debugValues[@"dur"]    = [NSString stringWithFormat:@"DT: %f", CMTimeGetSeconds(weakSelf.duration)];
                         weakSelf.debugValues[@"op"]     = [NSString stringWithFormat:@"OpC: %lu", (unsigned long)weakSelf.operationQueue.operationCount];
                         weakSelf.debugValues[@"offset"] = [NSString stringWithFormat:@"offest: %f", CMTimeGetSeconds(weakSelf.offsetTime)];
+                        weakSelf.debugValues[@"other"]  = [NSString stringWithFormat:@"%@",weakSelf.operationQueue.operations];
                         
                         [weakSelf updateDebugOutput];
-//                        [weakSelf.checker refreshCoolDown];
+
+                        
+//                        [weakSelf.monitor update:weakSelf];
+                        
+                        
                         if (weakSelf.delegate) {
                             [weakSelf.delegate tick:weakSelf];
                         }
@@ -720,18 +740,25 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)updateDebugOutput
 {
-      dispatch_async(dispatch_get_main_queue(),^ {
-    _debugOutput.text = [NSString stringWithFormat:@"%@\n%@\nrate: %@ \n%@\n%@\n%@\n%@",
-                         self.name,
-                         _debugValues[@"itemStatus"],
-                         _debugValues[@"rate"],
-                         _debugValues[@"now"],
-                         _debugValues[@"dur"],
-                         _debugValues[@"op"],
-                         _debugValues[@"offset"]
-                         
-                         ];
-  });
+    if (!DEBUG_MODE && !self.reliable) {
+        _debugOutput.hidden = NO;
+        _debugOutput.text = @"Error";
+    } else {
+        dispatch_async(dispatch_get_main_queue(),^ {
+            _debugOutput.text = [NSString stringWithFormat:@"%@  %@\n%@\nrate: %@ \n%@\n%@\n%@\n%@\n%@",
+                                 self.name,
+                                 (self.reliable)?@"R":@"F",
+                                 _debugValues[@"itemStatus"],
+                                 _debugValues[@"rate"],
+                                 _debugValues[@"now"],
+                                 _debugValues[@"dur"],
+                                 _debugValues[@"op"],
+                                 _debugValues[@"offset"],
+                                 _debugValues[@"other"]
+                                 ];
+        });
+    }
+    
 }
 
 
@@ -765,7 +792,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)setFrame:(CGRect)frame
 {
-    _avPlayerLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    _avPlayerLayer.frame        = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    _activityIndicator.center   = CGPointMake(frame.size.width/2, frame.size.height/2);
     [super setFrame:frame];
 }
 
@@ -815,6 +843,40 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 {
     _avPlayerLayer.player =nil;// self.avPlayer;
     _avPlayerLayer.player =self.avPlayer;
+}
+
+
+
+
+-(BOOL)live
+{
+    
+    
+    if (!self.avPlayer.currentItem) {
+        return NO;
+    } else if (self.avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && !CMTimeCompare(_avPlayer.currentItem.duration, kCMTimeIndefinite)) {
+        return YES;
+    } else {
+        return NO;
+    }
+
+}
+
+
+
+-(void)setReliable:(BOOL)reliable
+{
+    [self willChangeValueForKey:@"reliable"];
+    _reliable = reliable;
+    self.streamStatus.hidden = _reliable;
+
+    [self didChangeValueForKey:@"reliable"];
+}
+
+-(BOOL)reliable
+{
+    
+    return _reliable;
 }
 
 

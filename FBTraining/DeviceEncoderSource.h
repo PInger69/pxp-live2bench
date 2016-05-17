@@ -13,7 +13,7 @@
 
 +(DeviceEncoderSource*) instance;
 
-
+@property (nonatomic,assign) NSInteger      cameraCount;
 @property (nonatomic,strong) NSDictionary * eventData;
 -(PxpURLResponse*) handleRequest:(NSURLRequest*) request;
 

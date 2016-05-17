@@ -9,7 +9,7 @@
 #import "StreamViewVideoKit.h"
 #import "VKPlayerViewController.h"
 
-@interface StreamViewVideoKit ()
+@interface StreamViewVideoKit () <VKPlayerControllerDelegate>
 @property (nonatomic,strong) UIView * player;
 @property (nonatomic,strong) VKPlayerController *playerC;
 @end
@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.view = self;
-        [self setBackgroundColor:[UIColor blueColor]];
+//        [self setBackgroundColor:[UIColor blueColor]];
     }
     return self;
 }
@@ -34,7 +34,7 @@
     self = [super init];
     if (self) {
         self.view = self;
-        [self setBackgroundColor:[UIColor blueColor]];
+//        [self setBackgroundColor:[UIColor blueColor]];
     }
     return self;
 }
@@ -51,7 +51,7 @@
     //@"rtsp://172.18.2.102:8900/pxpstr"
     self.playerC =  [[VKPlayerController alloc]initWithURLString:urlPath];
     self.playerC.decoderOptions = options;
-    
+    self.playerC.delegate = self;
     [self.playerC.view setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     [self.view addSubview:self.playerC.view];
     self.playerC.controlStyle = kVKPlayerControlStyleNone;
@@ -68,6 +68,14 @@
 -(void)clear
 {
     [self.playerC stop];
+}
+
+
+
+#pragma mark - VKPlayerControllerDelegate Mehtod
+-(void)player:(VKPlayerControllerBase *)player didChangeState:(VKDecoderState)state errorCode:(VKError)errCode
+{
+
 }
 
 @end

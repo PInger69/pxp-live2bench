@@ -11,4 +11,5 @@
 
 @interface StreamViewVideoKit : UIView <StreamViewProtocol>
 @property (nonatomic,strong) UIView * view;
+-(void)url:(NSString*)urlPath;
 @end

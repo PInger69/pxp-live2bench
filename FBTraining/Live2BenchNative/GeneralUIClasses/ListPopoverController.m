@@ -69,7 +69,11 @@
     for ( void (^aBlock)(NSString*pick) in onCompletionBlocks) {
         aBlock(thePick);
     }
-    [self dismissPopoverAnimated:_animateDismiss];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self dismissPopoverAnimated:_animateDismiss];
+    });
+    
 }
 
 -(void)_buildButton:(NSString*)aButtonName index:(int)aIndex
@@ -153,11 +157,13 @@
    
     float centerX = CGRectGetMidX([view bounds]) - (content.frame.size.width/2);
     float centerY = CGRectGetMidY([view bounds]) - (content.frame.size.height/2);
-    
-    [super presentPopoverFromRect:CGRectMake(centerX, centerY , content.frame.size.width, content.frame.size.height)
-                           inView:view
-         permittedArrowDirections:0
-                         animated:animated];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [super presentPopoverFromRect:CGRectMake(centerX, centerY , content.frame.size.width, content.frame.size.height)
+                               inView:view
+             permittedArrowDirections:0
+                             animated:animated];
+    });
+
 
 }
 

@@ -246,8 +246,23 @@ static EncoderManager * instance;
  */
 -(void)registerEncoder:(NSString*)name ip:(NSString*)ip
 {
-    if ([dictOfEncoders objectForKey:name] == nil || [((Encoder*)[dictOfEncoders objectForKey:name]).name isEqualToString:@"trashed"]) {
-        Encoder * newEncoder        = [[Encoder alloc]initWithIP:ip];
+    Encoder * newEncoder;
+    if ([ip isEqualToString:@"device"]) {
+       
+        newEncoder        = [[Encoder alloc]initWithIP:ip];
+        newEncoder.encoderManager   = self;
+        newEncoder.name             = name;
+        newEncoder.urlProtocol      = @"device";
+        [newEncoder requestVersion];
+        [newEncoder authenticateWithCustomerID:[UserCenter getInstance].customerID];
+        [dictOfEncoders setValue:newEncoder forKey:name];
+        
+        PXPLog(@"*** Registered Encoder ***");
+        PXPLog(@"    %@ - %@",newEncoder.name,ip);
+        PXPLog(@"**************************");
+    
+    } else if ([dictOfEncoders objectForKey:name] == nil || [((Encoder*)[dictOfEncoders objectForKey:name]).name isEqualToString:@"trashed"]) {
+        newEncoder        = [[Encoder alloc]initWithIP:ip];
         newEncoder.encoderManager   = self;
         newEncoder.name             = name;
         [newEncoder requestVersion];
@@ -487,6 +502,7 @@ static EncoderManager * instance;
         NSLog(@"Event Download started!");
         __block Event * weakEvent = theEvent;
 
+        
         NSString * videoFolderPath      = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
         __block Event * weakLocalEvent  = [_localMediaManager getEventByName:weakEvent.name];
         NSString * savedFileName        = [encoderSource lastPathComponent];
@@ -506,6 +522,8 @@ static EncoderManager * instance;
         
         DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
         [item setOnComplete:^{
+//            weakLocalEvent.originalFeeds;
+            
             [weakLocalEvent buildFeeds];
         }];
         

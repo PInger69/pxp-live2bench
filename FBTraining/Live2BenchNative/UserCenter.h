@@ -12,6 +12,11 @@
 #import "LeagueTeam.h"
 
 
+#define L2B_MODE_HQ                 @"hq"
+#define L2B_MODE_PROXY              @"proxy"
+#define L2B_MODE_STREAM_OPTIMIZE    @"streamOp"
+
+
 @interface UserCenter : NSObject
 {
     NSURLRequest            * urlRequest;

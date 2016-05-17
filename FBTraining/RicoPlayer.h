@@ -60,6 +60,10 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 @property (nonatomic, assign)           CMTimeRange         range;
 @property (nonatomic, assign)           CMTime              offsetTime;// this will offset all seektimes and 
 @property (nonatomic, strong)           NSMutableArray      * linkedRenderViews;
+@property (nonatomic, assign,readonly)           BOOL                live;
+@property (nonatomic, assign)           BOOL                reliable;
+@property (nonatomic, strong)           UILabel             * streamStatus;
+
 
 
 -(instancetype)initWithFrame:(CGRect)frame;

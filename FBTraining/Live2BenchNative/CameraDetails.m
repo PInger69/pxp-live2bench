@@ -31,9 +31,18 @@
         
         _type           = ([details objectForKey:@"type"])? [details objectForKey:@"type"]:@"";
         _fps            = ([details objectForKey:@"fps"])?  [NSNumber numberWithFloat:[[details objectForKey:@"fps"]floatValue]]:@0;
-        _source         = ([details objectForKey:@"sidx"])? [NSString stringWithFormat:@"s_%@",[details objectForKey:@"sidx"] ]:@"";
+        
+        NSString * src = [details objectForKey:@"sidx"];
+        
+        if ([src rangeOfString:@"s_"].location == NSNotFound) {
+            src =  [NSString stringWithFormat:@"s_%@",src ];
+        }
+        
+        
+        
+        _source         = (src)? src:@"";
         _cameraID       = ([details objectForKey:@"mac"])?  [details objectForKey:@"mac"]:@"";
-        _ipAddress      = ([details objectForKey:@"ip"])?   [details objectForKey:@"ip"]:@"######";
+        _ipAddress      = ([details objectForKey:@"ip"])?   [details objectForKey:@"ip"]:@"(unsupported)";
         _name           = ([details objectForKey:@"name"])? [details objectForKey:@"name"]:_cameraID;
         _rtsp            = ([details objectForKey:@"url"])? [details objectForKey:@"url"]:@"";
     }

@@ -15,7 +15,7 @@
 #import "EncoderManager.h"
 #import "NullCameraDetails.h"
 
-#define BOX_WIDTH 615
+#define BOX_WIDTH 674
 
 @interface FeedMappingViewController () <UITextFieldDelegate,FeedMapControllerDelegate>
 
@@ -42,49 +42,98 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor lightGrayColor]];
-    self.feedMapController = [FeedMapController instance];
-    self.feedMapController.delegate = self;
+    self.feedMapController              = [FeedMapController instance];
+    self.feedMapController.delegate     = self;
     
-    CGFloat m = 50;
-    
-    
-    // build the container for the camera naming
+    CGFloat m = 14;
     CGFloat h = 700;
     
-    self.cameraNameStackView = [[UIStackView alloc]initWithFrame:CGRectMake(m, 0, BOX_WIDTH,h)];
-
+    self.cameraNameStackView            = [[UIStackView alloc]initWithFrame:CGRectMake(m, m, BOX_WIDTH,h)];
     self.cameraNameStackView.alignment  = UIStackViewAlignmentTop;
     self.cameraNameStackView.axis       = UILayoutConstraintAxisVertical;
     self.cameraNameStackView.spacing    = 3;
     [self.view addSubview:self.cameraNameStackView];
+}
 
-    [self.feedMapController populate];
-    [self.feedMapController refresh];
 
-    [self buildCameraLabeler];
+-(void)buildCamDisplayToStack:(UIStackView*)stack
+{
+    
+    Encoder * enc = (Encoder *)[EncoderManager getInstance].primaryEncoder;
+    if (!enc) enc = (Encoder *)[EncoderManager getInstance].masterEncoder;
+    if (!enc) enc = (Encoder *)[EncoderManager getInstance].liveEvent.parentEncoder;
+
+    
+    
+    void (^preSelect)(FeedMapDisplay* fmd,NSString* location) = ^void(FeedMapDisplay* fmd,NSString* location) {
+        UIPickerView * p = fmd.sourcePicker;
+        FeedMapController * fmc =  (FeedMapController *) p.dataSource;
+        NSArray * camDataList = [enc.cameraData allValues];
+        if (![camDataList count]) return;
+        NSString * loc =  [[UserCenter getInstance]getPickByCameraLocation:location];
+        
+        for (NSInteger i =0; i<[camDataList count]; i++) {
+            CameraDetails * c = camDataList[i];
+            NSString * camID = c.cameraID;
+            
+            if ([camID isEqualToString:loc]) {
+                [p selectRow:i inComponent:0 animated:NO];
+                [p reloadAllComponents];
+                fmd.cameraDetails = c;
+                [fmd refresh];
+                [fmc.camDataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    CameraDetails * cc = obj;
+                    NSLog(@"%@",cc.name);
+                }];
+                
+               // break;
+            }
+        }
+        
+        
+        
+        
+    };
+
+    
+    CGSize groupSize = [(FeedMapDisplay*)self.feedMapController.feedMapDisplaysDict[kQuad1of4] frame].size;
+    
+    
+    
+    
+    UIView * group = [[UIView alloc]initWithFrame:CGRectMake(0, 0, groupSize.width*2, groupSize.height*2)];
+    [group setBackgroundColor:[UIColor redColor]];
+    
+    NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];//,kTopDual,kBottomDual
+    NSInteger c = 0;
+    NSInteger r = 0;
+    for (NSInteger i =0; i<[list count]; i++) {
+        NSString * k = list[i];
+        FeedMapDisplay* fmd = self.feedMapController.feedMapDisplaysDict[k];
+        [fmd setFrame:CGRectMake(fmd.bounds.size.width*r, fmd.bounds.size.height*c, fmd.bounds.size.width, fmd.bounds.size.height)];
+        [group addSubview:fmd];
+        
+        [fmd refresh];
+        preSelect(fmd,k);
+        r++;
+        if (r>1) {
+            r= 0;
+            c++;
+        }
+        
+    }
+    [group.heightAnchor constraintEqualToConstant:group.bounds.size.height].active = YES;
+    [group.widthAnchor  constraintEqualToConstant:group.bounds.size.width].active  = YES;
+    [stack addArrangedSubview:group];
 }
 
 
 
--(void)buildCameraLabeler
+
+-(void)buildCamCellsToStack:(UIStackView*)stack
 {
-    // remove all elements
-    [self.cameraNameStackView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        UIView * aCell = obj;
-        [self.cameraNameStackView removeArrangedSubview:aCell];
-        [aCell removeFromSuperview];
-    }];
-    
-    
-    
-    
-    // Build the cameraPart of the StackView
-    
-    
-    NSArray * camIdList         = [self.feedMapController camDataList];
-    // make camera header
     UIView * headerContainer    = [[UIView alloc]initWithFrame:CGRectMake(0, 0, BOX_WIDTH, 30)];
-    UILabel * alabel            = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 200, 20)];
+    UILabel * alabel             = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 200, 20)];
     
     [headerContainer.heightAnchor constraintEqualToConstant:headerContainer.bounds.size.height].active = YES;
     [headerContainer.widthAnchor  constraintEqualToConstant:headerContainer.bounds.size.width].active  = YES;
@@ -92,10 +141,12 @@
     [alabel setTextColor:[UIColor whiteColor]];
     alabel.text = @"Cameras on encoder:";
     [headerContainer addSubview:alabel];
-    [self.cameraNameStackView addArrangedSubview:headerContainer];
-    // end make header
+    [stack addArrangedSubview:headerContainer];
+    
+    // Build the cameraPart of the StackView
     
     
+    NSArray * camIdList         = [self.feedMapController camDataList];
     
     // build the cameras
     
@@ -112,46 +163,52 @@
         cell.UserInputField.delegate    = self;
         cell.UserInputField.tag         = 2;
         cell.ipAddressLabel.text        = details.ipAddress;
-        [self.cameraNameStackView addArrangedSubview:cell];
+        [stack addArrangedSubview:cell];
     }
     
     
-    // make camera header
-    headerContainer    = [[UIView alloc]initWithFrame:CGRectMake(0, 0, BOX_WIDTH, 30)];
-    alabel             = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 200, 20)];
     
-    [headerContainer.heightAnchor constraintEqualToConstant:headerContainer.bounds.size.height].active = YES;
-    [headerContainer.widthAnchor  constraintEqualToConstant:headerContainer.bounds.size.width].active  = YES;
     
-    [alabel setTextColor:[UIColor whiteColor]];
-    alabel.text = @"Camera Map Locations:";
-    [headerContainer addSubview:alabel];
-    [self.cameraNameStackView addArrangedSubview:headerContainer];
-    // end make header
+}
 
 
-    
-    // build a scroll view for all the feed map stack
-    
-    UIScrollView * scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, BOX_WIDTH, 500)];
-//    scrollView.layer.borderWidth = 1;
-    scrollView.scrollEnabled = YES;
 
-    [scrollView.heightAnchor constraintEqualToConstant:scrollView.bounds.size.height].active = YES;
-    [scrollView.widthAnchor  constraintEqualToConstant:scrollView.bounds.size.width].active  = YES;
-    [self.cameraNameStackView addArrangedSubview:scrollView];
+
+
+-(void)clearStack:(UIStackView*)stack
+{
+    [stack.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        UIView * aCell = obj;
+        [stack removeArrangedSubview:aCell];
+        [aCell removeFromSuperview];
+    }];
+
+}
+
+
+
+
+
+
+
+
+-(void)buildCameraLabeler
+{
+    // remove all elements
+    [self.cameraNameStackView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        UIView * aCell = obj;
+        [self.cameraNameStackView removeArrangedSubview:aCell];
+        [aCell removeFromSuperview];
+    }];
     
-    //
-//    
+    
     self.stackViewTop = [[UIStackView alloc]initWithFrame:CGRectMake(0, 0, BOX_WIDTH,580)];
     
-    
+    // get endcoder
     Encoder * enc = (Encoder *)[EncoderManager getInstance].primaryEncoder;
     
     if (!enc) enc = (Encoder *)[EncoderManager getInstance].masterEncoder;
     if (!enc) enc = (Encoder *)[EncoderManager getInstance].liveEvent.parentEncoder;
-    
-   
     
     void (^preSelect)(FeedMapDisplay* fmd,NSString* location) = ^void(FeedMapDisplay* fmd,NSString* location) {
         UIPickerView * p = fmd.sourcePicker;
@@ -159,7 +216,6 @@
         NSArray * camDataList = [enc.cameraData allValues];
         if (![camDataList count]) return;
         NSString * loc =  [[UserCenter getInstance]getPickByCameraLocation:location];
-        
         
         for (NSInteger i =0; i<[camDataList count]; i++) {
             CameraDetails * c = camDataList[i];
@@ -184,25 +240,96 @@
       
     };
     
+    UIView * group = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 600, 400)];
+    
     
     NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];//,kTopDual,kBottomDual
-    
+    NSInteger c = 0;
+    NSInteger r = 0;
     for (NSInteger i =0; i<[list count]; i++) {
         NSString * k = list[i];
         FeedMapDisplay* fmd = self.feedMapController.feedMapDisplaysDict[k];
-        [self.stackViewTop addArrangedSubview:fmd];
+        [fmd setFrame:CGRectMake(fmd.bounds.size.width*c,fmd.bounds.size.height*r,  fmd.bounds.size.width, fmd.bounds.size.height)];
+        [group addSubview:fmd];
         preSelect(fmd,k);
          [fmd refresh];
+        c++;
+        if (c>1) {
+            c= 0;
+            r++;
+        }
+        
     }
+
     
-    self.stackViewTop.axis      = UILayoutConstraintAxisVertical;
-    self.stackViewTop.alignment = UIStackViewAlignmentTop;
-    self.stackViewTop.spacing   = 3;
     
-  [self.stackViewTop addArrangedSubview:[UIView new]];
-    scrollView.contentSize = CGSizeMake(BOX_WIDTH, self.stackViewTop.frame.size.height);
-    [scrollView addSubview:self.stackViewTop];
-    [self.cameraNameStackView addArrangedSubview:scrollView];
+    
+//    // Build the cameraPart of the StackView
+//    
+//    
+//    NSArray * camIdList         = [self.feedMapController camDataList];
+//
+//    
+//    
+//    
+//    // build the cameras
+//    
+//    for (NSInteger  i=0; i<[camIdList count]; i++) {
+//        
+//        CameraDetails * details         = camIdList[i];
+//        
+//        if ([details isKindOfClass:[NullCameraDetails class]]) continue;
+//        
+//        NameCameraCellView * cell       = [NameCameraCellView new];
+//        
+//        cell.camIDLabel.text            = details.cameraID;
+//        cell.UserInputField.text        = details.name;
+//        cell.UserInputField.delegate    = self;
+//        cell.UserInputField.tag         = 2;
+//        cell.ipAddressLabel.text        = details.ipAddress;
+//        [self.cameraNameStackView addArrangedSubview:cell];
+//    }
+    
+    // make camera header
+    
+    // end make header
+    
+
+
+    
+    // build a scroll view for all the feed map stack
+    
+//    UIView * scrollView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, BOX_WIDTH, 500)];
+//    //    scrollView.layer.borderWidth = 1;
+//    
+//    
+//    [scrollView.heightAnchor constraintEqualToConstant:scrollView.bounds.size.height].active = YES;
+//    [scrollView.widthAnchor  constraintEqualToConstant:scrollView.bounds.size.width].active  = YES;
+//    [self.cameraNameStackView addArrangedSubview:scrollView];
+//    
+//    
+//    
+//    headerContainer    = [[UIView alloc]initWithFrame:CGRectMake(0, 0, BOX_WIDTH, 30)];
+//    alabel            = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 200, 20)];
+//    
+//    [headerContainer.heightAnchor constraintEqualToConstant:headerContainer.bounds.size.height].active = YES;
+//    [headerContainer.widthAnchor  constraintEqualToConstant:headerContainer.bounds.size.width].active  = YES;
+//    
+//    [alabel setTextColor:[UIColor whiteColor]];
+//    alabel.text = @"Cameras on encoder:";
+//    [headerContainer addSubview:alabel];
+//    [scrollView addSubview:group];
+//    
+//    
+//    
+//    
+//    [self.cameraNameStackView addArrangedSubview:headerContainer];
+    
+    
+    
+//  [self.stackViewTop addArrangedSubview:[UIView new]];
+    
+    
     
 }
 
@@ -244,7 +371,12 @@
     self.hasUserInteracted = YES;
     [self.feedMapController populate];
     [self.feedMapController refresh];
-    [self buildCameraLabeler];
+
+    [self clearStack:self.cameraNameStackView];
+    [self buildCamDisplayToStack:self.cameraNameStackView];
+    [self buildCamCellsToStack:self.cameraNameStackView];
+    [self.cameraNameStackView addArrangedSubview:[UIView new]];
+    
 
 }
 
@@ -267,15 +399,15 @@
     [super viewDidDisappear:animated];
 }
 
+
+
 -(void)onRefresh:(FeedMapController*)deedMapController
 {
-
-    [self buildCameraLabeler];
+    [self clearStack:self.cameraNameStackView];
+    [self buildCamDisplayToStack:self.cameraNameStackView];
+    [self buildCamCellsToStack:self.cameraNameStackView];
+    [self.cameraNameStackView addArrangedSubview:[UIView new]];
 }
-
-
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

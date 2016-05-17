@@ -617,15 +617,21 @@ static LocalMediaManager * instance;
         [localEventRawData setObject:path forKey:@"mp4"];
     }
     
+    
+    Event * localEvent;
+    
+    
+//    if ( [self getEventByName:encoderEvent.name]) {
+//        localEvent = [self getEventByName:encoderEvent.name];
+//        
+//    } else {
+        localEvent = [[Event alloc]initWithDict:localEventRawData isLocal:YES andlocalPath:self.localPath];
+        localEvent.parentEncoder = [LocalEncoder getInstance];
+        localEvent.local = true;
+//    }
+    
 
-    Event * localEvent = [[Event alloc]initWithDict:localEventRawData isLocal:YES andlocalPath:self.localPath];
-    localEvent.parentEncoder = [LocalEncoder getInstance];
-    localEvent.local = true;
-    //localEvent.tags = encoderEvent.tags;
-    //localEvent.isBuilt = true;
-    
-//    [encoderEvent.teams allKeys];
-    
+
 
     // This is all the pooled data from the team data added to the savePlist
     // this is parsing out the data the data the same way that its being recieved from the encoder
@@ -668,9 +674,9 @@ static LocalMediaManager * instance;
     NSMutableDictionary * combinedTeamData = [NSMutableDictionary dictionaryWithDictionary:localEvent.rawData];
     
     
-   
-    
-    localEvent.teams = [self parsedTeamData:localEventRawData]; // add teams to the new local event
+    if (localEvent.teams == nil) {
+        localEvent.teams = [self parsedTeamData:localEventRawData]; // add teams to the new local event
+    }
      [combinedTeamData setObject:teamSaveData forKey:@"savedTeamData"];
     [combinedTeamData writeToFile:plistNamePath atomically:YES];
     

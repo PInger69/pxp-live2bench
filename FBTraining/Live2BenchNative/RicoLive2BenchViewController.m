@@ -125,8 +125,8 @@ static BOOL wasPlaying;
     ContentViewController               * _playerDrawerRight;
     RicoL2BVideoBar                     * _videoBar;
     Tag                                 * _selectedTag;
-   BOOL                                _wasPausedBeforeTele;
-    UITapGestureRecognizer                 * _doubleTapOnGrid;
+    BOOL                                _wasPausedBeforeTele;
+    UITapGestureRecognizer              * _doubleTapOnGrid;
 }
 
 // Context
@@ -135,14 +135,14 @@ static void * eventContext      = &eventContext;
 
 #pragma mark - View Controller Methods
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"Live2Bench",nil) imageName:@"live2BenchTab"];
-    }
-    return self;
-}
+//- (id)init
+//{
+//    self = [super init];
+//    if (self) {
+//        [self setMainSectionTab:NSLocalizedString(@"Live2Bench",nil) imageName:@"live2BenchTab"];
+//    }
+//    return self;
+//}
 
 /**
  *  New init method
@@ -222,8 +222,6 @@ static void * eventContext      = &eventContext;
     
     [_videoBar.slomoButton removeTarget:_videoBar action:@selector(slomoAction:)  forControlEvents:UIControlEventTouchUpInside];
     [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
-
-    [self buildSourceButtons];
     
     // Rico
     self.ricoZoomGroup              = [[RicoPlayerGroupContainer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
@@ -272,9 +270,9 @@ static void * eventContext      = &eventContext;
     [self.ricoFullScreenControlBar.liveButton                   addTarget: self action:@selector(goToLive)            forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.startRangeModifierButton     addTarget: self action:@selector(extendStartAction:)  forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.endRangeModifierButton       addTarget: self action:@selector(extendEndAction:)    forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.controlBar.playPauseButton addTarget:self action:@selector(controlBarPlay) forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.fullscreenButton addTarget:self.ricoFullScreen action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreen.bottomBar addSubview:self.ricoFullScreenControlBar];
+    [self.ricoFullScreenControlBar.controlBar.playPauseButton   addTarget:self action:@selector(controlBarPlay) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.fullscreenButton             addTarget:self.ricoFullScreen action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreen.bottomBar                              addSubview:self.ricoFullScreenControlBar];
     
     self.sourceButtonPicker = [[RicoSourcePickerButtons alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.sourceButtonPicker.delegate = self;
@@ -299,7 +297,7 @@ static void * eventContext      = &eventContext;
     _doubleTapOnGrid = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapOnQuad:)];
     _doubleTapOnGrid.numberOfTapsRequired = 2;
     [self.ricoZoomGroup addGestureRecognizer:_doubleTapOnGrid];
-
+    [self buildSourceButtons];
 }
 
 -(void)debugDrawerToggle
@@ -314,11 +312,14 @@ static void * eventContext      = &eventContext;
 
 -(void)reloadPlayers
 {
-//    [self.ricoZoomGroup subviews];
     
     NSArray         * feeds     = [self.currentEvent.feeds allValues];
     NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
     NSString        * mode      = [defaults objectForKey:@"mode"];
+    
+    
+    
+//    self.ricoPlayerViewController.pl
     
     // just make one player
     if ([mode isEqualToString:@"streamOp"]) {
@@ -415,29 +416,7 @@ static void * eventContext      = &eventContext;
         _currentSource = key;
     }
     
-    
-//    Encoder * enc = (Encoder *)self.currentEvent.parentEncoder;
-//    CameraResource * camResource = enc.cameraResource;
-//    
-//    switch (pickedSource) {
-//        case 0:
-//            _currentSource = ((Feed *) [camResource getFeedByLocation:kQuad1of4 event:self.currentEvent]).sourceName;
-//            break;
-//        case 1:
-//            _currentSource = ((Feed *) [camResource getFeedByLocation:kQuad2of4 event:self.currentEvent]).sourceName;
-//            break;
-//        case 2:
-//            _currentSource = ((Feed *) [camResource getFeedByLocation:kQuad3of4 event:self.currentEvent]).sourceName;
-//            break;
-//        case 3:
-//            _currentSource = ((Feed *) [camResource getFeedByLocation:kQuad4of4 event:self.currentEvent]).sourceName;
-//            break;
-//            
-//        default:
-//            break;
-//    }
-    
-    
+
     
     
     // just make one player
@@ -466,13 +445,50 @@ static void * eventContext      = &eventContext;
         
         for (RicoPlayer * player in rPlayers) {
             
-            player.hidden = YES;
+//            player.hidden = ([rPlayers count]==1)? NO: YES;
             [player refresh];
         }
-        RicoPlayer * showPlayer = rPlayers[picker.selectedTag];
-        showPlayer.hidden = NO;
         
-        [self.ricoPlayerViewController setPrimaryPlayerByFeedName:showPlayer.feed.sourceName];
+
+
+        Encoder * enc = (Encoder *)self.currentEvent.parentEncoder;
+        CameraResource * camResource = enc.cameraResource;
+        NSString* pick;
+        
+        
+        switch (picker.selectedTag) {
+            case 0:
+                pick = ((Feed *) [camResource getFeedByLocation:kQuad1of4 event:self.currentEvent]).sourceName;
+                break;
+            case 1:
+                pick = ((Feed *) [camResource getFeedByLocation:kQuad2of4 event:self.currentEvent]).sourceName;
+                break;
+            case 2:
+                pick = ((Feed *) [camResource getFeedByLocation:kQuad3of4 event:self.currentEvent]).sourceName;
+                break;
+            case 3:
+                pick = ((Feed *) [camResource getFeedByLocation:kQuad4of4 event:self.currentEvent]).sourceName;
+                break;
+                
+            default:
+                break;
+        }
+        
+        
+        for (RicoPlayer * rp in rPlayers) {
+            if ([rp.feed.sourceName isEqualToString:pick]) {
+                RicoPlayer * showPlayer = rPlayers[picker.selectedTag];
+                showPlayer.hidden = NO;
+                
+                [self.ricoPlayerViewController setPrimaryPlayerByFeedName:showPlayer.feed.sourceName];
+            }
+        }
+        
+        
+        if (self.currentEvent.local){
+            RicoPlayer * aplayer = [rPlayers firstObject];
+            aplayer.hidden = NO;
+        }
         
     }
     
@@ -482,12 +498,6 @@ static void * eventContext      = &eventContext;
     self.ricoZoomContainer.zoomEnabled = !self.ricoZoomContainer.zoomEnabled;
     self.ricoZoomContainer.zoomEnabled = !self.ricoZoomContainer.zoomEnabled;
     [self.ricoPlayerViewController cancelPressed:self.ricoPlayerControlBar];
-    
-    
-    
-
-    
-    
     
     if (self.ricoPlayerControlBar.state == RicoPlayerStateLive){
         self.ricoPlayerControlBar.state = RicoPlayerStateLive;
@@ -600,8 +610,39 @@ static void * eventContext      = &eventContext;
     [self.ricoPlayerViewController cancelPressed:self.ricoPlayerControlBar];
     
     
+    NSString * key;
+    Encoder * enc = (Encoder *)self.currentEvent.parentEncoder;
+    NSString * camloc;
+    
+    
+    switch (self.sourceButtonPicker.selectedTag) {
+        case 0:
+            camloc = kQuad1of4;
+            break;
+        case 1:
+            camloc = kQuad2of4;
+            break;
+        case 2:
+            camloc = kQuad3of4;
+            break;
+        case 3:
+            camloc = kQuad4of4;
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    
+    key = [enc.cameraResource getFeedByLocation:camloc event:self.currentEvent].sourceName;
+    
 
-    NSString * key = _sourceNames[self.sourceButtonPicker.selectedTag];
+//    key = _sourceNames[self.sourceButtonPicker.selectedTag];
+    
+    
+    
+    
     
     
     // just make one player
@@ -1166,20 +1207,28 @@ static void * eventContext      = &eventContext;
             NSString * camName;
             switch (i) {
                 case 0:
+                    madePlayer.name     = kQuad1of4;
                     camName             = [enc.cameraResource getCameraNameBy:kQuad1of4];
                     tempFeed            = [enc.cameraResource getFeedByLocation:kQuad1of4 event:_currentEvent];
+//                    if (!tempFeed) tempFeed = [enc.cameraResource getFeedByIndex:0 event:_currentEvent];
                     break;
                 case 1:
+                    madePlayer.name     = kQuad2of4;
                     camName             = [enc.cameraResource getCameraNameBy:kQuad2of4];
                     tempFeed           = [enc.cameraResource getFeedByLocation:kQuad2of4 event:_currentEvent];
+//                    if (!tempFeed) tempFeed = [enc.cameraResource getFeedByIndex:1 event:_currentEvent];
                     break;
                 case 2:
+                    madePlayer.name     = kQuad3of4;
                     camName             = [enc.cameraResource getCameraNameBy:kQuad3of4];
                     tempFeed           = [enc.cameraResource getFeedByLocation:kQuad3of4 event:_currentEvent];
+//                    if (!tempFeed) tempFeed = [enc.cameraResource getFeedByIndex:2 event:_currentEvent];
                     break;
                 case 3:
+                    madePlayer.name     = kQuad4of4;
                     camName             = [enc.cameraResource getCameraNameBy:kQuad4of4];
                     tempFeed           = [enc.cameraResource getFeedByLocation:kQuad4of4 event:_currentEvent];
+//                    if (!tempFeed) tempFeed = [enc.cameraResource getFeedByIndex:3 event:_currentEvent];
                     break;
                 default:
                     break;
@@ -1209,51 +1258,34 @@ static void * eventContext      = &eventContext;
 
 -(void)buildSourceButtons
 {
-    
-    
     [self.sourceButtonPicker setFrame:CGRectMake(155, 62, 300, 30)];
     [_sourceNames removeAllObjects];
     
-    
-    
     CameraResource * camResource = self.currentEvent.cameraResource;
-    
     
     _sourceNames    = [[((Encoder*)_encoderManager.primaryEncoder).event.feeds allKeys]mutableCopy];
     
-    
-    
-    
     [_sourceNames sortedArrayUsingSelector:@selector(compare:)];
     _sourceNames    =[[[_sourceNames reverseObjectEnumerator] allObjects]mutableCopy];
-    
     
     NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];
      [_sourceNames removeAllObjects];
     for (NSInteger i=0;i< [list count]; i++) {
         Feed * feed = [camResource getFeedByLocation:list[i] event:self.currentEvent];
         if (feed)[_sourceNames addObject:feed.sourceName];
-        
     }
-    
-    
-    
     
     _currentSource  = [_sourceNames firstObject];
 
     // not hiding
     self.multiCamButton.hidden = YES;
-    
-
         
     if ([_sourceNames count] > 1 || [_sourceNames count]==0) {
      self.multiCamButton.hidden = NO;
     }
     
     self.sourceButtonPicker.hidden = ([_sourceNames count]<=1);
-    
 
-        
     [self.sourceButtonPicker buildButtonsWithString:_sourceNames];
     [self.sourceButtonPicker selectButtonByIndex:0];
     
@@ -1278,92 +1310,6 @@ static void * eventContext      = &eventContext;
 }
 
 
-//-(void)onPressSourceButton:(id)sender
-//{
-//    if (self.telestrationViewController.telestration) {
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
-//    }
-//    self.ricoPlayerViewController.syncronizePlayers = NO;
-//    BOOL wasLive = (self.ricoPlayerControlBar.state == RicoPlayerStateLive);
-// 
-//    self.ricoZoomContainer.zoomEnabled = !self.ricoZoomContainer.zoomEnabled;
-//    self.ricoZoomContainer.zoomEnabled = !self.ricoZoomContainer.zoomEnabled;
-//    
-////    for (UIButton * b in _sourceButtons) {
-////        [b setBackgroundColor:[UIColor lightGrayColor]] ;
-////    }
-//    UIButton * button = sender;
-//    [button setBackgroundColor:PRIMARY_APP_COLOR] ;
-//
-//
-//    [self.ricoPlayerViewController cancelPressed:self.ricoPlayerControlBar];
-//    
-//    
-//    // Getting user preferences
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    NSString * mode =  [defaults objectForKey:@"mode"];
-//
-//    NSString * key;
-//    if (button.tag< [_sourceNames count]){
-//        key = _sourceNames[button.tag];
-//        _currentSource = key;
-//    }
-//    // just make one player
-//    if ([mode isEqualToString:@"streamOp"]) {
-//        
-//        RicoPlayer * aplayer = [[self.ricoPlayerViewController.players allValues]firstObject];;
-//        
-//        CMTime time = aplayer.currentTime;
-//        
-//
-//        Feed * aFeed = self.currentEvent.feeds[key];
-//        aFeed.quality = 1;
-//        [aplayer loadFeed:aFeed];
-//        
-//        [aplayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
-//        
-//        
-//        if (aplayer.isPlaying) {
-//            [aplayer play];
-//        }
-//        [aplayer refresh];
-//
-//    } else {
-////        NSArray * rPlayers = [self.ricoPlayerViewController.players allValues];
-////        
-////        
-////        if (button.tag == [self.sourceButtons count]-1){
-////            self.ricoZoomGroup.gridMode = YES;
-////            self.ricoPlayerViewController.syncronizePlayers = YES;
-////        } else {
-////            self.ricoZoomGroup.gridMode = NO;
-////            
-////            for (RicoPlayer * player in rPlayers) {
-////                
-////                player.hidden = YES;
-////                [player refresh];
-////            }
-////            RicoPlayer * showPlayer = rPlayers[button.tag];
-////            showPlayer.hidden = NO;
-////        }
-////
-//        
-//
-//    
-//    }
-//
-//    if (wasLive){
-//        self.ricoPlayerControlBar.state = RicoPlayerStateLive;
-//    }
-//
-//    
-//
-//    
-//
-//
-//}
-//
-
 
 -(void)controlBarPlay
 {
@@ -1381,7 +1327,7 @@ static void * eventContext      = &eventContext;
 
 - (NSTimeInterval)currentTimeInSeconds
 {
-    return CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayers.currentTime);
+    return CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayer.currentTime);
 }
 
 #pragma mark -
@@ -1395,7 +1341,7 @@ static void * eventContext      = &eventContext;
 //    [self.ricoPlayerViewController seekToTime:self.ricoPlayerViewController.currentTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
 //        
 //    }];
-    
+    telestration.sourceName = self.ricoPlayerViewController.primaryPlayer.feed.sourceName;
     self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = YES;
     self.ricoPlayerControlBar.playPauseButton.paused =YES;
     if(self.ricoFullScreen.fullscreen){
@@ -1424,7 +1370,7 @@ static void * eventContext      = &eventContext;
     
     NSTimeInterval timeTele = CMTimeGetSeconds([self.ricoPlayerViewController currentTime]) ;//CMTimeGetSeconds([self.ricoPlayerViewController currentTimeFromSourceName:_currentSource]);//
 
-    tele.sourceName = _currentSource;//self.playerViewController.playerView.activePlayerName;
+//    tele.sourceName = _currentSource;//self.playerViewController.playerView.activePlayerName;
     NSDictionary * dict = @{
                             @"time":            [NSString stringWithFormat:@"%f",timeTele],
                             @"duration":        @"1",//[NSString stringWithFormat:@"%i",(int)roundf(tele.duration)]
@@ -1652,7 +1598,7 @@ static void * eventContext      = &eventContext;
 {
     SideTagButton *button = (SideTagButton*)sender;
 
-    NSTimeInterval currentTime =     CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayers.currentTime);
+    NSTimeInterval currentTime =     CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayer.currentTime);
     
     NSArray *players;
     if (_playerDrawerLeft.view.superview == self.view) {
@@ -1860,7 +1806,7 @@ static void * eventContext      = &eventContext;
     }
     
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
-    CMTime  cTime = self.ricoPlayerViewController.primaryPlayers.currentTime;
+    CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
 
     self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
     
@@ -1950,7 +1896,7 @@ static void * eventContext      = &eventContext;
         endTime = endTime + 5;
         //if new end time is greater the duration of video, set it to the video's duration
         
-        RicoPlayer * mainPlayer =         self.ricoPlayerViewController.primaryPlayers;
+        RicoPlayer * mainPlayer =         self.ricoPlayerViewController.primaryPlayer;
 
         if (endTime > CMTimeGetSeconds(mainPlayer.duration)) {
             endTime = CMTimeGetSeconds(mainPlayer.duration);

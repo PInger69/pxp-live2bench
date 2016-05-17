@@ -93,6 +93,7 @@ static LocalEncoder * instance;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
   
         instance = self;
+        self.cameraResource = [CameraResource new];
     }
     return self;
 }

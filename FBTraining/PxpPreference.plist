@@ -59,7 +59,7 @@
 		<key>DuelView</key>
 		<dict>
 			<key>Active</key>
-			<false/>
+			<true/>
 			<key>Visible</key>
 			<true/>
 		</dict>

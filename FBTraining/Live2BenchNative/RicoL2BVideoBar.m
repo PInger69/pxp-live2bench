@@ -325,12 +325,12 @@
 }
 
 - (NSTimeInterval)selectedTimeInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
-    NSTimeInterval selectedTime = CMTimeGetSeconds(_playerViewController.primaryPlayers.currentTime);
+    NSTimeInterval selectedTime = CMTimeGetSeconds(_playerViewController.primaryPlayer.currentTime);
     return isfinite(selectedTime) ? selectedTime : 0.0;
 }
 
 - (BOOL)shouldDisplaySelectedTimeInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
-    return _event.tags.count && _playerViewController.primaryPlayers;
+    return _event.tags.count && _playerViewController.primaryPlayer;
 }
 
 #pragma mark - Private Methods
@@ -340,7 +340,7 @@
 }
 
 - (NSTimeInterval)durationOfVideoPlayer {
-    NSTimeInterval duration = CMTimeGetSeconds(_playerViewController.primaryPlayers.duration);
+    NSTimeInterval duration = CMTimeGetSeconds(_playerViewController.primaryPlayer.duration);
     return isfinite(duration) ? duration : 0.0;
 }
 

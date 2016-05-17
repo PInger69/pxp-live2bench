@@ -24,6 +24,7 @@
 @interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate,ActionListItem,EventDelegate>
 
 @property (nonatomic, weak)     EncoderManager          *encoderManager;
+@property (nonatomic,strong) CameraResource * cameraResource;
 //@property (nonatomic,strong)    NSString                * name;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;

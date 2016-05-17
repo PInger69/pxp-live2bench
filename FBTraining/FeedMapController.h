@@ -47,6 +47,8 @@ extern NSString * const kQuad4of4;
 
 -(void)populate;
 
+
+-(void)reloadStreams;
 -(void)refresh;
 -(void)refreshLocationCells;
 -(void)submitChanges;

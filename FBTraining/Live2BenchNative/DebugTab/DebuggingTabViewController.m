@@ -13,6 +13,9 @@
 #import "UserCenter.h"
 
 #import "VKPlayerViewController.h"
+#import "FeedMapDisplay.h"
+#import "StreamViewVideoKit.h"
+
 
 @interface DebuggingTabViewController ()
 {
@@ -65,7 +68,7 @@
     NSDictionary *options = @{ @"rtsp_transport":@"tcp"};
     
     
-    VKPlayerController * playerView2 =  [[VKPlayerController alloc]initWithURLString:@"rtsp://172.18.2.102:9000/pxpstr"];
+    VKPlayerController * playerView2 =  [[VKPlayerController alloc]initWithURLString:@"rtsp://172.18.2.102:8600/pxpstr"];
     playerView2.decoderOptions = options;
     [self.list addObject:playerView2];
     [playerView2.view setFrame:CGRectMake(100, 100, 150, 100)];
@@ -82,9 +85,61 @@
     playerView1.controlStyle = kVKPlayerControlStyleNone;
     [playerView1 play];
     
+    
+    StreamViewVideoKit * stream = [[StreamViewVideoKit alloc]initWithFrame:CGRectMake(200, 400, 150, 100)];
+    [stream url:@"rtsp://172.18.2.102:8600/pxpstr"];
+    [self.view addSubview:stream.view];
+    
+    
+    
+    
+    
+    
+    
+    [self sessionTest];
+    
+    
+    
 }
 
+-(void)sessionTest
+{
+    NSURLSession * sess;
+    
+    NSURLSessionConfiguration*sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfig.allowsCellularAccess              = NO;
+    sessionConfig.timeoutIntervalForRequest         = 10;
+    sessionConfig.timeoutIntervalForResource        = 10;
+    sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
 
+    
+    sess    = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
+    NSURL * theUrl = [NSURL URLWithString: @"http://172.18.2.102/min/ajax/auth/%7B%22id%22:%22356a192b7913b04c54574d18c28d46e6395428ab%22%7D"];
+    
+    NSURLSessionTask *task;
+    
+    
+    task= [sess dataTaskWithURL:theUrl completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        
+        // Parse JSON
+        NSError* parseError;
+        id object = (NSDictionary*)[NSJSONSerialization
+                                    JSONObjectWithData:data
+                                    options:0
+                                    error:&parseError];
+        
+        
+              
+    }];
+    
+    
+//    task= sess da
+    
+    [task resume];
+
+
+}
 
 
 
