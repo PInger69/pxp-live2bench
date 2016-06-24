@@ -215,11 +215,16 @@
     
     tableViewController.arrayOfAllData      = [temp mutableCopy];
     calendarViewController.arrayOfAllData   = tableViewController.arrayOfAllData;
+    [calendarViewController.calendar reloadData];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [[LocalMediaManager getInstance] refresh];
+    [self refresh];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning

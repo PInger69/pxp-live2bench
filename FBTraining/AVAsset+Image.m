@@ -19,7 +19,7 @@
     
     AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:copyAsset];
     
-//    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:self]; 
+
     
     CGImageRef imageRef = [generator copyCGImageAtTime:time actualTime:NULL error:&error];
     UIImage *image = [UIImage imageWithCGImage:imageRef];

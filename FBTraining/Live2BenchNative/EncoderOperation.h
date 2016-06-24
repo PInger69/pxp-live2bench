@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "EncoderParseProtocol.h"
 #import "Encoder.h" // this should be a Protocol
+#import "EncoderProtocol.h"
 #import "BooleanOperation.h"
+#import "TagProtocol.h"
 
 @interface EncoderOperation : BooleanOperation <NSURLSessionDelegate,NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
 
@@ -21,7 +23,7 @@
 
 #pragma mark - EncoderOperation Methods
 
-@property (nonatomic,strong)      Encoder         * encoder;
+@property (nonatomic,strong)    id <EncoderProtocol> encoder;
 @property (nonatomic,assign)    ParseMode       parseMode;
 
 @property (nonatomic,strong)    NSURLSession    * session;
@@ -78,7 +80,14 @@
 
 
 @interface EncoderOperationModTag : EncoderOperation
+@property (nonatomic,weak) id <TagProtocol>  tag;
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder tag:(id <TagProtocol>)tag;
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(id <TagProtocol>)tag;
+@end
+
+@interface EncoderOperationCloseTag : EncoderOperation
 @property (nonatomic,weak) Tag * tag;
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder tag:(Tag*)tag;
 - (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag;
 @end
 
@@ -87,6 +96,7 @@
 @end
 
 @interface EncoderOperationMakeTag : EncoderOperation
+@property (nonatomic,assign)    BOOL generateProxyTag;
 @end
 
 
@@ -100,4 +110,26 @@
 
 @interface EncoderOperationCameraStartTimes : EncoderOperation
 @end
+
+
+@interface EncoderOperationCheckSpace : EncoderOperation
+@end
+
+@interface EncoderOperationStatAndSync : EncoderOperation
+@end
+
+
+@interface EncoderOperationLocalTagPost : EncoderOperation
+@property (nonatomic,strong) NSDictionary* tagData;
+@property (nonatomic,strong) NSString* tagHash;
+@property (nonatomic,strong) NSString* type;
+
+-(instancetype)initTagData:(NSDictionary*)tagData;
+-(instancetype)initTagModData:(NSDictionary*)tagData;
+-(void)updateWithEncoder:(id<EncoderProtocol>)aEncoder;
+@end
+
+
+
+
 

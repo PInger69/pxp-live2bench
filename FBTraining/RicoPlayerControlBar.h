@@ -58,6 +58,7 @@ typedef NS_ENUM (NSInteger, RicoPlayerState){
 
 - (void)update:(CMTime)time duration:(CMTime)duration;
 
+
 // This use to zero out the side times and puts the bar in a no controlled state
 -(void)clear;
 

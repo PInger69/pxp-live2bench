@@ -163,7 +163,7 @@
     for (SideTagEditButtonDisplayView * d in self.tagSetButtons) {
         d.typeLabel.text = @"None";
         d.typeLabel.textColor = [UIColor grayColor];
-        [d.button setTitle:@"" forState:UIControlStateNormal];
+        [d.button setTitle:@" " forState:UIControlStateNormal];
         d.enabled = ![self.currentTagSetName isEqualToString:DEFAULT_TAG_SET];        // you cant mod the default
     }
     
@@ -303,7 +303,7 @@
     
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = @"";
+        textField.text = display.name;
     }];
     
 
@@ -396,25 +396,74 @@
     NSMutableDictionary * customersTagSetData = [[defaults objectForKey:[UserCenter getInstance].customerEmail]mutableCopy];
     NSMutableDictionary * userTagSets = [customersTagSetData[@"tagSets"] mutableCopy];
     
+//
+//    [customersTagSetData setObject:DEFAULT_TAG_SET forKey:@"currentTagSetName"];
+//    
+//    [userTagSets removeObjectForKey:name];
+//    [customersTagSetData setObject:userTagSets forKey:@"tagSets"];
+//    
+//    [defaults setObject:customersTagSetData forKey:[UserCenter getInstance].customerEmail];
+//    [defaults synchronize];
+//    
+//    [self.listTagSetName removeObject:name];
+//    [self.tagSetPicker reloadAllComponents];
+//    self.currentTagSetName = name;
+//    
+//    self.currentTagSetName = nil;
+//    
+//    [self pickerView:self.tagSetPicker didSelectRow:0 inComponent:0];
+//    [self.tagSetPicker selectRow:[self.listTagSetName indexOfObject:DEFAULT_TAG_SET] inComponent:0 animated:YES];
+//
+//    
+    
+    
 
-    [customersTagSetData setObject:DEFAULT_TAG_SET forKey:@"currentTagSetName"];
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:@"Tag Set Builder"
+                                  message:@"Are you sure you want to delete this tag set"
+                                  preferredStyle:UIAlertControllerStyleAlert];
     
-    [userTagSets removeObjectForKey:name];
-    [customersTagSetData setObject:userTagSets forKey:@"tagSets"];
-    
-    [defaults setObject:customersTagSetData forKey:[UserCenter getInstance].customerEmail];
-    [defaults synchronize];
-    
-    [self.listTagSetName removeObject:name];
-    [self.tagSetPicker reloadAllComponents];
-    self.currentTagSetName = name;
-    
-    self.currentTagSetName = nil;
-    
-    [self pickerView:self.tagSetPicker didSelectRow:0 inComponent:0];
-    [self.tagSetPicker selectRow:[self.listTagSetName indexOfObject:DEFAULT_TAG_SET] inComponent:0 animated:YES];
+    UIAlertAction* yesButton = [UIAlertAction
+                                actionWithTitle:@"Yes"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action)
+                                {
+                                    [customersTagSetData setObject:DEFAULT_TAG_SET forKey:@"currentTagSetName"];
+                                    
+                                    [userTagSets removeObjectForKey:name];
+                                    [customersTagSetData setObject:userTagSets forKey:@"tagSets"];
+                                    
+                                    [defaults setObject:customersTagSetData forKey:[UserCenter getInstance].customerEmail];
+                                    [defaults synchronize];
+                                    
+                                    [self.listTagSetName removeObject:name];
+                                    [self.tagSetPicker reloadAllComponents];
+                                    self.currentTagSetName = name;
+                                    
+                                    self.currentTagSetName = nil;
+                                    
+                                    [self pickerView:self.tagSetPicker didSelectRow:0 inComponent:0];
+                                    [self.tagSetPicker selectRow:[self.listTagSetName indexOfObject:DEFAULT_TAG_SET] inComponent:0 animated:YES];
 
+                                    [alert dismissViewControllerAnimated:YES completion:nil];
+                                    
+                                }];
+    UIAlertAction* noButton = [UIAlertAction
+                               actionWithTitle:@"Cancel"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action)
+                               {
+                                   
+                                   [alert dismissViewControllerAnimated:YES completion:nil];
+                               }];
+    
+    [alert addAction:yesButton];
+    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 
+    
+    
 }
 
 #pragma mark - UIPickerViewDataSource Delegate Methods
@@ -447,11 +496,9 @@
     
     if ( [self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
         
-        
         [self setUpButtons:[UserCenter getInstance].defaultTagNames];
     } else {
-        
-        
+
         NSDictionary * customersTagSetData = [defaults objectForKey:[UserCenter getInstance].customerEmail];
         [self setUpButtons:customersTagSetData[@"tagSets"][self.listTagSetName[row]]];
     }

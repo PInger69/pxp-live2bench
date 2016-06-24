@@ -582,7 +582,8 @@ static void * encoderTagContext = &encoderTagContext;
                 [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
             }
             
-            if (!weakThumb) {
+            if (!weakThumb && [tagSelect respondsToSelector:@selector(thumbnailForSource:)]) {
+                
                 weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
             }
        
@@ -769,7 +770,7 @@ static void * encoderTagContext = &encoderTagContext;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    
+  
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
     
     
@@ -789,8 +790,8 @@ static void * encoderTagContext = &encoderTagContext;
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     [sourceSelectPopover clear];
     
-     if (selectedCell.data.event.feeds.count >=2 && !tagSelect.telestration) { // if is new
-        NSArray * listOfScource = [[selectedCell.data.event.feeds allKeys]sortedArrayUsingSelector:@selector(compare:)];
+     if (selectedCell.data.eventInstance.feeds.count >=2 && !tagSelect.telestration) { // if is new
+        NSArray * listOfScource = [[selectedCell.data.eventInstance.feeds allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
         [sourceSelectPopover setListOfButtonNames:listOfScource];
         
@@ -818,7 +819,7 @@ static void * encoderTagContext = &encoderTagContext;
             [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
                 
                 // Get the feed
-                NSDictionary *feeds = selectedCell.data.event.feeds;
+                NSDictionary *feeds = selectedCell.data.eventInstance.feeds;
                 Feed *feed = feeds[pick] ? feeds[pick] : feeds.allValues.firstObject;
                 
 
@@ -844,7 +845,7 @@ static void * encoderTagContext = &encoderTagContext;
         
     } else if (tagSelect.telestration) {
         
-        Feed *feed = selectedCell.data.event.feeds[tagSelect.telestration.sourceName];
+        Feed *feed = selectedCell.data.eventInstance.feeds[tagSelect.telestration.sourceName];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
                                                            object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
@@ -864,7 +865,7 @@ static void * encoderTagContext = &encoderTagContext;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
     }  else {
         
-        Feed *feed = [[selectedCell.data.event.feeds allValues] firstObject];
+        Feed *feed = [[selectedCell.data.eventInstance.feeds allValues] firstObject];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
                                                            object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         

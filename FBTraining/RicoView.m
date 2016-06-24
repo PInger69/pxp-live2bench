@@ -31,5 +31,22 @@
     self.player = ricoPlayer.avPlayer;
 }
 
+//-(UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+//{
+// 
+//    
+//    
+//    NSLog(@"loc: %@",NSStringFromCGPoint(point));
+//    NSLog(@"%@ frame: %@",self,NSStringFromCGRect(self.frame));
+//    if ([self pointInside:point withEvent:event]){
+//        return self;
+//    } else {
+//        return [super hitTest:point withEvent:event];
+//    }
+//    
+//    
+//}
+
+
 
 @end

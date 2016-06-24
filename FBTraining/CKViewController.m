@@ -1,11 +1,11 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CKViewController.h"
-#import "CKCalendarView.h"
+
 #import "Event.h"
 
 @interface CKViewController () <CKCalendarDelegate>
 
-@property(nonatomic, weak) CKCalendarView *calendar;
+
 @property(nonatomic, strong) UILabel *dateLabel;
 @property(nonatomic, strong) NSDateFormatter *dateFormatter;
 @property(nonatomic, strong) NSDate *minimumDate;

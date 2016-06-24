@@ -16,14 +16,14 @@
 
 
 @property (nonatomic,strong)    NSString                * name;
-@property (nonatomic, weak)     EncoderManager          * encoderManager;
+
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
+@property (nonatomic,strong)    NSMutableDictionary            * allEvents;    // all events on the encoder keyed by HID
 @property (readonly, strong, nonatomic) PxpEventContext *eventContext;
 @property (nonatomic, copy) void(^onComplete)();
-@property (nonatomic,readonly)    NSString             * version;
+@property (nonatomic,strong)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;
 @property (nonatomic,strong)    Event                * liveEvent;

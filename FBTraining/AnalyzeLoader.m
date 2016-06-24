@@ -37,8 +37,8 @@
         self.operationQueue     = [NSOperationQueue new];
         self.tagModResponces    = [NSMutableArray new];
         self.status             = ANALYZE_LOADER_STATE_IDLE;
-        self.event              = self.currentTag.event;
-        self.encoder            = (Encoder *)self.currentTag.event.parentEncoder;
+        self.event              = self.currentTag.eventInstance;
+        self.encoder            = (Encoder *)self.currentTag.eventInstance.parentEncoder;
     }
     return self;
 }

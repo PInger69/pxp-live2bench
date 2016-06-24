@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+//#import <AVFoundation/AVFoundation.h>
 #import "DownloadItem.h"
 @interface Utility : NSObject
+//+(NSString*)timeToString:(CMTime)time;
 +(NSString*)translateTimeFormat:(float)time;
 +(NSString*)encodeSpecialCharacters:(NSString*)inputString;
 

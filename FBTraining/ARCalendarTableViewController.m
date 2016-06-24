@@ -31,7 +31,7 @@
 @property (strong, nonatomic) ListPopoverController* teamPick;
 @property (strong, nonatomic) ListPopoverController* cameraPick;
 @property (strong, nonatomic) NSMutableDictionary *downloadSizeDict;
-
+@property (weak,nonatomic) Event * selectedEvent;
 @end
 
 
@@ -169,6 +169,32 @@
             [day2 era] == [day era]);
 }
 
+
+-(void)downloadAllButtonPress:(id)sender
+{
+    if (!self.selectedEvent) return;
+    
+    __block Event * selectedEvent                       = self.selectedEvent;
+    __block ARCalendarTableViewController * weakSelf    = self;
+    
+    NSArray * sourceList = [selectedEvent.feeds allKeys];
+    
+    [selectedEvent setOnComplete:^{
+        for (NSString * sourceKey in sourceList) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:selectedEvent userInfo:@{@"source":sourceKey}];
+        }
+        [weakSelf reloadData];
+    }];
+    
+    [selectedEvent build];
+    
+    
+
+    
+    
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -243,9 +269,7 @@
                 }
             }]resume];
             
-            
-
-            
+ 
         } else {
             collapsableCell.dowdloadSize.text = self.downloadSizeDict[data];
         }
@@ -358,7 +382,7 @@
     }
     
     ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
-    
+    cell.downloadAll.hidden = YES;
     cell.swipeRecognizerLeft.enabled = self.swipeableMode;
     
     cell.deleteBlock = ^(UITableViewCell *theCell){
@@ -368,6 +392,7 @@
     };
     
     
+    [cell.downloadAll addTarget:self action:@selector(downloadAllButtonPress:) forControlEvents:UIControlEventTouchUpInside];
     cell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
     cell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
     [cell.dateLabel setTextColor:[UIColor blackColor]];
@@ -380,7 +405,7 @@
     Event *event;
     
     if (firstIndexPath.row < indexPath.row) {
-        event = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+        event = self.tableData[indexPath.row - self.arrayOfCollapsableIndexPaths.count];
     }else{
         event = self.tableData[indexPath.row];
     }
@@ -396,8 +421,6 @@
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
     NSString *leagueString = [[[[event.teams allValues] firstObject] league] name];
     
-    //    cell.downloadButton.hidden = NO;
-    //    cell.playButton.hidden = NO;
     
     [cell.timeLabel setText: [bothStrings[1] substringToIndex: 5]];
     [cell.dateLabel setText: bothStrings[0]];
@@ -405,10 +428,6 @@
     [cell.downloadInfoLabel setText:@"0 / 0"];
     [cell.leagueLabel setText:leagueString];
 
-    
-//    if ()
-    
-    
     if (localOne) {
         [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) ([localOne.originalFeeds count]), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.originalFeeds, NSLocalizedString(@"Sources", nil)]];
     }
@@ -830,12 +849,14 @@
     }else{
         event = self.tableData[indexPath.row];
     }
-    
+    self.selectedEvent = event;
    
     
 //    ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
 //    [lastCell isSelected:NO];
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
+    
     [currentCell isSelected:YES];
     if ([event.originalFeeds allValues].count >= 1) {
         [self.arrayOfSelectedEvent addObject:event.name];
@@ -893,6 +914,8 @@
         [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView scrollToRowAtIndexPath:self.lastSelectedIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         [self.tableView endUpdates];
+        
+        if ([Utility hasWiFi]) currentCell.downloadAll.hidden = NO;
     }else{
         
         [self.tableView beginUpdates];
@@ -904,6 +927,7 @@
         [self.tableView reloadRowsAtIndexPaths:@[temp] withRowAnimation:NO];
         self.swipeableMode = YES;
         [self.tableView endUpdates];
+        currentCell.downloadAll.hidden = YES;
     }
     
     

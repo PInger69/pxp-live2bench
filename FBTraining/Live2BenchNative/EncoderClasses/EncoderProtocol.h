@@ -8,30 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "PxpEventContext.h"
+#import "EncoderParseProtocol.h"
+#import "CameraResource.h"
 
-#define AUTHENTICATE    @"authenticate:timeStamp:"
-#define BUILD           @"buildEncoder:timeStamp:"
-#define VERSION         @"requestVersion:timeStamp:"
-#define SHUTDOWN        @"shutdown:timeStamp:"
-#define MODIFY_TAG      @"modifyTag:timeStamp:"
-#define MAKE_TAG        @"makeTag:timeStamp:"
-#define MAKE_TELE_TAG   @"makeTeleTag:timeStamp:"
-#define SUMMARY_GET     @"summaryGet:timeStamp:"
-#define SUMMARY_PUT     @"summaryPut:timeStamp:"
-#define TEAMS_GET       @"teamsGet:timeStamp:"
-#define EVENT_GET_TAGS  @"eventTagsGet:timeStamp:"
-#define CAMERAS_GET     @"camerasGet:timeStamp:"
-#define ALL_EVENTS_GET_ @"allEventsGet:timeStamp:"
-#define DELETE_EVENT    @"deleteEvent:timeStamp:"
-
-#define STOP_EVENT      @"stopEvent:timeStamp:"
-#define PAUSE_EVENT     @"pauseEvent:timeStamp:"
-#define RESUME_EVENT    @"resumeEvent:timeStamp:"
-#define START_EVENT     @"startEvent:timeStamp:"
 
 @class Event;
-@class EncoderManager;
 @class EncoderOperation;
+
 
 typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
     ENCODER_STATUS_UNKNOWN        = 0,
@@ -56,12 +39,21 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @protocol EncoderProtocol <NSObject>
 
 @property (nonatomic,strong)    NSString                * name;
-@property (nonatomic, weak)     EncoderManager          * encoderManager;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
+@property (nonatomic,strong)    Event                   * liveEvent;
+@property (nonatomic,strong)    NSMutableDictionary            * allEvents;    // all events on the encoder keyed by HID
 @property (readonly, strong, nonatomic) PxpEventContext *eventContext;
+
+@property (nonatomic,strong)    NSString        *urlProtocol;//http
+@property (nonatomic,strong)    NSString        * ipAddress;
+@property (nonatomic,strong)    id <EncoderParseProtocol> parseModule;
+@property (nonatomic,strong)    NSMutableSet    *postedTagIDs;
+@property (nonatomic,assign )  BOOL            authenticated;
+@property (nonatomic,strong)    CameraResource              * cameraResource;
+@property (nonatomic,strong)  NSString        * version;
+@property (nonatomic,strong)    NSOperationQueue * operationQueue; // new
 
 -(id <EncoderProtocol>)makePrimary;
 -(id <EncoderProtocol>)removeFromPrimary;
@@ -75,19 +67,19 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 // This adds a layer of abstarction so we let the encoder it self manage the operaions
 -(void)runOperation:(EncoderOperation*)operation;
 
-
 @optional
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void(^)(NSDictionary*userInfo))onComplete;
 @property (nonatomic, copy) void(^onComplete)();
-@property (nonatomic,readonly)    NSString             * version;
+
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;
-@property (nonatomic,strong)    Event                * liveEvent;
+
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 -(void)resetEventAfterRemovingFeed:(Event *)event;
 -(void)clearQueueAndCurrent;
 -(void) writeToPlist;
-
-
+-(void)encoderStatusChange:(EncoderStatus)status;
+-(void)encoderStatusStringChange:(NSDictionary *)data;
+-(void)assignMaster:(NSDictionary *)data extraData:(BOOL)olderVersion;
 @end

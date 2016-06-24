@@ -104,6 +104,9 @@
 
 static BOOL hasUserInteracted;
 
+static Feed * _topPick;
+static Feed * _bottomPick;
+
 
 @implementation RicoDualViewTabViewController
 
@@ -208,6 +211,7 @@ static BOOL hasUserInteracted;
 // encoderOberver
 -(void)addEventObserver:(NSNotification *)note
 {
+    
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
     if (_observedEncoder != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
@@ -218,6 +222,8 @@ static BOOL hasUserInteracted;
     }else{
         _observedEncoder = (id <EncoderProtocol>) note.object;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+        _bottomPick = nil;
+        _topPick = nil;
     }
 }
 
@@ -435,11 +441,15 @@ static BOOL hasUserInteracted;
 //    [DebugOutput getInstance].frame = CGRectMake(10, 60, 400, 200);
     [self.view addSubview:self.forwardSeekButton];
     [self.view addSubview:self.backSeekButton];
-    
+
+
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+
     
     [self updateSideTags];
 
@@ -545,13 +555,23 @@ static BOOL hasUserInteracted;
 
      
      }
-}
+    
+   }
 
-//-(void)viewDidAppear:(BOOL)animated
-//{
-//    [super viewDidAppear:animated];
-//   [self.playerControls setNeedsDisplay]; // sometimes the bar does not refresh when it appears
-//}
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (_topPick) {
+        [self.topViewFeedSelectionController highLightFeed:_topPick];
+        
+    }
+    
+    if (_bottomPick) {
+        [self.bottomViewFeedSelectionController highLightFeed:_bottomPick];
+        
+    }
+}
 
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -858,6 +878,14 @@ static BOOL hasUserInteracted;
     hasUserInteracted = YES; // this keep trach if the user has changed something
     
     
+    if (feedSelectionController == self.topViewFeedSelectionController) {
+        _topPick = feed;
+    } else {
+        _bottomPick = feed;
+    }
+    
+    
+    
     BOOL wasLive = (self.playerControls.state == RicoPlayerStateLive);
     [self.playerViewController cancelPressed:self.playerControls];
     
@@ -880,6 +908,8 @@ static BOOL hasUserInteracted;
     
         if (feedSelectionController == self.topViewFeedSelectionController) {
             if ([mode isEqualToString:@"streamOp"]) {
+                
+                if ([[RicoPlayerPool instance].pooledPlayers count] == 0) return;
                 
                 RicoPlayer * onlySingletionPlayer = [RicoPlayerPool instance].pooledPlayers[0];
                 feed.quality    = 1;
@@ -909,7 +939,7 @@ static BOOL hasUserInteracted;
            
             if ([mode isEqualToString:@"streamOp"]) {
               
-                
+                if ([[RicoPlayerPool instance].pooledPlayers count] == 0) return;
                 
                 RicoPlayer * mainPlayer = [RicoPlayerPool instance].pooledPlayers[0];
                 feed.quality    = 1;
@@ -991,12 +1021,12 @@ static BOOL hasUserInteracted;
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
-    self.recording = NO;
-    self.backSeekButton.enabled = YES;
-    self.forwardSeekButton.enabled = YES;
-    self.slomoButton.enabled = YES;
-    self.liveButton.hidden = NO;
-    self.playerControls.enabled         = YES;
+    self.recording                  = NO;
+    self.backSeekButton.enabled     = YES;
+    self.forwardSeekButton.enabled  = YES;
+    self.slomoButton.enabled        = YES;
+    self.liveButton.hidden          = NO;
+    self.playerControls.enabled     = YES;
     [self.periodTableViewController setHidden:NO animated:YES];
     
     if (!self.fullscreenView){
@@ -1008,13 +1038,22 @@ static BOOL hasUserInteracted;
 
     Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
 
-    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tag makeTagData]];
-
-    [tagData setValue:[NSString stringWithFormat:@"%f", endTime] forKey:@"closetime"];
-    [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
-    [tagData setValue:self.durationTagID forKey:@"dtagid"];
+//    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tag makeTagData]];
+//    [tagData setValue:[NSString stringWithFormat:@"%f", endTime] forKey:@"closetime"];
+//    [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+//    [tagData setValue:self.durationTagID forKey:@"dtagid"];
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
+    tag.type = TagTypeCloseDuration;
+    tag.closeTime = endTime;
+    tag.duration = (int)(tag.closeTime - tag.startTime);
+    //
+    
+    Encoder * eventEncoder = (Encoder *)_currentEvent.parentEncoder;
+    EncoderOperation * closeTagOperation = [[EncoderOperationCloseTag alloc]initEncoder:eventEncoder tag:tag];
+    [eventEncoder runOperation:closeTagOperation];
+    
+    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
     self.durationTagID = nil;
     
     self.timeLabel.textColor = [UIColor lightGrayColor];

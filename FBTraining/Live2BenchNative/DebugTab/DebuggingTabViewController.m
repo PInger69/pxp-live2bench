@@ -15,7 +15,8 @@
 #import "VKPlayerViewController.h"
 #import "FeedMapDisplay.h"
 #import "StreamViewVideoKit.h"
-
+#import "AVAsset+Image.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface DebuggingTabViewController ()
 {
@@ -61,7 +62,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    return;
     NSString * urls;
     //    urls = @"rtsp://172.18.2.105:554/stream1";
     urls = @"rtsp://172.18.2.102:9000/pxpstr";
@@ -148,12 +149,84 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     
-
+    NSString * path = @"http://192.168.1.104/events/live/video/list_01hq.m3u8";
+    NSLog(@"");
+    
+    UIImage * test = [self thumbnailForSource:path time:100];
+    
+    
+    
+    NSLog(@"DONE Thumb from LIVE");
 }
 
 
 
 
+- (nullable UIImage *)thumbnailForSource:(nullable NSString *)source time:(NSTimeInterval)time{
+    
+//    CGSize size = CGSizeMake(100, 100);
+    
+    NSURL * url = [NSURL URLWithString:source];
+    
+    AVAsset *asset;
+    asset = [AVAsset assetWithURL:url];
+//    AVURLAsset *asset;
+//    asset =  [AVURLAsset URLAssetWithURL:url options:nil];
+//    asset = [[AVURLAsset alloc]initWithURL:url options:nil];
+    
+    
+//    AVAsset * copyAsset = [asset copy];
+    // for some starange reason if you call .metadata on the av asset before it goes in to AVAssetImageGenerator it will no error out
+    
+    
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    generator.appliesPreferredTrackTransform = YES;
+    generator.maximumSize = CGSizeMake(100, 100);
+    
+    NSError *error = NULL;
+    CMTime ttime = CMTimeMake(1, 65);
+    
+    CGImageRef imageRef = [generator copyCGImageAtTime:ttime actualTime:NULL error:&error];
+    
+    
+    [generator generateCGImagesAsynchronouslyForTimes:@[[NSValue valueWithCMTime:ttime]] completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable image, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
+        NSLog(@"");
+    }];
+    
+    
+    NSLog(@"error==%@, Refimage==%@", error, imageRef);
+    
+    UIImage *thumb = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    
+    if (error) {
+        
+    }
+    
+
+    
+    
+    
+    
+
+    UIGraphicsBeginImageContext(thumb.size);
+    
+    [thumb drawInRect:CGRectMake(0.0, 0.0, thumb.size.width, thumb.size.height)];
+//    [self.telestration.thumbnail drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+    
+    thumb = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    
+    
+    
+    MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    UIImage  *thumbnail = [player thumbnailImageAtTime:100.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+    
+    
+    
+    return thumb;
+}
 
 
 

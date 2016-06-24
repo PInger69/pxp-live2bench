@@ -29,7 +29,7 @@
     self = [super init];
     if (self) {
         encoderManager  = appDel.encoderManager;
-        monitorSize     = CGSizeMake(400, 100);
+        monitorSize     = CGSizeMake(600, 100);
         builtMonitors   = [[NSMutableDictionary alloc]init];
         self.view       = [[UIView alloc]initWithFrame:CGRectMake(10, 200,400, 400)];
         self.view.backgroundColor = [UIColor colorWithWhite:0.95f alpha: 1.0f];
@@ -118,7 +118,7 @@
     
     for (BitrateMonitor * monitor in list){
         
-        [monitor setFrame:CGRectMake(75, yOffset + (count * (monitorSize.height+60)), 703 - 150, monitorSize.height)];
+        [monitor setFrame:CGRectMake(5, yOffset + (count * (monitorSize.height+60)), 703 - 150, monitorSize.height)];
         count++;
     }
 }

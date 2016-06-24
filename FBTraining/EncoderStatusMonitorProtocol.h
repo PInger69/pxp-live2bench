@@ -16,7 +16,7 @@
 //- (void) onUserInfo;
 -(void)onEncoderMasterFallen:(NSError *)error;
 - (void) onTagsChange:(NSData *) data;
-- (void) onMotionAlarm:(NSDictionary *)data;
+//- (void) onMotionAlarm:(NSDictionary *)data;
 - (void) encoderStatusChange:(EncoderStatus) status;
 - (void) encoderStatusStringChange:(NSDictionary *)data;
 - (BOOL) checkEncoderVersion;
@@ -24,6 +24,8 @@
 - (void) onBitrate:(NSDate *)startTime;
 
 @property (nonatomic,strong)    NSString             * ipAddress;
+@property (nonatomic,strong)    Event           * event;        // the current event the encoder is looking at
+@property (nonatomic,strong)    Event           * liveEvent;
 
 
 @end

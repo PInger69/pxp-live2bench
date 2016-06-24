@@ -32,6 +32,8 @@
 #import "RicoFullScreenControlBar.h"
 #import "RicoPlayerGroupContainer.h"
 
+#import "RicoBookmarkPlayerController.h"
+
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -49,20 +51,34 @@
 @property (strong, nonatomic) UIButton                      * filterButton;
 @property (strong, nonatomic) UIButton                      * userSortButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
-//@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
+
+
+
+
 @property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
+
+
+
 @property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
 
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController    * telestrationViewController;
 @property (strong, nonatomic) RicoPlayer                  * ricoPlayer;
+
+
 @property (strong, nonatomic) RicoPlayerControlBar        * ricoPlayerControlBar;
 @property (strong, nonatomic) RicoPlayerViewController    * ricoPlayerController;
 @property (strong, nonatomic) RicoZoomContainer           * ricoZoomer;
 @property (strong, nonatomic) RicoFullScreenControlBar    * ricoFullScreenControlBar;
+
+
 @property (strong, nonatomic, nonnull) RicoPlayerGroupContainer         * ricoZoomGroup;
 
 @property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController *fullscreenViewController;
+
+
+@property (strong, nonatomic, nonnull) RicoBookmarkPlayerController *ricoBookmarkPlayerController;
+
 
 @end
 
@@ -104,14 +120,8 @@
         _tagsToDisplay                          = [NSMutableArray new];
         
 //        _playerViewController                   = [[PxpPlayerViewController alloc] init];
-        self.ricoPlayerController               = [RicoPlayerViewController new];
-//        _fullscreenViewController               = [[PxpMyClipViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-       
-        
-        
-//        [self addChildViewController:_playerViewController];
-//        [self addChildViewController:_fullscreenViewController];
-        
+//        self.ricoPlayerController               = [RicoPlayerViewController new];
+
         _videoBar       = [[PxpVideoBar alloc] init];
         
         [_videoBar.forwardSeekButton    addTarget:self action:@selector(onSeekButtonPress:) forControlEvents:UIControlEventTouchUpInside];
@@ -124,12 +134,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-   
-    
    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSelectedToPlay:) name:NOTIF_CLIP_SELECTED object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REMOVE_INFORMATION object:nil queue:nil usingBlock:^(NSNotification *note){
         [clipContentDisplay displayClip:nil];
     }];
@@ -140,6 +146,7 @@
     [self setupView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBookmarkPlayerControlerChange:) name:BOOKMARK_PLAYER_CONTROLLER_CHANGE object:nil];
   
     // This is for the tag count
     numTagsLabel = [[CustomLabel alloc] init];
@@ -161,45 +168,41 @@
     
     // Rico Player
     
+    CGRect theFrame = CGRectMake(0.0,  768 - height - 88.0, width, height);
     
-    self.ricoPlayer = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, width, height)];
-//    [self.view addSubview:self.ricoPlayer];
-    self.ricoPlayer.looping = YES;
-    self.ricoPlayerControlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(0.0, 768 - 88.0, width, 44.0)];
+    self.ricoPlayerControlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(0.0,  768 - 88.0, width, 44)];
+   
+    self.ricoPlayerControlBar.enabled = NO;
+    
+
+    
+    
+    [self.ricoPlayerControlBar.playPauseButton addTarget:self action:@selector(onPlayPause:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.ricoBookmarkPlayerController = [[RicoBookmarkPlayerController alloc]initWithFrame:theFrame];
+    self.ricoPlayerController = self.ricoBookmarkPlayerController.ricoPlayerController;
+    [self.view addSubview:self.ricoBookmarkPlayerController.view];
     [self.view addSubview:self.ricoPlayerControlBar];
+    
     self.ricoPlayerController.playerControlBar = self.ricoPlayerControlBar;
-    self.ricoPlayerControlBar.delegate = self.ricoPlayerController;
-    self.ricoPlayerController.view = [[UIView alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
-    
-    
-    self.ricoZoomer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
-    
-//    [self.ricoZoomer addToContainer:self.ricoPlayer];
+    self.ricoPlayerControlBar.delegate                                      = self.ricoPlayerController;
+    self.ricoPlayerControlBar.state                                         = RicoPlayerStateNormal;
 
-    [self.view addSubview:self.ricoZoomer];
-    
-
-    [self.ricoPlayerController addPlayers:self.ricoPlayer];
-    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
-    
-
-    _fullscreenViewController               = [[RicoBaseFullScreenViewController alloc] initWithView:self.ricoZoomer];
+    _fullscreenViewController               = [[RicoBaseFullScreenViewController alloc] initWithView:self.ricoBookmarkPlayerController.view];
     _fullscreenViewController.delegate      = self;
 
     _ricoFullScreenControlBar               = [[RicoFullScreenControlBar alloc]init];
     [_fullscreenViewController.bottomBar addSubview:_ricoFullScreenControlBar];
     
-    
-    [self.ricoPlayerControlBar.playPauseButton addTarget:self action:@selector(onPlayPause:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.ricoFullScreenControlBar.backwardSeekButton addTarget: self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.forwardSeekButton addTarget:  self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.slomoButton addTarget:        self action:@selector(slomoPressed:)       forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.controlBar.playPauseButton addTarget:self action:@selector(onPlayPause:) forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.nextTagButton        addTarget:self.tableViewController action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.previousTagButton    addTarget:self.tableViewController action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self.ricoFullScreenControlBar.backwardSeekButton           addTarget: self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.forwardSeekButton            addTarget: self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.slomoButton                  addTarget: self action:@selector(slomoPressed:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.controlBar.playPauseButton   addTarget: self action:@selector(onPlayPause:) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.fullscreenButton             addTarget: _fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.nextTagButton                addTarget: self.tableViewController  action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.previousTagButton            addTarget: self.tableViewController  action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.frameBackward                addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.frameForward                 addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
     
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeBookmark;
     [self.view addSubview:_videoBar];
@@ -211,23 +214,16 @@
     self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
 
     
-    
-    
-    // Build Quad player
-    self.ricoZoomGroup              = [[RicoPlayerGroupContainer alloc]initWithFrame:CGRectMake(0, 0, width, height)];
-    [self.ricoZoomGroup setBackgroundColor:[UIColor greenColor]];
-    [self.ricoZoomGroup addSubview:self.ricoPlayer];
-    
-    [self.ricoZoomer addToContainer:self.ricoZoomGroup];
-    
-    
-// Telestartion
-    self.telestrationViewController = [PxpTelestrationViewController new];
-    self.telestrationViewController.stillMode   = YES;
-    self.telestrationViewController.delegate    = self;
-    self.telestrationViewController.view.frame = self.ricoPlayerController.view.frame;
-    self.telestrationViewController.timeProvider = self;
 
+// Telestartion
+
+    
+    self.telestrationViewController = [PxpTelestrationViewController new];
+    self.telestrationViewController.stillMode    = YES;
+    self.telestrationViewController.delegate     = self;
+    self.telestrationViewController.view.frame   = self.ricoBookmarkPlayerController.view.frame;
+    self.telestrationViewController.timeProvider = self;
+    self.telestrationViewController.view.hidden  = YES;
     [self.view addSubview:self.telestrationViewController.view];
 }
 
@@ -254,48 +250,12 @@
         [weakSelf.tableViewController reloadData];
     };
 
-//    [_playerViewController zeroControlBarTimes];
     [_videoBar setSelectedTag:clipToPlay];
     [_videoBar.tagExtendEndButton setHidden:YES];
     [_videoBar.tagExtendStartButton setHidden:YES];
-//    [_fullscreenViewController setSelectedTag:clipToPlay];
+    self.ricoPlayerControlBar.enabled = YES;
     
-    ///////////////////////////////////
-    
-
-//    return;
-    NSDictionary *videos = clipToPlay.videosBySrcKey;
-//    NSArray *sources = videos.allKeys;
-    Feed * feed;
-    if (videos.allKeys.count > 0) {
-        NSString * akey;
-        if (videos.allKeys.count == 1) {
-            akey = videos.allKeys[0];
-            feed = [[Feed alloc] initWithFileURL:videos[akey]];
-            [self.ricoPlayer loadFeed:feed];
-            [self.ricoPlayerController play];
-        } else if ([videos.allKeys containsObject:source]) {
-            //akey = videos[source];
-            feed = [[Feed alloc] initWithFileURL:videos[source]];
-            [self.ricoPlayer loadFeed:feed];
-            [self.ricoPlayerController play];
-        }
-        
-    }
-    
-    
-//    if (videos.allKeys.count > 1) {
-//        // reveal the multi player
-//        
-//        self.ricoZoomGroup.hidden = NO;
-//    } else {
-//        // hide the multi player
-//        self.ricoZoomGroup.hidden = YES;
-//    }
-    
-    
-    
- 
+    [self.ricoBookmarkPlayerController playClip:clipToPlay];
 }
 
 - (void)clipSaved:(NSNotification *)note {
@@ -308,11 +268,9 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
     [_pxpFilter filterTags:self.allClips];
-        _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
+    _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
     self.tableViewController.tableData = _tagsToDisplay;
-
     CGRect tableRect = self.tableViewController.view.frame;
     numTagsLabel.frame = CGRectMake(tableRect.origin.x, CGRectGetMaxY(tableRect), tableRect.size.width, 18);
     [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
@@ -333,8 +291,7 @@
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{}];
-    self.ricoPlayer.feed = nil;
-    [self.ricoPlayerControlBar clear];
+    [self.ricoBookmarkPlayerController clear];
 }
 
 //initialize comment box and if one tag is selected, the tag details will show in the box too
@@ -412,6 +369,7 @@
 {
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
     CMTime  cTime = self.ricoPlayerController.primaryPlayer.currentTime;
+    
     
     if (sender.speed < 0.2 && sender.speed > -0.2) {
         [self.ricoPlayerController stepByCount:(sender.speed>0)?1:-1];
@@ -546,33 +504,28 @@
 
 -(void)onFullScreenLeave:(RicoBaseFullScreenViewController *)fullscreenController
 {
-        self.ricoPlayerController.playerControlBar     = self.ricoPlayerControlBar;
-        self.ricoPlayerControlBar.delegate             = self.ricoPlayerController;
+    self.ricoPlayerController.playerControlBar          = self.ricoPlayerControlBar;
+    self.ricoPlayerControlBar.delegate                  = self.ricoPlayerController;
+    self.telestrationViewController.view.hidden         = YES;
+    self.videoBar.slomoButton.slomoOn                   = self.ricoPlayerController.slomo;
     
-    [self.telestrationViewController.view setFrame:self.ricoPlayerController.frame];
+    [self.telestrationViewController.view setFrame:self.ricoBookmarkPlayerController.view.frame];
 }
 
 -(void)onFullScreenShow:(RicoBaseFullScreenViewController *)fullscreenController
 {
-    self.ricoPlayerController.playerControlBar = self.ricoFullScreenControlBar.controlBar;
-    self.ricoFullScreenControlBar.controlBar.delegate = self.ricoPlayerController;
-    
-    
-    // moving to telestartion to full screen
-    
-
-    //    self.telestrationViewController.view.layer.borderWidth = 2;
-    //    self.telestrationViewController.view.layer.borderColor = [UIColor greenColor].CGColor;
-    // temp fix
+    self.ricoPlayerController.playerControlBar          = self.ricoFullScreenControlBar.controlBar;
+    self.ricoFullScreenControlBar.controlBar.delegate   = self.ricoPlayerController;
+    self.ricoFullScreenControlBar.slomoButton.slomoOn   = self.videoBar.slomoButton.slomoOn;
+    CGRect aRect = self.ricoBookmarkPlayerController.view.frame;
+    self.telestrationViewController.view.hidden  = NO;
     CGRect tempRect = CGRectMake(
-                                 self.ricoPlayerController.primaryPlayer.frame.origin.x,
-                                 self.ricoPlayerController.primaryPlayer.frame.origin.y+130,
-                                 self.ricoPlayerController.primaryPlayer.frame.size.width,
-                                 self.ricoPlayerController.primaryPlayer.frame.size.height-50
+                                 aRect.origin.x,
+                                 aRect.origin.y+130,
+                                 aRect.size.width,
+                                 aRect.size.height -10
                                  );
     [self.telestrationViewController.view setFrame:tempRect];
-    
-
 }
 
 #pragma mark -
@@ -604,6 +557,29 @@
         self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = NO;
         self.ricoPlayerControlBar.playPauseButton.paused = NO;
     }
+}
+
+#pragma mark -
+-(void)onBookmarkPlayerControlerChange:(NSNotification*)note
+{
+    RicoBookmarkPlayerController * controller = (RicoBookmarkPlayerController *)note.object;
+    
+    // if its more then one feed then hide the telestaration
+}
+
+-(void)frameByFrame:(id)sender{
+    
+    if (self.telestrationViewController.telestration) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
+    }
+    
+    [self.ricoPlayerController pause];
+    self.ricoPlayerController.playerControlBar.playPauseButton.paused = YES;
+    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-0.10:0.10;
+    
+    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    [self.ricoPlayerController pause];
+    [self.ricoPlayerController stepByCount:(speed>0)?1:-1];
 }
 
 

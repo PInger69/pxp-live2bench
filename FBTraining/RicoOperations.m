@@ -367,19 +367,20 @@
         [avi cancelPendingSeeks];
         
 //        NSLog(@"Start Rico Seek");
+        
+        
+        
         [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
             weakself.success = afinished;
+            
+
+            
             if (weakself.completionHandler != nil) {
                 weakself.completionHandler(finished);
                 
             }
-//            NSLog(@"Finish Rico Seek");
-//             dispatch_async(dispatch_get_main_queue(),^{
             
-                 [weakself completeOperation];
-            
-//              });
-//            NSLog(@"Seeking Complete %@",(afinished)?@"PASS":@"FAIL");
+            [weakself completeOperation];
         }];
     } else {
         [self completeOperation];

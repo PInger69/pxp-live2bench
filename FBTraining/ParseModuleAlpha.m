@@ -111,7 +111,7 @@
     EncoderStatus  statusCode  = [[dict objectForKey:@"code"]integerValue];
     [encoder encoderStatusStringChange:dict];
     [encoder encoderStatusChange:statusCode];
-    [encoder onMotionAlarm:dict];
+//    [encoder onMotionAlarm:dict];
 }
 
 

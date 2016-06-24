@@ -10,7 +10,7 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "UserCenter.h"
-
+#import "EncoderOperation.h"
 
 
 @implementation Event {
@@ -37,6 +37,10 @@
 @synthesize primary                 = _primary;
 
 @synthesize delegate = _delegate;
+
+
+
+
 
 //Depricated
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
@@ -104,6 +108,10 @@
 
 
 
+
+
+
+
 -(void)openEvent
 {
     if (!_open){
@@ -119,9 +127,15 @@
         
         NSMutableDictionary * tagToRaw = [NSMutableDictionary new];
         // convert tags to rawdata
-        for (Tag* t in _tags) {
-            tagToRaw[t.ID] = [t makeTagData];
+//        for (Tag* t in _tags) {
+//            tagToRaw[t.ID] = [t makeTagData];
+//        }
+        
+        for (id <TagProtocol> t in _tags) {
+            tagToRaw[ [t ID] ] = [t rawData];
         }
+
+        
         _rawData[@"tags"]   = [tagToRaw copy];
         _tags               = nil;
     }
@@ -169,7 +183,7 @@
 
 
 
--(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
+-(void)addTag:(id<TagProtocol>)newtag extraData:(BOOL)notifPost
 {
     if ((newtag.type == TagTypeDeleted ) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
         return;
@@ -242,14 +256,22 @@
                                                                                                               @"colour":tagToBeModded.colour,
                                                                                                               @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
                                                                                                               }];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:[tagToBeModded makeTagData]];
+            
+            NSLog(@"%s Notif removed to prevent double tag mod posts",__FUNCTION__);
+//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:[tagToBeModded makeTagData]];
             
      
         }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){
             [_tags removeObject:tagToBeModded];
             
         }else {
-            [tagToBeModded replaceDataWithDictionary:modifiedData];
+            if (![tagToBeModded isKindOfClass:[Tag class]]) {
+                [tagToBeModded.tagData addEntriesFromDictionary:modifiedData];
+            } else {
+                [tagToBeModded replaceDataWithDictionary:modifiedData];
+            }
+            
+            
         }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED
@@ -523,7 +545,7 @@
     return [tempDict copy];
 }
 
-
+// depricated this should be handled by the
 -(void)destroy
 {
 
@@ -532,9 +554,12 @@
                                                                                 @"hid": self.hid
                                                                                 }];
     
-    [self.parentEncoder issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+//    [self.parentEncoder issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 
-
+    EncoderOperation * deleteOp = [[EncoderOperationDeleteEvent alloc]initEncoder:self.parentEncoder data:dict];
+    [self.parentEncoder runOperation:deleteOp];
+    
+    
 }
 
 // this rebuilds feeds this will add feeds that are missing from the event
@@ -599,6 +624,7 @@
     
     return txt;
 }
+
 
 -(void)dealloc
 {

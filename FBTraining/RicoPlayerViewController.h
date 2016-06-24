@@ -24,7 +24,10 @@
 @property (nonatomic, assign) BOOL                  slomo;
 @property (nonatomic, assign) CGRect                frame;
 @property (nonatomic, assign) BOOL                  isPlaying;
-@property (nonatomic, strong)           UITextView          * debugOutput;
+@property (nonatomic, strong) UITextView           * debugOutput;
+
+@property (nonatomic, strong) NSMutableSet * depedencyPlayers; // all players in this list depend on each other
+@property (nonatomic, strong) NSOperation * syncBlock;
 
 -(void)addPlayers:(RicoPlayer *)aPlayer;
 -(void)removePlayers:(RicoPlayer *)aPlayer;

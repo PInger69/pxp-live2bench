@@ -12,6 +12,7 @@
 #import "DebugOutput.h"
 #import "CustomAlertControllerQueue.h"
 #import "RicoPlayerMonitor.h"
+#import "Ticker.h"
 #include <stdlib.h>
 
 
@@ -26,6 +27,7 @@
 //@property (strong, nonatomic) RicoPlayerChecker * checker; // check to see if the player is stuck seeking
 @property (strong, nonatomic) NSTimer  * checkTimer;
 @property (strong, nonatomic) RicoPlayerMonitor * monitor;
+@property (strong, nonatomic) Ticker * ticker;
 @end
 
 
@@ -42,6 +44,8 @@ NSString* const RicoPlayerDidPlayerItemFailNotification             = @"RicoPlay
 @synthesize range           = _range;
 @synthesize live;
 @synthesize reliable        = _reliable;
+@synthesize offsetTime      = _offsetTime;
+
 
 static void * feedContext = &feedContext;
 static void * itemContext = &itemContext;
@@ -91,7 +95,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         [self.streamStatus setFont:[UIFont systemFontOfSize:10.0f]];
         [self.streamStatus setHidden:YES];
         self.reliable = YES;
-        
+        self.ticker = [[Ticker alloc]initWithTick:10];
     }
     return self;
 }
@@ -134,15 +138,10 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         [self.streamStatus setFont:[UIFont systemFontOfSize:10.0f]];
         self.streamStatus.text = @"Corrupted Stream";
         self.reliable = YES;
+        self.ticker = [[Ticker alloc]initWithTick:10];
     }
     return self;
 }
-
-//-(void)commonInit
-//{
-//
-//
-//}
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
@@ -198,6 +197,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         if (weakSelf.avPlayer.status == AVPlayerStatusReadyToPlay) {
         
                 [weakSelf.avPlayer play];
+            if (weakSelf.slomo) _avPlayer.rate = RICO_SLOMO_RATE;
+            
             if (CMTIME_IS_VALID(weakSelf.avPlayer.currentTime)){
                 
                 CMTime seekTime = weakSelf.avPlayer.currentTime;
@@ -245,40 +246,34 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(NSOperation*)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
-    
     BOOL check = NO;
-    NSLog(@"");
     if (check){
-        
         CGFloat tt = 1;
-        NSLog(@"");
-        
         self.offsetTime = CMTimeMakeWithSeconds(tt, NSEC_PER_SEC);
     }
     
     CMTime timeWithOffset = CMTimeAdd(time, self.offsetTime);
-
-    NSLog(@"Seeking to: %f   tolerance: %f / %f ",CMTimeGetSeconds(time),CMTimeGetSeconds(toleranceBefore),CMTimeGetSeconds(toleranceAfter));
-    NSLog(@"offsetWitj:     %f      %f",CMTimeGetSeconds(timeWithOffset),CMTimeGetSeconds(self.offsetTime));
+    NSLog(@"currenttime: %f",CMTimeGetSeconds(self.currentTime));
+    NSLog(@"Seeking to:  %f   tolerance: %f / %f ",CMTimeGetSeconds(time),CMTimeGetSeconds(toleranceBefore),CMTimeGetSeconds(toleranceAfter));
+    NSLog(@"offsetWitj:  %f      %f",CMTimeGetSeconds(timeWithOffset),CMTimeGetSeconds(self.offsetTime));
     NSOperation * seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:timeWithOffset toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
     
     [seeker setCompletionBlock:^{
             NSLog(@"Seek finished: %f",CMTimeGetSeconds(self.currentTime));
     }];
-//    seeker.completionBlock = completionHandler;
+
     if (self.syncronized) {
           __weak RicoPlayer * weakSelf = self;
         [seeker setCompletionBlock:^{
             weakSelf.waitingForSynchronization = YES;
             NSLog(@"%@ Seek finished: %f",self.name,CMTimeGetSeconds(self.currentTime));
             dispatch_async(dispatch_get_main_queue(),^{
-                
                 [[NSNotificationCenter defaultCenter]postNotificationName:RicoPlayerWillWaitForSynchronizationNotification object:weakSelf ];
             });
         }];
     }
     [self.operationQueue addOperation:seeker];
-
+    NSLog(@"Operations %lu",(unsigned long)self.operationQueue.operationCount);
     return seeker;
 }
 
@@ -294,7 +289,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(NSOperation*)loadFeed:(Feed *)feed
 {
-    
+    self.reliable = YES;
     CMTimeRange oldTimeRange = _range;
     
     [self clear];
@@ -348,7 +343,6 @@ static NSInteger playerCounter = 0; // count the number of players created and g
             NSLog(@" LOAD %@ - URL:%@",weakSelf.name,[weakSelf.feed path]);
             
             if (weakSelf.isReadyOperation.isCancelled) {
-                
                 NSLog(@"");
             }
             
@@ -360,7 +354,6 @@ static NSInteger playerCounter = 0; // count the number of players created and g
                 });
             } else {
                 NSLog(@"Item Load Fail");
-//                [weakSelf addPeriodicTimeObserver];
             }
             
         }];
@@ -522,6 +515,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         [self.operationQueue addOperationWithBlock:^{
             [_avPlayer seekToTime:timeWithOffset completionHandler:^(BOOL finished) {
                 [_avPlayer play];
+                if (self.slomo) _avPlayer.rate = RICO_SLOMO_RATE;
             }];
         }];
         
@@ -813,29 +807,34 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     BOOL i = NO;
     
     
-    if ((CMTimeGetSeconds(self.duration) == 0 && self.isReadyOperation.isFinished)|| i) {
+    
+    if ((CMTimeGetSeconds(self.duration) == 0 && self.isReadyOperation.isFinished && self.avPlayer.status == AVPlayerStatusReadyToPlay)|| i) {
         NSLog(@"PLAYER CRASH");
-        PXPLog(@"PLAYER CRASH");
+        PXPLog(@"PLAYER %@ Crashed:  ",self.name);
+        PXPLog(@"  Player duration = 0 and status = AVPlayerStatusReadyToPlay");
         
         
         
-        if (DEBUG_MODE){
-            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pxp Player Alert"
-                                                                            message:@"Player lost connection, attempting to reconnect"
-                                                                     preferredStyle:UIAlertControllerStyleAlert];
-            // build NO button
-            UIAlertAction* cancelButtons = [UIAlertAction
-                                            actionWithTitle:@"OK"
-                                            style:UIAlertActionStyleCancel
-                                            handler:^(UIAlertAction * action)
-                                            {
-                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                            }];
-            [alert addAction:cancelButtons];
-            
-            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:[UIApplication sharedApplication].keyWindow.rootViewController animated:YES style:AlertImportant completion:nil];
+        
+//        if (DEBUG_MODE){
+//            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pxp Player Alert"
+//                                                                            message:@"Player lost connection, attempting to reconnect"
+//                                                                     preferredStyle:UIAlertControllerStyleAlert];
+//            // build NO button
+//            UIAlertAction* cancelButtons = [UIAlertAction
+//                                            actionWithTitle:@"OK"
+//                                            style:UIAlertActionStyleCancel
+//                                            handler:^(UIAlertAction * action)
+//                                            {
+//                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+//                                            }];
+//            [alert addAction:cancelButtons];
+//            
+//            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:[UIApplication sharedApplication].keyWindow.rootViewController animated:YES style:AlertImportant completion:nil];
+//        }
+        if ([self.ticker ready]) {
+            [self reset];
         }
-        [self reset];
     }
 }
 
@@ -869,7 +868,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     [self willChangeValueForKey:@"reliable"];
     _reliable = reliable;
     self.streamStatus.hidden = _reliable;
-
+    
+    if (!DEBUG_MODE)[_debugOutput setHidden:YES];
     [self didChangeValueForKey:@"reliable"];
 }
 
@@ -884,6 +884,26 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 {
     return [NSString stringWithFormat:@"RicoPlayer %@: FeedName:%@",self.name,self.feed.sourceName ];
 }
+
+//
+-(void)setOffsetTime:(CMTime)offsetTime
+{
+    _offsetTime = offsetTime;
+
+}
+
+-(CMTime)offsetTime
+{
+    
+    
+    if (CMTimeCompare(_offsetTime, CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC))) {
+        _offsetTime =  CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC);
+    }
+    
+    return  _offsetTime;
+//    return kCMTimeZero;
+}
+
 
 @end
 

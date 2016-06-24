@@ -10,6 +10,7 @@
 #import "EncoderProtocol.h"
 #import "CameraResource.h"
 #import "CameraResourceNonLive.h"
+#import "TagProtocol.h"
 
 @class Tag;
 
@@ -64,15 +65,18 @@
 
 
 
--(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
-- (instancetype)initWithDict:(NSDictionary*)data localPath:(NSString *)path;
+-(instancetype)initWithDict:(NSDictionary*)data isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
+-(instancetype)initWithDict:(NSDictionary*)data localPath:(NSString *)path;
 -(void)openEvent;
 -(void)closeEvent;
 
--(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost;
+-(void)addTag:(id<TagProtocol>)newtag extraData:(BOOL)notifPost;
 -(void)addAllTags:(NSDictionary *)allTagData;
 -(void)modifyTag:(NSDictionary *)modifiedData;
 -(NSArray*)getTagsByID:(NSString*)tagId;
+
+
+
 
 -(void)build;
 -(void)buildFeeds;

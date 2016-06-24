@@ -195,6 +195,8 @@
 }
 
 
+
+
 - (void)autoUpdate:(CMTime)time duration:(CMTime)duration
 {
     if (!self.delegateUpdateEnabled) return;
@@ -268,7 +270,7 @@
             self.slider.enabled             = YES;
             self.playPauseButton.enabled = YES;
             self.container.backgroundColor  = [self.tintColor colorWithAlphaComponent:0.5];
-            self.playPauseButton.paused     = NO;            
+            self.playPauseButton.paused     = self.playPauseButton.paused;            
             break;
             
         case RicoPlayerStateTelestrationStill:
@@ -291,7 +293,7 @@
     
     [self willChangeValueForKey:NSStringFromSelector(@selector(range))];
     _range = range;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(range))];
+    [self  didChangeValueForKey:NSStringFromSelector(@selector(range))];
     if (CMTIMERANGE_IS_VALID(_range)){
         self.state = RicoPlayerStateRange;
     } else {

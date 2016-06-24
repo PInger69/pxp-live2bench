@@ -25,6 +25,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 @synthesize type = _type;
 @synthesize durationID;
 @synthesize rating = _rating;
+@synthesize eventInstance = _eventInstance;
 
 + (void)initialize {
     if (self == [Tag self]) {
@@ -67,13 +68,14 @@ static NSMutableDictionary * openDurationTagsWithID;
 -(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent{
     self = [super init];
     if (self) {
+        self.eventInstance   = aEvent;
         self.rawData         = tagData;
         self.colour          = tagData[@"colour"];
         _comment             = tagData[@"comment"];
         self.deviceID        = tagData[@"deviceid"];
         self.displayTime     = tagData[@"displaytime"];
         self.duration        = [tagData[@"duration"]intValue];
-        self.event           = aEvent;//tagData[@"event"];
+        self.event           = aEvent.name;//tagData[@"event"];
         self.homeTeam        = tagData[@"homeTeam"];
         self.visitTeam       = tagData[@"visitTeam"];
         self.uniqueID        = [tagData[@"id"] intValue];
@@ -119,10 +121,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         
         // only add the timer if its your tag not someone elses
         if (_type == TagTypeOpenDuration && [self.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-            NSTimeInterval waitInterval = (330);
-            durationTagWarningTimer            = [NSTimer scheduledTimerWithTimeInterval:waitInterval target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:NO];
-
-            [Tag addOpenDurationTag:self dtid:tagData[@"dtagid"]];
+                     [Tag addOpenDurationTag:self dtid:tagData[@"dtagid"]];
             
         }
         
@@ -151,8 +150,6 @@ static NSMutableDictionary * openDurationTagsWithID;
                 }
                 
                 _coachPick = modifiedTag.coachPick;
-//                self.duration = modifiedTag.duration;
-//                self.startTime = modifiedTag.startTime;
             }
         }];
         
@@ -193,14 +190,14 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 
--(void)postDurationTagWarning:(NSTimer *)timer
-{
-    // post notif
-    [durationTagWarningTimer invalidate];
-    durationTagWarningTimer = nil;
-    PXPLog(@"Warning Tag is too long - %@", self.name);
-    NSLog(@"Warning Tag is too long - %@", self.name);
-}
+//-(void)postDurationTagWarning:(NSTimer *)timer
+//{
+//    // post notif
+//    [durationTagWarningTimer invalidate];
+//    durationTagWarningTimer = nil;
+//    PXPLog(@"Warning Tag is too long - %@", self.name);
+//    NSLog(@"Warning Tag is too long - %@", self.name);
+//}
 
 #pragma mark - custom setters and getters
 -(NSString *)name{
@@ -219,7 +216,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     [self didChangeValueForKey:NSStringFromSelector(@selector(type))];
    if (_type == TagTypeCloseDuration && durationTagWarningTimer){
        
-       id <EncoderProtocol> closingEncoder = self.event.parentEncoder;
+       id <EncoderProtocol> closingEncoder = self.eventInstance.parentEncoder;
        
 //       MAKE_TAG
 //       MODIFY_TAG
@@ -240,10 +237,10 @@ static NSMutableDictionary * openDurationTagsWithID;
 
        
        
-       [closingEncoder issueCommand:MAKE_TAG priority:5 timeoutInSec:5 tagData:[NSMutableDictionary dictionaryWithDictionary:[self makeTagData]] timeStamp:GET_NOW_TIME];
+//       [closingEncoder issueCommand:MAKE_TAG priority:5 timeoutInSec:5 tagData:[NSMutableDictionary dictionaryWithDictionary:[self makeTagData]] timeStamp:GET_NOW_TIME];
        
     if (durationTagWarningTimer && (_type == TagTypeCloseDuration || _type == TagTypeDeleted )) {
-           [durationTagWarningTimer invalidate];
+//           [durationTagWarningTimer invalidate];
            durationTagWarningTimer = nil;
        }
 
@@ -262,9 +259,21 @@ static NSMutableDictionary * openDurationTagsWithID;
     return _displayTime;
 }
 
--(Event *)event{
-    return _event;
+-(Event *)eventInstance{
+    return _eventInstance;
 }
+
+-(void)setEventInstance:(Event *)eventInstance{
+
+    if (![eventInstance isKindOfClass:[Event class]]) {
+        NSLog(@"%s",__FUNCTION__);
+        
+    }
+    
+    
+    _eventInstance = eventInstance;
+}
+
 
 -(void)setFeeds:(NSDictionary *)feeds{
     _feeds = [feeds copy];
@@ -345,7 +354,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"deleted"     : @"1",
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
-             @"event"       : (self.event.name)?self.event.name:@"",
+             @"event"       : (self.eventInstance.name)?self.eventInstance.name:@"",
              @"homeTeam"    : (self.homeTeam)?self.homeTeam:@"",
              @"id"          : [NSString stringWithFormat: @"%i", self.uniqueID],
              @"isLive"      : [NSString stringWithFormat: @"%i", self.isLive],
@@ -406,7 +415,7 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
                                                                                     @"displaytime" : self.displayTime ? self.displayTime : @"",
                                                                                   @"duration"    : (self.duration)?[NSString stringWithFormat: @"%i", self.duration]:@"",
-                                                                                  @"event"       : (self.event.name)?self.event.name:@"",
+                                                                                  @"event"       : (self.event)?self.event:@"",
                                                                                   @"name"        : self.name ? self.name : @"",
                                                                                   @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
                                                                                   @"time"        : [NSString stringWithFormat:@"%f", self.time],
@@ -420,6 +429,11 @@ static NSMutableDictionary * openDurationTagsWithID;
     if (self.durationID) {
         [tagData setObject:self.durationID forKey:@"dtagid"];
     }
+    
+    if (self.closeTime) {
+        [tagData setObject:[NSString stringWithFormat:@"%f", self.closeTime] forKey:@"closetime"];
+    }
+    
     
     if (self.extraDic) {
         [tagData setObject:self.extraDic forKey:@"extra"];
@@ -506,6 +520,14 @@ static NSMutableDictionary * openDurationTagsWithID;
     return [NSString stringWithFormat: @"%i" ,self.uniqueID];
 }
 
+
+-(void)setEvent:(NSString *)event
+{
+
+    _event = event;
+}
+
+
 -(BOOL) isEqual:(id)object{
     Tag *comparingTag;
     if ([object isKindOfClass:[Tag class]]) {
@@ -540,12 +562,12 @@ static NSMutableDictionary * openDurationTagsWithID;
         return _cachedThumbnail;
     }
         NSLog(@"checking feed");
-    Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
+    Feed *feed = source && self.eventInstance.feeds[source] ? self.eventInstance.feeds[source] : self.eventInstance.feeds.allValues.firstObject;
         NSLog(@" feed checked");
     if (!source && self.telestration) {
-        for (NSString *k in self.event.feeds.keyEnumerator) {
+        for (NSString *k in self.eventInstance.feeds.keyEnumerator) {
             if ([self.telestration.sourceName isEqualToString:k]) {
-                feed = self.event.feeds[k];
+                feed = self.eventInstance.feeds[k];
                 break;
             }
         }

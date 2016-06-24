@@ -67,7 +67,9 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     // get user defaults
     
     
-    
+    [self.recToggle setOnTintColor:PRIMARY_APP_COLOR];
+    [self.recToggle setTintColor:PRIMARY_APP_COLOR];
+    [self.recToggle setThumbTintColor:[UIColor grayColor]];
     
 }
 
@@ -242,6 +244,30 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     
 }
 
+- (IBAction)toggleRegStat:(id)sender {
+    UISwitch * switcher = (UISwitch *)sender;
+    
+    Encoder * enc = (Encoder *)[EncoderManager getInstance].liveEvent.parentEncoder;
+    if ( switcher.on) {
+        
+        
+        EncoderOperation * testOp =  [[EncoderOperationCameraStartTimes alloc]initEncoder:enc data:nil];
+        [enc runOperation:testOp];
+
+    } else {
+
+        Event * liveEvent = enc.liveEvent;
+
+        if (liveEvent) {
+            for (Feed * fed in [liveEvent.feeds allValues]) {
+                fed.offset = 0;
+                [fed.offsetDict removeAllObjects];
+            }
+        }
+
+    }
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -11,6 +11,10 @@
 #import "PxpURLProtocol.h"
 #import "MockURLProtocol.h"
 #import "Feed.h"
+#import "Event.h"
+#import "TagProtocol.h"
+#import "TagProxy.h"
+
 #define EO_DEFAULT_TIMEOUT 5
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
@@ -421,20 +425,91 @@
 @implementation EncoderOperationModTag
 
 
-- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder tag:(id <TagProtocol>)tag
 {
-    self = [super initEncoder:aEncoder data:aData];
+    self = [super init];
     if (self) {
+        
+        
+        
+        self.argData    = @{};
+        self.encoder    = (Encoder*)aEncoder;
+        
+        if ([self.tag isKindOfClass:[TagProxy class]]) {
+            for (NSOperation * ops in [aEncoder operationQueue].operations) {
+                if ([ops isKindOfClass:[EncoderOperationModTag class]] && ((EncoderOperationModTag*)ops).tag == tag) {
+                    return nil;
+                }
+            }
+            
+        }
+        self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
         self.tag = tag;
+        self.request    = [self buildRequest:self.argData ]; // this build request is overrided
     }
     return self;
+}
+
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(id <TagProtocol>)tag
+{
+    self = [super init];
+    if (self) {
+        self.argData    = aData;
+        self.encoder    = (Encoder*)aEncoder;
+        self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
+        self.tag = tag;
+        
+    }
+    return self;
+}
+
+
+-(void)start
+{
+    
+    
+    if ([self isCancelled]) {
+        [self setFinished:YES];
+        
+    }
+    [self setExecuting:YES];
+    
+    
+    self.request    = [self buildRequest:self.argData]; // this build request is overrided
+    
+    NSURLSessionConfiguration *sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfig.allowsCellularAccess              = NO;
+    sessionConfig.timeoutIntervalForRequest         = 10;
+    sessionConfig.timeoutIntervalForResource        = 10;
+    sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
+    sessionConfig.protocolClasses                   = @[[PxpURLProtocol class],
+                                                        [MockURLProtocol class]
+                                                        ];
+    
+    self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
+    [[self.session dataTaskWithRequest:self.request]resume];
 }
 
 
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
     NSError     * error;
-    NSString    * jsonData = [Utility dictToJSON:aData];
+    
+    
+//    NSMutableDictionary *mData = [[self.tag makeTagData]mutableCopy];
+    NSMutableDictionary *mData = [[self.tag rawData]mutableCopy];
+    
+    if (self.tag.isLive){
+        mData[@"event"] = LIVE_EVENT;
+    }
+    if (self.tag.durationID){
+        mData[@"dtagid"] = self.tag.durationID;
+    }
+    
+    
+    [mData removeObjectForKey:@"url"];
+//    [mData removeObjectForKey:@"duration"];
+    NSString    * jsonData = [Utility dictToJSON:mData];
     
     if (error) {
         PXPLog(@"Error converting data to dowload Clip event");
@@ -450,7 +525,96 @@
 -(void)parseDataToEncoder:(NSData*)data
 {
     [super parseDataToEncoder:data];
-    [self.encoder.parseModule parse:data mode:ParseModeTagMod for:self.encoder];
+    
+    
+    
+   NSDictionary * dict =  [self.encoder.parseModule parse:data mode:ParseModeTagMod for:self.encoder];
+    
+    
+    NSLog(@"%s",__FUNCTION__);
+
+}
+
+// its ready if its a real tag  or if its a proxy with a real tag inside;
+-(BOOL)isReady
+{
+    // if its not a proxy tag then its fine
+    if ( ![self.tag isKindOfClass:[TagProxy class]]  ) {
+        return YES;
+    } else if ([self.tag isKindOfClass:[TagProxy class]]) {
+        return [((TagProxy *) self.tag) hasTag];
+    } else {
+        return NO;
+    }
+}
+
+
+@end
+
+
+@implementation EncoderOperationCloseTag
+
+
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder tag:(Tag*)tag
+{
+    self = [super init];
+    if (self) {
+        self.argData    = @{};
+        self.encoder    = (Encoder*)aEncoder;
+        self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
+        self.tag = tag;
+        self.request    = [self buildRequest:self.argData ]; // this build request is overrided
+    }
+    return self;
+}
+
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    NSError     * error;
+    
+    NSMutableDictionary *mData = [[self.tag makeTagData]mutableCopy];
+    
+    if (self.tag.isLive){
+        mData[@"event"] = LIVE_EVENT;
+    }
+    if (self.tag.durationID){
+        mData[@"dtagid"] = self.tag.durationID;
+    }
+    
+    mData[@"time"] =  mData[@"closetime"];
+    [mData removeObjectForKey:@"url"];
+    [mData removeObjectForKey:@"url_2"];
+    [mData removeObjectForKey:@"duration"];
+    NSString    * jsonData = [Utility dictToJSON:mData];
+    
+    if (error) {
+        PXPLog(@"Error converting data to dowload Clip event");
+        return nil;
+    }
+    
+    
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonData ]];
+    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+    [super parseDataToEncoder:data];
+    
+    
+    
+    NSDictionary * dict =  [self.encoder.parseModule parse:data mode:ParseModeTagMod for:self.encoder];
+    
+    if ([dict[@"success"]intValue]){
+    
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil userInfo:@{@"colour":dict[@"colour"],
+                                                                                                    @"msg":dict[@"name"],
+                                                                                                    @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]}];
+    }
+    
+    NSLog(@"%s",__FUNCTION__);
+    
 }
 @end
 
@@ -498,6 +662,12 @@
     //over write name and add request time
 
     
+//    aslfkj
+    
+    // Make Proxy Tag for the event the attach when complete or sync
+    
+    
+    
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary new];
@@ -517,7 +687,19 @@
 //        [tagData setValue:period forKey:@"period"];
 //    }
 //
-       NSString    * jsonString                    = [Utility dictToJSON:tagData];
+
+    
+    if ([tagData[@"type"]integerValue] != TagTypeOpenDuration &&[tagData[@"type"]integerValue] != TagTypeOpenDuration && self.generateProxyTag) {
+        Event * event = [self.encoder event];
+        NSMutableDictionary * proxyData = [tagData mutableCopy];
+        proxyData[@"name"] = [aData objectForKey:@"name"];
+        id <TagProtocol> proxyTag = [[TagProxy alloc]initWithTagData:proxyData ownEvent:event];
+        BOOL postToast = YES;
+        [event addTag:proxyTag extraData:postToast];
+    }
+    
+    
+    NSString    * jsonString                    = [Utility dictToJSON:tagData];
     
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagset/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonString ]];
     NSURLRequest * req = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
@@ -532,6 +714,40 @@
 -(void)parseDataToEncoder:(NSData*)data
 {
     NSDictionary * dict = [self.encoder.parseModule parse:data mode:ParseModeTagSet for:self.encoder];
+    
+    
+    
+    // first check to add the real tag to the proxy
+    
+    
+    NSArray * tags = [self.encoder.event.tags copy];
+    
+    for ( id <TagProtocol> aTag in tags) {
+        if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
+            // check if aTag matches the data from the dict
+            
+            
+            
+            if ([[aTag name] isEqualToString:dict[@"name"]] && [aTag time] == [dict[@"time"]doubleValue] && [dict[@"own"]boolValue]) { //match
+                TagProxy * proxyTag         = (TagProxy *)aTag;
+                
+                if (proxyTag.modified) {
+                    PXPLog(@"Tag was Modded before server responded");
+                }
+                
+                id <TagProtocol> realTag    = [[Tag alloc] initWithData: dict event:self.encoder.event];//  make from data
+                
+                [proxyTag addTagToProxy:realTag];
+                
+            
+            }
+            
+        
+        }
+    }
+    
+    
+    
     
 //    if ( ![self.encoder.postedTagIDs containsObject:newTag.ID] ){
 //        [self.encoder.postedTagIDs addObject:newTag.ID];
@@ -705,7 +921,7 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     NSArray * list = [results[@"camlist"]allValues];
     self.encoder.cameraCount = list.count;
-    self.encoder.cameraData = results;
+//    self.encoder.cameraData = results;
     [super parseDataToEncoder:data];
 }
 @end
@@ -801,4 +1017,167 @@
     
     [super parseDataToEncoder:data];
 }
+
+
 @end
+#pragma mark - CheckSpace
+
+@implementation EncoderOperationCheckSpace
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    self.timeout = 60;
+    
+    NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getcameras",self.encoder.urlProtocol,self.encoder.ipAddress] ];
+    NSURLRequest * req  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+    
+    return req;
+}
+
+-(void)EncoderOperationCheckSpace:(NSData*)data
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+
+    [super parseDataToEncoder:data];
+}
+@end
+
+
+#pragma mark - CheckSpace
+
+@implementation EncoderOperationStatAndSync
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    self.timeout = 60;
+    
+    NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encstatsyncme",self.encoder.urlProtocol,self.encoder.ipAddress] ];
+    NSURLRequest * req  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+    
+    return req;
+}
+
+-(void)EncoderOperationCheckSpace:(NSData*)data
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
+    [super parseDataToEncoder:data];
+}
+@end
+
+
+
+#pragma mark - Local Tag Post
+@implementation EncoderOperationLocalTagPost
+
+-(instancetype)initTagData:(NSDictionary*)tagData
+{
+    self = [super init];
+    if (self) {
+        self.tagData = tagData;
+        self.type    = @"tagset";
+        
+        NSMutableDictionary * filteredData  = [NSMutableDictionary new];
+        
+        [filteredData setObject:self.tagData[@"time"]     forKey:@"time"];
+        [filteredData setObject:self.tagData[@"event"]    forKey:@"event"];
+        [filteredData setObject:self.tagData[@"name"]     forKey:@"name"];
+        [filteredData setObject:self.tagData[@"type"]     forKey:@"type"];
+        [filteredData setObject:self.tagData[@"colour"]   forKey:@"colour"];
+        [filteredData setObject:self.tagData[@"user"]     forKey:@"user"];
+        [filteredData setObject:self.tagData[@"deviceid"] forKey:@"deviceid"];
+        [filteredData setObject:self.tagData[@"duration"] forKey:@"duration"];
+        
+        
+        self.tagData = [filteredData copy];
+        
+    }
+    return self;
+}
+
+-(instancetype)initTagModData:(NSDictionary*)tagData
+{
+    self = [super init];
+    if (self) {
+        self.tagData = tagData;
+        self.type    = @"tagmod";
+    }
+    return self;
+}
+
+-(void)start
+{
+    
+    
+    if ([self isCancelled]) {
+        [self setFinished:YES];
+        
+    }
+    
+    
+    self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
+    self.request    = [self buildRequest:self.tagData]; // this build request is overrided
+    
+    
+    [self setExecuting:YES];
+    
+    NSURLSessionConfiguration *sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfig.allowsCellularAccess              = NO;
+    sessionConfig.timeoutIntervalForRequest         = 10;
+    sessionConfig.timeoutIntervalForResource        = 10;
+    sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
+    sessionConfig.protocolClasses                   = @[[PxpURLProtocol class],
+                                                        [MockURLProtocol class]
+                                                        ];
+    
+    self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
+    [[self.session dataTaskWithRequest:self.request]resume];
+}
+
+
+-(void)updateWithEncoder:(id<EncoderProtocol>)aEncode
+{
+    [self willChangeValueForKey:@"isReady"];
+    self.encoder = aEncode;
+    [self didChangeValueForKey:@"isReady"];
+}
+
+
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    NSString    * jsonString                    = [Utility dictToJSON:aData];
+    NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/%@/%@",self.encoder.urlProtocol,self.encoder.ipAddress,self.type,jsonString] ];
+    NSURLRequest * req  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+    return req;
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+    if (self.onRequestComplete) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.onRequestComplete(data,self);
+        });
+    }
+    
+    NSDictionary * checkIfFail = [Utility JSONDatatoDict:data];
+    if ([checkIfFail[@"success"]intValue] == 0) {
+        self.success = NO;
+    } else {
+        self.success = YES;
+    }
+}
+
+-(BOOL)isReady
+{
+    NSString * eventName = self.tagData[@"event"];
+// if has encoder and encoder has EVent
+    return (self.encoder && [[self.encoder allEvents] objectForKey:eventName]);
+}
+
+@end
+
+
+
+
+

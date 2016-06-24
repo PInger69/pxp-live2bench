@@ -52,11 +52,11 @@
     
     self.dateLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+10+leftMargin, topMargin+txtBoxHeight, 100, txtBoxHeight)];
     [self.dateLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
-   
-    self.timeLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+105,      topMargin+txtBoxHeight, 50, txtBoxHeight)];
+  
+    self.timeLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+115,      topMargin+txtBoxHeight, 50, txtBoxHeight)];
    [self.timeLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     
-    self.leagueLabel = [[UILabel alloc]initWithFrame:CGRectMake(125+10+leftMargin, topMargin+txtBoxHeight+txtBoxHeight-5, 260, txtBoxHeight)];
+    self.leagueLabel = [[UILabel alloc]initWithFrame:CGRectMake(60+10+leftMargin, topMargin+txtBoxHeight+txtBoxHeight-5, 220, txtBoxHeight)];
     [self.leagueLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin, 380, txtBoxHeight)];
@@ -67,6 +67,11 @@
     self.downloadInfoLabel.numberOfLines = 2;
     self.downloadInfoLabel.lineBreakMode = NSLineBreakByClipping;
 
+    
+    self.downloadAll = [[UIButton alloc]initWithFrame:CGRectMake(290, 30, 90, 40)];
+    [self.downloadAll.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
+    [self.downloadAll setBackgroundColor:PRIMARY_APP_COLOR];
+    [self.downloadAll setTitle:@"Download All" forState:UIControlStateNormal];
     [self.myContentView addSubview: self.downloadInfoLabel];
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];
@@ -75,6 +80,8 @@
     [self.myContentView addSubview: _dateDescription];
     [self.myContentView addSubview: _leagueDescription];
     
+    [self.myContentView addSubview: self.downloadAll];
+
     //[self.myContentView addSubview: self.playButton];
 }
 //-(void)prepareForReuse{

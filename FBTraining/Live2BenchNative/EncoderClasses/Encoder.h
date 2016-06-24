@@ -50,6 +50,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
+
 @interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderProtocol,EncoderStatusMonitorProtocol,ActionListItem,UIAlertViewDelegate>
 {
     
@@ -77,7 +78,7 @@
 @property (nonatomic,strong)    Event           * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    Event           * liveEvent;
 @property (nonatomic,strong)    NSMutableDictionary    * allEvents;    // all events on the encoder
-@property (nonatomic,weak)      EncoderManager  * encoderManager;
+//@property (nonatomic,weak)      EncoderManager  * encoderManager;
 @property (nonatomic,assign)    EncoderStatus   status;
 @property (nonatomic,strong)    NSString        * statusAsString;
 @property (nonatomic,assign)    double          bitrate;
@@ -86,7 +87,7 @@
 @property (nonatomic,assign)    NSInteger       cameraCount;
 @property (nonatomic,strong)    NSDictionary    * cameraData;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
-
+@property (nonatomic,strong)    NSOperationQueue * operationQueue; // new
 
 
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder

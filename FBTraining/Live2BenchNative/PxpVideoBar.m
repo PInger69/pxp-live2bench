@@ -271,7 +271,7 @@
 }
 
 - (void)slomoAction:(Slomo *)slomoButton {
-    slomoButton.slomoOn = !slomoButton.slomoOn;
+//    slomoButton.slomoOn = !slomoButton.slomoOn;
     _playerViewController.playerView.player.playRate = slomoButton.slomoOn ? 0.5 : 1.0;
 }
 

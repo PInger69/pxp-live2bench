@@ -62,12 +62,14 @@ static EncoderManager * instance;
     
     self = [super init];
     if (self){
+        self.localTagSyncManager        = [[LocalTagSyncManager alloc]initWithDocsPath:aLocalDocsPath];
         self.feedMapController          = [FeedMapController instance];
         _authenticatedEncoders          = [[NSMutableArray alloc]init];
         dictOfEncoders                  = [[NSMutableDictionary alloc]init];
         bonjourModule                   = [[BonjourModule alloc]initWithDelegate:self];
         _cloudEncoder                   = [[CloudEncoder alloc]initWithIP:[Utility getIPAddress]];  // started in searchForEncoders
         _localEncoder                   = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
+        _localEncoder.localTagSyncManager = self.localTagSyncManager;
         _localEncoder.encoderManager    = self;// depricated
         _localMediaManager              = [[LocalMediaManager alloc]initWithDocsPath:aLocalDocsPath];
         _searchForEncoders              = NO;
@@ -250,7 +252,6 @@ static EncoderManager * instance;
     if ([ip isEqualToString:@"device"]) {
        
         newEncoder        = [[Encoder alloc]initWithIP:ip];
-        newEncoder.encoderManager   = self;
         newEncoder.name             = name;
         newEncoder.urlProtocol      = @"device";
         [newEncoder requestVersion];
@@ -263,7 +264,6 @@ static EncoderManager * instance;
     
     } else if ([dictOfEncoders objectForKey:name] == nil || [((Encoder*)[dictOfEncoders objectForKey:name]).name isEqualToString:@"trashed"]) {
         newEncoder        = [[Encoder alloc]initWithIP:ip];
-        newEncoder.encoderManager   = self;
         newEncoder.name             = name;
         [newEncoder requestVersion];
         [newEncoder authenticateWithCustomerID:[UserCenter getInstance].customerID];
@@ -301,6 +301,9 @@ static EncoderManager * instance;
     if (registerEncoder.authenticated  && ![_authenticatedEncoders containsObject:registerEncoder]) {
         [_authenticatedEncoders addObject:registerEncoder];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+        
+        // TO check if local tags need to be pushed
+        [self.localTagSyncManager updateWithEncoder:registerEncoder];
         
         if (!self.primaryEncoder ) {
             self.primaryEncoder = registerEncoder;
@@ -549,6 +552,7 @@ static EncoderManager * instance;
 
 -(void)onLiveEventFound:(NSNotification*)note
 {
+    if (![note.object isKindOfClass:[Encoder class]]) return;
     Encoder * encoderHasLive = (Encoder*) note.object;
     self.liveEvent = encoderHasLive.liveEvent;
     

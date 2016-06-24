@@ -32,8 +32,7 @@ static RicoPlayerPool * instance;
         
         NSString * mode = [UserCenter getInstance].l2bMode;
         if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
-        
-            self.defaultController  = [RicoPlayerViewController new];
+            self.defaultController  = [RicoPlayerViewControllerSO new];
         } else if ([mode isEqualToString:L2B_MODE_HQ]) {
             self.defaultController  = [RicoPlayerViewController new];
         } else { // default L2B_MODE_PROXY

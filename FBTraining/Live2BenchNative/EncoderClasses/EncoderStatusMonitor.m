@@ -8,10 +8,6 @@
 //
 
 #import "EncoderStatusMonitor.h"
-#import "Encoder.h"
-#import "Event.h"
-//#import <objc/runtime.h>
-#import "Tag.h"
 #import "EncoderStatusMonitorProtocol.h"
 #import "UserCenter.h"
 #import "PxpURLProtocol.h"
@@ -30,7 +26,7 @@
 
 @implementation EncoderStatusMonitor
 {
-    //Encoder                 * checkedEncoder;
+
     id <EncoderStatusMonitorProtocol>     checkedEncoder;
     // For Status
     NSString                * ipAddress;
@@ -167,12 +163,14 @@
 
 -(void)syncCheck
 {
-    if (!statusSync)return;
+    if (!statusSync  || ![checkedEncoder event])return;
 
+    
+    
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:@{
                                                                                  @"user"         : [UserCenter getInstance].userHID,
                                                                                  @"requesttime"  : GET_NOW_TIME_STRING, //[NSString stringWithFormat:@"%f",0]
-                                                                                 @"event"        : @"live",
+                                                                                 @"event"        : ([[checkedEncoder event].name isEqualToString:[checkedEncoder liveEvent].name])?@"live":[checkedEncoder event].name,//,
                                                                                  @"device"       : [UserCenter getInstance].customerAuthorization
                                                                                  }];
     
@@ -253,7 +251,16 @@
     
     [checkedEncoder encoderStatusStringChange:results];
     [checkedEncoder encoderStatusChange:statusCode];
-    [checkedEncoder onMotionAlarm:results];
+    
+    
+//    if ([self.motionDelegate respondsToSelector:@selector(onMotionAlarm:)]){
+        if ([results objectForKey:@"alarms"] && [((NSArray*)[results objectForKey:@"alarms"]) count]) {
+//            [self.motionDelegate onMotionAlarm:results];
+            self.onMotion(self,results);
+        }
+//    }
+    
+    
 }
 
 
@@ -318,12 +325,10 @@
     if (shutdownTimer)  [shutdownTimer invalidate];
 }
 
-
 -(void)dealloc
 {
     if (statusTimer)    [statusTimer invalidate];
     if (shutdownTimer)  [shutdownTimer invalidate];
-
 }
 
 @end

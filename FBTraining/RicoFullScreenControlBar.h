@@ -61,7 +61,8 @@ typedef NS_OPTIONS (NSInteger,RicoFullScreenModes){
 @property (readonly, strong, nonatomic, nonnull) PxpBorderLabel *currentTagLabel;
 @property (readonly, strong, nonatomic, nonnull) PxpBorderButton *previousTagButton;
 @property (readonly, strong, nonatomic, nonnull) PxpBorderButton *nextTagButton;
-
+@property (readonly, strong, nonatomic, nonnull) UIButton *frameForward;
+@property (readonly, strong, nonatomic, nonnull) UIButton *frameBackward;
 
 
 

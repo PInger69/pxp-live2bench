@@ -41,51 +41,52 @@
 #import "FilterItemProtocol.h"
 #import "Event.h"
 #import "PxpTelestration.h"
+#import "TagProtocol.h"
 
-typedef NS_ENUM (NSInteger,TagType){
-    TagTypeNormal                  = 0,
-    //TagTypeLine                    = 2,
-    TagTypeDeleted                 = 3,
-    TagTypeTele                    = 4,
-    //TagTypeStrength                = 10,
-//    TagTypeOpenDuration            = 99,
-    TagTypeCloseDurationOLD           = 100,
-    
-    TagTypeHockeyStartOLine        = 1,
-    TagTypeHockeyStopOLine         = 2,
-    TagTypeHockeyStartDLine        = 5,
-    TagTypeHockeyStopDLine         = 6,
-    TagTypeHockeyPeriodStart       = 7,
-    TagTypeHockeyPeriodStop        = 8,
-    TagTypeHockeyOppOLineStart     = 9,
-    TagTypeHockeyOppOLineStop      = 10,
-    TagTypeHockeyOppDLineStart     = 11,
-    TagTypeHockeyOppDLineStop      = 12,
-    TagTypeHockeyStrengthStart     = 13,
-    TagTypeHockeyStrengthStop      = 14,
-    
-    /*TagTypeSoccerHalfStart         = 15,
-    TagTypeSoccerHalfStop          = 16,
-    TagTypeSoccerZoneStart         = 17,
-    TagTypeSoccerZoneStop          = 18,*/
-    
-    TagTypeSoccerHalfStart         = 17,
-    TagTypeSoccerHalfStop          = 18,
-    TagTypeSoccerZoneStart         = 15,
-    TagTypeSoccerZoneStop          = 16,
-    
-    TagTypeFootballDownStart       = 19,
-    TagTypeFootballDownStop        = 20,
-    TagTypeFootballQuarterStart    = 21,
-    TagTypeFootballQuarterStop     = 22,
-    
-    TagTypeFootballDownTags        = 1002,
-    TagTypeOpenDuration            = 1004,
-    TagTypeCloseDuration           = 1006,
-    
-};
+//typedef NS_ENUM (NSInteger,TagType){
+//    TagTypeNormal                  = 0,
+//    //TagTypeLine                    = 2,
+//    TagTypeDeleted                 = 3,
+//    TagTypeTele                    = 4,
+//    //TagTypeStrength                = 10,
+////    TagTypeOpenDuration            = 99,
+//    TagTypeCloseDurationOLD           = 100,
+//    
+//    TagTypeHockeyStartOLine        = 1,
+//    TagTypeHockeyStopOLine         = 2,
+//    TagTypeHockeyStartDLine        = 5,
+//    TagTypeHockeyStopDLine         = 6,
+//    TagTypeHockeyPeriodStart       = 7,
+//    TagTypeHockeyPeriodStop        = 8,
+//    TagTypeHockeyOppOLineStart     = 9,
+//    TagTypeHockeyOppOLineStop      = 10,
+//    TagTypeHockeyOppDLineStart     = 11,
+//    TagTypeHockeyOppDLineStop      = 12,
+//    TagTypeHockeyStrengthStart     = 13,
+//    TagTypeHockeyStrengthStop      = 14,
+//    
+//    /*TagTypeSoccerHalfStart         = 15,
+//    TagTypeSoccerHalfStop          = 16,
+//    TagTypeSoccerZoneStart         = 17,
+//    TagTypeSoccerZoneStop          = 18,*/
+//    
+//    TagTypeSoccerHalfStart         = 17,
+//    TagTypeSoccerHalfStop          = 18,
+//    TagTypeSoccerZoneStart         = 15,
+//    TagTypeSoccerZoneStop          = 16,
+//    
+//    TagTypeFootballDownStart       = 19,
+//    TagTypeFootballDownStop        = 20,
+//    TagTypeFootballQuarterStart    = 21,
+//    TagTypeFootballQuarterStop     = 22,
+//    
+//    TagTypeFootballDownTags        = 1002,
+//    TagTypeOpenDuration            = 1004,
+//    TagTypeCloseDuration           = 1006,
+//    
+//};
 
-@interface Tag : NSObject<FilterItemProtocol>
+@interface Tag : NSObject<FilterItemProtocol,TagProtocol>
 {
 
     NSInteger _rating;
@@ -98,7 +99,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSString      *deviceID;
 @property (strong, nonatomic) NSString      *displayTime;
 @property (assign, nonatomic) int           duration;
-@property (strong, nonatomic) Event         * event;
+@property (strong, nonatomic) NSString      * event;
+@property (strong, nonatomic) Event         * eventInstance;
 @property (strong, nonatomic) NSString      *homeTeam;
 @property (strong, nonatomic) NSString      *visitTeam;
 @property (assign, nonatomic) int           uniqueID;
@@ -109,6 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) NSInteger     rating;
 @property (strong, nonatomic) NSString      *requestURL;
 @property (assign, nonatomic) double        startTime;
+@property (assign, nonatomic) double        closeTime;
 @property (assign, nonatomic) double        time;
 @property (assign, nonatomic) TagType       type;
 @property (strong, nonatomic) NSDictionary  *thumbnails;

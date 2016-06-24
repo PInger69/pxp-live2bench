@@ -16,7 +16,7 @@
 
 
 #import "ParseModuleDefault.h"
-
+#import "EncoderProtocol.h"
 @implementation ParseModuleDefault
 
 
@@ -37,7 +37,7 @@
 
 
 // no parse for getCam
--(NSDictionary *)parse:(NSData*)data mode:(ParseMode)mode for:(Encoder*)encoder
+-(NSDictionary *)parse:(NSData*)data mode:(ParseMode)mode for:(id <EncoderProtocol>)encoder
 {
     NSDictionary * parsedData   = [self jsonToDict:data];
 
@@ -109,24 +109,24 @@
 
 #pragma mark - Master Responce
 
--(void)stop:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)stop:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     PXPLog(@"!!!Event Stopped on %@",encoder.name);
 }
 
--(void)start:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)start:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STARTED object:self];
     PXPLog(@"!!!Event Started on %@",encoder.name);
 }
 
--(void)pause:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)pause:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_PAUSED object:self];
     PXPLog(@"!!!Event Paused on %@",encoder.name);
 }
 
--(void)resume:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)resume:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_RESUMED object:self];
     PXPLog(@"!!!Event Resumed on %@",encoder.name);
@@ -138,14 +138,14 @@
 
 
 // ParseModeVersionCheck
--(void)versionCheck:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)versionCheck:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     encoder.version = (NSString *)[dict objectForKey:@"version"] ;
 //    PXPLog(@"%@ is version %@",encoder.name ,encoder.version);
 }
 
 
--(void)authenticate:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)authenticate:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
    
     encoder.authenticated =  YES;
@@ -183,7 +183,7 @@
 
 
 // this build the Leagus, teams and players on this encoder
--(void)getTeams:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)getTeams:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     if (encoder.encoderLeagues) {
         return;
@@ -290,7 +290,7 @@
 
 
 // ParseModeGetPastEvents and Find Live Event
--(void)getPastEvents:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)getPastEvents:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
 
     NSArray                 * events   = [dict objectForKey:@"events"];
@@ -371,7 +371,7 @@
 }
 
 
--(void)deleteEvent:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)deleteEvent:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     if (dict){
         PXPLog(@"The event has been deleted %@" , dict);
@@ -381,11 +381,11 @@
 
 
 // This method is incomplete so the it only list cam count and raw data
--(void)getCameras:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)getCameras:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
     NSArray * list      = [dict[@"camlist"]allValues];
     encoder.cameraCount = list.count;
-    encoder.cameraData  = dict;
+//    encoder.cameraData  = dict;
     PXPLog(@"%@ has %@ cameras",encoder.name ,[NSString stringWithFormat:@"%ld",(long)encoder.cameraCount ]);
 
 //    NSMutableArray *camerasAvailableList = [[NSMutableArray alloc]init];
@@ -402,17 +402,17 @@
 }
 
 
--(void)makeTag:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)makeTag:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
 
 }
 
--(void)modTag:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)modTag:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
 
 }
 
--(void)modTagMakeMP4:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)modTagMakeMP4:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
 
 }
@@ -420,7 +420,7 @@
 
 
 
--(void)encoderStatus:(NSDictionary*)dict encoder:(Encoder*)encoder
+-(void)encoderStatus:(NSDictionary*)dict encoder:(id <EncoderProtocol>)encoder
 {
 
     NSString        * legacyStatus = [dict objectForKey:@"status"];
@@ -449,7 +449,7 @@
     [encoder assignMaster:dict extraData:YES];
     [encoder encoderStatusStringChange:dict];
     [encoder encoderStatusChange:statusCode];
-    [encoder onMotionAlarm:dict];
+//    [encoder onMotionAlarm:dict];
 }
 
 

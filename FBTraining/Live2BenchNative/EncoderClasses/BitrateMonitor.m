@@ -99,7 +99,7 @@ static void * bitrateContext         = &bitrateContext;
         double val = ( (Encoder*) object).bitrate;
          dispatch_async(dispatch_get_main_queue(), ^{
             [self setBackgroundColorBasedOnRate:val];
-            [nameLabelValue setText: [NSString stringWithFormat:@"%@ %@",encoder.name,(encoder.encoderManager.masterEncoder==encoder)?@"(Master)":@""]];
+            [nameLabelValue setText: [NSString stringWithFormat:@"%@ %@",encoder.name,([EncoderManager getInstance].masterEncoder==encoder)?@"(Master)":@""]];
             [nameLabelValue sizeToFit];
             [statusLabelValue setText:[NSString stringWithFormat:@"%@", encoder.statusAsString]];
             [statusLabelValue sizeToFit];

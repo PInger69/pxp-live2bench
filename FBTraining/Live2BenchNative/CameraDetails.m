@@ -38,7 +38,7 @@
             src =  [NSString stringWithFormat:@"s_%@",src ];
         }
         
-        
+        _resolution     =  ([details objectForKey:@"resolution"])?  [details objectForKey:@"resolution"]:@"";
         
         _source         = (src)? src:@"";
         _cameraID       = ([details objectForKey:@"mac"])?  [details objectForKey:@"mac"]:@"";

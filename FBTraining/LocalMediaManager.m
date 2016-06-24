@@ -254,6 +254,82 @@ static LocalMediaManager * instance;
         return self;
 }
 
+
+-(void)refresh
+{
+    [_allEvents removeAllObjects];
+    NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
+    NSArray         * plistPaths    = [self grabAllFiles:[_localPath stringByAppendingPathComponent:@"events"] ext:@"plist"];
+    for (NSString *pths in plistPaths) {
+        NSDictionary *dict = [[NSDictionary alloc]initWithContentsOfFile:pths];
+        if (dict) {
+            [tempPool addObject:dict];
+        }
+    }
+    
+    // and then checks if the videos are downloaded for each source and added to the Event
+    NSEnumerator    * enumerator    = [tempPool objectEnumerator];
+    id              value;
+    while ((value = [enumerator nextObject])) {
+        NSMutableDictionary * dict = value;
+        NSString * itemHid = [dict objectForKey:@"hid"];
+        if (itemHid) {
+            NSArray *mp4s = [dict[@"mp4_2"] allValues];
+            if (mp4s.count > 1) {
+                NSMutableDictionary *feeds = [[NSMutableDictionary alloc]init];
+                for (int i = 0; i < mp4s.count; i++) {
+                    NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
+                    NSString *path = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:dict[@"name"]] stringByAppendingPathComponent:name];
+                    [feeds setObject:path forKey:[NSString stringWithFormat:@"s_0%i",i]];
+                }
+                [dict setObject:feeds forKeyedSubscript:@"mp4_2"];
+            } else {
+                NSString *path = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:dict[@"name"]] stringByAppendingPathComponent:@"main.mp4"];
+                [dict setObject:path forKey:@"mp4"];
+            }
+            
+            
+            //                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
+            Event * anEvent = [[Event alloc]initWithDict:dict localPath:self.localPath];
+            anEvent.parentEncoder       = [LocalEncoder getInstance];
+            anEvent.local               = YES;
+            anEvent.isBuilt             = YES;
+            anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
+            
+            
+            if ([dict objectForKey:@"savedTeamData"]){
+                anEvent.teams =  [self parsedTeamData:dict];
+            }
+            
+            // Local event cache thumb
+            NSArray *components = @[_localPath, @"events", anEvent.datapath, @"thumbnails"];
+            NSString * thumbFolder =[NSString pathWithComponents:components];
+            
+            BOOL isDir;
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:thumbFolder isDirectory:&isDir];
+            
+            if (fileExists) {
+                // get all images from the folder
+                NSArray * thumbNails = grabAllThumbNamesFromEvent(anEvent);
+                for (NSString * orgFilePathName in thumbNails) {
+                    // all thumbs were saved on the device by the real file name but will be keyed by the download path
+                    NSString    * imageLocation =  [thumbFolder stringByAppendingPathComponent:[orgFilePathName lastPathComponent]];
+                    UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
+                    if (thmb) [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
+                }
+                
+            }
+            
+            NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
+            [_allEvents setValue: eventFinal forKey:anEvent.name];// this is the new kind of build that events have their own feed
+            
+            //[_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
+        }
+    }
+
+
+}
+
 -(void)assignLocalTags:(NSDictionary *)mainDict{
     NSArray *tagToBeAddedArray = [mainDict allValues];
     
@@ -430,7 +506,7 @@ static LocalMediaManager * instance;
 -(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
 {
     
-    NSString * eventName = tag.event.name;
+    NSString * eventName = tag.eventInstance.name;
     NSString * tagID = tag.ID;
     NSString * searchClipID = [NSString stringWithFormat:@"%@_%@", eventName, tagID];
     Clip    * foundClip;
@@ -692,6 +768,46 @@ static LocalMediaManager * instance;
      
     return aPath;
 }
+
+// This creates a event Plist and folder and returns a URL of the event folder so you can copy the video too
+-(NSString*)makeLocalEvent:(NSMutableDictionary*)eventDic
+{
+    
+    Event *madeLocalEvent =   [[Event alloc]initWithDict:eventDic localPath:@"path"];
+    
+    // This gets the path and makes a DIR if its not there
+    NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:madeLocalEvent.datapath];
+    
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&isDir];
+    
+    
+    if ( !isDir){
+        [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
+        [[NSFileManager defaultManager] createDirectoryAtPath:[aPath stringByAppendingPathComponent:@"thumbnails"] withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    
+    // make Plist
+    
+    
+    
+    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:madeLocalEvent.datapath]stringByAppendingPathExtension:@"plist"];
+    
+    
+    
+    NSMutableDictionary * localEventRawData = [[NSMutableDictionary alloc]initWithDictionary:[madeLocalEvent.rawData copy]];
+    
+    
+     [localEventRawData writeToFile:plistNamePath atomically:YES];
+
+    
+    
+    NSString * eventFolderPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:madeLocalEvent.datapath];
+
+
+    return eventFolderPath;
+}
+
 
 
 

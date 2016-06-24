@@ -140,7 +140,11 @@
     
     const CGFloat w = self.bounds.size.width, h = self.bounds.size.height;
     const CGFloat lh = (h-10);
-    _tagView.frame = CGRectMake(3.5 * h, 0.0, w - 7.0 * h, h);
+    _tagView.frame = CGRectMake(3.5 * h,
+                                0.0,
+                                w - 7.0 * h,
+                                h);
+    
     _tagLabel.frame = CGRectMake((w - 4.0 * lh) / 2.0 , 5.0, 4.0 * lh, lh);
     _tagLabel.font = [UIFont systemFontOfSize:PHI_INV * lh];
     

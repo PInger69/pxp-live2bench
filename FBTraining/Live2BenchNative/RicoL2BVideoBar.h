@@ -36,6 +36,10 @@ IB_DESIGNABLE
 @property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenButton *fullscreenButton;
 
+@property (readonly, strong, nonatomic, nonnull) UIButton *frameForward;
+@property (readonly, strong, nonatomic, nonnull) UIButton *frameBackward;
+
+
 @property (assign, nonatomic) BOOL enabled;
 
 - (void)showExtendButton; // show extend start/end buttons

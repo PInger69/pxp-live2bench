@@ -9,7 +9,7 @@
 #import "PxpBorderButton.h"
 #import "UIColor+Highlight.h"
 
-#define DEFAULT_BORDER_WIDTH 2.0
+#define DEFAULT_BORDER_WIDTH 1.0
 
 @interface PxpBorderButton ()
 

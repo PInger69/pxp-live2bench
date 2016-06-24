@@ -250,7 +250,7 @@ static __nonnull NSComparator _tagSortBlock;
 
 - (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     Tag *tag = _teleTags[[self tagIndexForIndexPath:indexPath]];
-    [self.tagSelectResponder didSelectTag:tag source:tag.telestration.sourceName ? tag.telestration.sourceName : tag.event.feeds.allKeys.firstObject];
+    [self.tagSelectResponder didSelectTag:tag source:tag.telestration.sourceName ? tag.telestration.sourceName : tag.eventInstance.feeds.allKeys.firstObject];
 }
 
 /*

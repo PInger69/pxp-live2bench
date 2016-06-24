@@ -10,8 +10,6 @@
 
 @interface RicoPlayerViewController ()
 
-@property (nonatomic, strong) NSMutableSet * depedencyPlayers; // all players in this list depend on each other
-@property (nonatomic, strong) NSOperation * syncBlock;
 
 @end
 
@@ -144,7 +142,17 @@ static CMClockRef _masterClock;
 -(void)play
 {
     self.isPlaying = YES;
+    
+    [self.depedencyPlayers removeAllObjects];
+    
+
+    
     for (RicoPlayer * player in [self.players allValues]) {
+        
+        if (player.reliable) {
+            [self.depedencyPlayers addObject:player];
+        }
+        
         if (player.syncronized) {
             if (!self.syncBlock) {
                 self.syncBlock = [RicoSyncOperation new];
@@ -225,9 +233,20 @@ static CMClockRef _masterClock;
     NSOperation * blk = [NSBlockOperation blockOperationWithBlock:^{}];
     
     for (RicoPlayer * player in [self.players allValues]) {
-
-        if(player.reliable) liveTime = kCMTimePositiveInfinity;
         
+//        if(player.reliable){
+//            liveTime = kCMTimePositiveInfinity;
+//        }
+        
+        if(player.reliable && [UserCenter getInstance].preferenceLiveBuffer == 0 ){
+            liveTime = kCMTimePositiveInfinity;
+        } else if (player.reliable){
+            NSInteger inter = [UserCenter getInstance].preferenceLiveBuffer;
+            float adjustment = (float)inter;
+            CMTime tt = CMTimeMakeWithSeconds(-adjustment,NSEC_PER_SEC);
+            liveTime = CMTimeAdd(liveTime,tt );
+        }
+        player.reliable = YES;
         NSOperation * seekOp  = [player seekToTime:liveTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
         NSOperation * playOp  = [player play];
         
@@ -260,9 +279,21 @@ static CMClockRef _masterClock;
     
     for (RicoPlayer * player in [self.players allValues]) {
         
-        
-         NSOperation * seekOp = [player seekToTime:kCMTimeZero toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:nil];
+        (void)[player play];
+         NSOperation * seekOp = [player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+             NSLog(@"## Player seek Complete %@",(finished)?@"Fail":@"Pass");
+             
+         }];
+        [seekOp setCompletionBlock:^{
+            NSLog(@"## Player seek");
+        }];
          NSOperation * playOp = [player play];
+        [playOp setCompletionBlock:^{
+            NSLog(@"## Player play");
+        }];
+        
+        
+        NSLog(@"## %@",player.isReadyOperation.isFinished?@"was finished":@"not finished");
         [seekOp addDependency:player.isReadyOperation];
         [playOp addDependency:syncBlock];
         [syncBlock addDependency:seekOp];
@@ -273,6 +304,8 @@ static CMClockRef _masterClock;
     }
     
     [self.operationQueue addOperation:syncBlock];
+    
+    
     
 }
 
@@ -478,6 +511,7 @@ static CMClockRef _masterClock;
 -(void)seekToTime:(CMTime)seekTime toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void(^)(BOOL finished))completionHandler
 {
     for (RicoPlayer * dplayers in self.depedencyPlayers) {
+        if(dplayers.operationQueue.operationCount > 10) continue;
         [dplayers seekToTime:seekTime toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
     }
 }
@@ -622,7 +656,10 @@ static CMClockRef _masterClock;
     
     for (RicoPlayer * player in list) {
         if (CMTimeGetSeconds(player.duration) < (CMTimeGetSeconds(highestPlayer.duration) - 10 )) {
+//            NSLog(@" %f   %f ",CMTimeGetSeconds(player.duration),(CMTimeGetSeconds(highestPlayer.duration) - 10 ));
             player.reliable = NO;
+            player.streamStatus.text = @"Stream delayed";
+
 //            [self.depedencyPlayers removeObject:player];
         }
     }

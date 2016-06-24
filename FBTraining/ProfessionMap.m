@@ -18,13 +18,14 @@
 #import "RugbyBottomViewController.h"
 #import "FootballBottomViewController.h"
 #import "FootballTrainingBottomViewController.h"
+#import "CFLBottomViewController.h"
 
 // FilterTabControllers
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
 #import "PxpFilterRugbyTabViewController.h"
 #import "PxpFilterSoccerTabViewController.h"
-
+#import "PxpFilterCFLTabController.h"
 
 @implementation ProfessionMap
 
@@ -36,11 +37,12 @@ static NSDictionary * _professionMapData;
     dict[SPORT_HOCKEY]                  =  [ProfessionMap buildHockey];
     dict[SPORT_SOCCER]                  =  [ProfessionMap buildSoccer];
     dict[SPORT_FOOTBALL]                =  [ProfessionMap buildFootball];
+    dict[SPORT_CFL]                     =  [ProfessionMap buildCFL];
     dict[SPORT_RUGBY]                   =  [ProfessionMap buildRugby];
     dict[SPORT_CRICKET]                 =  [ProfessionMap buildCricket];
     dict[SPORT_FOOTBALL_TRAINING]       =  [ProfessionMap buildFootballTraining];
-    dict[SPORT_BLANK]       =  [ProfessionMap buildBlank];
-    _professionMapData      = [dict copy];
+    dict[SPORT_BLANK]                   =  [ProfessionMap buildBlank];
+    _professionMapData                  =  [dict copy];
 
 }
 
@@ -134,7 +136,12 @@ static NSDictionary * _professionMapData;
     
     
     soccer.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[
-                                                                                       [NSPredicate predicateWithFormat:@"duration != 0"]
+                                                                                        [NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerHalfStop]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerZoneStop]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerHalfStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerZoneStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"duration != 0"]
+                                                                                     
                                                                                        ]];
     
     
@@ -194,6 +201,51 @@ static NSDictionary * _professionMapData;
     
     return profession;
 }
+#pragma mark -
++(Profession*)buildCFL
+{
+    
+    Profession * sport = [Profession new];
+    
+    sport.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStart]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStop]
+                                                                                   ]];
+    
+    
+    sport.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[
+                                                                                       [NSPredicate predicateWithFormat:@"duration != 0"]
+                                                                                       ]];
+    
+    
+    
+    
+    // this is for extra styling for
+    [sport setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:NO];
+        if (tagForData.type == TagTypeTele){
+            cellToStyle.thumbDur.text = @"";
+        }
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Quarter: %d",[tagForData.period intValue]];
+        
+        
+        
+    }];
+    
+    [sport setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    // set BottomviewController
+    sport.bottomViewControllerClass = [CFLBottomViewController class];
+    
+    // set filter for list and clip view
+    sport.filterTabClass            = [PxpFilterCFLTabController class];
+//    sport.filterTabClass            = [PxpFilterSoccerTabViewController class];
+    
+    return sport;
+}
+
+
 
 #pragma mark -
 +(Profession*)buildRugby

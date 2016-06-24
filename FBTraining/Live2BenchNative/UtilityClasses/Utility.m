@@ -40,20 +40,34 @@ static InternetMonitor* internetMonitor;
     NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
     NSString *displayTime;
     if (time < 0) {
-        if (dHours > 0) {
+//        if (dHours > 0) {
             displayTime = [NSString stringWithFormat:@"-%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
-        }else{
-            displayTime = [NSString stringWithFormat:@"-%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
-        }
+//        }
+//        else{
+//            displayTime = [NSString stringWithFormat:@"-%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
+//        }
     }else{
-        if (dHours > 0) {
+//        if (dHours > 0) {
             displayTime = [NSString stringWithFormat:@"%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
-        }else{
-            displayTime = [NSString stringWithFormat:@"%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
-        }
+//        }
+//        else{
+//            displayTime = [NSString stringWithFormat:@"%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
+//        }
     }
     return displayTime;
 }
+
+//+(NSString*)timeToString:(CMTime)time
+//{
+//    NSUInteger dTotalSeconds = CMTimeGetSeconds(time);
+//    NSUInteger dHours = floor(dTotalSeconds / 3600);
+//    NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
+//    NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
+//    NSString *videoDurationText = [NSString stringWithFormat:@"%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
+//    
+//    return videoDurationText;
+//}
+//
 
 
 +(NSString *)encodeSpecialCharacters:(NSString*)inputString
@@ -135,10 +149,22 @@ static InternetMonitor* internetMonitor;
         
         if(error) {
 
-            NSString * description  = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
-            NSString * reason       = [error.userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
+            NSString * description      = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
+            NSString * reason           = [error.userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
+            NSString * debugDescription = [error.userInfo objectForKey:@"NSDebugDescription"];
             
-            PXPLog(@"%@ Error! U001  %@",description,reason);
+            if (!description && debugDescription) {
+                PXPLog(@"JSON was malformed Error! %@",debugDescription);
+            } else if (!description && !reason) {
+            
+                PXPLog(@"JSON was malformed Error!");
+            } else {
+                PXPLog(@"%@ Error! U001  %@",description,reason);
+            }
+            
+           
+            
+            
             /* JSON was malformed, act appropriately here */ }
         
         // the originating poster wants to deal with dictionaries;

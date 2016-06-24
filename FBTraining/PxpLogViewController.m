@@ -94,8 +94,8 @@
         self.crashButton.layer.borderWidth = 1;
         self.crashButton.layer.borderColor = [[UIColor grayColor]CGColor];
         [self.crashButton setBackgroundColor:[UIColor lightGrayColor]];
-        [self.crashButton setTitle:@"Crash" forState:UIControlStateNormal];
-        [self.crashButton addTarget:self action:@selector(onCrashTop:) forControlEvents:UIControlEventTouchUpInside];
+        [self.crashButton setTitle:@"Tag" forState:UIControlStateNormal];
+        [self.crashButton addTarget:self action:@selector(onTagDump:) forControlEvents:UIControlEventTouchUpInside];
 
 
         encoderManager = appDel.encoderManager;
@@ -217,6 +217,9 @@
                 PXPLog(@"   Check if an Event is playing");
             } else {
                 
+                
+                PXPLog(@"Camera Formats Match: %@",([op.encoder.cameraResource allCamerasHaveMatchingFormats])?@"TRUE":@"FALSE");
+                
                 NSDictionary    * results =[Utility JSONDatatoDict:d];
                 NSArray * list = [results[@"camlist"]allValues];
                 PXPLog(@"%@",list);
@@ -328,6 +331,51 @@
     
     
 
+    
+}
+
+
+-(void)onTagDump:(id)sender
+{
+    Event * evt;
+    if (!encoderManager.primaryEncoder){
+        PXPLog(@"No current Event because no encoder");
+    } else {
+        
+        evt = encoderManager.primaryEncoder.event;
+        PXPLog(@"All Tags for - %@",evt);
+        PXPLog(@"#   TYPE  ID  NAME   ");
+        NSArray * tags = [evt.tags copy];
+        for (NSInteger i = 0; i<[tags count]; i++) {
+            Tag * tag = tags[i];
+            
+            
+            NSMutableString * outputpart = [NSMutableString new];
+            
+            NSString *indexColumn = [[NSString stringWithFormat:@"%ld", (long)i] stringByPaddingToLength:4 withString:@" " startingAtIndex:0];
+            [outputpart appendString:indexColumn];
+            
+            NSString *typeColumn = [[NSString stringWithFormat:@"%ld", (long)tag.type] stringByPaddingToLength:6 withString:@" " startingAtIndex:0];
+            [outputpart appendString:typeColumn];
+            
+            NSString *idColumn = [[NSString stringWithFormat:@"%@", tag.ID] stringByPaddingToLength:4 withString:@" " startingAtIndex:0];
+            [outputpart appendString:idColumn];
+            
+            
+            NSString *nameColumn = [[NSString stringWithFormat:@"%@", tag.name] stringByPaddingToLength:20 withString:@" " startingAtIndex:0];
+            [outputpart appendString:nameColumn];
+            
+
+            
+            //NSLog(@"%ld. %ld ID: %@  name:%@ st: %f  dr: %d   dID: %@",(long)i,(long)tag.type,tag.ID,tag.name,tag.startTime,tag.duration,(tag.durationID)?:@"none");
+//            PXPLog(@"%ld.\t%ld %@  %@ st:%f  dr:%d",(long)i,(long)tag.type,tag.ID,tag.name,tag.startTime,tag.duration);
+            PXPLog(outputpart);
+        }
+        
+    }
+    
+    
+    
     
 }
 

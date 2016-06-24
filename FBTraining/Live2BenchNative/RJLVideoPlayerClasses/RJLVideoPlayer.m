@@ -9,7 +9,7 @@
 #import "RJLVideoPlayer.h"
 #import "RJLFreezeMonitor.h"
 #import "RJLVideoPlayerResponder.h"
-#import "ValueBuffer.h"
+//#import "ValueBuffer.h"
 
 
 #define LIVE_BUFFER     5
@@ -41,7 +41,7 @@
 
     
     BOOL  isFeedReady;
-    ValueBuffer * liveBuffer;
+//    ValueBuffer * liveBuffer;
 
 }
 static void *ViewControllerRateObservationContext           = &ViewControllerRateObservationContext;
@@ -84,7 +84,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame = frame;
         
-        liveBuffer = [[ValueBuffer alloc]initWithValue:6 coolDownValue:10000000 coolDownTick:50];
+//        liveBuffer = [[ValueBuffer alloc]initWithValue:6 coolDownValue:10000000 coolDownTick:50];
         restoreAfterPauseRate = 1;
     }
     return self;
@@ -658,13 +658,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                          *  Should add check life to keep up to date
                          */
                         if (weakSelf.status & RJLPS_Live){
-                        
-                            double duration = CMTimeGetSeconds([weakSelf playerItemDuration]);
-                            double ctime    = CMTimeGetSeconds([weakSelf.playerItem currentTime]);
-                            if (duration - ctime > weakSelf -> liveBuffer.value){
-                                [weakSelf -> liveBuffer onCoolDown];
-                                [weakSelf seekToInSec:duration];
-                            }
+//                        
+//                            double duration = CMTimeGetSeconds([weakSelf playerItemDuration]);
+//                            double ctime    = CMTimeGetSeconds([weakSelf.playerItem currentTime]);
+//                            if (duration - ctime > weakSelf -> liveBuffer.value){
+//                                [weakSelf -> liveBuffer onCoolDown];
+//                                [weakSelf seekToInSec:duration];
+//                            }
                         }
                     }];
 

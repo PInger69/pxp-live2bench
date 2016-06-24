@@ -317,7 +317,7 @@
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
         tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
        
-        NSArray *keys = [[NSMutableArray arrayWithArray:[tag.event.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        NSArray *keys = [[NSMutableArray arrayWithArray:[tag.eventInstance.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         NSString *key = keys[indexPath.row - firstIndexPath.row];
         
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithTag:tag source:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
@@ -331,6 +331,10 @@
         NSString * tagKey;
 //        tagKey  = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
         tagKey = key;//[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+        
+        
+        NSLog(@"Looking for Key: %@",tagKey);
+        
         
         
         if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] != nil &&   [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] isKindOfClass:[NSString class]]) {
@@ -350,6 +354,16 @@
             collapsableCell.downloadButton.progress         = 1;
         }
 
+        NSString * otherKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] && [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] isKindOfClass:[DownloadItem class]]) {
+            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
+            __block FeedSelectCell *weakerCell = weakCell;
+            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                weakerCell.downloadButton.progress = progress;
+                [weakerCell.downloadButton setNeedsDisplay];
+            }];
+        }
+        
         
         // When the download button is pressed
         collapsableCell.downloadButtonBlock = ^(){
@@ -396,7 +410,7 @@
         //Feed *feed = feeds[key] ? feeds[key] :feeds.allValues.firstObject;
         
         collapsableCell.sendUserInfo = ^(){
-            Feed *feed = [tag.event.feeds objectForKey:key];
+            Feed *feed = [tag.eventInstance.feeds objectForKey:key];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{//@"context":STRING_LISTVIEW_CONTEXT,
                                                                                                                                             //@"feed":tag.feeds[key],
                                                                                                                                             //@"feed":tag.name,
@@ -512,7 +526,7 @@
             [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
         }
         
-        if (!weakThumb) {
+        if (!weakThumb && [tag respondsToSelector:@selector(thumbnailForSource:)]) {
             weakThumb = [tag thumbnailForSource:@"onlySource"];
         }
         
@@ -546,7 +560,7 @@
     [cell.tagPlayersView setContentSize:CGSizeMake(players.length*8, cell.tagPlayersView.frame.size.height)];
     
     
-    LeagueTeam *team = [[tag.event.teams allValues]firstObject];
+    LeagueTeam *team = [[tag.eventInstance.teams allValues]firstObject];
     if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
         [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
@@ -636,14 +650,14 @@
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
         if (self.previouslySelectedIndexPath.row < indexPath.row && self.previouslySelectedIndexPath) {
-            for (int i = 0; i < tag.event.feeds.count ; ++i) {
+            for (int i = 0; i < tag.eventInstance.feeds.count ; ++i) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
             }
             
             self.previouslySelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
         }else{
-            for (int i = 0; i < tag.event.feeds.count ; ++i) {
+            for (int i = 0; i < tag.eventInstance.feeds.count ; ++i) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
             }
@@ -655,22 +669,12 @@
         [self.arrayOfCollapsableIndexPaths addObjectsFromArray: insertionIndexPaths];
         [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView scrollToRowAtIndexPath:self.previouslySelectedIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//        NSArray *arrayToRemove = [NSArray array];
-//        if (self.arrayOfCollapsableIndexPaths.count) {
-//            arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
-//        }
-//        
-//        NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-//        [self.arrayOfCollapsableIndexPaths addObject: insertionIndexPath];
-//        [self.tableView insertRowsAtIndexPaths:@[insertionIndexPath ] withRowAnimation:UITableViewRowAnimationBottom];
-//        [self.arrayOfCollapsableIndexPaths removeObjectsInArray:arrayToRemove];
-//        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationTop];
+
         
     }else{
         [cell setSelected: NO];
         
-        //NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-        //[self.arrayOfCollapsableIndexPaths removeObject: insertionIndexPath];
+
         NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];

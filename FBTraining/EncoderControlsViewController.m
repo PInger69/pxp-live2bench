@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 #import <Crashlytics/Crashlytics.h>
+#import <Photos/Photos.h>
 #import "EncoderControlsViewController.h"
 #import "EncoderManager.h"
 #import "Encoder.h"
@@ -15,8 +16,13 @@
 #import "League.h"
 #import "DeviceEncoderSource.h"
 #import "LocalMediaManager.h"
+#import "MakeEventViewController.h"
+#import "CopyDeviceVideoToOperation.h"
+#import "DeviceVideoDataSource.h"
 
 @interface EncoderControlsViewController ()
+
+@property (nonatomic,strong) DeviceVideoDataSource * deviceVideoDataSource;
 
 typedef enum {
     SVSignalSearching = 0,
@@ -143,7 +149,7 @@ SVSignalStatus signalStatus;
         
 //        self.startAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"myplayXplay", nil) message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 
-        
+        self.deviceVideoDataSource = [DeviceVideoDataSource new];
     }
     return self;
 }
@@ -221,9 +227,11 @@ SVSignalStatus signalStatus;
     
     self.makeLocalEventButton = [[UIButton alloc]initWithFrame:CGRectMake(500, 10, 200, 80)];
     [self.makeLocalEventButton addTarget:self action:@selector(buildStandAloneEvent) forControlEvents:UIControlEventTouchUpInside];
-    [self.makeLocalEventButton setTitle:@"Build Stand Alone Event" forState:UIControlStateNormal];
+    [self.makeLocalEventButton setTitle:@"Build Local Event" forState:UIControlStateNormal];
     self.makeLocalEventButton.layer.borderWidth = 1;
-    if (DEBUG_MODE)[self.view  addSubview:self.makeLocalEventButton];
+    if (DEBUG_MODE){
+        [self.view  addSubview:self.makeLocalEventButton];
+    }
 }
 
 - (void)viewDidLoad
@@ -608,44 +616,25 @@ SVSignalStatus signalStatus;
 #pragma mark - Standalone Event
 -(void)buildStandAloneEvent
 {
-    
-    [[Crashlytics sharedInstance] crash];
-    Encoder * deviceEncoder     = [[Encoder alloc]initWithIP:@""];
-    deviceEncoder.urlProtocol   = @"mockup"; // @"device"; //
-    deviceEncoder.name          = @"Device Encoder";
-    
-    EncoderOperation * version      = [[EncoderOperationGetVersion alloc]initEncoder:deviceEncoder data:@{}];
-    EncoderOperation * getAllEvents = [[EncoderOperationGetPastEvents alloc]initEncoder:deviceEncoder data:@{}];
-    
-    [version setOnRequestComplete:^(NSData *n, EncoderOperation *nn) {
-        NSLog(@"version done");
-    }];
-    
-    
-    [getAllEvents setOnRequestComplete:^(NSData *n, EncoderOperation *nn) {
-        
-        Event * createdEvent            = [[nn.encoder.allEvents allValues]firstObject];
-        
-        NSString * videoFolderPath      = [[LocalMediaManager getInstance] saveEvent: [NSMutableDictionary dictionaryWithDictionary:@{@"local":createdEvent, @"non-local":createdEvent}] ];
+    MakeEventViewController * vc = [MakeEventViewController new];
+    vc.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+    vc.preferredContentSize    = vc.view.bounds.size;
 
-//        NSString * savedFileName        = [encoderSource lastPathComponent];
-//        NSString * downloaderKey        = [NSString stringWithFormat:@"%@_%@",theEvent.name,source ];
-
-        
-        
-
-
-        
-//        DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:@""] type:DownloadItem_TypeVideo key:downloaderKey];
-        
-        NSLog(@"all events DONE %@",videoFolderPath);
-    }];
-    [getAllEvents addDependency:version];
+    vc.delegate = self;
+    vc.videoTable.dataSource   = self.deviceVideoDataSource;
+//    vc.videoCollection.dataSource = self.deviceVideoDataSource;
+    [vc.videoTable reloadData];
     
-    [deviceEncoder runOperation:version];
-    [deviceEncoder runOperation:getAllEvents];
- 
-    NSLog(@"Press Standalone");
+    UIPopoverPresentationController *presentationController = [vc popoverPresentationController];
+    presentationController.sourceRect               = self.view.frame;//[[UIScreen mainScreen] bounds];
+    presentationController.sourceView               = self.view;
+    presentationController.permittedArrowDirections = 0;
+
+    [self presentViewController:vc animated:YES completion:nil];
+    
+
+    
+    
 }
 
 #pragma mark -
@@ -977,6 +966,92 @@ SVSignalStatus signalStatus;
 }
 
 
+#define mark - MakeEventViewControllerDeleagate
+-(void)onMakeEvent:(MakeEventViewController*)sender
+{
+  
+    
+    
+    
+    
+    
+    NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc]init];
+    aDateFormatter.dateFormat = @"yyyy-MM-dd";
+    
+    NSString * hid              = [[NSUUID UUID]UUIDString];
+    NSString * fileName         = @"main_00hq.mp4";
+    
+    NSString * dateString       = [aDateFormatter stringFromDate:sender.datePicker.date];
+    dateString                  = [dateString stringByAppendingString:@"_12-00-00"];
+    
+    NSString * dateString1      = [aDateFormatter stringFromDate:sender.datePicker.date];
+    dateString1                  = [dateString1 stringByAppendingString:@" 12:00:00"];
+    
+    
+    NSString * localPath   = [LocalMediaManager getInstance].localPath;
+    
+    
+    NSString * folderURL    = [NSString stringWithFormat:@"%@/events/%@_%@",localPath,dateString,hid];
+    NSString * fileURL     = [folderURL stringByAppendingPathComponent:fileName];
+    
+    NSMutableDictionary * data = [NSMutableDictionary dictionaryWithDictionary:@{
+                                        @"datapath"      : [NSString stringWithFormat:@"%@_%@",dateString,hid],
+                                        @"date"          : dateString1,//@"2016-06-08 12:11:20"
+                                        @"dateFmt"       : dateString,//@"2016-06-08_12-11-20"
+                                        @"hid"           : hid,
+                                        @"homeTeam"      : sender.homeTeamNameInput.text,
+                                        @"visitTeam"     : sender.awayTeamNameInput.text,
+                                        @"league"        : sender.leagueNameInput.text,
+                                        @"sport"         : @"none",
+                                        @"mp4"           : fileURL,
+                                        @"mp4_2"         : [ @{@"s_00" : fileURL}mutableCopy],
+                                        @"name"          : [NSString stringWithFormat:@"%@_%@",dateString,hid],//@"2016-06-08_12-11-20_3f30c7c14d4da656f9eda33b792838a2a0fb7236_local"
+                                        @"tags"          : [@{} mutableCopy],
+                                        @"vid"           : fileURL,
+                                        @"vid_2"         : [@{@"s_00" : [@{
+                                                                     @"hq" : fileURL,
+                                                                     @"lq" : fileURL,
+                                                                     @"vidsize_hq" : @"0.00MB",
+                                                                     @"vidsize_lq" : @"0.00MB",
+                                                                     @"vq" : @"lq"
+                                                                     }mutableCopy]
+                                                              }mutableCopy],
+                                        
+                                        }];
+    
+    
+
+    // make the event
+    
+
+    
+    // add Video
+    
+     
+    (void)[[LocalMediaManager getInstance] makeLocalEvent:data];
+    // copy op
+    
+    
+    NSLog(@"Output video URL: %@",fileURL);
+    
+    PHAsset *assetFromTable = self.deviceVideoDataSource.videos[sender.videoTable.indexPathForSelectedRow.row];
+    
+    CopyDeviceVideoToOperation * copyOp = [[CopyDeviceVideoToOperation alloc]initAsset:assetFromTable outputStringURL:fileURL];
+    
+    
+    
+    [copyOp setCompletionBlock:^{
+        NSLog(@"Complete");
+    }];
+    [[NSOperationQueue mainQueue]addOperation:copyOp];
+
+ 
+}
+
+-(void)onMakeEventAndLaunch:(MakeEventViewController*)sender
+{
+
+}
 
 
 @end

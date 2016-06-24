@@ -49,10 +49,12 @@
 
 
 // Preferences
-@property (atomic,assign) NSInteger              * preferenceLiveBuffer;
+@property (nonatomic,assign) NSInteger              preferenceLiveBuffer;
 
 @property (nonatomic,strong) NSString               * l2bMode;
 
+@property (nonatomic,assign) double preRoll;
+@property (nonatomic,assign) double postRoll;
 
 +(instancetype)getInstance;
 

@@ -74,7 +74,7 @@
         _dowdloadSize.textAlignment = NSTextAlignmentRight;
         _dowdloadSize.text = @"";
         if (!source) {
-            source = tag.event.feeds.allKeys.firstObject;
+            source = tag.eventInstance.feeds.allKeys.firstObject;
         }
         
         NSString * __nonnull src = source ? source : @"";

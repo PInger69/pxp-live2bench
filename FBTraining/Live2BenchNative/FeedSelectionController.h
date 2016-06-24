@@ -24,6 +24,8 @@
 
 - (nonnull instancetype)initWithFeeds:(nonnull NSArray *)feeds;
 
+-(void)highLightFeed:(nonnull Feed *)feed;
+
 - (void)present:(BOOL)animated;
 - (void)dismiss:(BOOL)animated;
 

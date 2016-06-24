@@ -22,4 +22,5 @@
 -(Feed*)getFeedByLocation:(NSString*)cameraLocation event:(Event*)event;
 
 -(NSString*)getCameraNameBy:(NSString*)cameraLocation;
+-(BOOL)allCamerasHaveMatchingFormats;
 @end

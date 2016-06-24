@@ -68,7 +68,7 @@
 @property (strong, nonatomic, nonnull) RicoPlayerControlBar     * ricoPlayerControlBar;
 @property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController     * ricoFullscreenViewController;
 @property (strong, nonatomic, nonnull) RicoFullScreenControlBar         * ricoFullScreenControlBar;
-
+@property (strong, nonatomic, nonnull) UIButton                 * downloadAllButton;
 
 
 @end
@@ -104,7 +104,9 @@
         [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         _fullscreenViewController   = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-
+        
+        
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
@@ -366,13 +368,33 @@
     [self.ricoFullScreenControlBar.liveButton addTarget:         self action:@selector(goToLive)            forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.startRangeModifierButton     addTarget:self action:@selector(extendStartAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.endRangeModifierButton       addTarget:self action:@selector(extendEndAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
+
+    [self.ricoFullScreenControlBar.frameBackward                addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.frameForward                 addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
+
+
     [self.ricoFullScreenControlBar.fullscreenButton addTarget:self.ricoFullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.ricoFullscreenViewController.bottomBar addSubview:self.ricoFullScreenControlBar];
 
     
+    CGFloat w = 200;
+    CGFloat h = 35;
+    self.downloadAllButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.ricoPlayerControlBar.frame) - (w / 2),
+                                                                       CGRectGetMaxY(self.ricoPlayerControlBar.frame)+h+10,
+                                                                       w,
+                                                                       h)];
+//    [self.downloadAllButton setBackgroundColor:PRIMARY_APP_COLOR ];
+    [self.downloadAllButton setTitle:@"Download Whole Tag" forState:UIControlStateNormal];
+    
+    [self.downloadAllButton addTarget:self action:@selector(downloadWholeCurrentTag) forControlEvents:UIControlEventTouchUpInside];
+    self.downloadAllButton.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    self.downloadAllButton.layer.borderWidth = 1;
+    [self.downloadAllButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [self.downloadAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.downloadAllButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
+    [self.view addSubview:self.downloadAllButton];
+//    [self.downloadAllButton setEnabled:NO];
     NSLog(@"List View done Load");
 }
 
@@ -390,7 +412,7 @@
     
     selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                   @"feed":[[selectedTag.event.feeds allValues] firstObject],
+                                                                                                                                   @"feed":[[selectedTag.eventInstance.feeds allValues] firstObject],
                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
                                                                                                                                    @"comment": selectedTag.comment,
@@ -480,7 +502,7 @@
     selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                    @"feed":[[selectedTag.event.feeds allValues] firstObject],
+                                                                                                                                    @"feed":[[selectedTag.eventInstance.feeds allValues] firstObject],
                                                                                                                                     @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
                                                                                                                                     @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
                                                                                                                                     @"comment": selectedTag.comment,
@@ -555,7 +577,7 @@
 
 -(void) feedSelected: (NSNotification *) notification
 {
-    
+// [self.downloadAllButton setEnabled:YES];
     NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
     
     Feed *feed = [userInfo objectForKey:@"feed"];
@@ -689,7 +711,7 @@
         
           [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
     }
-    
+
   
 }
 
@@ -697,6 +719,69 @@
     slomo.slomoOn = !slomo.slomoOn;
 //    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
     self.ricoPlayerViewController.slomo = slomo.slomoOn;
+}
+
+#pragma mark - Download All
+
+-(void)downloadWholeCurrentTag
+{
+    if (!selectedTag) return;
+    
+    Tag * tagToDownload =  selectedTag;
+
+    // get all tag keys
+    
+    NSArray *keys = [tagToDownload.eventInstance.feeds allKeys];
+    
+    for (NSString * key in keys) {
+        
+        
+        // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tagToDownload.ID,key ];
+        NSString *src = [NSString stringWithFormat:@"%@hq", key];
+        
+        
+        NSLog(@"Added Placeholder key: %@",placeHolderKey);
+        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+        
+        
+        // this takes the download item and attaches it to the cell
+        void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+            //videoItem = downloadItem;
+//            weakCell.downloadButton.downloadItem = downloadItem;
+//            __block FeedSelectCell *weakerCell = weakCell;
+//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+//                dispatch_async(dispatch_get_main_queue(), ^(){
+//                    weakerCell.downloadButton.progress = progress;
+//                    if (progress >= 1.0) {
+//                        weakerCell.downloadButton.downloadComplete = 1.0;
+//                    }
+//                    
+//                    [weakerCell.downloadButton setNeedsDisplay];
+//                });
+//            }];
+            
+               [_tableViewController reloadData];
+        };
+
+        
+        
+
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+                                                                                                               @"block": blockName,
+                                                                                                               @"tag": tagToDownload,
+                                                                                                               @"src":src,
+                                                                                                               @"key":key}];
+        
+ 
+    }
+    
+    
+    
+
+    // table reload
+//    [_tableViewController reloadData];
+
 }
 
 
@@ -1049,6 +1134,9 @@
 -(void)clipCancelNotification:(NSNotification *)note {
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeListNonTag;
     self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    self.ricoFullScreenControlBar.controlBar.range = kCMTimeRangeInvalid;
+    self.ricoPlayerControlBar.range = kCMTimeRangeInvalid;
+    
 }
 
 
@@ -1118,6 +1206,33 @@
         }
         
     }
+}
+
+
+-(void)frameByFrame:(id)sender{
+    
+    if (self.telestrationViewController.telestration) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
+    }
+    
+    [self.ricoPlayerViewController pause];
+    self.ricoPlayerViewController.playerControlBar.playPauseButton.paused = YES;
+    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-0.10:0.10;
+    
+    CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
+    CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
+    
+    
+    if (_currentEvent.local) {
+        [self.ricoPlayerViewController pause];
+        [self.ricoPlayerViewController stepByCount:(speed>0)?1:-1];
+    } else {
+        
+        [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+    }
+    
+    
+    
 }
 
 

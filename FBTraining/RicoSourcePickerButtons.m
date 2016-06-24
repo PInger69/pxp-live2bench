@@ -104,6 +104,7 @@
 
 -(void)deselectAll
 {
+    
     self.selectedTag = -1;
     self.selectedString = nil;
     // clear any old buttons

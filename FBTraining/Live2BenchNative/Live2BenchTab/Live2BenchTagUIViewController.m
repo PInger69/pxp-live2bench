@@ -55,11 +55,10 @@
         //key "left" represents the tag name buttons on the left side, and key value equals to 0 means, the buttons are not swiped out, 1 means, the buttons are swiped out; same for the right  buttons
         swipeControlDict = [[NSMutableDictionary alloc]initWithObjects:[NSArray arrayWithObjects:@"0",@"0", nil] forKeys:[NSArray arrayWithObjects:@"left",@"right", nil]];
         
-
+      
     }
     return self;
 }
-
 
 
 - (void)oneFingerSwipeLeft:(UITapGestureRecognizer *)recognizer
@@ -167,7 +166,8 @@
  
  */
 #pragma mark - Live2BenchTagUIViewController
-
+#import "RicoPlayer.h"
+#import "RicoPlayerViewController.h"
 
 
 @implementation Live2BenchTagUIViewController
@@ -209,11 +209,92 @@
         _leftTray           = [[Tray alloc]initWithSide:@"left" buttonList:_tagButtonsLeft];
         _rightTray          = [[Tray alloc]initWithSide:@"right" buttonList:_tagButtonRight];
         self.buttonStateMode    = SideTagButtonModeDisable;
+          [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(playerTick:) name:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:nil];
     }
 
     return self;
 }
 
+
+
+-(void)playerTick:(NSNotification*)notif
+{
+    RicoPlayerViewController * rpvc = (RicoPlayerViewController *) notif.object;
+    
+    float time;
+    for (SideTagButton*tb1 in _tagButtonsLeft) {
+        if (!tb1.durationView.hidden) {
+            time = (CMTimeGetSeconds(rpvc.primaryPlayer.currentTime) - tb1.durationView.startTime);
+            tb1.durationView.timeLabel.text = [Utility translateTimeFormat:time];
+            if (time <0) {
+                tb1.alpha = 0.6;
+                tb1.userInteractionEnabled = NO;
+            } else if (time >0 && !tb1.isBusy){
+                tb1.alpha = 1;
+                tb1.userInteractionEnabled = YES;
+            }
+            
+            if (!tb1.durationView.hasPostedWarning && time > 180) {
+                
+                tb1.durationView.hasPostedWarning = YES;
+                NSString * msg = [NSString stringWithFormat:@"Tag \"%@\" is past recommended duration.",tb1.titleLabel.text ];
+                
+                UIAlertController      * alert = [UIAlertController alertControllerWithTitle:@"Warning"
+                                                                                     message:msg
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+                // build NO button
+                UIAlertAction* cancelButtons = [UIAlertAction
+                                                actionWithTitle:@"Ok"
+                                                style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction * action)
+                                                {
+                                                    //                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:_alert animated:YES completion:nil];
+                                                }];
+                [alert addAction:cancelButtons];
+                
+                [self presentViewController:alert animated:YES completion:nil];
+
+            }
+        }
+    }
+    for (SideTagButton*tb2 in _tagButtonRight) {
+        if (!tb2.durationView.hidden) {
+            time = (CMTimeGetSeconds(rpvc.primaryPlayer.currentTime) - tb2.durationView.startTime);
+            tb2.durationView.timeLabel.text = [Utility translateTimeFormat:time];
+            if (time <0) {
+                tb2.alpha = 0.6;
+                tb2.userInteractionEnabled = NO;
+            } else if (time >0 && !tb2.isBusy){
+                tb2.alpha = 1;
+                tb2.userInteractionEnabled = YES;
+            }
+            
+            if (!tb2.durationView.hasPostedWarning && time > 180) {
+            
+                tb2.durationView.hasPostedWarning = YES;
+                
+                NSString * msg = [NSString stringWithFormat:@"Tag \"%@\" is past recommended duration.",tb2.titleLabel.text ];
+                
+                UIAlertController      * alert = [UIAlertController alertControllerWithTitle:@"Warning"
+                                                             message:msg
+                                                      preferredStyle:UIAlertControllerStyleAlert];
+                // build NO button
+                UIAlertAction* cancelButtons = [UIAlertAction
+                                                actionWithTitle:@"Ok"
+                                                style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction * action)
+                                                {
+//                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:_alert animated:YES completion:nil];
+                                                }];
+                [alert addAction:cancelButtons];
+                
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            
+            
+        }
+    }
+}
 
 // this builds the tags from the supplied data
 -(void)inputTagData:(NSArray*)listOfDicts
@@ -372,6 +453,9 @@
     if( [[dict objectForKey:@"side"] isEqualToString:@"left"]  || [[dict objectForKey:@"position"] isEqualToString:@"left"]){
         
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        [btn.durationView.timeLabel setTextAlignment:NSTextAlignmentRight];
+        [btn.durationView.nameLabel setTextAlignment:NSTextAlignmentRight];
+        
         [btn setAccessibilityValue:@"left"];
         
         [btn setFrame:CGRectMake(0,
@@ -391,6 +475,8 @@
     } else { /// Right Tags
         
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [btn.durationView.timeLabel setTextAlignment:NSTextAlignmentLeft];
+        [btn.durationView.nameLabel setTextAlignment:NSTextAlignmentLeft];
         [btn setAccessibilityValue:@"right"];
         //        self.view.bounds.size.width - _buttonSize.width
         [btn setFrame:CGRectMake(0,
@@ -417,12 +503,8 @@
     return btn;
 }
 
-/*-(BorderButton*)getButtonByName:(NSString*)btnName
-{
 
-    return [buttons objectForKey:btnName];
 
-}*/
 -(SideTagButton*) getButtonByName:(NSString*)btnName
 {
     return [buttons objectForKey:btnName];
@@ -603,6 +685,8 @@
             if ([tag.name isEqualToString:btn2.titleLabel.text] && tag.type == TagTypeOpenDuration && [tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]){
                 btn2.isOpen = YES;
                 btn2.durationID = tag.durationID;
+                btn2.durationView.startTime = tag.startTime;
+                btn2.durationView.timeLabel.text = [Utility translateTimeFormat:tag.startTime];
             }
             
             

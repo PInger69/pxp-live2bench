@@ -21,6 +21,7 @@
     
     NSArray * _teleStill;
     NSArray * _teleAnimated;
+    UIImage * _orangeFill;
 }
 
 @synthesize mode = _mode;
@@ -28,6 +29,8 @@
 {
     self = [super init];
     if (self) {
+        
+        _orangeFill = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _backwardSeekButton = [[SeekButton alloc] initWithBackward:YES];
         _forwardSeekButton  = [[SeekButton alloc] initWithBackward:NO];
         _slomoButton        = [[Slomo alloc] init];
@@ -58,7 +61,19 @@
 
         
         
+        _frameBackward = [[UIButton alloc]initWithFrame:CGRectMake(0,0, 44, 44)];
+        _frameBackward.layer.borderWidth = 1;
+        _frameBackward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+        [_frameBackward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [_frameBackward setTitle:@"FB" forState:UIControlStateNormal];
         
+        _frameForward  = [[UIButton alloc]initWithFrame:CGRectMake(0,0, 44, 44)];
+        _frameForward.layer.borderWidth = 1;
+        _frameForward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+        _frameForward.titleLabel.textColor = PRIMARY_APP_COLOR;
+        [_frameForward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [_frameForward setTitle:@"FF" forState:UIControlStateNormal];
+
         
         
         
@@ -97,8 +112,8 @@
         _slomoButton.center         = CGPointMake(maxx*0.22, alignY);
         _fullscreenButton.center    = CGPointMake(maxx*0.78, alignY);
         
-        _startRangeModifierButton.center       = CGPointMake(maxx*0.05, alignY);
-        _endRangeModifierButton.center         = CGPointMake(maxx*0.95, alignY);
+        _startRangeModifierButton.center       = CGPointMake(maxx*0.04, alignY);
+        _endRangeModifierButton.center         = CGPointMake(maxx*0.96, alignY);
         _currentTagLabel.center                = CGPointMake(midx, alignY);
         _liveButton.center                     = CGPointMake(maxx*0.67, alignY);
         
@@ -107,8 +122,17 @@
         [_previousTagButton setTitle:NSLocalizedString(@"PREVIOUS", nil) forState:UIControlStateNormal];
         [_nextTagButton setTitle:NSLocalizedString(@"NEXT", nil) forState:UIControlStateNormal];
         // bottom bar buttons
-      
-
+        _frameBackward.center        = CGPointMake(maxx*0.103, alignY);
+        _frameForward.center       = CGPointMake(maxx*0.897, alignY);
+       
+        
+        [_frameBackward setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [_frameForward setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [_frameBackward setBackgroundImage:_orangeFill forState:UIControlStateHighlighted];
+        [_frameForward setBackgroundImage:_orangeFill forState:UIControlStateHighlighted];
+        
+        
+        
         [self addSubview:_controlBar];
         [self addSubview:_backwardSeekButton];
         [self addSubview:_forwardSeekButton];
@@ -123,15 +147,19 @@
       
         [self addSubview:_previousTagButton];
         [self addSubview:_nextTagButton];
+        
+        [self addSubview:_frameForward];
+        [self addSubview:_frameBackward];
+        
 
-        _liveObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton];
-        _eventObject      = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton];
-        _clipObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel];
-        _allObjects       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel,_previousTagButton,_nextTagButton];
+        _liveObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton,_frameForward,_frameBackward];
+        _eventObject      = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton,_frameForward,_frameBackward];
+        _clipObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel,_frameForward,_frameBackward];
+        _allObjects       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel,_previousTagButton,_nextTagButton,_frameForward,_frameBackward];
         _disabledObject   = @[_controlBar, _fullscreenButton];
-        _listObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel];
-        _listNonTagObject = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton];
-        _bookmarkObject   = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton,_previousTagButton,_nextTagButton,_currentTagLabel];
+        _listObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel,_frameForward,_frameBackward];
+        _listNonTagObject = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton,_frameForward,_frameBackward];
+        _bookmarkObject   = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton,_previousTagButton,_nextTagButton,_currentTagLabel,_frameForward,_frameBackward];
         
         _teleStill        = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _currentTagLabel];
         _teleAnimated     = @[];

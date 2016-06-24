@@ -72,23 +72,40 @@
                 
                 
                 playerView.frame = CGRectMake(x ,y , width, height);
-                NSLog(@"");
+//                NSLog(@"%@",NSStringFromCGRect(playerView.frame));
                 i = i + 1;
             }
         }
     } else {
         for (UIView * subview in self.subviews) {
             [subview setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-            //        [subview.layer removeAllAnimations];
+
+                       //        [subview.layer removeAllAnimations];
+         
+//            NSLog(@"%@",NSStringFromCGRect(subview.frame));
         }
-   
+        
+
     }
     
 
 }
 
 
-
+//-(UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+//{
+//    if (!self.clipsToBounds && !self.hidden && self.alpha > 0) {
+//        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
+//            CGPoint subPoint = [subview convertPoint:point fromView:self];
+//            UIView *result = [subview hitTest:subPoint withEvent:event];
+//            if (result != nil) {
+//                return result;
+//            }
+//        }
+//    }
+//    
+//    return nil;
+//}
 
 - (NSUInteger)numberOfColumnsInGridView:(nonnull UIView *)gridView {
     return MAX(ceil(sqrt(gridView.subviews.count)), 2);

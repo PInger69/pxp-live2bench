@@ -1,3 +1,4 @@
+
 //
 //  SideTagButton.m
 //  Live2BenchNative
@@ -8,6 +9,7 @@
 
 #import "SideTagButton.h"
 #import "Tag.h"
+
 
 @implementation SideTagButton
 {
@@ -40,7 +42,11 @@
         self.mode = SideTagButtonModeDisable;
         backgroundColor = [UIColor clearColor];
         [self setEnabled:false];
-
+        
+        
+        self.durationView = [[DurationTagButtonView alloc]initWithFrame:self.bounds];
+        self.durationView.hidden = YES;
+        [self addSubview:self.durationView];
     }
     return self;
 }
@@ -140,10 +146,13 @@
     if (isOpen && !_isOpen && self.mode == SideTagButtonModeToggle){
         [self setHighlighted:true];
         self.durationID = [Tag makeDurationID];
+        self.durationView.hidden = NO;
+        self.durationView.nameLabel.text = self.titleLabel.text;
     } else if (!isOpen && _isOpen && self.mode == SideTagButtonModeToggle) {
         [self setHighlighted:false];
         self.durationID = nil; // clear id as soon as its finished closing
         [self setSelected:false];
+        self.durationView.hidden = YES;
     }
     _isOpen = isOpen;
 }
@@ -160,7 +169,13 @@
     }
 }
 
-
+-(void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    
+    [self.durationView setFrame:self.bounds];
+    
+}
 
 -(BOOL)isBusy
 {

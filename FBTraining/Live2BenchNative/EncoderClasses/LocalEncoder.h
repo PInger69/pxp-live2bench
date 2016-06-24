@@ -10,6 +10,8 @@
 #import "EncoderProtocol.h"
 #import "ActionListItem.h"
 #import "EncoderOperation.h"
+#import "LocalTagSyncManager.h"
+
 
 @class Event;
 @class Clip;
@@ -38,6 +40,7 @@
 
 @property (nonatomic,strong)    NSString        *urlProtocol;//http
 @property (nonatomic,strong)    NSString        * ipAddress;
+@property (nonatomic,strong) LocalTagSyncManager    * localTagSyncManager;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 

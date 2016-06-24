@@ -16,13 +16,15 @@
 //@property (nonatomic,strong) DownloadButton     * downloadButton;
 //@property (nonatomic,strong) CustomButton       * playButton;
 
-@property (strong, nonatomic) UILabel *dateLabel;
-@property (strong, nonatomic) UILabel *timeLabel;
-@property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) UILabel *downloadInfoLabel;
-@property (strong, nonatomic) UILabel *leagueLabel;
-@property (strong, nonatomic) UILabel * dateDescription;
-@property (strong, nonatomic) UILabel * leagueDescription;
+@property (strong, nonatomic) UILabel   * dateLabel;
+@property (strong, nonatomic) UILabel   * timeLabel;
+@property (strong, nonatomic) UILabel   * titleLabel;
+@property (strong, nonatomic) UILabel   * downloadInfoLabel;
+@property (strong, nonatomic) UILabel   * leagueLabel;
+@property (strong, nonatomic) UILabel   * dateDescription;
+@property (strong, nonatomic) UILabel   * leagueDescription;
+@property (strong, nonatomic) UIButton  * downloadAll;
+
 //@property (strong, nonatomic) DownloadItem *downloadItem;
 
 //@property (nonatomic, copy) void(^sendUserInfo)();

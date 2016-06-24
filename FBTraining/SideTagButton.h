@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Tag.h"
+#import "DurationTagButtonView.h"
 
-
-typedef NS_OPTIONS (NSInteger,SideTagButtonModes){
-    
+typedef NS_OPTIONS (NSInteger,SideTagButtonModes)
+{    
     SideTagButtonModeDisable,
     SideTagButtonModeRegular,
     SideTagButtonModeToggle
@@ -24,6 +24,6 @@ typedef NS_OPTIONS (NSInteger,SideTagButtonModes){
 @property (nonatomic,assign) BOOL                   isOpen;
 @property (nonatomic,assign) SideTagButtonModes     mode;
 @property (nonatomic,assign) BOOL                   isBusy;
-
+@property (nonatomic,strong) DurationTagButtonView  * durationView;
 
 @end

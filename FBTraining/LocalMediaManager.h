@@ -23,6 +23,9 @@
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 -(void)deleteEvent:(Event*)aEvent;
 -(NSString*)saveEvent:(NSMutableDictionary*)eventDic;
+
+-(NSString*)makeLocalEvent:(NSMutableDictionary*)eventDic;
+
 -(NSString*)bookmarkedVideosPath;
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData;
 -(Event*)getEventByName:(NSString*)eventName;
@@ -30,4 +33,9 @@
 -(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey;
 -(void)breakTagLink:(Clip*)aClip;
 -(Feed*)getFeedByEvent:(Event*)event scrKey:(NSString *)scrKey;
+
+
+-(void)refresh;
+
+
 @end

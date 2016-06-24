@@ -18,6 +18,9 @@
 #import "BonjourModule.h"
 #import "CustomAlertControllerQueue.h"
 #import "FeedMapController.h"
+
+#import "LocalTagSyncManager.h"
+
 @class Encoder;
 
 
@@ -72,6 +75,7 @@
 
 @property (nonatomic,strong)            Encoder                 * deviceEncoder;
 @property (nonatomic,weak)              FeedMapController       * feedMapController;
+@property (nonatomic,strong)            LocalTagSyncManager     * localTagSyncManager;
 
 #pragma mark - Encoder Manager Methods
 

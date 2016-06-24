@@ -12,6 +12,7 @@
 #import <objc/runtime.h>
 #import "Feed.h"
 #import "Tag.h"
+#import "TagProxy.h"
 #import "EncoderManager.h"
 #import "CameraDetails.h"
 #import "UserCenter.h"
@@ -31,230 +32,6 @@
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
 #define SYNC_ME             @"SYNC_ME"
 #define IS_AUTHENTICATING NO
-
-
-// HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
-@interface EncoderDataSync : NSObject
-@property (nonatomic,assign)  BOOL            complete;
--(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete;
-
-@end
-
-@implementation EncoderDataSync
-{
-    NSMutableArray  * _colletedResponce;
-    NSMutableDictionary  * _colletedResponceDict;
-    NSString        * _name;
-    NSArray         * _encodersBeingWatched;
-    NSInteger       _countOfLeftToComplete;
-    void            (^_onComplete)(NSArray*pooled);
-    void            (^_onCompleteDict)(NSDictionary*pooled);
-    void            * _context;
-    NSNumber        * _timeStamp;
-    BOOL            _earlyBirdMode;
-    
-
-    
-}
-
-@synthesize complete = _complete;
-
-
--(id)init
-{
-    self = [super init];
-    if (self){
-        _earlyBirdMode          = NO;
-        _complete               = YES;
-        _colletedResponce       = [[NSMutableArray alloc]init];
-        _name                   = @"None";
-        _countOfLeftToComplete  = 0;
-        _encodersBeingWatched   = @[];
-    }
-    return self;
-}
-
-
-/**
- *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
- *  passing the data thru the block as an Array of each of the responeses
- *
- *  @param aToObserve  list of encoders
- *  @param aName       Name of notification to be observed
- *  @param aOnComplete block to run on completion
- *
- *  @return instance
- */
--(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
-{
-    self = [super init];
-    if (self){
-        _complete               = NO;
-        _colletedResponce       = [[NSMutableArray alloc]init];
-        _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-        _name                   = aName;
-        _encodersBeingWatched   = aToObserve;
-        _countOfLeftToComplete  = _encodersBeingWatched.count;
-        _onComplete             = aOnComplete;
-        _timeStamp              = aTime;
-        
-        for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-        }
-        
-        
-        
-    }
-    return self;
-}
-
-
-/**
- *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
- *  passing the data thru the block as an Array of each of the responeses
- *
- *  @param aToObserve  list of encoders
- *  @param aName       Name of notification to be observed
- *  @param aOnComplete block to run on completion
- *
- *
- */
--(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
-{
-    if (!_complete){
-        [self cancel];
-    }
-    _earlyBirdMode          = NO;
-    _complete               = NO;
-    _name                   = aName;
-    _encodersBeingWatched   = aToObserve;
-    _countOfLeftToComplete  = _encodersBeingWatched.count;
-    _onComplete             = aOnComplete;
-    _timeStamp              = aTime;
-    
-    _colletedResponce       = [[NSMutableArray alloc]init];
-    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-    
-    
-    for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-    }
-}
-
-
--(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinishDict: (void (^)(NSDictionary * pooledResponces))aOnComplete
-{
-    
-    if (!_complete){
-        [self cancel];
-    }
-    _earlyBirdMode          = NO;
-    _complete               = NO;
-    _name                   = aName;
-    _encodersBeingWatched   = aToObserve;
-    _countOfLeftToComplete  = _encodersBeingWatched.count;
-    _onCompleteDict         = aOnComplete;
-    _timeStamp              = aTime;
-    
-    _colletedResponce       = [[NSMutableArray alloc]init];
-    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-    
-    
-    for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-    }
-}
-
-
-// This method requests from all passed encoders and the first one to respond is not canceled
--(void)earlyBird:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
-{
-    if (!_complete){
-        [self cancel];
-    }
-    _earlyBirdMode          = YES;
-    _complete               = NO;
-    _name                   = aName;
-    _encodersBeingWatched   = aToObserve;
-    _countOfLeftToComplete  = _encodersBeingWatched.count;
-    _onComplete             = aOnComplete;
-    _timeStamp              = aTime;
-    
-    _colletedResponce       = [[NSMutableArray alloc]init];
-    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-    
-    
-    for ( id <EncoderProtocol> edS in _encodersBeingWatched) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-    }
-    
-    
-}
-
-
-
-/**
- *  This collects the data responce that is sent with the notif
- *
- *  @param note Notification with responce data
- */
--(void)recievedNotifcation:(NSNotification *)note
-{
-    if (_timeStamp != [NSNumber numberWithDouble:[[note.userInfo objectForKey:@"timeStamp"]doubleValue]])
-        
-        _countOfLeftToComplete--;
-    if (_onComplete && [note.userInfo objectForKey:@"responce"])   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
-    if (_onCompleteDict && [note.userInfo objectForKey:@"responce"]){
-        NSDictionary * collect = [note.userInfo objectForKey:@"responce"];
-        [_colletedResponceDict addEntriesFromDictionary:collect];
-    }
-    if (!_countOfLeftToComplete || _earlyBirdMode) [self onCompletion];
-}
-
-/**
- *  This method is run when all the encders have responced
- *  This object will be flaged as complete
- *  it will remove the observers
- * it will also run the block. The argeument passed into the block is an Array of all the responces from the encoders
- *
- */
--(void)onCompletion
-{
-    self.complete = YES;
-    [_encodersBeingWatched enumerateObjectsUsingBlock:^( id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
-    }];
-    if (_onComplete)        _onComplete([_colletedResponce copy]);
-    if (_onCompleteDict)    _onCompleteDict([_colletedResponceDict copy]);
-    [self cancel];
-}
-
-
-// cancel current command
--(void)cancel
-{
-    //   NSLog(@"Cancel Sync: %@",_name);
-    _onComplete = nil;
-    [_colletedResponce removeAllObjects];
-    _name                   = @"";
-    
-    [_encodersBeingWatched enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
-        
-        // this needs to reamove the command from the queue or cancel all
-    }];
-    _countOfLeftToComplete  = 0;
-    
-    
-}
-
-
-@end
-
-// END OF HELPER CLASS
-
-
-
 
 
 
@@ -346,11 +123,8 @@
     // Ready Flags
     BOOL isTeamsGet;
     BOOL isAuthenticate;
-    EncoderDataSync             * encoderSync;
+
     void            (^_onCompleteDownloadClip)(NSArray*pooled);
-    
-    NSOperationQueue * operationQueue; // new
-    
 }
 
 
@@ -372,17 +146,8 @@
 @synthesize event           = _event;
 
 @synthesize isMaster        = _isMaster;
-//@synthesize allEventData    = _allEventData;
 @synthesize liveEvent   = _liveEvent;
-//@synthesize eventType       = _eventType;
-//@synthesize eventTags       = _eventTags;
-//@synthesize eventData       = _eventData;
-//@synthesize feeds           = _feeds;
-
-//@synthesize playerData      = _playerData;
-
 @synthesize cameraCount     = _cameraCount;
-//@synthesize eventTagsDict   = _eventTagsDict;
 @synthesize encoderTeams    = _encoderTeams;
 @synthesize encoderLeagues  = _encoderLeagues;
 @synthesize isBuild         = _isBuild;
@@ -406,7 +171,6 @@
         timeOut         = 15.0f;
         queue           = [[NSMutableDictionary alloc]init];
         _allEvents      = [[NSMutableDictionary alloc]init];
-//        _eventTagsDict  = [[NSMutableDictionary alloc]init];
         isWaitiing      = NO;
         version         = @"?";
         _statusAsString = @"";
@@ -420,10 +184,12 @@
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
-        encoderSync     = [[EncoderDataSync alloc]init];
         _parseModule    = [ParseModuleDefault new];
         _postedTagIDs   = [NSMutableSet new];
         self.cameraResource = [[CameraResource alloc]initEncoder:self];
+        self.operationQueue = [NSOperationQueue new];
+        self.operationQueue.maxConcurrentOperationCount = 1;
+        
     }
     return self;
 }
@@ -709,7 +475,7 @@
         Tag *tagToModify = note.object;
         dict = [NSMutableDictionary dictionaryWithDictionary:
                 @{
-                  @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+                  @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event, // LIVE_EVENT == @"live"
                   @"id"            : tagToModify.ID,
                   @"requesttime"   : GET_NOW_TIME_STRING,
                   @"name"          : tagToModify.name,
@@ -741,7 +507,7 @@
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
                                      @{
                                        @"delete"        : @"1",
-                                       @"event"         : (tagToDelete.isLive)?LIVE_EVENT:tagToDelete.event.name, // LIVE_EVENT == @"live"
+                                       @"event"         : (tagToDelete.isLive)?LIVE_EVENT:tagToDelete.event, // LIVE_EVENT == @"live"
                                        @"id"            : tagToDelete.ID,
                                        @"requesttime"   : GET_NOW_TIME_STRING,
                                        @"user"          : tagToDelete.user
@@ -780,7 +546,7 @@
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
                                               @"id": tag.ID,
-                                              @"event": (tag.isLive)?LIVE_EVENT:tag.event.name,
+                                              @"event": (tag.isLive)?LIVE_EVENT:tag.event,
                                               @"requesttime":GET_NOW_TIME_STRING,
                                               @"bookmark":@"1",
                                               @"user":[UserCenter getInstance].userHID,
@@ -1175,8 +941,11 @@
 
 -(void)camerasGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    
+    //    Encoder * enc = (Encoder *)self.currentEvent.parentEncoder;
     EncoderOperation * testOp =  [[EncoderOperationCameraStartTimes alloc]initEncoder:self data:nil];
     [self runOperation:testOp];
+    
     
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getcameras",self.urlProtocol,self.ipAddress]  ];
@@ -1283,7 +1052,7 @@
 -(void)startEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     
-    _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
+    [EncoderManager getInstance].primaryEncoder = [EncoderManager getInstance].masterEncoder;
     
     _pressingStart = true;
     
@@ -1387,7 +1156,7 @@
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
          [self getEventTags:finishedData extraData:@{@"type":MODIFY_TAG}];
-        //[self tagsJustChanged:finishedData extraData:MODIFY_TAG];
+
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
@@ -1409,9 +1178,26 @@
         if (!statusMonitor) {
             statusMonitor   = [[EncoderStatusMonitor alloc]initWithDelegate:self];
             statusMonitor.urlProtocol = self.urlProtocol;
+            __weak id <EncoderProtocol> weakSelf = self;
+            [statusMonitor setOnMotion:^(EncoderStatusMonitor *m, NSDictionary *data) {
+                NSArray * alarmedFeeds = [data objectForKey:@"alarms"];
+                NSArray * feedsChecked = (weakSelf.event.feeds)?[weakSelf.event.feeds allKeys]:@[];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MOTION_ALARM object:weakSelf userInfo:@{
+                                                                                                                    @"feeds"    : feedsChecked,
+                                                                                                                    @"alarms"   : alarmedFeeds
+                                                                                                                    }];
+    
+            }];
+            
+            
         }
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
-        [self.encoderManager onRegisterEncoderCompleted:self];
+
+        
+
+        
+        
+        
+        [[EncoderManager getInstance] onRegisterEncoderCompleted:self];
     }
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
@@ -1474,6 +1260,16 @@
  */
 -(void)authenticateResponse:(NSData *)data
 {
+    
+     NSDictionary    * results =    [Utility JSONDatatoDict:data];
+    
+    if (results[@"config"]){
+        NSDictionary * config = results[@"config"];
+        [UserCenter getInstance].preRoll    = [config[@"preroll"] doubleValue];
+        [UserCenter getInstance].postRoll   = [config[@"postroll"] doubleValue];
+    }
+    
+    
     if (!IS_AUTHENTICATING){
         [self willChangeValueForKey:@"authenticated"];
         _authenticated = YES;
@@ -1485,7 +1281,6 @@
     }
     
     
-    NSDictionary    * results;
 
     if(NSClassFromString(@"NSJSONSerialization"))
     {
@@ -1812,10 +1607,10 @@
         return;
     }
     
-    
-    if ([data objectForKey:@"id"]) {
+    // check if tag data has ID and check if the event exists
+    if ([data objectForKey:@"id"] && [_allEvents objectForKey:[data objectForKey:@"event"]]) {
         
-        if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
+    
             NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
             Event * encoderEvent = [checkEventDic objectForKey:@"non-local"];
             Event * localEvent = [checkEventDic objectForKey:@"local"];
@@ -1826,7 +1621,46 @@
             if ( ![self.postedTagIDs containsObject:newTag.ID] ){
                 [self.postedTagIDs addObject:newTag.ID];
                 if (self.event == encoderEvent) {
-                    [encoderEvent addTag:newTag extraData:true];
+                    
+                    // check if tag is in the event
+                    
+                    
+                    NSArray * tags = [encoderEvent.tags copy];
+                    TagProxy * proxyTag;
+                    
+                    
+                    for ( id <TagProtocol> aTag in tags) {
+                        if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
+                            // check if aTag matches the data from the dict
+//                            proxyTag = (TagProxy *) aTag;
+                            if ([[aTag name] isEqualToString:newTag.name] && [aTag time] == newTag.time) {
+                                proxyTag         = (TagProxy *)aTag;
+                                if (proxyTag.modified) {
+                                    PXPLog(@"Tag was Modded before server responded");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    
+                    
+                    
+                    if (proxyTag != nil && ![proxyTag hasTag]) {
+                    
+                        // get proxy and add tag to it
+                        [proxyTag addTagToProxy:newTag];
+                    
+                    } else if (proxyTag == nil && [newTag own])  { //this is not your tag add it
+                        [encoderEvent addTag:newTag extraData:true];
+                    } else if (![newTag own]){
+                        [encoderEvent addTag:newTag extraData:false];
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
                 }else{
                     [encoderEvent addTag:newTag extraData:false];
                 }
@@ -1844,11 +1678,6 @@
             // Download Thumbnail for new tags
 
             [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
-
-
-            
-            
-        }
     }
 }
 
@@ -2039,15 +1868,15 @@
                 //self.liveEvent = nil;
                 
                 if (self.status == ENCODER_STATUS_STOP) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
-                [self.encoderManager declareCurrentEvent:nil];
+                [[EncoderManager getInstance] declareCurrentEvent:nil];
 
 
             };
             [self.allEvents removeObjectForKey:LIVE_EVENT];
             if (self.liveEvent) [self.allEvents removeObjectForKey:self.liveEvent.name];
             self.liveEvent = nil;
-            self.encoderManager.liveEvent = nil;
-            self.encoderManager.liveEventName = nil;
+            [EncoderManager getInstance].liveEvent = nil;
+            [EncoderManager getInstance].liveEventName = nil;
 
 
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":@""}];
@@ -2091,16 +1920,20 @@
 
 }
 
+
+
+
+#pragma mark  - EncoderStatusMonitorMotionDelegate Method
 -(void)onMotionAlarm:(NSDictionary *)data
 {
-    if ([data objectForKey:@"alarms"]) {
+    
         NSArray * alarmedFeeds = [data objectForKey:@"alarms"];
         NSArray * feedsChecked = (self.event.feeds)?[self.event.feeds allKeys]:@[];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MOTION_ALARM object:self userInfo:@{
                                                                                                                 @"feeds"    : feedsChecked,
                                                                                                                 @"alarms"   : alarmedFeeds
                                                                                                             }];
-    }
+    
 }
 
 
@@ -2264,7 +2097,12 @@
                 id value;
                 
                 while ((value = [enumerator nextObject])) {
-                
+                    
+                    if ( ![self validateEventData:value]) {
+                        NSLog(@" !!! Corruppted Event Found on server %@",value);
+                        continue;
+                    }
+                    
                     // make event with the data
                   
                     Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
@@ -2275,10 +2113,10 @@
                     LeagueTeam  * homeTeam      = [league.teams objectForKey:value[kHomeTeam]];
                     LeagueTeam  * visitTeam     = [league.teams objectForKey:value[kAwayTeam]];
                     if (!homeTeam) {
-                            homeTeam     = [LeagueTeam new];
+                        homeTeam     = [LeagueTeam new];
                     }
                     if (!visitTeam) {
-                            visitTeam   = [LeagueTeam new];
+                        visitTeam   = [LeagueTeam new];
                     }
                     
                     
@@ -2308,7 +2146,9 @@
                         if ([_allEvents objectForKey:anEvent.name]){
                             NSLog(@" *** Is already on encoder %@",anEvent.name);
                         } else {
+
                             [pool setObject:anEvent forKey:anEvent.name];
+                        
                         }
                         
                     }
@@ -2385,6 +2225,25 @@
             break;
         }
     }
+    
+
+    
+}
+
+#pragma mark - 
+
+-(BOOL)validateEventData:(NSDictionary *)eventData
+{
+    BOOL allOkay = YES;
+    if (![eventData isKindOfClass:[NSDictionary class]]) allOkay = NO;
+    if (![eventData objectForKey:@"name"]) allOkay = NO;
+    if (![eventData objectForKey:@"hid"]) allOkay = NO;
+    if (![eventData objectForKey:@"sport"]) allOkay = NO;
+    if (![eventData objectForKey:@"league"]) allOkay = NO;
+    if (![eventData objectForKey:@"homeTeam"]) allOkay = NO;
+    if (![eventData objectForKey:@"visitTeam"]) allOkay = NO;
+
+    return  allOkay;
 }
 
 
@@ -2586,7 +2445,8 @@
 // The reason for not sending it directly is there is other encoders that will not react to operaions the same way
 -(void)runOperation:(EncoderOperation*)operation
 {
-    [[NSOperationQueue mainQueue] addOperation:(NSOperation *)operation];
+    
+    [self.operationQueue addOperation:(NSOperation *)operation];
 }
 
 

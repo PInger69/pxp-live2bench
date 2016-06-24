@@ -191,10 +191,32 @@
     if (self.delegate) {
         [self.delegate feedSelectionController:self didSelectFeed:self.feeds[indexPath.row]];
     }
-    [tableView beginUpdates];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [tableView endUpdates];
+//    [tableView beginUpdates];
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [tableView endUpdates];
 }
+
+
+-(void)highLightFeed:(nonnull Feed *)feed
+{
+    
+    NSIndexPath * indexP = [NSIndexPath indexPathForRow:[self.feeds indexOfObject:feed] inSection:0];
+    if (self.delegate) {
+        [self.delegate feedSelectionController:self didSelectFeed:self.feeds[indexP.row]];
+    }
+   
+    [self.tableView selectRowAtIndexPath:indexP animated:NO scrollPosition:nil];
+    
+//    
+    UITableViewCell *cell =[self.tableView cellForRowAtIndexPath:indexP];
+//    cell.textLabel.s
+//    cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
+//    cell.backgroundColor = [UIColor clearColor];
+
+
+    
+}
+
 
 /*
 // Override to support conditional editing of the table view.

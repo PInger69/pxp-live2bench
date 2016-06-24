@@ -10,7 +10,7 @@
 #import "Encoder.h"
 #import "CameraDetails.h"
 #import "Feed.h"
-
+#import "FeedMapController.h"
 #import "Event.h"
 @interface CameraResource ()
 
@@ -58,6 +58,7 @@
     
     CameraDetails* pickCam;
     for (CameraDetails* cd in self.cameraDataPool) {
+         NSLog(@"CamName: %@  %@ camID %@",cd.name,cd.cameraID,camID);
         if ([cd.cameraID isEqualToString:camID]) {
             pickCam = cd;
             NSLog(@"CamName: %@  %@ camID %@",cd.name,cd.cameraID,camID);
@@ -72,6 +73,20 @@
     
     //    self.encoder.cameraData
     NSLog(@"%@",selectedFeed.sourceName);
+    
+    if (selectedFeed == nil) {
+        NSDictionary * sourceAlt = @{kQuad1of4:@"s_00",
+                                     kQuad2of4:@"s_01",
+                                     kQuad3of4:@"s_02",
+                                     kQuad4of4:@"s_03"};
+    
+        
+        NSString * sKey =[sourceAlt objectForKey:cameraLocation];
+        selectedFeed = [event.feeds objectForKey:sKey];
+    }
+    
+    
+    
     return selectedFeed;
 }
 
@@ -98,6 +113,21 @@
 
 
     return (camname)?camname:pickCam.cameraID;
+}
+
+-(BOOL)allCamerasHaveMatchingFormats
+{
+    if ([self.cameraDataPool count]== 0) return YES;
+    
+    CameraDetails* camData =[self.cameraDataPool firstObject];
+    NSString * format = camData.resolution;
+    
+    for (CameraDetails* c in self.cameraDataPool) {
+        if (![c.resolution isEqualToString:format]) return NO;
+    }
+    
+
+    return YES;
 }
 
 

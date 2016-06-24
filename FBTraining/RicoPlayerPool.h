@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RicoPlayerViewController.h"
-
+#import "RicoPlayerViewControllerSO.h"
 @interface RicoPlayerPool : NSObject
 
 
