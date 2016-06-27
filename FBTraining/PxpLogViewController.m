@@ -40,7 +40,7 @@
     if (self) {
         self.textView = [[UITextView alloc] initWithFrame: CGRectZero];
         self.textView.backgroundColor   = [UIColor blackColor];
-        self.textView.font              = [UIFont fontWithName:@"Courier" size:18.0];
+        self.textView.font              = [UIFont fontWithName:@"Courier" size:12.0];
         self.textView.editable          = NO;
         self.textView.delegate          = self;
         [self.textView setSelectable:YES];
@@ -218,6 +218,17 @@
             } else {
                 
                 
+                for (NSString* key in [[RicoPlayerPool instance].defaultController.players allKeys]) {
+                    RicoPlayer * asdf = (RicoPlayer *)[RicoPlayerPool instance].defaultController.players[key];
+
+                    AVURLAsset * ass = ((AVURLAsset *)asdf.avPlayer.currentItem.asset);
+                    PXPLog(@"Player %@  ",key);
+                    PXPLog(@"  CR: %@   ",ass.URL);
+                    PXPLog(@"  LQ: %@   ",((Feed*)asdf.feed).lqPath);
+                    PXPLog(@"  HQ: %@   ",((Feed*)asdf.feed).hqPath);
+                    PXPLog(@" ");
+                }
+                PXPLog(@" ");
                 PXPLog(@"Camera Formats Match: %@",([op.encoder.cameraResource allCamerasHaveMatchingFormats])?@"TRUE":@"FALSE");
                 
                 NSDictionary    * results =[Utility JSONDatatoDict:d];

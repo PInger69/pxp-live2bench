@@ -292,6 +292,10 @@
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{}];
     [self.ricoBookmarkPlayerController clear];
+    self.fullscreenViewController.fullscreen = NO;
+    
+    [self.ricoFullScreenControlBar.controlBar clear];
+    [self.ricoPlayerControlBar clear];
 }
 
 //initialize comment box and if one tag is selected, the tag details will show in the box too

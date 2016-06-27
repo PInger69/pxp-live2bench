@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "703"
-            endingLineNumber = "703"
+            startingLineNumber = "705"
+            endingLineNumber = "705"
             landmarkName = "-buildRequest:"
             landmarkType = "5">
             <Actions>
@@ -83,11 +83,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "864"
-            endingLineNumber = "864"
+            startingLineNumber = "866"
+            endingLineNumber = "866"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
          </BreakpointContent>
@@ -99,11 +99,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "790"
-            endingLineNumber = "790"
+            startingLineNumber = "792"
+            endingLineNumber = "792"
             landmarkName = "-buildRequest:"
             landmarkType = "5">
             <Actions>
@@ -211,11 +211,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "534"
-            endingLineNumber = "534"
+            startingLineNumber = "536"
+            endingLineNumber = "536"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
             <Actions>
@@ -605,11 +605,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "488412076.648826"
+            timestampString = "488487127.173839"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1118"
-            endingLineNumber = "1118"
+            startingLineNumber = "1114"
+            endingLineNumber = "1114"
             landmarkName = "-onFeedMapChange:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1006,7 +1006,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/FeedMapController.m"
-                  timestampString = "488412076.891747"
+                  timestampString = "488498849.329237"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "192"
@@ -1021,7 +1021,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/FeedMapController.m"
-                  timestampString = "488412076.891865"
+                  timestampString = "488498849.3294"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "192"
@@ -1054,11 +1054,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "634"
-            endingLineNumber = "634"
+            startingLineNumber = "636"
+            endingLineNumber = "636"
             landmarkName = "-buildRequest:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1249,11 +1249,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
-            timestampString = "487802181.80692"
+            timestampString = "488498848.457"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
             landmarkName = "-onSeekButtonPress:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1433,7 +1433,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/ListViewController.m"
-                  timestampString = "488412076.895153"
+                  timestampString = "488498849.333305"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "749"
@@ -1448,7 +1448,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/ListViewController.m"
-                  timestampString = "488412076.895273"
+                  timestampString = "488498849.333444"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "749"
@@ -1577,11 +1577,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "752"
-            endingLineNumber = "752"
+            startingLineNumber = "754"
+            endingLineNumber = "754"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
             <Actions>
@@ -1608,11 +1608,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "707"
-            endingLineNumber = "707"
+            startingLineNumber = "709"
+            endingLineNumber = "709"
             landmarkName = "-buildRequest:"
             landmarkType = "5">
             <Actions>
@@ -1678,11 +1678,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487634362.615525"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1565"
-            endingLineNumber = "1565"
+            startingLineNumber = "1573"
+            endingLineNumber = "1573"
             landmarkName = "-onModifyTags:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1748,11 +1748,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487634362.615525"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1606"
-            endingLineNumber = "1606"
+            startingLineNumber = "1614"
+            endingLineNumber = "1614"
             landmarkName = "-onNewTags:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1764,11 +1764,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487634362.615525"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1688"
-            endingLineNumber = "1688"
+            startingLineNumber = "1696"
+            endingLineNumber = "1696"
             landmarkName = "-onNewTagsEO:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1780,11 +1780,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487614141.748891"
+            timestampString = "488495044.00484"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1149"
-            endingLineNumber = "1149"
+            startingLineNumber = "1153"
+            endingLineNumber = "1153"
             landmarkName = "-connectionDidFinishLoading:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1892,22 +1892,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpLogViewController.m"
-            timestampString = "487006859.711916"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "315"
-            endingLineNumber = "315"
-            landmarkName = "-onEvent:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FBTraining/CKViewController.m"
             timestampString = "487196947.006338"
             startingColumnNumber = "9223372036854775807"
@@ -1941,11 +1925,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487698334.363487"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2305"
-            endingLineNumber = "2305"
+            startingLineNumber = "2313"
+            endingLineNumber = "2313"
             landmarkName = "-destroy"
             landmarkType = "5">
             <Actions>
@@ -1966,11 +1950,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "948"
-            endingLineNumber = "948"
+            startingLineNumber = "950"
+            endingLineNumber = "950"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2094,11 +2078,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "719"
-            endingLineNumber = "719"
+            startingLineNumber = "721"
+            endingLineNumber = "721"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2110,11 +2094,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "732"
-            endingLineNumber = "732"
+            startingLineNumber = "734"
+            endingLineNumber = "734"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
             <Actions>
@@ -2135,11 +2119,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487634362.615525"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1693"
-            endingLineNumber = "1693"
+            startingLineNumber = "1701"
+            endingLineNumber = "1701"
             landmarkName = "-onNewTagsEO:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2151,11 +2135,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487634362.615525"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1611"
-            endingLineNumber = "1611"
+            startingLineNumber = "1619"
+            endingLineNumber = "1619"
             landmarkName = "-onNewTags:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2167,11 +2151,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487634362.615525"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1637"
-            endingLineNumber = "1637"
+            startingLineNumber = "1645"
+            endingLineNumber = "1645"
             landmarkName = "-onNewTags:"
             landmarkType = "5">
             <Actions>
@@ -2336,11 +2320,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "487696351.409733"
+            timestampString = "488495153.920392"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2099"
-            endingLineNumber = "2099"
+            startingLineNumber = "2107"
+            endingLineNumber = "2107"
             landmarkName = "-getAllEventsResponse:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2400,11 +2384,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "488412076.648826"
+            timestampString = "488487127.173839"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1081"
-            endingLineNumber = "1081"
+            startingLineNumber = "1077"
+            endingLineNumber = "1077"
             landmarkName = "-recordingDidTerminateInRecordButton:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2586,7 +2570,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/LocalTagSyncManager.m"
-                  timestampString = "488412076.913386"
+                  timestampString = "488498849.351938"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "122"
@@ -2601,7 +2585,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/LocalTagSyncManager.m"
-                  timestampString = "488412076.913511"
+                  timestampString = "488498849.352096"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "122"
@@ -2683,11 +2667,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1165"
-            endingLineNumber = "1165"
+            startingLineNumber = "1167"
+            endingLineNumber = "1167"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
             <Actions>
@@ -2732,11 +2716,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1167"
-            endingLineNumber = "1167"
+            startingLineNumber = "1169"
+            endingLineNumber = "1169"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
             <Actions>
@@ -2756,11 +2740,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488316414.565213"
+            timestampString = "488494785.701999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "763"
-            endingLineNumber = "763"
+            startingLineNumber = "765"
+            endingLineNumber = "765"
             landmarkName = "-parseDataToEncoder:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2820,12 +2804,124 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "488412076.648826"
+            timestampString = "488487127.173839"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "526"
-            endingLineNumber = "526"
+            startingLineNumber = "522"
+            endingLineNumber = "522"
             landmarkName = "-viewWillAppear:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/PxpLogViewController.m"
+            timestampString = "488489004.364478"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "-onCams:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/PxpLogViewController.m"
+            timestampString = "488489129.291006"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "-onCams:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
+            timestampString = "488494676.796684"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "512"
+            endingLineNumber = "512"
+            landmarkName = "-buildRequest:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
+            timestampString = "488494864.439589"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "496"
+            endingLineNumber = "496"
+            landmarkName = "-buildRequest:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "488495044.00484"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1124"
+            endingLineNumber = "1124"
+            landmarkName = "-connectionDidFinishLoading:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UtilityClasses/Utility.m"
+            timestampString = "488496295.199642"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "+JSONDatatoDict:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "488496641.975711"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2017"
+            endingLineNumber = "2017"
+            landmarkName = "-camerasGetResponce:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

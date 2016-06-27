@@ -1120,7 +1120,11 @@
     }  else if ([connectionType isEqualToString: STOP_EVENT]) {
         [self stopResponce:     finishedData];
     }  else if ([connectionType isEqualToString: START_EVENT]) {
-        NSDictionary    * results =[Utility JSONDatatoDict:finishedData];
+        NSError * error;
+        NSDictionary    * results;
+        results =[Utility JSONDatatoDict:finishedData];
+        results = [Utility JSONDatatoDict:finishedData error:&error];
+        
         if ([results[@"success"]intValue] == 0) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:self];
             
@@ -1359,7 +1363,11 @@
  */
 -(void)versionResponse:(NSData *)data
 {
-    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    NSError * error;
+    NSDictionary    * results;
+//    results = [Utility JSONDatatoDict:data];
+    results = [Utility JSONDatatoDict:data error:&error];
+    
     if([results isKindOfClass:[NSDictionary class]]){
         version = (NSString *)[results objectForKey:@"version"] ;
         PXPLog(@"    version - %@",version);

@@ -509,7 +509,9 @@
     
     [mData removeObjectForKey:@"url"];
 //    [mData removeObjectForKey:@"duration"];
-    NSString    * jsonData = [Utility dictToJSON:mData];
+    NSString    * jsonData;
+    jsonData = [Utility dictToJSON:mData];
+    jsonData = [Utility dictToJSON:mData error:&error];
     
     if (error) {
         PXPLog(@"Error converting data to dowload Clip event");
