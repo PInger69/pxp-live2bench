@@ -62,20 +62,8 @@
 
 @property (nonatomic,assign) BOOL * success;
 @property (copy, nonatomic) void(^completionHandler)(BOOL);
-
-
-@property (strong,nonatomic) NSTimer            * timer;
-@property (assign,nonatomic) NSInteger          maxCoolDownTick;
-@property (assign,nonatomic) NSInteger          currentCoolDownTick;
-@property (assign,nonatomic) NSTimeInterval     tick;
-
-
-
-
-
-
 - (instancetype)initWithAVPlayer:(AVPlayer*)aPlayer seekToTime:(CMTime)seekTo toleranceBefore:(CMTime)tBefore toleranceAfter:(CMTime)tAfter;
--(void)reSeek;
+
 
 @end
 
@@ -94,15 +82,3 @@
 @end
 
 
-@interface RicoPrerollOperation : NSOperation
-{
-    BOOL        executing;
-    BOOL        finished;
-}
-@property (nonatomic,assign) BOOL * success;
-@property (nonatomic,weak)  RicoPlayer * player;
-
-- (instancetype)initWithRicoPlayer:(RicoPlayer*)player rate:(float)rate;
-
-
-@end
