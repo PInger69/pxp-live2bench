@@ -140,11 +140,23 @@
     [_container addSubview:_rightLabel];
     [_container addSubview:_slider];
 
+    
+    
+    
+    
+ 
+    
+    
 
     self.clipsToBounds = YES;
     self.backgroundColor = [UIColor clearColor];
     self.gestureEnabled = YES;
     [self clear];
+    
+    
+    
+    
+    
 }
 
 

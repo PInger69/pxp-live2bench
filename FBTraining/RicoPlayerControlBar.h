@@ -54,6 +54,9 @@ typedef NS_ENUM (NSInteger, RicoPlayerState){
 @property (assign, nonatomic) BOOL gestureEnabled;
 @property (assign, nonatomic) BOOL delegateUpdateEnabled;
 
+
+
+
 @property (assign, nonatomic) CMTimeRange range;
 
 - (void)update:(CMTime)time duration:(CMTime)duration;

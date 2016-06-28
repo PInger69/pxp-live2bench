@@ -325,9 +325,9 @@
         finished                = NO;
         self.name               = @"Seek Op";
  
-        self.maxCoolDownTick        = 3;
-        self.currentCoolDownTick    = self.maxCoolDownTick;
-        self.tick                   = 1.0;
+//        self.maxCoolDownTick        = 3;
+//        self.currentCoolDownTick    = self.maxCoolDownTick;
+//        self.tick                   = 1.0;
 
         
         
@@ -357,10 +357,10 @@
     __block AVPlayer        * avp = self.player;
     __block AVPlayerItem    * avi = self.player.currentItem;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
-    });
-    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
+//    });
+//    
     
     if (self.player.status == AVPlayerStatusReadyToPlay && self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
         [avp cancelPendingPrerolls];
@@ -396,16 +396,16 @@
 
 -(void)update
 {
-    if (self.currentCoolDownTick == 0 && self.player.rate !=0) {
-        
-        // something is wrong
-        [self reSeek];
-         self.currentCoolDownTick = self.maxCoolDownTick;
-        
-        
-    } else {
-        self.currentCoolDownTick--;
-    }
+//    if (self.currentCoolDownTick == 0 && self.player.rate !=0) {
+//        
+//        // something is wrong
+//        [self reSeek];
+//         self.currentCoolDownTick = self.maxCoolDownTick;
+//        
+//        
+//    } else {
+//        self.currentCoolDownTick--;
+//    }
     
 }
 
@@ -420,13 +420,13 @@
     
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];
-    [self.timer invalidate];
+//    [self.timer invalidate];
 }
 
 
 -(void)reSeek
 {
-      [self.timer invalidate];
+//      [self.timer invalidate];
     if ([self isCancelled]) return;
     
     if (!finished && executing) {
@@ -436,9 +436,9 @@
         __block AVPlayer        * avp = self.player;
         __block AVPlayerItem    * avi = self.player.currentItem;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
+//        });
         
         
         if (self.player.status == AVPlayerStatusReadyToPlay && self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
@@ -624,99 +624,99 @@
 
 
 
-@implementation RicoPrerollOperation
-{
-    float _rate;
-}
-
-- (instancetype)initWithRicoPlayer:(RicoPlayer*)player rate:(float)rate
-{
-    self = [super init];
-    if (self) {
-        self.player = player;
-        _rate = rate;
-        self.name = @"Preroll Op";
-    }
-    return self;
-}
-
--(void)start
-{
-    NSLog(@"RicoOperation Preroll");
-    if ([self isCancelled]  ||  self.player.avPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay) {
-        [self willChangeValueForKey:@"isFinished"];
-        [self willChangeValueForKey:@"isExecuting"];
-        finished = YES;
-        executing = NO;
-        [self didChangeValueForKey:@"isFinished"];
-        [self didChangeValueForKey:@"isExecuting"];
-        
-        return;
-    }
-    
-    [self willChangeValueForKey:@"isExecuting"];
-    executing = YES;
-    [self didChangeValueForKey:@"isExecuting"];
-    
-    
-           __block RicoPrerollOperation* weakself = self;
-    [self.player.avPlayer prerollAtRate:_rate completionHandler:^(BOOL afinished) {
-        weakself.success = afinished;
-        
-        [weakself completeOperation];
-        
-
-    }];
-    
-
-    
-}
-
-
-
-- (void)completeOperation {
-    [self willChangeValueForKey:@"isFinished"];
-    [self willChangeValueForKey:@"isExecuting"];
-    
-    executing = NO;
-    finished = YES;
-    
-    [self didChangeValueForKey:@"isExecuting"];
-    [self didChangeValueForKey:@"isFinished"];
-}
-
-
-
--(void)cancel
-{
-    [super cancel];
-    [self completeOperation];
-}
-
--(BOOL)isConcurrent
-{
-    return YES;
-}
-
--(BOOL)isExecuting
-{
-    return executing;
-}
-
--(BOOL)isFinished
-{
-    return finished;
-}
-
--(void)dealloc
-{
-    
-}
-
-
-
-
-@end
+//@implementation RicoPrerollOperation
+//{
+//    float _rate;
+//}
+//
+//- (instancetype)initWithRicoPlayer:(RicoPlayer*)player rate:(float)rate
+//{
+//    self = [super init];
+//    if (self) {
+//        self.player = player;
+//        _rate = rate;
+//        self.name = @"Preroll Op";
+//    }
+//    return self;
+//}
+//
+//-(void)start
+//{
+//    NSLog(@"RicoOperation Preroll");
+//    if ([self isCancelled]  ||  self.player.avPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay) {
+//        [self willChangeValueForKey:@"isFinished"];
+//        [self willChangeValueForKey:@"isExecuting"];
+//        finished = YES;
+//        executing = NO;
+//        [self didChangeValueForKey:@"isFinished"];
+//        [self didChangeValueForKey:@"isExecuting"];
+//        
+//        return;
+//    }
+//    
+//    [self willChangeValueForKey:@"isExecuting"];
+//    executing = YES;
+//    [self didChangeValueForKey:@"isExecuting"];
+//    
+//    
+//           __block RicoPrerollOperation* weakself = self;
+//    [self.player.avPlayer prerollAtRate:_rate completionHandler:^(BOOL afinished) {
+//        weakself.success = afinished;
+//        
+//        [weakself completeOperation];
+//        
+//
+//    }];
+//    
+//
+//    
+//}
+//
+//
+//
+//- (void)completeOperation {
+//    [self willChangeValueForKey:@"isFinished"];
+//    [self willChangeValueForKey:@"isExecuting"];
+//    
+//    executing = NO;
+//    finished = YES;
+//    
+//    [self didChangeValueForKey:@"isExecuting"];
+//    [self didChangeValueForKey:@"isFinished"];
+//}
+//
+//
+//
+//-(void)cancel
+//{
+//    [super cancel];
+//    [self completeOperation];
+//}
+//
+//-(BOOL)isConcurrent
+//{
+//    return YES;
+//}
+//
+//-(BOOL)isExecuting
+//{
+//    return executing;
+//}
+//
+//-(BOOL)isFinished
+//{
+//    return finished;
+//}
+//
+//-(void)dealloc
+//{
+//    
+//}
+//
+//
+//
+//
+//@end
 
 
 

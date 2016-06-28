@@ -277,13 +277,13 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     return seeker;
 }
 
--(NSOperation*)preroll:(float)rate
-{
-
-    NSOperation * preroll = [[RicoPrerollOperation alloc]initWithRicoPlayer:self rate:rate];
-    [self.operationQueue addOperation:preroll];
-    return preroll;
-}
+//-(NSOperation*)preroll:(float)rate
+//{
+//
+//    NSOperation * preroll = [[RicoPrerollOperation alloc]initWithRicoPlayer:self rate:rate];
+//    [self.operationQueue addOperation:preroll];
+//    return preroll;
+//}
 
 
 

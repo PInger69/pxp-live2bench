@@ -45,6 +45,8 @@
 @interface RicoDualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>{
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
+    UIButton    * _frameForward;
+    UIButton    * _frameBackward;
 }
 
 
@@ -194,6 +196,25 @@ static Feed * _bottomPick;
         _resumeTime = kCMTimeInvalid;
         _resumeRate = 1.0;
         
+
+        
+        
+        _frameBackward = [[UIButton alloc]initWithFrame:CGRectMake(0,50, 44, 44)];
+        _frameBackward.layer.borderWidth = 1;
+        _frameBackward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+        [_frameBackward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [_frameBackward setTitle:@"FB" forState:UIControlStateNormal];
+        [_frameBackward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+        _frameForward  = [[UIButton alloc]initWithFrame:CGRectMake(0,50, 44, 44)];
+        _frameForward.layer.borderWidth = 1;
+        _frameForward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+        _frameForward.titleLabel.textColor = PRIMARY_APP_COLOR;
+        [_frameForward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [_frameForward setTitle:@"FF" forState:UIControlStateNormal];
+        [_frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+
+        [self.bottomBarView addSubview:_frameBackward];
+        [self.bottomBarView addSubview:_frameForward];
         
     }
     return self;
@@ -1114,6 +1135,29 @@ static Feed * _bottomPick;
 
 
 
+}
+
+-(void)frameByFrame:(id)sender{
+    
+
+    
+    [self.playerViewController pause];
+    self.playerViewController.playerControlBar.playPauseButton.paused = YES;
+    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-0.10:0.10;
+    
+    CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
+    CMTime  cTime = self.playerViewController.primaryPlayer.currentTime;
+    //    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    
+    if (_currentEvent.local) {
+        [self.playerViewController pause];
+        [self.playerViewController stepByCount:(speed>0)?1:-1];
+    } else {
+        [self.playerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+    }
+    
+    
+    
 }
 
 

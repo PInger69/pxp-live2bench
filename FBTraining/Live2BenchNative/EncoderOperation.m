@@ -566,6 +566,7 @@
         self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
         self.tag = tag;
         self.request    = [self buildRequest:self.argData ]; // this build request is overrided
+        
     }
     return self;
 }
@@ -689,7 +690,7 @@
 //        [tagData setValue:period forKey:@"period"];
 //    }
 //
-
+//    self.generateProxyTag = YES;
     
     if ([tagData[@"type"]integerValue] != TagTypeOpenDuration &&[tagData[@"type"]integerValue] != TagTypeOpenDuration && self.generateProxyTag) {
         Event * event = [self.encoder event];
