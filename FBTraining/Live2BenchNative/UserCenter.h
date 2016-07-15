@@ -41,7 +41,7 @@
 @property (atomic,strong) NSString               * userHID;
 @property (atomic,strong) UIColor                * customerColor;
 
-
+@property (atomic,strong) NSString                * currentTagSetName;
 //Paths
 
 @property (atomic,strong) NSString               * accountInfoPath;

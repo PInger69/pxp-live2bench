@@ -24,7 +24,7 @@
 #import "PreferencesViewController.h"
 #import "SideTagSettingsViewController.h"
 #import "FeedMappingViewController.h"
-
+#import "DropboxSettingsViewController.h"
 
 @interface SettingsPageViewController () <SettingsTableViewControllerSelectDelegate>
 
@@ -90,6 +90,7 @@ NS_OPTIONS(NSInteger, style){
         InfoSettingViewController *informationSettingViewController             = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
         TabsSettingViewController *tabsSettingViewController                    = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
         SideTagSettingsViewController * tagSetSettingViewController                = [[SideTagSettingsViewController alloc] initWithAppDelegate:appDel name:@"Tag Set" identifier:@"Tag Set"];
+        DropboxSettingsViewController *dropboxViewController                            = [[DropboxSettingsViewController alloc] initWithAppDelegate:appDel];
         CreditsViewController *creditsViewController                            = [[CreditsViewController alloc] initWithAppDelegate:appDel];
         FeedMappingViewController *feedMappingViewController                            = [[FeedMappingViewController alloc] initWithAppDelegate:appDel name:@"Feed Map" identifier:@"Feed Map"];
         
@@ -164,11 +165,21 @@ NS_OPTIONS(NSInteger, style){
                                            @"Identifier": feedMappingViewController.identifier
                                            }];
         
+        
+        if ([setPref[@"Dropbox"] boolValue]) [tempDefinitions addObject:@{
+                                                                          @"Name": dropboxViewController.name,
+                                                                          @"ViewController": dropboxViewController,
+                                                                          @"Identifier": dropboxViewController.identifier
+                                                                          }];
+        
         if ([setPref[@"Credits"] boolValue]) [tempDefinitions addObject:@{
-                                           @"Name": creditsViewController.name,
-                                           @"ViewController": creditsViewController,
-                                           @"Identifier": creditsViewController.identifier
-                                           }];
+                                                                          @"Name": creditsViewController.name,
+                                                                          @"ViewController": creditsViewController,
+                                                                          @"Identifier": creditsViewController.identifier
+                                                                          }];
+
+        
+
         
         [tempDefinitions addObject:@{
                                      @"Name": @"Logout",

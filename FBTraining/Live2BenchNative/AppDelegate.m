@@ -21,7 +21,7 @@
 #import "CustomAlertControllerQueue.h"
 #import "PxpFilterDefaultTabViewController.h"
 #import "DeviceAssetLibrary.h"
-
+#import <DropboxSDK/DropboxSDK.h>
 
 @implementation AppDelegate
 {
@@ -339,6 +339,19 @@
 
     
 }
+
+#pragma mark - Dropbox
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if ([[DBSession sharedSession] handleOpenURL:url]) {
+        if ([[DBSession sharedSession] isLinked]) {
+//            [navigationController pushViewController:rootViewController.photoViewController animated:YES];
+        }
+        return YES;
+    }
+    
+    return NO;
+}
+
 
 
 -(void)memoryWarning:(NSNotification*)note

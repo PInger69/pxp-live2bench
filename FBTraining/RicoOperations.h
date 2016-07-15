@@ -43,6 +43,7 @@
 @property (nonatomic,strong) AVPlayerItem * observedItem;
 //@property (nonatomic,weak) id <RicoPlayerItemOperationDelegate> delegate;
 @property (nonatomic,assign) BOOL * success;
+@property (nonatomic,strong) NSError * error;
 
 - (instancetype)initWithPlayerItem:(AVPlayerItem *)playerItem;
 @end

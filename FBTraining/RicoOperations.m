@@ -101,7 +101,10 @@
 
 
 @implementation RicoReadyPlayerItemOperation
-
+{
+    NSURLSession * sess;
+    NSURLSessionTask * task;
+}
 
 - (instancetype)initWithPlayerItem:(AVPlayerItem *)playerItem
 {
@@ -126,13 +129,40 @@
         [self didChangeValueForKey:@"isFinished"];
         return;
     }
+    
+    
+//    NSURLSessionConfiguration*sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    sessionConfig.allowsCellularAccess              = NO;
+//    sessionConfig.timeoutIntervalForRequest         = 10;
+//    sessionConfig.timeoutIntervalForResource        = 10;
+//    sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
+    
+    // this was made just to check if the file is there
+//    sess    = [NSURLSession sessionWithConfiguration:sessionConfig delegate:nil delegateQueue:nil];
+//    NSURL * storeURL =((AVURLAsset*) self.observedItem.asset).URL;
+//    NSLog(@"");
+//    task= [sess dataTaskWithURL:storeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+//        
+//        
+//        // Parse JSON
+//        NSError* parseError;
+//        id object = (NSDictionary*)[NSJSONSerialization
+//                                    JSONObjectWithData:data
+//                                    options:0
+//                                    error:&parseError];
+//        
+//        
+//        NSLog(@"");
+//    }];
+//
+//    [task resume];
 
     [self willChangeValueForKey:@"isExecuting"];
     executing = YES;
     [self didChangeValueForKey:@"isExecuting"];
     
 
-    [self.observedItem addObserver:self forKeyPath:@"status" options:0 context:NULL];
+    [self.observedItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil];
 
 }
 
@@ -145,14 +175,28 @@
         return;
     }
     
+    NSArray * timeMeta;
+    CMTimebaseRef  tbrf;
     switch (item.status) {
         case AVPlayerItemStatusReadyToPlay:
             self.success = YES;
             NSLog(@"RicoOperation Load Item success");
+            
+            timeMeta = item.timedMetadata;
+            tbrf =  item.timebase;
 //            if (self.delegate) [self.delegate onPlayerOperationItemReady:self];
             break;
         case AVPlayerItemStatusFailed:
             self.success = NO;
+            if (!self.error) {
+                NSString     * errVideoURL  = [((AVURLAsset*) self.observedItem.asset).URL absoluteString];
+                NSDictionary * userInfo     = @{
+                                                NSLocalizedDescriptionKey:               @"Video failed to load.",
+                                                NSLocalizedFailureReasonErrorKey:        [NSString stringWithFormat:@"AVPlayerItemStatusFailed for URL: %@", errVideoURL],
+                                                NSLocalizedRecoverySuggestionErrorKey:   [NSString stringWithFormat:@"Event might not support this quality level"]
+                                                };
+                self.error =  [NSError errorWithDomain:PxpErrorDomain code:PLAYER_ERROR_LOAD_ITEM userInfo:userInfo];
+            }
 //            if (self.delegate) [self.delegate onPlayerOperationItemFail:self];
             break;
         default:

@@ -199,22 +199,22 @@ static Feed * _bottomPick;
 
         
         
-        _frameBackward = [[UIButton alloc]initWithFrame:CGRectMake(0,50, 44, 44)];
-        _frameBackward.layer.borderWidth = 1;
-        _frameBackward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
-        [_frameBackward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-        [_frameBackward setTitle:@"FB" forState:UIControlStateNormal];
-        [_frameBackward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
-        _frameForward  = [[UIButton alloc]initWithFrame:CGRectMake(0,50, 44, 44)];
-        _frameForward.layer.borderWidth = 1;
-        _frameForward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
-        _frameForward.titleLabel.textColor = PRIMARY_APP_COLOR;
-        [_frameForward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-        [_frameForward setTitle:@"FF" forState:UIControlStateNormal];
-        [_frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
-
-        [self.bottomBarView addSubview:_frameBackward];
-        [self.bottomBarView addSubview:_frameForward];
+//        _frameBackward = [[UIButton alloc]initWithFrame:CGRectMake(100,55, 44, 44)];
+//        _frameBackward.layer.borderWidth = 1;
+//        _frameBackward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+//        [_frameBackward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+//        [_frameBackward setTitle:@"FB" forState:UIControlStateNormal];
+//        [_frameBackward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+//        _frameForward  = [[UIButton alloc]initWithFrame:CGRectMake(880,55, 44, 44)];
+//        _frameForward.layer.borderWidth = 1;
+//        _frameForward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+//        _frameForward.titleLabel.textColor = PRIMARY_APP_COLOR;
+//        [_frameForward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+//        [_frameForward setTitle:@"FF" forState:UIControlStateNormal];
+//        [_frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+//
+//        [self.bottomBarView addSubview:_frameBackward];
+//        [self.bottomBarView addSubview:_frameForward];
         
     }
     return self;
@@ -381,16 +381,18 @@ static Feed * _bottomPick;
     self.recordButton.delegate = self;
     [self.bottomBarView addSubview:self.recordButton];
     
+    CGFloat m = 50;
+    
     self.timeLabel.frame = CGRectMake(self.bottomBarView.center.x - 150, PLAYHEAD_HEIGHT, 300, BOTTOM_BAR_HEIGHT);
     self.timeLabel.textColor = [UIColor whiteColor];
-    self.timeLabel.font = [UIFont systemFontOfSize:64];
+    self.timeLabel.font = [UIFont systemFontOfSize:48];
     self.timeLabel.text = @"00:00:00";
     self.timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.bottomBarView addSubview:self.timeLabel];
     
     self.activeTagLabel.frame = CGRectMake(15, PLAYHEAD_HEIGHT, 135, BOTTOM_BAR_HEIGHT);
     self.activeTagLabel.textColor = PRIMARY_APP_COLOR;
-    self.activeTagLabel.font = [UIFont systemFontOfSize:20];
+    self.activeTagLabel.font = [UIFont systemFontOfSize:18];
     self.activeTagLabel.text = @"";
     self.activeTagLabel.textAlignment = NSTextAlignmentLeft;
     [self.bottomBarView addSubview:self.activeTagLabel];
@@ -399,12 +401,12 @@ static Feed * _bottomPick;
     [self.liveButton addTarget:self action:@selector(liveButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBarView addSubview:self.liveButton];
     
-    self.slomoButton = [[Slomo alloc] initWithFrame:CGRectMake(230, PLAYHEAD_HEIGHT, BOTTOM_BAR_HEIGHT, BOTTOM_BAR_HEIGHT)];
+    self.slomoButton = [[Slomo alloc] initWithFrame:CGRectMake(230+m, PLAYHEAD_HEIGHT, BOTTOM_BAR_HEIGHT, BOTTOM_BAR_HEIGHT)];
     [self.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBarView addSubview:self.slomoButton];
     
     CGPoint forwardSeekPoint = [self.view convertPoint:CGPointMake(self.bottomBarView.bounds.size.width - 160 - 70, PLAYHEAD_HEIGHT) fromView:self.bottomBarView];
-    CGPoint backSeekPoint = [self.view convertPoint:CGPointMake(160, PLAYHEAD_HEIGHT) fromView:self.bottomBarView];
+    CGPoint backSeekPoint = [self.view convertPoint:CGPointMake(160+m, PLAYHEAD_HEIGHT) fromView:self.bottomBarView];
     
     
     self.forwardSeekButton = [SeekButton makeFullScreenForwardAt:forwardSeekPoint];
@@ -463,6 +465,24 @@ static Feed * _bottomPick;
     [self.view addSubview:self.forwardSeekButton];
     [self.view addSubview:self.backSeekButton];
 
+    _frameBackward = [[UIButton alloc]initWithFrame:CGRectMake(100+m,55, 44, 44)];
+    _frameBackward.layer.borderWidth = 1;
+    _frameBackward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    [_frameBackward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [_frameBackward setTitle:@"FB" forState:UIControlStateNormal];
+    [_frameBackward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+    _frameForward  = [[UIButton alloc]initWithFrame:CGRectMake(880,55, 44, 44)];
+    _frameForward.layer.borderWidth = 1;
+    _frameForward.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    _frameForward.titleLabel.textColor = PRIMARY_APP_COLOR;
+    [_frameForward setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [_frameForward setTitle:@"FF" forState:UIControlStateNormal];
+    [_frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.bottomBarView addSubview:_frameBackward];
+    [self.bottomBarView addSubview:_frameForward];
+
+    
 
 }
 
@@ -963,6 +983,8 @@ static Feed * _bottomPick;
                 if ([[RicoPlayerPool instance].pooledPlayers count] == 0) return;
                 
                 RicoPlayer * mainPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+                [mainPlayer.debugOutput removeFromSuperview];
+                [mainPlayer.streamStatus removeFromSuperview];
                 feed.quality    = 1;
                 CMTime time     = mainPlayer.currentTime;
                 

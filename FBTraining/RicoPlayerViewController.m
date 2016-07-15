@@ -531,14 +531,27 @@ static CMClockRef _masterClock;
     }
 }
 
-// this only works for downloaded MP4
+
 - (void)stepByCount:(NSInteger)stepCount
 {
-//    NSLog(@"%s this only works for downloaded MP4",__FUNCTION__);
-    NSLog(@"Step By: %ld",(long)stepCount);
-    for (RicoPlayer * dplayers in self.depedencyPlayers) {
-        [dplayers.avPlayer.currentItem stepByCount:stepCount];
+    [self pause];
+
+    if (!self.primaryPlayer.live) {
+        for (RicoPlayer * dplayers in self.depedencyPlayers) {
+            [dplayers.avPlayer.currentItem stepByCount:stepCount];
+        }
+    } else {
+        float speed = (stepCount < 0 )?-0.10:0.10;
+        CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
+        CMTime  cTime = self.primaryPlayer.currentTime;
+        CMTime  nTime = CMTimeAdd(cTime, sTime);
+        [self seekToTime:nTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
     }
+
+
+    
+    
+    
 }
 
 
@@ -658,7 +671,7 @@ static CMClockRef _masterClock;
         if (CMTimeGetSeconds(player.duration) < (CMTimeGetSeconds(highestPlayer.duration) - 10 )) {
 //            NSLog(@" %f   %f ",CMTimeGetSeconds(player.duration),(CMTimeGetSeconds(highestPlayer.duration) - 10 ));
             player.reliable = NO;
-            player.streamStatus.text = @"Stream delayed";
+//            player.streamStatus.text = @"Stream delayed";
 
 //            [self.depedencyPlayers removeObject:player];
         }

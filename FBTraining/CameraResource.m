@@ -58,11 +58,8 @@
     
     CameraDetails* pickCam;
     for (CameraDetails* cd in self.cameraDataPool) {
-         NSLog(@"CamName: %@  %@ camID %@",cd.name,cd.cameraID,camID);
         if ([cd.cameraID isEqualToString:camID]) {
             pickCam = cd;
-            NSLog(@"CamName: %@  %@ camID %@",cd.name,cd.cameraID,camID);
-            NSLog(@" ");
             break;
         }
     }

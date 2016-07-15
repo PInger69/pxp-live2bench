@@ -89,7 +89,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         self.monitor = [[RicoPlayerMonitor alloc]initWithPlayer:self];
         self.streamStatus = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 92, 12)];
         [self.streamStatus setTextAlignment:NSTextAlignmentCenter];
-        self.streamStatus.text = @"Corrupted Stream";
+//        self.streamStatus.text = @"Corrupted Stream";
         [self.streamStatus setTextColor:[UIColor redColor]];
         [self.streamStatus setBackgroundColor:[UIColor blackColor]];
         [self.streamStatus setFont:[UIFont systemFontOfSize:10.0f]];
@@ -134,9 +134,9 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         [self.streamStatus setHidden:YES];
         [self.streamStatus setTextAlignment:NSTextAlignmentCenter];
         [self.streamStatus  setTextColor:[UIColor redColor]];
-        [self.streamStatus setBackgroundColor:[UIColor blackColor]];
+//        [self.streamStatus setBackgroundColor:[UIColor blackColor]];
         [self.streamStatus setFont:[UIFont systemFontOfSize:10.0f]];
-        self.streamStatus.text = @"Corrupted Stream";
+//        self.streamStatus.text = @"Corrupted Stream";
         self.reliable = YES;
         self.ticker = [[Ticker alloc]initWithTick:10];
     }
@@ -440,7 +440,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         _avPlayerLayer = nil;
     }
     
-    
+    self.error = nil;
 }
 
 
@@ -707,7 +707,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     }];
 
     [self seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
-    [self seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+    [self seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];// this was doulbled from a reason
 
 }
 
@@ -759,7 +759,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 -(void)destroy
 {
     self.feed = nil;
-//    [self.operationQueue cancelAllOperations];
+    [self.operationQueue cancelAllOperations];
 //    self.operationQueue     = nil;
 //    self.feed               = nil;
 //    self.isReadyOperation   = nil;
@@ -809,29 +809,19 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     
     
     if ((CMTimeGetSeconds(self.duration) == 0 && self.isReadyOperation.isFinished && self.avPlayer.status == AVPlayerStatusReadyToPlay)|| i) {
-        NSLog(@"PLAYER CRASH");
-        PXPLog(@"PLAYER %@ Crashed:  ",self.name);
-        PXPLog(@"  Player duration = 0 and status = AVPlayerStatusReadyToPlay");
+
+        if (!self.error) {
+            NSString     * errVideoURL  = [((AVURLAsset*) self.avPlayer.currentItem.asset).URL absoluteString];
+            NSDictionary * userInfo     = @{
+                                           NSLocalizedDescriptionKey:               @"Video failed to play.",
+                                           NSLocalizedFailureReasonErrorKey:        [NSString stringWithFormat:@"Player %@ has no duration and status is ReadyToPlay URL: %@",self.name,errVideoURL],
+                                           NSLocalizedRecoverySuggestionErrorKey:   [NSString stringWithFormat:@"Check connections and/or restart player"]
+                                           };
+            self.error =  [NSError errorWithDomain:PxpErrorDomain code:PLAYER_ERROR_NO_DURATION userInfo:userInfo];
+        }
         
         
-        
-        
-//        if (DEBUG_MODE){
-//            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pxp Player Alert"
-//                                                                            message:@"Player lost connection, attempting to reconnect"
-//                                                                     preferredStyle:UIAlertControllerStyleAlert];
-//            // build NO button
-//            UIAlertAction* cancelButtons = [UIAlertAction
-//                                            actionWithTitle:@"OK"
-//                                            style:UIAlertActionStyleCancel
-//                                            handler:^(UIAlertAction * action)
-//                                            {
-//                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-//                                            }];
-//            [alert addAction:cancelButtons];
-//            
-//            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:[UIApplication sharedApplication].keyWindow.rootViewController animated:YES style:AlertImportant completion:nil];
-//        }
+
         if ([self.ticker ready]) {
             [self reset];
         }
@@ -840,7 +830,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)refresh
 {
-    _avPlayerLayer.player =nil;// self.avPlayer;
+    _avPlayerLayer.player =nil;
     _avPlayerLayer.player =self.avPlayer;
 }
 
@@ -849,8 +839,6 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(BOOL)live
 {
-    
-    
     if (!self.avPlayer.currentItem) {
         return NO;
     } else if (self.avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && !CMTimeCompare(_avPlayer.currentItem.duration, kCMTimeIndefinite)) {
@@ -875,9 +863,24 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(BOOL)reliable
 {
-    
     return _reliable;
 }
+
+
+-(void)setOffsetTime:(CMTime)offsetTime
+{
+    _offsetTime = offsetTime;
+    
+}
+
+-(CMTime)offsetTime
+{
+    if (CMTimeCompare(_offsetTime, CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC))) {
+        _offsetTime =  CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC);
+    }
+    return  _offsetTime;
+}
+
 
 
 -(NSString*)description
@@ -885,51 +888,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     return [NSString stringWithFormat:@"RicoPlayer %@: FeedName:%@",self.name,self.feed.sourceName ];
 }
 
-//
--(void)setOffsetTime:(CMTime)offsetTime
-{
-    _offsetTime = offsetTime;
-
-}
-
--(CMTime)offsetTime
-{
-    
-    
-    if (CMTimeCompare(_offsetTime, CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC))) {
-        _offsetTime =  CMTimeMakeWithSeconds(_feed.offset, NSEC_PER_SEC);
-    }
-    
-    return  _offsetTime;
-//    return kCMTimeZero;
-}
-
-
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

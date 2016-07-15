@@ -103,7 +103,7 @@
 
 
 static BOOL wasMulti;
-static BOOL wasPlaying;
+
 
 
 @implementation RicoLive2BenchViewController{
@@ -446,7 +446,7 @@ static void * eventContext      = &eventContext;
         for (RicoPlayer * player in rPlayers) {
             
 //            player.hidden = ([rPlayers count]==1)? NO: YES;
-            [player refresh];
+//            [player refresh];
         }
         
 
@@ -479,8 +479,8 @@ static void * eventContext      = &eventContext;
             if ([rp.feed.sourceName isEqualToString:pick]) {
                 RicoPlayer * showPlayer = rPlayers[picker.selectedTag];
                 showPlayer.hidden = NO;
-                
-                [self.ricoPlayerViewController setPrimaryPlayerByFeedName:showPlayer.feed.sourceName];
+                [self changeSource:pick];
+//                [self.ricoPlayerViewController setPrimaryPlayerByFeedName:showPlayer.feed.sourceName];
             }
         }
         
@@ -583,7 +583,7 @@ static void * eventContext      = &eventContext;
         for (RicoPlayer * player in rPlayers) {
             
             player.hidden = YES;
-            [player refresh];
+//            [player refresh];
         }
         RicoPlayer * showPlayer = rPlayers[pickedSource];
         showPlayer.hidden = NO;
@@ -638,10 +638,6 @@ static void * eventContext      = &eventContext;
     key = [enc.cameraResource getFeedByLocation:camloc event:self.currentEvent].sourceName;
     
 
-//    key = _sourceNames[self.sourceButtonPicker.selectedTag];
-    
-    
-    
     
     
     
@@ -678,7 +674,7 @@ static void * eventContext      = &eventContext;
                 player.hidden = NO;
                 [self.ricoPlayerViewController setPrimaryPlayerByFeedName:player.feed.sourceName];
             }
-            [player refresh];
+//            [player refresh];
         }
 
         
@@ -1762,12 +1758,6 @@ static void * eventContext      = &eventContext;
     
 }
 
--(void) onAppTerminate:(NSNotification *)note{
-    if(!_currentEvent.live){
-        [_tagButtonController closeAllOpenTagButtons];
-        [_bottomViewController closeAllOpenTagButtons];
-    }
-}
 
 #pragma mark _ PLAY CLIP FROM CLIP VIEW
 - (void)clipViewPlayFeedNotification:(NSNotification *)note {
@@ -1997,21 +1987,24 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
     }
     
-    [self.ricoPlayerViewController pause];
-    self.ricoPlayerViewController.playerControlBar.playPauseButton.paused = YES;
-    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-0.10:0.10;
+    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-1.10:1.10;
+    [self.ricoPlayerViewController stepByCount:speed];
     
-    CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
-    CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
-//    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
-    
-    if (self.currentEvent.local) {
-        [self.ricoPlayerViewController pause];
-        [self.ricoPlayerViewController stepByCount:(speed>0)?1:-1];
-    } else {
-        [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
-    }
-
+//    [self.ricoPlayerViewController pause];
+//    self.ricoPlayerViewController.playerControlBar.playPauseButton.paused = YES;
+//    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-0.10:0.10;
+//    
+//    CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
+//    CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
+////    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+//    
+//    if (self.currentEvent.local) {
+//        [self.ricoPlayerViewController pause];
+//        [self.ricoPlayerViewController stepByCount:(speed>0)?1:-1];
+//    } else {
+//        [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+//    }
+//
     
     
 }

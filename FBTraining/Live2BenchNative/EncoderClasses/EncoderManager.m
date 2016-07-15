@@ -93,6 +93,10 @@ static EncoderManager * instance;
         grabAllThumbNamesFromEvent = ^NSArray *(Event *input) {
             NSMutableArray  * collection    = [[NSMutableArray alloc]init];
             for (Tag * item in input.tags) {
+                
+                NSArray * tags = [item.thumbnails allValues];
+                
+                
                 [collection addObjectsFromArray:[item.thumbnails allValues]];
             }
             return [collection copy];

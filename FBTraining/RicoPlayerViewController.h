@@ -11,10 +11,10 @@
 #import "RicoPlayerControlBar.h"
 #import "Tag.h"
 #import "BottomViewTimeProviderDelegate.h"
+#import "RicoPlayerControlProtocol.h"
 
 
-
-@interface RicoPlayerViewController : UIViewController <RicoPlayerControlBarDelegate, RicoPlayerObserverDelegate,BottomViewTimeProviderDelegate>
+@interface RicoPlayerViewController : UIViewController <RicoPlayerControlBarDelegate, RicoPlayerObserverDelegate,BottomViewTimeProviderDelegate,RicoPlayerControlProtocol>
 
 @property (nonatomic, strong) NSOperationQueue      * operationQueue;
 @property (nonatomic, strong) NSMutableDictionary   * players;
@@ -38,7 +38,9 @@
 -(void)playTag:(Tag*)tag;//
 -(void)live;//
 -(void)seekToTime:(CMTime)seekTime toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void(^)(BOOL finished))completionHandler;//
+
 -(void)stepByCount:(NSInteger)stepCount;//
+
 -(CMTime)currentTimeFromSourceName:(NSString*)feedName;//
 
 -(void)cancelPressed:(RicoPlayerControlBar *)playerControlBar;//

@@ -21,6 +21,8 @@
 -(void)addPlayers:(RicoPlayer *)aPlayer
 {
     
+    [aPlayer.debugOutput removeFromSuperview];
+    [aPlayer.streamStatus removeFromSuperview];
     NSArray * pls = [self.players allValues];
     for (NSInteger i = [pls count]-1; i > 0; i--) {
         RicoPlayer * p = (RicoPlayer *)pls[i];
@@ -78,8 +80,10 @@
 -(void)pause
 {
     self.isPlaying = NO;
-   (void)[self.primaryPlayer pause];
-    
+
+    for (RicoPlayer * dplayers in self.depedencyPlayers) {
+        (void)[dplayers pause];
+    }
 }
 
 
@@ -107,12 +111,17 @@
 {
     self.isPlaying = YES;
     self.primaryPlayer.reliable = YES;
-    NSOperation * seekOp  = [self.primaryPlayer seekToTime:kCMTimePositiveInfinity toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
-    NSOperation * playOp  = [self.primaryPlayer play];
-    [playOp addDependency:seekOp];
+    
+    
+    for (RicoPlayer * dplayers in self.depedencyPlayers) {
+        NSOperation * seekOp  = [dplayers seekToTime:self.primaryPlayer.duration toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
+        NSOperation * playOp  = [dplayers play];
+        [playOp addDependency:seekOp];
+    }
     if (self.playerControlBar) {
         self.playerControlBar.state = RicoPlayerStateLive;
     }
+    
 }
 
 
@@ -468,7 +477,7 @@
         if (CMTimeGetSeconds(player.duration) < (CMTimeGetSeconds(highestPlayer.duration) - 10 )) {
             //            NSLog(@" %f   %f ",CMTimeGetSeconds(player.duration),(CMTimeGetSeconds(highestPlayer.duration) - 10 ));
             player.reliable = NO;
-            player.streamStatus.text = @"Stream delayed";
+//            player.streamStatus.text = @"Stream delayed";
             
             //            [self.depedencyPlayers removeObject:player];
         }

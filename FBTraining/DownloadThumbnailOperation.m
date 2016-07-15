@@ -42,6 +42,7 @@
     if (self) {
         self.imageAssetManager      = aIAM;
         self.url                    = aUrl;
+        
         self.imageView              = aImageView;
         _isExecuting                = NO;
         _isFinished                 = NO;

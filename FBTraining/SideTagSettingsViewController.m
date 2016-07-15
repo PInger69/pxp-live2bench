@@ -91,10 +91,7 @@
     if ([UserCenter getInstance].customerEmail && [defaults objectForKey:[UserCenter getInstance].customerEmail]){
         NSDictionary * customersTagSetData = [defaults objectForKey:[UserCenter getInstance].customerEmail];
         self.currentTagSetName = customersTagSetData[@"currentTagSetName"];
-        if (![self.listTagSetName containsObject:self.currentTagSetName]) {
-            self.currentTagSetName = DEFAULT_TAG_SET;
-        }
-        
+        [UserCenter getInstance].currentTagSetName =self.currentTagSetName;
         NSArray * tagSetNames = [customersTagSetData[@"tagSets"] allKeys];
         
         // builds data from the picker
@@ -102,6 +99,11 @@
             [self.listTagSetName addObject:key];
         }
         
+        if (![self.listTagSetName containsObject:self.currentTagSetName]) {
+            self.currentTagSetName = DEFAULT_TAG_SET;
+            [UserCenter getInstance].currentTagSetName =self.currentTagSetName;
+        }
+
         
         if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
             [self setUpButtons:[UserCenter getInstance].defaultTagNames];

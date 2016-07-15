@@ -299,6 +299,8 @@ UIScrollView *scrollView;
         // clear list
     }
     [loadingView setHidden:YES];
+    
+
 }
 
 

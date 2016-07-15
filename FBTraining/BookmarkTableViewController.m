@@ -14,6 +14,8 @@
 #import "AVAsset+Image.h"
 #import "CustomAlertControllerQueue.h"
 
+#import "PxpDropboxActivity.h"
+
 #define YES_BUTTON  0
 #define NO_BUTTON   1
 
@@ -252,7 +254,7 @@
         
         
         // Add all clips
-        
+        [clipsToShare removeAllObjects];
         for (NSIndexPath * index2 in clipsBeingShared) {
             Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
             [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
@@ -261,23 +263,52 @@
         ////////////////////////////////////////////////////////////
      
         
-        
-//        MailClipsActivity * mca = [MailClipsActivity new];
-        
-        UIActivityViewController * activityVC = [[UIActivityViewController alloc]initWithActivityItems:clipsToShare applicationActivities:nil];
-        [activityVC setValue:subjectLine forKey:@"subject"];
+        if ([clipsBeingShared count] > 1 ){
+    //        MailClipsActivity * mca = [MailClipsActivity new];
+    //
+//            GroupDropboxActivity * gda = [[GroupDropboxActivity alloc]init];
+            
+            PxpDropboxActivity * activity = [[PxpDropboxActivity alloc]init];
+            
+            for (NSIndexPath * index2 in clipsBeingShared) {
+                Clip *aClip = [self.tableData objectAtIndex:index2.row];
+                //make sure comment and rating are updated
+                for (NSURL * vidUrl in aClip.videoFiles) {
+                    NSString * src;
+                    NSString *eventDate = [aClip.eventName substringToIndex:18];
+                    NSString *fileName = [NSString stringWithFormat:@"%@_%@_%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,aClip.homeTeam,aClip.visitTeam,@""];
+                    fileName = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    
 
-        UIPopoverController * pop = [[UIPopoverController alloc] initWithContentViewController:activityVC];
-        
-        CGRect rect = [[UIScreen mainScreen] bounds];
-        
-        [pop
-         presentPopoverFromRect:rect inView:self.view
-         permittedArrowDirections:0
-         animated:YES];
-        
-        return;
-        
+                    
+                    [activity.urlToFileName setObject:fileName forKey:[vidUrl absoluteString]];
+                    
+                }
+                
+                
+                
+                
+                
+                Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
+                [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
+            }
+            
+            
+            //@[gda]
+            UIActivityViewController * activityVC = [[UIActivityViewController alloc]initWithActivityItems:clipsToShare applicationActivities:@[activity]];
+            [activityVC setValue:subjectLine forKey:@"subject"];
+
+            UIPopoverController * pop = [[UIPopoverController alloc] initWithContentViewController:activityVC];
+            
+            CGRect rect = [[UIScreen mainScreen] bounds];
+            
+            [pop
+             presentPopoverFromRect:rect inView:self.view
+             permittedArrowDirections:0
+             animated:YES];
+            
+            return;
+        }
         
         if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
             BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;

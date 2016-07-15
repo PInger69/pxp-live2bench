@@ -169,6 +169,8 @@
 		D70A66871C5284D4003CA163 /* RicoFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */; };
 		D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66881C52C5C7003CA163 /* RicoLive2BenchViewController.m */; };
 		D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D70E21651B434E2600F6C1D5 /* BonjourModule.m */; };
+		D70F36941D38333E000C1B00 /* DropboxUploadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70F36931D38333E000C1B00 /* DropboxUploadOperation.m */; };
+		D70F36971D396D0B000C1B00 /* PxpDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D70F36961D396D0A000C1B00 /* PxpDropboxActivity.m */; };
 		D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD9BC31317EB4855001B67DE /* EulaModalViewController.m */; };
 		D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */; };
 		D70FBA4C17FF7A1E00B606CF /* DownloadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA4B17FF7A1E00B606CF /* DownloadButton.m */; };
@@ -329,6 +331,7 @@
 		D760736619D21AD6000E35C2 /* seeklarge.png in Resources */ = {isa = PBXBuildFile; fileRef = D760736419D21AD6000E35C2 /* seeklarge.png */; };
 		D760736719D21AD6000E35C2 /* seeklarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D760736519D21AD6000E35C2 /* seeklarge@2x.png */; };
 		D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D760737219D4A513000E35C2 /* FullScreenViewController.m */; };
+		D760DE111D34427A006A3541 /* GroupDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D760DE101D34427A006A3541 /* GroupDropboxActivity.m */; };
 		D763D0581CFDE7490048798A /* DurationTagButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D763D0571CFDE7490048798A /* DurationTagButtonView.m */; };
 		D763D05F1CFF31750048798A /* CFLBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D763D05E1CFF31750048798A /* CFLBottomViewController.m */; };
 		D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7652C501B39C40A006B46E3 /* SideTagButton.m */; };
@@ -592,6 +595,7 @@
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
 		D7D47E531BCD5B12005BC1EC /* EncoderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D47E521BCD5B11005BC1EC /* EncoderOperation.m */; };
 		D7D619351BDFF1BD003F9B39 /* PxpPlayerRebooter.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D619341BDFF1BC003F9B39 /* PxpPlayerRebooter.m */; };
+		D7D665831D2413B200B22E86 /* PxpErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D665821D2413B200B22E86 /* PxpErrors.m */; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
 		D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */; };
 		D7DA051E1C0DEE95009F0B87 /* RicoOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DA051D1C0DEE95009F0B87 /* RicoOperations.m */; };
@@ -630,6 +634,9 @@
 		D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE1E4018244DB800CA36CF /* GraphView.m */; };
 		D7EE1E4B1828596300CA36CF /* gotolive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DB754717EA0EFC009C402F /* gotolive@2x.png */; };
 		D7EE1E4C1828596400CA36CF /* clipTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DB753B17EA0495009C402F /* clipTab@2x.png */; };
+		D7EE715F1D359348002CEB8A /* DropboxSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE715E1D359348002CEB8A /* DropboxSettingsViewController.m */; };
+		D7EE71621D369620002CEB8A /* DropboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE71611D369620002CEB8A /* DropboxManager.m */; };
+		D7EE71661D36995E002CEB8A /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7EE71651D36995E002CEB8A /* DropboxSDK.framework */; };
 		D7EE84D019F19DC000DEC82B /* EncoderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE84CF19F19DC000DEC82B /* EncoderManager.m */; };
 		D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE84D219F19E0900DEC82B /* Encoder.m */; };
 		D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EF106217B4088A00CD4786 /* AutoScrollLabel.m */; };
@@ -923,6 +930,10 @@
 		D70A668A1C52C665003CA163 /* RicoLive2BenchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoLive2BenchViewController.h; sourceTree = "<group>"; };
 		D70E21641B434E2600F6C1D5 /* BonjourModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourModule.h; path = Live2BenchNative/EncoderClasses/BonjourModule.h; sourceTree = "<group>"; };
 		D70E21651B434E2600F6C1D5 /* BonjourModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourModule.m; path = Live2BenchNative/EncoderClasses/BonjourModule.m; sourceTree = "<group>"; };
+		D70F36921D38333E000C1B00 /* DropboxUploadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxUploadOperation.h; sourceTree = "<group>"; };
+		D70F36931D38333E000C1B00 /* DropboxUploadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxUploadOperation.m; sourceTree = "<group>"; };
+		D70F36951D396D0A000C1B00 /* PxpDropboxActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpDropboxActivity.h; sourceTree = "<group>"; };
+		D70F36961D396D0A000C1B00 /* PxpDropboxActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpDropboxActivity.m; sourceTree = "<group>"; };
 		D70F5CEA1B3DFEEE004353FD /* Live2BenchNative copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Live2BenchNative copy-Info.plist"; path = "/Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative copy-Info.plist"; sourceTree = "<absolute>"; };
 		D70FBA3D17FE0E3600B606CF /* PlayerCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCollectionViewController.h; sourceTree = "<group>"; };
 		D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCollectionViewController.m; sourceTree = "<group>"; };
@@ -1226,6 +1237,8 @@
 		D760736519D21AD6000E35C2 /* seeklarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "seeklarge@2x.png"; sourceTree = "<group>"; };
 		D760737119D4A513000E35C2 /* FullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullScreenViewController.h; sourceTree = "<group>"; };
 		D760737219D4A513000E35C2 /* FullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullScreenViewController.m; sourceTree = "<group>"; };
+		D760DE0F1D34427A006A3541 /* GroupDropboxActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDropboxActivity.h; sourceTree = "<group>"; };
+		D760DE101D34427A006A3541 /* GroupDropboxActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDropboxActivity.m; sourceTree = "<group>"; };
 		D763A0461731677E0089D132 /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		D763A0471731677F0089D132 /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
 		D763D0561CFDE7480048798A /* DurationTagButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationTagButtonView.h; sourceTree = "<group>"; };
@@ -1631,6 +1644,9 @@
 		D7D47E521BCD5B11005BC1EC /* EncoderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderOperation.m; sourceTree = "<group>"; };
 		D7D619331BDFF1BC003F9B39 /* PxpPlayerRebooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PxpPlayerRebooter.h; path = Live2BenchNative/PxpPlayerRebooter.h; sourceTree = "<group>"; };
 		D7D619341BDFF1BC003F9B39 /* PxpPlayerRebooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PxpPlayerRebooter.m; path = Live2BenchNative/PxpPlayerRebooter.m; sourceTree = "<group>"; };
+		D7D665811D2413B200B22E86 /* PxpErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpErrors.h; sourceTree = "<group>"; };
+		D7D665821D2413B200B22E86 /* PxpErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpErrors.m; sourceTree = "<group>"; };
+		D7D665BD1D25BF1200B22E86 /* RicoPlayerControlProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoPlayerControlProtocol.h; sourceTree = "<group>"; };
 		D7D86CD316B2D84400F48523 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
 		D7D86CD416B2D84500F48523 /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 		D7D9DCC11BA0CC0500D04CE0 /* ThumbnailDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailDownloader.h; sourceTree = "<group>"; };
@@ -1696,6 +1712,11 @@
 		D7EB50AF1AD721F500CFB200 /* Clip.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Clip.m; path = Live2BenchNative/EncoderClasses/Clip.m; sourceTree = "<group>"; };
 		D7EE1E3F18244DB800CA36CF /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
 		D7EE1E4018244DB800CA36CF /* GraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
+		D7EE715D1D359347002CEB8A /* DropboxSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxSettingsViewController.h; sourceTree = "<group>"; };
+		D7EE715E1D359348002CEB8A /* DropboxSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxSettingsViewController.m; sourceTree = "<group>"; };
+		D7EE71601D36961F002CEB8A /* DropboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxManager.h; sourceTree = "<group>"; };
+		D7EE71611D369620002CEB8A /* DropboxManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxManager.m; sourceTree = "<group>"; };
+		D7EE71651D36995E002CEB8A /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		D7EE84CE19F19DC000DEC82B /* EncoderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderManager.h; path = EncoderClasses/EncoderManager.h; sourceTree = "<group>"; };
 		D7EE84CF19F19DC000DEC82B /* EncoderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderManager.m; path = EncoderClasses/EncoderManager.m; sourceTree = "<group>"; };
 		D7EE84D119F19E0900DEC82B /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Encoder.h; path = EncoderClasses/Encoder.h; sourceTree = "<group>"; };
@@ -1763,6 +1784,7 @@
 				D73CDD561CCA74A80006AE72 /* VideoKitCore.a in Frameworks */,
 				D7A0681C16B041F0002A2892 /* QuartzCore.framework in Frameworks */,
 				D7A939B316ADD875006CBAB2 /* AVFoundation.framework in Frameworks */,
+				D7EE71661D36995E002CEB8A /* DropboxSDK.framework in Frameworks */,
 				D73CDD4C1CCA74A80006AE72 /* libavcodec.a in Frameworks */,
 				D7A9394416ADA65E006CBAB2 /* UIKit.framework in Frameworks */,
 				D7A9394816ADA65E006CBAB2 /* CoreGraphics.framework in Frameworks */,
@@ -3000,6 +3022,11 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7EE71631D36962F002CEB8A /* Dropbox */,
+				D760DE0F1D34427A006A3541 /* GroupDropboxActivity.h */,
+				D760DE101D34427A006A3541 /* GroupDropboxActivity.m */,
+				D7D665811D2413B200B22E86 /* PxpErrors.h */,
+				D7D665821D2413B200B22E86 /* PxpErrors.m */,
 				D7C113D61D0F503F008F8B54 /* TagClasses */,
 				D7579AA71D0B3D1E007D4C62 /* PxpEncoder.h */,
 				D7579AA81D0B3D1E007D4C62 /* PxpEncoder.m */,
@@ -3251,6 +3278,7 @@
 		D7A9394216ADA65E006CBAB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D7EE71651D36995E002CEB8A /* DropboxSDK.framework */,
 				D73CDD691CCA78BA0006AE72 /* AudioToolbox.framework */,
 				D73CDD671CCA78A60006AE72 /* OpenGLES.framework */,
 				D73CDD651CCA78750006AE72 /* libiconv.tbd */,
@@ -3587,10 +3615,7 @@
 				D7DA05201C0F4402009F0B87 /* RicoPlayerControlBar.m */,
 				D7DA051C1C0DEE94009F0B87 /* RicoOperations.h */,
 				D7DA051D1C0DEE95009F0B87 /* RicoOperations.m */,
-				D7E1A1881C07AD8C001055E2 /* RicoPlayerViewController.h */,
-				D7C113DE1D11DB96008F8B54 /* RicoPlayerViewControllerSO.h */,
-				D7C113DF1D11DB96008F8B54 /* RicoPlayerViewControllerSO.m */,
-				D7E1A1891C07AD8C001055E2 /* RicoPlayerViewController.m */,
+				D7D665BC1D25BD7100B22E86 /* RicoPlayerViewControllers */,
 				D7CC7C7E1C062342009AEFD3 /* RicoPlayer.h */,
 				D7CC7C7F1C062342009AEFD3 /* RicoPlayer.m */,
 				D74F39A51CDA84E600627E3A /* RicoPlayerMonitor.h */,
@@ -3635,6 +3660,18 @@
 				D7D47E521BCD5B11005BC1EC /* EncoderOperation.m */,
 			);
 			name = EncoderOperations;
+			sourceTree = "<group>";
+		};
+		D7D665BC1D25BD7100B22E86 /* RicoPlayerViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D7E1A1881C07AD8C001055E2 /* RicoPlayerViewController.h */,
+				D7C113DE1D11DB96008F8B54 /* RicoPlayerViewControllerSO.h */,
+				D7C113DF1D11DB96008F8B54 /* RicoPlayerViewControllerSO.m */,
+				D7E1A1891C07AD8C001055E2 /* RicoPlayerViewController.m */,
+				D7D665BD1D25BF1200B22E86 /* RicoPlayerControlProtocol.h */,
+			);
+			name = RicoPlayerViewControllers;
 			sourceTree = "<group>";
 		};
 		D7DB74EB17E79A13009C402F /* Eula */ = {
@@ -3698,6 +3735,21 @@
 				D7EE1E4018244DB800CA36CF /* GraphView.m */,
 			);
 			name = "GraphView *3P";
+			sourceTree = "<group>";
+		};
+		D7EE71631D36962F002CEB8A /* Dropbox */ = {
+			isa = PBXGroup;
+			children = (
+				D7EE71601D36961F002CEB8A /* DropboxManager.h */,
+				D7EE71611D369620002CEB8A /* DropboxManager.m */,
+				D7EE715D1D359347002CEB8A /* DropboxSettingsViewController.h */,
+				D7EE715E1D359348002CEB8A /* DropboxSettingsViewController.m */,
+				D70F36921D38333E000C1B00 /* DropboxUploadOperation.h */,
+				D70F36931D38333E000C1B00 /* DropboxUploadOperation.m */,
+				D70F36951D396D0A000C1B00 /* PxpDropboxActivity.h */,
+				D70F36961D396D0A000C1B00 /* PxpDropboxActivity.m */,
+			);
+			name = Dropbox;
 			sourceTree = "<group>";
 		};
 		D7EE84D419F19EBC00DEC82B /* EncoderClasses */ = {
@@ -4228,6 +4280,7 @@
 				D780B8951B66951100CB7ED8 /* RugbyBottomViewController.m in Sources */,
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
 				D763D05F1CFF31750048798A /* CFLBottomViewController.m in Sources */,
+				D7D665831D2413B200B22E86 /* PxpErrors.m in Sources */,
 				D7C113E01D11DB97008F8B54 /* RicoPlayerViewControllerSO.m in Sources */,
 				D7B560491C10E6FC0093F00B /* RicoZoomContainer.m in Sources */,
 				AED484B51B56A23600769EEF /* PxpLineButton.m in Sources */,
@@ -4339,9 +4392,11 @@
 				D7581EF1196454B00029C5DD /* CommentingRatingField.m in Sources */,
 				D74860FF1B5FDE4300CEC9DD /* LeagueTeam.m in Sources */,
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
+				D70F36971D396D0B000C1B00 /* PxpDropboxActivity.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
+				D7EE715F1D359348002CEB8A /* DropboxSettingsViewController.m in Sources */,
 				D73CDD551CCA74A80006AE72 /* VKPlayerControllerBase.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */,
@@ -4360,6 +4415,7 @@
 				D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */,
 				D76662301CAEC13400571659 /* FeedMap.m in Sources */,
 				D7581F3E196461ED0029C5DD /* HeaderBar.m in Sources */,
+				D70F36941D38333E000C1B00 /* DropboxUploadOperation.m in Sources */,
 				D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */,
 				AE06A3791B696A3A001840D0 /* PxpVideoBar.m in Sources */,
 				D738305A198AC9A30053F0A1 /* MyClipFilterViewController.m in Sources */,
@@ -4387,6 +4443,7 @@
 				D7E3C4B11C163B0A004F2A8C /* TagSetEditPopUpViewController.m in Sources */,
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
 				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,
+				D760DE111D34427A006A3541 /* GroupDropboxActivity.m in Sources */,
 				D7DA051E1C0DEE95009F0B87 /* RicoOperations.m in Sources */,
 				AE9CA1BF1B875C9800BF1746 /* PXPTIFTelestration.c in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
@@ -4396,6 +4453,7 @@
 				D746D2C51CC532A100F14FE6 /* FakeEncoderBitrate.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				D73CDD5F1CCA74A80006AE72 /* VKPlayerViewController.m in Sources */,
+				D7EE71621D369620002CEB8A /* DropboxManager.m in Sources */,
 				D73CDD611CCA74A80006AE72 /* VKStreamInfoView.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,

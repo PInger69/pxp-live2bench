@@ -135,7 +135,14 @@ static NSMutableDictionary * openDurationTagsWithID;
             }
             self.thumbnails = thumbnails;
         }else if([tagData objectForKey:@"url"]){
-            self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
+            
+            if ([[tagData objectForKey:@"url"] isKindOfClass:[NSDictionary class]]) {
+                self.thumbnails = [tagData objectForKey:@"url"];
+            } else {
+                 self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
+            }
+            
+           
         }
         
         tagModifyObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAG_MODIFIED object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -499,7 +506,11 @@ static NSMutableDictionary * openDurationTagsWithID;
         }
         self.thumbnails = thumbnails;
     }else if ([tagData objectForKey:@"url"]){
-        self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
+        if ([[tagData objectForKey:@"url"] isKindOfClass:[NSDictionary class]]) {
+            self.thumbnails = [tagData objectForKey:@"url"];
+        } else {
+            self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
+        }
     }
     
     if ([tagData objectForKey:@"durationID"]) {
@@ -608,6 +619,10 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 
-
+-(NSDictionary*)thumbnails
+{
+    NSLog(@"%@",_thumbnails);
+    return _thumbnails;
+}
 
 @end

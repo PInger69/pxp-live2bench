@@ -501,10 +501,11 @@ static UserCenter * instance;
     NSMutableDictionary     * userInfo    = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
         
     if (tgnames){// no respoince from cloud
-            
+        
         // convert new tags for Live to bench
-        _tagNames = [self convertToL2BReadable: tgnames key:@"tagbuttons"];
-            
+        if ([self.currentTagSetName isEqualToString:@"Default (non editable)"]) {
+            _tagNames = [self convertToL2BReadable: tgnames key:@"tagbuttons"];
+        }
             
         // delete old tags if there
         if ([userInfo objectForKey:@"tagnames"]){
@@ -522,9 +523,10 @@ static UserCenter * instance;
         }
             
     } else {
-            
-        _tagNames =[self convertToL2BReadable: rawResponce key:@"tagnames"];
-        //                _tagNames = [self _buildTagNames:localPath];
+         if ([self.currentTagSetName isEqualToString:@"Default (non editable)"]) {
+             _tagNames =[self convertToL2BReadable: rawResponce key:@"tagnames"];
+    //                _tagNames = [self _buildTagNames:localPath];
+         }
     }
 
 }
@@ -698,6 +700,7 @@ static UserCenter * instance;
     NSString * mode =  [defaults objectForKey:@"mode"];
     return mode;
 }
+
 
 
 @end

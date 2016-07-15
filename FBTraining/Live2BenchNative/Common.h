@@ -7,6 +7,7 @@
 //
 #import "Utility.h"
 #import "PxpPreference.h"
+#import "PxpErrors.h"
 #ifndef Live2BenchNative_Common_h
 #define Live2BenchNative_Common_h
 

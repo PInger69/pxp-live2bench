@@ -220,9 +220,11 @@
                 
                 for (NSString* key in [[RicoPlayerPool instance].defaultController.players allKeys]) {
                     RicoPlayer * asdf = (RicoPlayer *)[RicoPlayerPool instance].defaultController.players[key];
-
+                    
+                    
+                    
                     AVURLAsset * ass = ((AVURLAsset *)asdf.avPlayer.currentItem.asset);
-                    PXPLog(@"Player %@  ",key);
+                    PXPLog(@"Player %@  Offset: %@",key,[NSString stringWithFormat:@"%f",CMTimeGetSeconds(asdf.offsetTime) ]);
                     PXPLog(@"  CR: %@   ",ass.URL);
                     PXPLog(@"  LQ: %@   ",((Feed*)asdf.feed).lqPath);
                     PXPLog(@"  HQ: %@   ",((Feed*)asdf.feed).hqPath);
