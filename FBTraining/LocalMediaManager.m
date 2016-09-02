@@ -805,6 +805,8 @@ static LocalMediaManager * instance;
     NSString * eventFolderPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:madeLocalEvent.datapath];
 
 
+    [self.allEvents setObject:[[NSMutableDictionary alloc]initWithDictionary:@{@"local":madeLocalEvent}] forKey:madeLocalEvent.datapath];
+    
     return eventFolderPath;
 }
 

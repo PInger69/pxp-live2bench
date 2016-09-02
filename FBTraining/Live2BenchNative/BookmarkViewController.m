@@ -80,6 +80,7 @@
 @property (strong, nonatomic, nonnull) RicoBookmarkPlayerController *ricoBookmarkPlayerController;
 
 
+
 @end
 
 @implementation BookmarkViewController{
@@ -346,7 +347,15 @@
     [self.userSortButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
     [self.userSortButton addTarget:self action:@selector(useCustomSort:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.userSortButton];
-
+    
+    
+    self.progress = [[UILabel alloc]initWithFrame:CGRectMake(550, 710,230, 58)];
+    self.tableViewController.progress = self.progress;
+    [self.progress setTextColor:[UIColor blackColor]];
+    [self.progress setText:@""];
+    [self.progress setFont:[UIFont systemFontOfSize:10.0f]];
+    [self.progress setHidden:YES];
+    [self.view addSubview: self.progress];
 }
 
 #pragma mark - Filter Button Pressed

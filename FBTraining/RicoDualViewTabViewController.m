@@ -111,6 +111,9 @@ static Feed * _bottomPick;
 
 
 @implementation RicoDualViewTabViewController
+{
+     UIImage * _orangeFill;
+}
 
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
@@ -479,6 +482,17 @@ static Feed * _bottomPick;
     [_frameForward setTitle:@"FF" forState:UIControlStateNormal];
     [_frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
     
+    
+    _orangeFill = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+    
+    
+    [_frameBackward setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [_frameForward setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [_frameBackward setBackgroundImage:_orangeFill forState:UIControlStateHighlighted];
+    [_frameForward setBackgroundImage:_orangeFill forState:UIControlStateHighlighted];
+    
+    
+    
     [self.bottomBarView addSubview:_frameBackward];
     [self.bottomBarView addSubview:_frameForward];
 
@@ -650,6 +664,11 @@ static Feed * _bottomPick;
 - (void)updateSideTags {
     // sort them the way the user wanted them
 
+    
+ 
+
+    
+    
     NSArray *sortedTagDescriptors = [_appDel.userCenter.tagNames sortedArrayUsingDescriptors:@[
                                                                                                [NSSortDescriptor sortDescriptorWithKey:@"position" ascending:YES],
                                                                                                [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
@@ -660,7 +679,11 @@ static Feed * _bottomPick;
     }
     
     self.periodTableViewController.tagNames = tagNames;
-
+    
+    
+    self.periodTableViewController.tags = [NSMutableArray arrayWithArray:_appDel.encoderManager.primaryEncoder.event.tags];
+    
+    
 }
 
 - (void)sideTagsReady:(NSNotification *)note {

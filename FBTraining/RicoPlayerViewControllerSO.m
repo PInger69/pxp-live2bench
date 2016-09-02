@@ -352,16 +352,16 @@
     }
 }
 
-// this only works for downloaded MP4
-- (void)stepByCount:(NSInteger)stepCount
-{
-    //    NSLog(@"%s this only works for downloaded MP4",__FUNCTION__);
-    NSLog(@"Step By: %ld",(long)stepCount);
-    for (RicoPlayer * dplayers in self.depedencyPlayers) {
-        [dplayers.avPlayer.currentItem stepByCount:stepCount];
-    }
-}
-
+//// this only works for downloaded MP4
+//- (void)stepByCount:(NSInteger)stepCount
+//{
+//    //    NSLog(@"%s this only works for downloaded MP4",__FUNCTION__);
+//    NSLog(@"Step By: %ld",(long)stepCount);
+//    for (RicoPlayer * dplayers in self.depedencyPlayers) {
+//        [dplayers.avPlayer.currentItem stepByCount:stepCount];
+//    }
+//}
+//
 
 
 

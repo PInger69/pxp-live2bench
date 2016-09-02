@@ -89,8 +89,13 @@ static CustomAlertControllerQueue * _instance;
         
         if (presentingVC.presentedViewController != nil)return;
         void (^block)() = self.alertQueue[0][@"completion"];
+        BOOL animated = [self.alertQueue[0][@"animated"]boolValue];
         
-        [presentingVC presentViewController:alertVC animated:[self.alertQueue[0][@"animated"]boolValue] completion:block];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [presentingVC presentViewController:alertVC animated:animated completion:block];    
+            
+        });
+        
         
         [self.alertQueue removeObjectAtIndex:0];
     }

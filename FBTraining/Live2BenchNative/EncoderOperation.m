@@ -780,6 +780,11 @@
 {
     self.timeout = 60;
     
+    
+    NSString * eventType = self.encoder.event.eventType;
+    Profession * profession = [ProfessionMap getProfession:self.encoder.event.eventType];
+    
+    
     NSMutableDictionary * tData = [NSMutableDictionary new];
 
     NSLog(@"Time Getting sent to server: %@",[aData objectForKey:@"time"]);
@@ -790,7 +795,7 @@
                                         @"deviceid"         : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
                                         @"duration"         : [aData objectForKey:@"duration"],
                                         @"event"            : (self.encoder.event.live)?LIVE_EVENT:self.encoder.event.name,
-                                        @"name"             : @"Telestration",//[Utility encodeSpecialCharacters:[aData objectForKey:@"name"]],
+                                        @"name"             : profession.telestrationTagName,//@"Telestration",//[Utility encodeSpecialCharacters:[aData objectForKey:@"name"]],
                                         @"telestration"     : [aData objectForKey:@"telestration"],
                                         @"telesrc"          : [aData objectForKey:@"telesrc"],
                                         @"time"             : [aData objectForKey:@"time"],
@@ -1082,14 +1087,14 @@
         
         NSMutableDictionary * filteredData  = [NSMutableDictionary new];
         
-        [filteredData setObject:self.tagData[@"time"]     forKey:@"time"];
-        [filteredData setObject:self.tagData[@"event"]    forKey:@"event"];
-        [filteredData setObject:self.tagData[@"name"]     forKey:@"name"];
-        [filteredData setObject:self.tagData[@"type"]     forKey:@"type"];
-        [filteredData setObject:self.tagData[@"colour"]   forKey:@"colour"];
-        [filteredData setObject:self.tagData[@"user"]     forKey:@"user"];
-        [filteredData setObject:self.tagData[@"deviceid"] forKey:@"deviceid"];
-        [filteredData setObject:self.tagData[@"duration"] forKey:@"duration"];
+        if ([self.tagData objectForKey:@"time"])     [filteredData setObject:self.tagData[@"time"]     forKey:@"time"];
+        if ([self.tagData objectForKey:@"event"])    [filteredData setObject:self.tagData[@"event"]    forKey:@"event"];
+        if ([self.tagData objectForKey:@"name"])     [filteredData setObject:self.tagData[@"name"]     forKey:@"name"];
+        if ([self.tagData objectForKey:@"type"])     [filteredData setObject:self.tagData[@"type"]     forKey:@"type"];
+        if ([self.tagData objectForKey:@"colour"])   [filteredData setObject:self.tagData[@"colour"]   forKey:@"colour"];
+        if ([self.tagData objectForKey:@"user"])     [filteredData setObject:self.tagData[@"user"]     forKey:@"user"];
+        if ([self.tagData objectForKey:@"deviceid"]) [filteredData setObject:self.tagData[@"deviceid"] forKey:@"deviceid"];
+        if ([self.tagData objectForKey:@"duration"]) [filteredData setObject:self.tagData[@"duration"] forKey:@"duration"];
         
         
         self.tagData = [filteredData copy];

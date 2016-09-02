@@ -357,7 +357,7 @@
         
         evt = encoderManager.primaryEncoder.event;
         PXPLog(@"All Tags for - %@",evt);
-        PXPLog(@"#   TYPE  ID  NAME   ");
+        PXPLog(@"#   TYPE  ID  NAME   LIVE");
         NSArray * tags = [evt.tags copy];
         for (NSInteger i = 0; i<[tags count]; i++) {
             Tag * tag = tags[i];
@@ -378,6 +378,8 @@
             NSString *nameColumn = [[NSString stringWithFormat:@"%@", tag.name] stringByPaddingToLength:20 withString:@" " startingAtIndex:0];
             [outputpart appendString:nameColumn];
             
+            NSString *liveColumn = [[NSString stringWithFormat:@"%@", (tag.isLive)?@"YES":@"NO"] stringByPaddingToLength:25 withString:@" " startingAtIndex:0];
+            [outputpart appendString:liveColumn];
 
             
             //NSLog(@"%ld. %ld ID: %@  name:%@ st: %f  dr: %d   dID: %@",(long)i,(long)tag.type,tag.ID,tag.name,tag.startTime,tag.duration,(tag.durationID)?:@"none");

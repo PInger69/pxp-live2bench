@@ -35,5 +35,9 @@
 -(void)buildButtonsWithString:(NSArray*)arrayOfString;
 -(void)selectButtonByIndex:(NSInteger)index;
 -(void)selectButtonByString:(NSString*)buttonString;
+
+-(void)highlightButtonByIndex:(NSInteger)index;
+-(void)highlightButtonByString:(NSString*)buttonString;
+
 -(void)deselectAll;
 @end

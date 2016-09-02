@@ -26,6 +26,8 @@
 		<true/>
 		<key>TagSets</key>
 		<true/>
+		<key>VideoReciept</key>
+		<true/>
 		<key>Log</key>
 		<true/>
 		<key>FeedMap</key>

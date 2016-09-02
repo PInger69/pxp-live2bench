@@ -15,6 +15,14 @@
 
 @property (nonatomic,assign) NSInteger      cameraCount;
 @property (nonatomic,strong) NSDictionary * eventData;
+
+@property (atomic,strong) NSString               * customerID;
+@property (atomic,strong) NSString               * customerAuthorization;
+@property (atomic,strong) NSString               * customerEmail;
+@property (atomic,strong) NSString               * userHID;
+@property (atomic,strong) UIColor                * customerColor;
+
+
 -(PxpURLResponse*) handleRequest:(NSURLRequest*) request;
 
 

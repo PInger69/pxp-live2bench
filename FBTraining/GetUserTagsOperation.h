@@ -10,4 +10,6 @@
 
 @interface GetUserTagsOperation : PostOperation
 
+- (instancetype)initEmail:(NSString*)email password:(NSString*)aPassword authorization:(NSString*)authorization customerHid:(NSString*)customerHid;
+
 @end

@@ -41,6 +41,9 @@ static NSDictionary * _professionMapData;
     dict[SPORT_RUGBY]                   =  [ProfessionMap buildRugby];
     dict[SPORT_CRICKET]                 =  [ProfessionMap buildCricket];
     dict[SPORT_FOOTBALL_TRAINING]       =  [ProfessionMap buildFootballTraining];
+    
+    dict[SPORT_MEDICAL]                 =  [ProfessionMap buildMedical];
+    
     dict[SPORT_BLANK]                   =  [ProfessionMap buildBlank];
     _professionMapData                  =  [dict copy];
 
@@ -118,7 +121,7 @@ static NSDictionary * _professionMapData;
     
     hockey.bottomViewControllerClass    = [HockeyBottomViewController class];
     hockey.filterTabClass               = [PxpFilterHockeyTabViewController class];
-    
+    hockey.telestrationTagName          = @"Telestration";
     return hockey;
 }
 
@@ -168,7 +171,7 @@ static NSDictionary * _professionMapData;
     
     // set filter for list and clip view
     soccer.filterTabClass            = [PxpFilterSoccerTabViewController class];
-    
+    soccer.telestrationTagName          = @"Telestration";
     return soccer;
 }
 #pragma mark -
@@ -198,7 +201,7 @@ static NSDictionary * _professionMapData;
     profession.bottomViewControllerClass    = [FootballBottomViewController class];
     profession.filterTabClass               = [PxpFilterFootballTabViewController class];
     
-    
+    profession.telestrationTagName          = @"Telestration";
     return profession;
 }
 #pragma mark -
@@ -241,7 +244,7 @@ static NSDictionary * _professionMapData;
     // set filter for list and clip view
     sport.filterTabClass            = [PxpFilterCFLTabController class];
 //    sport.filterTabClass            = [PxpFilterSoccerTabViewController class];
-    
+    sport.telestrationTagName          = @"Telestration";
     return sport;
 }
 
@@ -275,7 +278,7 @@ static NSDictionary * _professionMapData;
     profession.filterTabClass               = [PxpFilterRugbyTabViewController class];
     
     
-    
+    profession.telestrationTagName          = @"Telestration";
     return profession;
 }
 
@@ -315,6 +318,7 @@ static NSDictionary * _professionMapData;
     
     profession.bottomViewControllerClass    = [FootballTrainingBottomViewController class];
     profession.filterTabClass               = nil;
+    profession.telestrationTagName          = @"Telestration";
     return profession;
 }
 
@@ -354,6 +358,32 @@ static NSDictionary * _professionMapData;
     
     profession.bottomViewControllerClass    = [SoccerBottomViewController class];
     profession.filterTabClass               = nil;
+    profession.telestrationTagName          = @"Telestration";
+    return profession;
+}
+
+#pragma mark -
++(Profession*)buildMedical
+{
+    
+    Profession * profession         = [Profession new];
+    
+    profession.filterPredicate      = [NSCompoundPredicate orPredicateWithSubpredicates:@[]];
+    
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    // this is for extra styling for
+    [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:YES];
+    }];
+    
+    [profession setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    profession.bottomViewControllerClass    = nil;
+    profession.filterTabClass               = nil;
+    profession.telestrationTagName          = @"Annotation";
     return profession;
 }
 
@@ -378,7 +408,7 @@ static NSDictionary * _professionMapData;
     
     profession.bottomViewControllerClass    = nil;
     profession.filterTabClass               = nil;
-    
+    profession.telestrationTagName          = @"Telestration";
     return profession;
 }
 

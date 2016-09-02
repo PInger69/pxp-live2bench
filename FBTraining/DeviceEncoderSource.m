@@ -60,6 +60,10 @@ static DeviceEncoderSource* server;
     
     if ([requestString rangeOfString:@"/auth"].location != NSNotFound) {
         num = [requestString rangeOfString:@"/auth"].location;
+        
+        NSString * theRaw = [requestString lastPathComponent];
+        NSDictionary * dict  =  [Utility URLJSONStringDict:theRaw];
+        self.customerID = dict[@"id"];
         responce = [self buildAuthenticateResponse];
     } else if ([requestString rangeOfString:@"/ajax/version"].location != NSNotFound) {
         num = [requestString rangeOfString:@"/ajax/version"].location;
@@ -76,9 +80,21 @@ static DeviceEncoderSource* server;
     } else if ([requestString rangeOfString:@"/ajax/getcameras"].location != NSNotFound) {
         num = [requestString rangeOfString:@"/ajax/getcameras"].location;
         responce = [self responseCameraGet];
+    } else if ([requestString rangeOfString:@"/ajax/tagset"].location != NSNotFound) {
+        num = [requestString rangeOfString:@"/ajax/tagset"].location;
+        responce = [PxpURLResponse responseWithDictionary: @{@"leagues":@{},@"requrl":@"/ajax/tagset",@"sender":@".device",
+                                                             @"success":@"1",
+                                                             
+                                                             
+                                                             @"msg":@"message"} errorCode:0];
+        responce = [self buildTagSetResponse];
     } else if ([requestString rangeOfString:@"/ajax/teamsget"].location != NSNotFound) {
         num = [requestString rangeOfString:@"/ajax/teamsget"].location;
         responce = [PxpURLResponse responseWithDictionary: @{@"leagues":@{},@"requrl":@"/ajax/teamsget",@"sender":@".device",@"teams":@{},@"teamsetup":@{}} errorCode:0];
+    
+    } else if ([requestString rangeOfString:@"/ajax/gametags"].location         != NSNotFound) {
+        
+        responce = [PxpURLResponse responseWithDictionary: @{@"requrl":@"/ajax/teamsget",@"sender":@".device"} errorCode:0];
     } else {
         responce = [PxpURLResponse responseWithDictionary: @{@"success":@"0",@"sender":@".device"} errorCode:1];
     }
@@ -116,39 +132,46 @@ static DeviceEncoderSource* server;
     NSArray * eventList = @[];
     
     
+    NSString * sampleFile = @"file:///var/mobile/Media/DCIM/100APPLE/TEST_VIDEO.mp4";
+    
     if (!self.eventData) {
+        
+        NSDictionary *sourcesData;
+        NSMutableDictionary * temp = [NSMutableDictionary new];
+        
+        for (NSInteger i=0; i<self.cameraCount; i++) {
+            
+            [temp setObject:@{
+                             @"hq":sampleFile,
+                             @"lq":sampleFile,
+                             @"vidsize_hq" : @"0.00MB",
+                             @"vidsize_lq" : @"0.00MB",
+                             @"vq" : @"lq"
+                             } forKey:[NSString stringWithFormat:@"s_0%ld",(long)i]];
+        }
+
+        sourcesData = [temp copy];
+        
         eventList = @[
                       @{
                           @"datapath"  : @"test",
-                          @"date"      : @"test",
-                          @"dateFmt"   : @"test",
+                          @"date"      : @"2016-08-11 17:23:19",
+                          @"dateFmt"   : @"2016-08-11_17-23-19",
                           @"deleted"   : @"0",
                           @"hid"       : @"12345",
-                          @"homeTeam"  : @"A",
-                          @"league"    : @"B",
+                          @"homeTeam"  : @"A_",
+                          @"league"    : @"B_",
                           @"md5"       : @"hash",
-                          @"mp4"       : @"file:///var/mobile/Media/DCIM/100APPLE/IMG_0001.mp4",
-                          @"mp4_2"     : @{@"s_00":@{
-                                                   @"hq":@"file:///var/mobile/Media/DCIM/100APPLE/IMG_0001.mp4",
-                                                   @"lq":@"file:///var/mobile/Media/DCIM/100APPLE/IMG_0001.mp4",
-                                                   @"vidsize_hq" : @"0.00MB",
-                                                   @"vidsize_lq" : @"0.00MB",
-                                                   @"vq" : @"lq"
-                                                   }},
+                          @"mp4"       : sampleFile,
+                          @"mp4_2"     : sourcesData,
                           @"name"      : @"EventName",
                           @"num_mp4"   : @"1",
                           @"num_vid"   : @"1",
                           @"size"      : @"0",
                           @"sport"     : @"Book Reading",
-                          @"vid"       : @"file:///var/mobile/Media/DCIM/100APPLE/IMG_0001.mp4",
-                          @"vid_2"     : @{@"s_00":@{
-                                                   @"hq":@"file:///var/mobile/Media/DCIM/100APPLE/IMG_0001.mp4",
-                                                   @"lq":@"file:///var/mobile/Media/DCIM/100APPLE/IMG_0001.mp4",
-                                                   @"vidsize_hq" : @"0.00MB",
-                                                   @"vidsize_lq" : @"0.00MB",
-                                                   @"vq" : @"lq"
-                                                   }},
-                          @"visitTeam" : @"C"
+                          @"vid"       : sampleFile,
+                          @"vid_2"     : sourcesData,
+                          @"visitTeam" : @"C_"
                           }
                       ];
     } else {
@@ -219,6 +242,50 @@ static DeviceEncoderSource* server;
     return responce;
 }
 
+-(PxpURLResponse*)buildTagSetResponse
+{
+    
+    
+    
+    NSDictionary * theData = @{
+                               @"colour"      : @"3AF20F",
+                               @"comment"     : @"",
+                               @"deleted"     : @"0",
+                               @"deviceid"    : @"282AF2B2-1B22-4A76-8EC6-032F5CB57648",
+                               @"displaytime" : @"0:35:00",
+                               @"duration"    : @"15",
+                               @"event"       : @"2016-08-16_11-12-15_308c84c9bebb1c176bf766dbcbbe740ea80126bd_local",
+                               @"homeTeam"    : @"St Mary's University",
+                               @"id"          : @"10",
+                               @"islive"      : @"1",
+                               @"name"        : @"Concussion",
+                               @"newTagID"    : @"10",
+                               @"own"         : @"1",
+                               @"period"      : @"0",
+                               @"rating"      : @"",
+                               @"requrl"       : @"/ajax/tagset/{\"colour\":\"3AF20F\",\"requesttime\":\"139859.478378\",\"deviceid\":\"282AF2B2-1B22-4A76-8EC6-032F5CB57648\",\"time\":\"2100.050871\",\"event\":\"live\",\"period\":\"0\",\"name\":\"Concussion\",\"user\":\"ae1e7198bc3074ff1b2e9ff520c30bc1898d038e\"}",
+                               @"sender"       : @".min",
+                               @"starttime"    : @"2095.050871",
+                               @"success"      : @"1",
+                               @"telefull_2"   : @{},
+                               @"teleurl_2"    : @{},
+                               @"time"         : @"2100.050871",
+                               @"type"         : @"0",
+                               @"url"          : @"http://172.18.2.157/events/live/thumbs/00hq_tn10.jpg",
+                               @"url_2"        : @{
+                                                   @"s_00" : @"http://172.18.2.157/events/live/thumbs/00hq_tn10.jpg"
+                                                   },
+                               @"user"         : @"ae1e7198bc3074ff1b2e9ff520c30bc1898d038e",
+                               @"vidurl_2"     : @[],
+                               @"visitTeam"    : @"St Mary's University"
+    };
+    
+    
+    
+    PxpURLResponse* responce = [PxpURLResponse responseWithDictionary: theData errorCode:0];
+    
+    return responce;
+}
 
 -(PxpURLResponse*)responseTest
 {

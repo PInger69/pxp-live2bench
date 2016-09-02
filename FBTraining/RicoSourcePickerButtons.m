@@ -96,6 +96,34 @@
     }
 }
 
+
+
+-(void)highlightButtonByIndex:(NSInteger)index
+{
+    if (![self.buttonArray count]) return;
+    UIButton* button        = self.buttonArray[index];
+    self.selectedTag        = button.tag;
+    self.selectedString     = self.stringArray[button.tag];
+    
+    // set color
+    for (UIButton * b in self.buttonArray) {
+        [b setBackgroundColor:self.deselectedColor] ;
+    }
+    
+    [button setBackgroundColor:self.selectedColor] ;
+}
+
+-(void)highlightButtonByString:(NSString*)buttonString
+{
+    NSInteger index = [self.stringArray indexOfObject:buttonString];
+    if ([self.stringArray indexOfObject:buttonString] != NSNotFound) {
+        UIButton* button        = self.buttonArray[index];
+        [button setBackgroundColor:self.selectedColor] ;
+    }
+}
+
+
+
 -(void)onSelection:(id)sender
 {
     UIButton * button = sender;

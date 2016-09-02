@@ -42,6 +42,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor lightGrayColor]];
+    
+    
+    NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
+    NSString        * mode      = [defaults objectForKey:@"mode"];
+    if ([mode isEqualToString:@"dual"]) {
+        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 500, 100)];
+        [label setText:@"Feed map is disabled in 'dual mode'"];
+        [self.view addSubview:label];
+        return;
+    }
+    
+    
     self.feedMapController              = [FeedMapController instance];
     self.feedMapController.delegate     = self;
     
@@ -368,6 +380,14 @@
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
     [super viewDidAppear:animated];
+    
+    NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
+    NSString        * mode      = [defaults objectForKey:@"mode"];
+    if ([mode isEqualToString:@"dual"]) {
+        
+        return;
+    }
+    
     self.hasUserInteracted = YES;
     [self.feedMapController populate];
     [self.feedMapController refresh];

@@ -165,6 +165,7 @@
 		D700801B19DF2456000144CF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D700801A19DF2456000144CF /* Utility.m */; };
 		D700F9061B011550008152E8 /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D700F9051B011550008152E8 /* FakeEncoder.m */; };
 		D705569D1C77819B00948E2C /* ButtonMultiScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = D705569C1C77819900948E2C /* ButtonMultiScreen.m */; };
+		D706AA541D4016290089A02E /* PxpMailClipActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D706AA531D4016280089A02E /* PxpMailClipActivity.m */; };
 		D706AC961B2735610091C02C /* CameraDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = D706AC951B2735610091C02C /* CameraDetails.m */; };
 		D70A66871C5284D4003CA163 /* RicoFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */; };
 		D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66881C52C5C7003CA163 /* RicoLive2BenchViewController.m */; };
@@ -183,7 +184,10 @@
 		D71E22901C3D778A00E1201D /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = D71E228F1C3D778900E1201D /* Default-Landscape.png */; };
 		D71E22921C3D786200E1201D /* Default-568.png in Resources */ = {isa = PBXBuildFile; fileRef = D71E22911C3D786200E1201D /* Default-568.png */; };
 		D72363E11C98617600A34B76 /* RicoSourcePickerButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D72363E01C98617600A34B76 /* RicoSourcePickerButtons.m */; };
+		D723F5491D64FFB2003C9149 /* UploadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D723F5481D64FFB2003C9149 /* UploadOperation.m */; };
+		D723F54C1D661C41003C9149 /* VideoUploadRecieptActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D723F54B1D661C40003C9149 /* VideoUploadRecieptActivity.m */; };
 		D7242FAF1C494D9D00CDA9C9 /* RicoDualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7242FAE1C494D9B00CDA9C9 /* RicoDualViewTabViewController.m */; };
+		D72675611D70C5D300477A9A /* VideoRecieptStatusOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D72675601D70C5D100477A9A /* VideoRecieptStatusOperation.m */; };
 		D727089A1A141AD90086BCB8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D727089C1A141AD90086BCB8 /* Localizable.strings */; };
 		D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D727089F1A1520900086BCB8 /* LocalEncoder.m */; };
 		D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = D72708A41A1BA4B30086BCB8 /* Feed.m */; };
@@ -285,6 +289,8 @@
 		D74F48DB1CFF6D1E001648D8 /* PxpFilterCFLTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = D74F48DA1CFF6D1E001648D8 /* PxpFilterCFLTabController.m */; };
 		D74F48DD1CFF6DF2001648D8 /* PxpFilterCFLTabController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D74F48DC1CFF6DF2001648D8 /* PxpFilterCFLTabController.xib */; };
 		D74F48DF1D021700001648D8 /* EncoderStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D74F48DE1D0216FC001648D8 /* EncoderStatusView.xib */; };
+		D74FB0B21D54E54C00BCFDFB /* GetSummaryOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D74FB0B11D54E54C00BCFDFB /* GetSummaryOperation.m */; };
+		D74FB0B51D54E58B00BCFDFB /* SetSummaryOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D74FB0B41D54E58B00BCFDFB /* SetSummaryOperation.m */; };
 		D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */; };
 		D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */; };
 		D7525D9D1CBC29630074F590 /* NameCameraCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7525D9C1CBC29630074F590 /* NameCameraCellView.xib */; };
@@ -319,6 +325,11 @@
 		D75CA3261C87A22A0002E273 /* UINotchDisplay.mm in Sources */ = {isa = PBXBuildFile; fileRef = D75CA3251C87A2270002E273 /* UINotchDisplay.mm */; };
 		D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75CD0A717CBF25500DD24E8 /* HockeyBottomViewController.m */; };
 		D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75CD0AC17CBF26700DD24E8 /* SoccerBottomViewController.m */; };
+		D75E67D71D6745E100A38CD0 /* VideoReciept.xib in Resources */ = {isa = PBXBuildFile; fileRef = D75E67D61D6745E100A38CD0 /* VideoReciept.xib */; };
+		D75E67DB1D674E9600A38CD0 /* VideoRecieptTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75E67DA1D674E9600A38CD0 /* VideoRecieptTableViewController.m */; };
+		D75E67DE1D6753DC00A38CD0 /* VideoRecieptDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = D75E67DD1D6753DC00A38CD0 /* VideoRecieptDataProvider.m */; };
+		D75E67E21D677F6400A38CD0 /* VideoRecieptTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D75E67E01D677F6100A38CD0 /* VideoRecieptTableViewCell.m */; };
+		D75E67E31D677F6800A38CD0 /* VideoRecieptTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D75E67E11D677F6100A38CD0 /* VideoRecieptTableViewCell.xib */; };
 		D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D75ED4FC1ACC4707003AF856 /* LiveLight.m */; };
 		D75ED5001ACC4713003AF856 /* RJLFreezeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D75ED4FF1ACC4713003AF856 /* RJLFreezeMonitor.m */; };
 		D75F2D1A1CB2AFC70059678F /* FeedMapDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = D75F2D191CB2AFC70059678F /* FeedMapDisplay.m */; };
@@ -922,6 +933,8 @@
 		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
 		D705569B1C77819900948E2C /* ButtonMultiScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonMultiScreen.h; sourceTree = "<group>"; };
 		D705569C1C77819900948E2C /* ButtonMultiScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonMultiScreen.m; sourceTree = "<group>"; };
+		D706AA521D4016280089A02E /* PxpMailClipActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpMailClipActivity.h; sourceTree = "<group>"; };
+		D706AA531D4016280089A02E /* PxpMailClipActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpMailClipActivity.m; sourceTree = "<group>"; };
 		D706AC941B2730980091C02C /* CameraDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraDetails.h; sourceTree = "<group>"; };
 		D706AC951B2735610091C02C /* CameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDetails.m; sourceTree = "<group>"; };
 		D70A66851C5284D2003CA163 /* RicoFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoFullScreenViewController.h; sourceTree = "<group>"; };
@@ -953,8 +966,14 @@
 		D71E22911C3D786200E1201D /* Default-568.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568.png"; sourceTree = "<group>"; };
 		D72363DF1C98617600A34B76 /* RicoSourcePickerButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoSourcePickerButtons.h; sourceTree = "<group>"; };
 		D72363E01C98617600A34B76 /* RicoSourcePickerButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoSourcePickerButtons.m; sourceTree = "<group>"; };
+		D723F5471D64FFB2003C9149 /* UploadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadOperation.h; sourceTree = "<group>"; };
+		D723F5481D64FFB2003C9149 /* UploadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadOperation.m; sourceTree = "<group>"; };
+		D723F54A1D661C3F003C9149 /* VideoUploadRecieptActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoUploadRecieptActivity.h; sourceTree = "<group>"; };
+		D723F54B1D661C40003C9149 /* VideoUploadRecieptActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoUploadRecieptActivity.m; sourceTree = "<group>"; };
 		D7242FAD1C494D9A00CDA9C9 /* RicoDualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoDualViewTabViewController.h; sourceTree = "<group>"; };
 		D7242FAE1C494D9B00CDA9C9 /* RicoDualViewTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoDualViewTabViewController.m; sourceTree = "<group>"; };
+		D726755F1D70C5D000477A9A /* VideoRecieptStatusOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRecieptStatusOperation.h; sourceTree = "<group>"; };
+		D72675601D70C5D100477A9A /* VideoRecieptStatusOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRecieptStatusOperation.m; sourceTree = "<group>"; };
 		D72708981A141ABD0086BCB8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D72708991A141ABD0086BCB8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D727089B1A141AD90086BCB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1151,6 +1170,10 @@
 		D74F48DA1CFF6D1E001648D8 /* PxpFilterCFLTabController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterCFLTabController.m; sourceTree = "<group>"; };
 		D74F48DC1CFF6DF2001648D8 /* PxpFilterCFLTabController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterCFLTabController.xib; sourceTree = "<group>"; };
 		D74F48DE1D0216FC001648D8 /* EncoderStatusView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EncoderStatusView.xib; sourceTree = "<group>"; };
+		D74FB0B01D54E54B00BCFDFB /* GetSummaryOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetSummaryOperation.h; sourceTree = "<group>"; };
+		D74FB0B11D54E54C00BCFDFB /* GetSummaryOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetSummaryOperation.m; sourceTree = "<group>"; };
+		D74FB0B31D54E58B00BCFDFB /* SetSummaryOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetSummaryOperation.h; sourceTree = "<group>"; };
+		D74FB0B41D54E58B00BCFDFB /* SetSummaryOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetSummaryOperation.m; sourceTree = "<group>"; };
 		D75042AC19F9640C00D9851D /* CheckEncoderShutdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckEncoderShutdown.h; path = EncoderClasses/CheckEncoderShutdown.h; sourceTree = "<group>"; };
 		D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckEncoderShutdown.m; path = EncoderClasses/CheckEncoderShutdown.m; sourceTree = "<group>"; };
 		D75042AF19FA966F00D9851D /* EncoderStatusMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderStatusMonitor.h; path = EncoderClasses/EncoderStatusMonitor.h; sourceTree = "<group>"; };
@@ -1217,6 +1240,14 @@
 		D75CD0A717CBF25500DD24E8 /* HockeyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HockeyBottomViewController.m; sourceTree = "<group>"; };
 		D75CD0AB17CBF26700DD24E8 /* SoccerBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoccerBottomViewController.h; sourceTree = "<group>"; };
 		D75CD0AC17CBF26700DD24E8 /* SoccerBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoccerBottomViewController.m; sourceTree = "<group>"; };
+		D75E67D61D6745E100A38CD0 /* VideoReciept.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoReciept.xib; sourceTree = "<group>"; };
+		D75E67D91D674E9600A38CD0 /* VideoRecieptTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRecieptTableViewController.h; sourceTree = "<group>"; };
+		D75E67DA1D674E9600A38CD0 /* VideoRecieptTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRecieptTableViewController.m; sourceTree = "<group>"; };
+		D75E67DC1D6753DC00A38CD0 /* VideoRecieptDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRecieptDataProvider.h; sourceTree = "<group>"; };
+		D75E67DD1D6753DC00A38CD0 /* VideoRecieptDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRecieptDataProvider.m; sourceTree = "<group>"; };
+		D75E67DF1D677F6100A38CD0 /* VideoRecieptTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRecieptTableViewCell.h; sourceTree = "<group>"; };
+		D75E67E01D677F6100A38CD0 /* VideoRecieptTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRecieptTableViewCell.m; sourceTree = "<group>"; };
+		D75E67E11D677F6100A38CD0 /* VideoRecieptTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoRecieptTableViewCell.xib; sourceTree = "<group>"; };
 		D75ED4FB1ACC4707003AF856 /* LiveLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveLight.h; sourceTree = "<group>"; };
 		D75ED4FC1ACC4707003AF856 /* LiveLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveLight.m; sourceTree = "<group>"; };
 		D75ED4FE1ACC4713003AF856 /* RJLFreezeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJLFreezeMonitor.h; sourceTree = "<group>"; };
@@ -2239,11 +2270,19 @@
 				D7525DA81CC158C20074F590 /* PostOperation.h */,
 				D7525DA91CC158C20074F590 /* PostOperation.m */,
 				D7525DAB1CC16C290074F590 /* LogoutOperation.h */,
+				D74FB0B01D54E54B00BCFDFB /* GetSummaryOperation.h */,
+				D74FB0B11D54E54C00BCFDFB /* GetSummaryOperation.m */,
+				D74FB0B31D54E58B00BCFDFB /* SetSummaryOperation.h */,
+				D74FB0B41D54E58B00BCFDFB /* SetSummaryOperation.m */,
 				D7525DAC1CC16C290074F590 /* LogoutOperation.m */,
 				D7525DAE1CC174330074F590 /* LoginOperation.h */,
 				D7525DAF1CC174330074F590 /* LoginOperation.m */,
 				D7525DB11CC17C9D0074F590 /* GetUserTagsOperation.h */,
 				D7525DB21CC17C9D0074F590 /* GetUserTagsOperation.m */,
+				D723F5471D64FFB2003C9149 /* UploadOperation.h */,
+				D723F5481D64FFB2003C9149 /* UploadOperation.m */,
+				D726755F1D70C5D000477A9A /* VideoRecieptStatusOperation.h */,
+				D72675601D70C5D100477A9A /* VideoRecieptStatusOperation.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -2789,6 +2828,23 @@
 			name = "CHECK IF DEAD CLASSES";
 			sourceTree = "<group>";
 		};
+		D75E67D81D674C7600A38CD0 /* VideoReciept */ = {
+			isa = PBXGroup;
+			children = (
+				D75E67D61D6745E100A38CD0 /* VideoReciept.xib */,
+				D723F54A1D661C3F003C9149 /* VideoUploadRecieptActivity.h */,
+				D723F54B1D661C40003C9149 /* VideoUploadRecieptActivity.m */,
+				D75E67D91D674E9600A38CD0 /* VideoRecieptTableViewController.h */,
+				D75E67DA1D674E9600A38CD0 /* VideoRecieptTableViewController.m */,
+				D75E67DC1D6753DC00A38CD0 /* VideoRecieptDataProvider.h */,
+				D75E67DD1D6753DC00A38CD0 /* VideoRecieptDataProvider.m */,
+				D75E67DF1D677F6100A38CD0 /* VideoRecieptTableViewCell.h */,
+				D75E67E01D677F6100A38CD0 /* VideoRecieptTableViewCell.m */,
+				D75E67E11D677F6100A38CD0 /* VideoRecieptTableViewCell.xib */,
+			);
+			name = VideoReciept;
+			sourceTree = "<group>";
+		};
 		D760737019D4A4C9000E35C2 /* FullScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -3022,6 +3078,9 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D75E67D81D674C7600A38CD0 /* VideoReciept */,
+				D706AA521D4016280089A02E /* PxpMailClipActivity.h */,
+				D706AA531D4016280089A02E /* PxpMailClipActivity.m */,
 				D7EE71631D36962F002CEB8A /* Dropbox */,
 				D760DE0F1D34427A006A3541 /* GroupDropboxActivity.h */,
 				D760DE101D34427A006A3541 /* GroupDropboxActivity.m */,
@@ -3082,7 +3141,6 @@
 				D784D9461C641D3D00E5B946 /* RicoPlayerPool.h */,
 				D784D9471C641D3E00E5B946 /* RicoPlayerPool.m */,
 				D784D9431C6169D000E5B946 /* RicoVideoBar.h */,
-				D784D9441C6169D000E5B946 /* RicoVideoBar.m */,
 				D70A66851C5284D2003CA163 /* RicoFullScreenViewController.h */,
 				D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */,
 				D7F144411C4E89B00000E415 /* DebugOutput.h */,
@@ -3090,6 +3148,7 @@
 				D7242FAD1C494D9A00CDA9C9 /* RicoDualViewTabViewController.h */,
 				D7242FAE1C494D9B00CDA9C9 /* RicoDualViewTabViewController.m */,
 				D72FC93B1C441297007C15FF /* NSURLProtocol */,
+				D784D9441C6169D000E5B946 /* RicoVideoBar.m */,
 				D7872A2F1C2857F000C151D3 /* CustomAlertControllerQueue.h */,
 				D7872A301C2857F000C151D3 /* CustomAlertControllerQueue.m */,
 				D78126F51C209950008B8B16 /* PxpPreference.plist */,
@@ -3896,6 +3955,7 @@
 				BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */,
 				D760736319D21A9F000E35C2 /* seek@2x.png in Resources */,
 				AA222B51195B836600820BCD /* filter.png in Resources */,
+				D75E67E31D677F6800A38CD0 /* VideoRecieptTableViewCell.xib in Resources */,
 				D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */,
 				AA222B5B195B839100820BCD /* sort.png in Resources */,
 				D7AB2D1D16B6F44D0093465F /* line-button-grey.png in Resources */,
@@ -3990,6 +4050,7 @@
 				BD8C367817F327AF0094CBAD /* facebook@2x.png in Resources */,
 				D7D1EBD416EA9D8A0005CBC0 /* settings.png in Resources */,
 				D78F68CA18073DC70096C793 /* BlueSettingsButtonSelect@2x.png in Resources */,
+				D75E67D71D6745E100A38CD0 /* VideoReciept.xib in Resources */,
 				D786C1EB17EB9BF90042DD96 /* listTab@2x.png in Resources */,
 				D78F68CE18073DC70096C793 /* RedSettingsButton@2x.png in Resources */,
 				D73B42E6193F763B00EA2775 /* subtractstartsec.png in Resources */,
@@ -4175,6 +4236,7 @@
 				D788262D1B42D9D400969D43 /* LocalMediaManager.m in Sources */,
 				AA0FED2C19589951001D25EB /* ClipSharePopoverViewController.m in Sources */,
 				D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */,
+				D723F54C1D661C41003C9149 /* VideoUploadRecieptActivity.m in Sources */,
 				D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */,
 				D73CDC4A1CC7E3570006AE72 /* CameraResource.m in Sources */,
 				D7A391721A6959DF00BFD353 /* ActionList.m in Sources */,
@@ -4183,6 +4245,7 @@
 				AEE5F8B71B8CFB4100EC2F00 /* UIImage+Blend.m in Sources */,
 				D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */,
 				D7CCE7F71AC1E48500D85095 /* PopoverViewController.m in Sources */,
+				D75E67DE1D6753DC00A38CD0 /* VideoRecieptDataProvider.m in Sources */,
 				D7B560511C1260610093F00B /* FeedMappingViewController.m in Sources */,
 				AEA25F901B78F009006C83C3 /* PxpListViewFullscreenViewController.m in Sources */,
 				D7D619351BDFF1BD003F9B39 /* PxpPlayerRebooter.m in Sources */,
@@ -4229,6 +4292,7 @@
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
 				D77BE0241B5556A4007C5E9B /* MedicalViewController.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
+				D723F5491D64FFB2003C9149 /* UploadOperation.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,
 				AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */,
@@ -4296,6 +4360,7 @@
 				AEDD7CAC1B4AB962003C82F3 /* PxpPlayerPipCompanionView.m in Sources */,
 				D7525DA41CC13E1B0074F590 /* AdvancedFeed.m in Sources */,
 				AE7AE3B61B74FAAA0021EC03 /* PxpPlayerViewController.m in Sources */,
+				D72675611D70C5D300477A9A /* VideoRecieptStatusOperation.m in Sources */,
 				D7A188BF19FFE6A200513909 /* FeedSwitchView.m in Sources */,
 				D727798D1A30C5870034DD66 /* UserCenter.m in Sources */,
 				D738304E198A94D60053F0A1 /* FilterTab.m in Sources */,
@@ -4334,8 +4399,10 @@
 				D784D9451C6169D000E5B946 /* RicoVideoBar.m in Sources */,
 				D7F144431C4E89B10000E415 /* DebugOutput.m in Sources */,
 				AE06A3711B691E02001840D0 /* PxpFullscreenButton.m in Sources */,
+				D75E67DB1D674E9600A38CD0 /* VideoRecieptTableViewController.m in Sources */,
 				D743D47F1B696EF400533070 /* PxpFilterButtonScrollView.m in Sources */,
 				AED484B71B56A23600769EEF /* PxpTelestrationAction.m in Sources */,
+				D75E67E21D677F6400A38CD0 /* VideoRecieptTableViewCell.m in Sources */,
 				D75F2D201CB2C29B0059678F /* StreamViewVideoKit.m in Sources */,
 				D7579AA91D0B3D1E007D4C62 /* PxpEncoder.m in Sources */,
 				AED484B61B56A23600769EEF /* PxpTelestration.m in Sources */,
@@ -4366,6 +4433,7 @@
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
+				D74FB0B51D54E58B00BCFDFB /* SetSummaryOperation.m in Sources */,
 				D7F443791C74D13F007F6924 /* MockEncoderSource.m in Sources */,
 				D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */,
 				D743D47C1B6962BD00533070 /* TempPxpFilterTabUI.m in Sources */,
@@ -4395,6 +4463,7 @@
 				D70F36971D396D0B000C1B00 /* PxpDropboxActivity.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
+				D706AA541D4016290089A02E /* PxpMailClipActivity.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7EE715F1D359348002CEB8A /* DropboxSettingsViewController.m in Sources */,
 				D73CDD551CCA74A80006AE72 /* VKPlayerControllerBase.m in Sources */,
@@ -4404,6 +4473,7 @@
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
 				D7413B651CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m in Sources */,
 				AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */,
+				D74FB0B21D54E54C00BCFDFB /* GetSummaryOperation.m in Sources */,
 				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
 				AED484B91B56A23600769EEF /* PxpTelestrationCaptureArea.m in Sources */,
 				D7A7B61216D3C6C3000D3A84 /* LogoViewController.m in Sources */,

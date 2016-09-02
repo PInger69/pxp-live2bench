@@ -960,6 +960,7 @@ static void * encoderTagContext = &encoderTagContext;
     
     TabView *popupTabBar = [TabView sharedFilterTabBar];
     
+    
     if (popupTabBar.isViewLoaded)
     {
         popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
@@ -978,6 +979,10 @@ static void * encoderTagContext = &encoderTagContext;
     [_pxpFilter filterTags:self.allTagsArray];
     
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
+    
+    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
+    [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
+//    [[TabView sharedDefaultFilterTab].telestrationLabel setNeedsDisplay];
 }
 
 

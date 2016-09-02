@@ -9,5 +9,7 @@
 #import "SettingItemViewController.h"
 
 @interface DropboxSettingsViewController : SettingItemViewController
+
+
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
 @end

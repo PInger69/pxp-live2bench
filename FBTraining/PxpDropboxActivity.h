@@ -10,11 +10,17 @@
 
 @interface PxpDropboxActivity : UIActivity
 
+- (instancetype)initWithURLnameDict:(NSDictionary*)dict;
+
 @property (nonatomic,strong) NSMutableDictionary * urlToFileName;
 
 @property (nonatomic,strong) NSError * error;
+@property (nonatomic,copy) void (^onActivityStart)(UIActivity*);
 @property (nonatomic,copy) void (^onActivityComplete)(UIActivity*);
-@property (nonatomic,copy) void (^onActivityProgress)(CGFloat);
+@property (nonatomic,copy) void (^onActivityProgress)(PxpDropboxActivity*activity,CGFloat progressOfCurrentFile);
 
+
+@property (nonatomic,assign) NSInteger fileCount;
+@property (nonatomic,assign) NSInteger filesUploaded;
 
 @end

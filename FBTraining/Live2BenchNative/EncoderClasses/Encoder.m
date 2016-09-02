@@ -1,4 +1,5 @@
 
+
 //  Encoder.m
 //  Live2BenchNative
 //
@@ -259,7 +260,7 @@
 
 -(void)resetEventAfterRemovingFeed:(Event *)event{
     _event = event;
-     _eventContext.event = event;
+    _eventContext.event = event;
 }
 
 -(Event*)event
@@ -1107,23 +1108,23 @@
 
     NSString * connectionType   = connection.connectionType;
     NSData * finishedData       = connection.cumulatedData;
-    NSDictionary * extra            = connection.extra;
+    NSDictionary * extra        = connection.extra;
 
     if ([connectionType isEqualToString: AUTHENTICATE]){
         [self authenticateResponse: finishedData];
-    }  else if ([connectionType isEqualToString: VERSION]){
+    } else if ([connectionType isEqualToString: VERSION]){
         [self versionResponse:  finishedData];
-    }  else if ([connectionType isEqualToString: BUILD]){
+    } else if ([connectionType isEqualToString: BUILD]){
         [self getAllEventsResponse: finishedData];
-    }  else if ([connectionType isEqualToString: TEAMS_GET]) {
+    } else if ([connectionType isEqualToString: TEAMS_GET]) {
         [self teamsResponse:    finishedData];
-    }  else if ([connectionType isEqualToString: STOP_EVENT]) {
+    } else if ([connectionType isEqualToString: STOP_EVENT]) {
         [self stopResponce:     finishedData];
-    }  else if ([connectionType isEqualToString: START_EVENT]) {
-        NSError * error;
+    } else if ([connectionType isEqualToString: START_EVENT]) {
+        NSError         * error;
         NSDictionary    * results;
-        results =[Utility JSONDatatoDict:finishedData];
-        results = [Utility JSONDatatoDict:finishedData error:&error];
+        results         = [Utility JSONDatatoDict:finishedData];
+        results         = [Utility JSONDatatoDict:finishedData error:&error];
         
         if ([results[@"success"]intValue] == 0) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:self];

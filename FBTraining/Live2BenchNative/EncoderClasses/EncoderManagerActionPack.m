@@ -10,6 +10,7 @@
 
 
 
+#import "InternetOperation.h"
 
 @implementation CheckForACloudAction
 {
@@ -33,11 +34,27 @@
 
 
 -(void)start {
-    NSURL * checkURL                        = [NSURL URLWithString:   @"http://myplayxplay.net/max/ping/ajax"  ];
-    PXPLogAjax(checkURL.absoluteString);
-    NSURLRequest * urlRequest               = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5];
-    NSURLConnection * connnect              = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    [connnect start];
+    
+    InternetOperation * operation = [InternetOperation new];
+    
+    __weak CheckForACloudAction * weakSelf = self;
+    
+    [operation setCheckIfInternet:^(BOOL isFound, NSError * error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.isSuccess = isFound;
+            weakSelf.isFinished = YES;
+            encoderMangager.hasMAX = isFound;
+        });
+    }];
+    
+    [[NSOperationQueue mainQueue]addOperation:operation];
+    
+    
+//    NSURL * checkURL                        = [NSURL URLWithString:   @"http://myplayxplay.net/max/ping/ajax"  ];
+//    PXPLogAjax(checkURL.absoluteString);
+//    NSURLRequest * urlRequest               = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5];
+//    NSURLConnection * connnect              = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    [connnect start];
 }
 
 

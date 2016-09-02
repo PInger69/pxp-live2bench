@@ -558,25 +558,6 @@
 
 -(void)sendTagInfo:(NSDictionary *)newDict{
     
-//    NSError *error;
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:newDict options:0 error:&error];
-//    NSString *jsonString;
-//    if (! jsonData) {
-//        
-//    } else {
-//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    }
-//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
-//    
-//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-//    
-//    [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
-//    
-//    //    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(nullFunction)],self, nil];
-//    //    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-//    //    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-//    //    [globals.APP_QUEUE enqueue:url dict:instObj];
     
 }
 

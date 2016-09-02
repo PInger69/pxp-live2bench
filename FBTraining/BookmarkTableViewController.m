@@ -15,11 +15,16 @@
 #import "CustomAlertControllerQueue.h"
 
 #import "PxpDropboxActivity.h"
+#import "PxpMailClipActivity.h"
+#import "VideoUploadRecieptActivity.h"
+#import "DropboxManager.h"
+#import <MessageUI/MessageUI.h>
 
 #define YES_BUTTON  0
 #define NO_BUTTON   1
 
-@interface BookmarkTableViewController ()
+
+@interface BookmarkTableViewController () <UIDocumentInteractionControllerDelegate>
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 @property (strong, nonatomic) NSMutableArray   *sharingIndexPaths;
@@ -162,66 +167,30 @@
     
     BookmarkViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookmarkViewCell" forIndexPath:indexPath];
     Clip *clip = self.tableData[indexPath.row];
-    
-    //[cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
     [cell.eventDate setText: [Utility dateFromEvent: clip.eventName]];
-    //[cell.tagTime setText: clip.rawData[ @"displaytime"]];
     [cell.tagTime setText: clip.displayTime];
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
-    
-    cell.interactionController = [[UIDocumentInteractionController alloc] init];
+//    cell.interactionController = [[UIDocumentInteractionController alloc] init];
 
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
     };
     
-    
-    
     NSDictionary *clipVideosBySourceKey = clip.videosBySrcKey;
-    
+    ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     cell.shareBlock = ^(UITableViewCell *tableViewCell) {
         
-        ////////////////////////////////////////////////////////////
+        
         NSMutableArray  * clipsToShare      = [NSMutableArray new];
         NSString        * subjectLine       = @"Live2Bench Clips";
         NSArray         * clipsBeingShared  = [self.setOfSharingCells allObjects];
         
         NSMutableString * text = [NSMutableString new];
-        
-//        for (NSIndexPath * index in clipsBeingShared) {
-//            Clip *aClip = [self.tableData objectAtIndex:index.row];
-//    
-//            [text appendString:@"<html><body>"];
-//            [text appendString:[NSString stringWithFormat:@"<b>%@</b><br/>",aClip.name]];
-//            [text appendString:[NSString stringWithFormat:@"<b>File Name:</b> %@<br/>",[aClip.videoFiles[0] lastPathComponent]]];
-//       
-//            if (aClip.rating) {
-//                
-//                [text appendString:[NSString stringWithFormat:@"<b>Rating:</b> "]];
-//                
-//                
-//                
-//                for (NSInteger i = 0; i < aClip.rating; i++) {
-//                    [text appendString:@"*"];
-//                }
-//                
-//                [text appendString:@"<br/>"];
-//
-//            }
-//            if (![aClip.comment isEqualToString:@""]) [text appendString:[NSString stringWithFormat:@"<b>Comment:</b> %@<br/>",aClip.comment]];
-//            
-//            [text appendString:@"---<br/>"];
-//            
-//            
-//            
-//        }
-//        [text appendString:@"</body></html>"];
-//        [clipsToShare addObject:text];
-
-///////////
         
         for (NSIndexPath * index in clipsBeingShared) {
             Clip *aClip = [self.tableData objectAtIndex:index.row];
@@ -245,122 +214,132 @@
             
             [text appendString:@"---<br/>"];
             
-            
             [clipsToShare addObject:text];
         }
         [text appendString:@"</body></html>"];
         
 
-        
+        NSMutableArray * clipsBeingEmailed =  [NSMutableArray new];
         
         // Add all clips
         [clipsToShare removeAllObjects];
         for (NSIndexPath * index2 in clipsBeingShared) {
             Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
             [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
+            [clipsBeingEmailed addObject:aClip2];
         }
-
+//        clipsToShare = @[[clipsToShare firstObject]];
         ////////////////////////////////////////////////////////////
-     
-        
-        if ([clipsBeingShared count] > 1 ){
-    //        MailClipsActivity * mca = [MailClipsActivity new];
-    //
-//            GroupDropboxActivity * gda = [[GroupDropboxActivity alloc]init];
-            
-            PxpDropboxActivity * activity = [[PxpDropboxActivity alloc]init];
-            
-            for (NSIndexPath * index2 in clipsBeingShared) {
-                Clip *aClip = [self.tableData objectAtIndex:index2.row];
-                //make sure comment and rating are updated
-                for (NSURL * vidUrl in aClip.videoFiles) {
-                    NSString * src;
-                    NSString *eventDate = [aClip.eventName substringToIndex:18];
-                    NSString *fileName = [NSString stringWithFormat:@"%@_%@_%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,aClip.homeTeam,aClip.visitTeam,@""];
-                    fileName = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                    
 
-                    
-                    [activity.urlToFileName setObject:fileName forKey:[vidUrl absoluteString]];
-                    
-                }
+        PxpDropboxActivity * activity = [[PxpDropboxActivity alloc]init];
+//
+//        
+        __weak BookmarkTableViewController * weakself = self;
+        [activity setOnActivityStart:^(UIActivity *activity) {
+            [weakself.progress setHidden:NO];
+            if([[DropboxManager getInstance].session isLinked]){
+                [[DropboxManager getInstance].restClient createFolder:@"/Live2BenchNative/"]; // make the folder if its not thay
+            }
+        }];
+        
+        [activity setOnActivityProgress:^(PxpDropboxActivity *activity, CGFloat cfProgress) {
+            [weakself.progress setText:[NSString stringWithFormat:@"%ld of %ld files uploaded: %.2f %%",(long)activity.filesUploaded,(long)activity.fileCount,(cfProgress*100.0f)]];
+        }];
+        
+        [activity setOnActivityComplete:^(UIActivity *activity) {
+            [weakself.progress setHidden:YES];
+        }];
+//
+        [clipsToShare removeAllObjects];
+        for (NSIndexPath * index2 in clipsBeingShared) {
+            Clip *aClip = [self.tableData objectAtIndex:index2.row];
+            //make sure comment and rating are updated
+            for (NSURL * vidUrl in aClip.videoFiles) {
+//                    NSString * src;
+                NSString *eventDate = [aClip.eventName substringToIndex:18];
+                NSString *fileName = [NSString stringWithFormat:@"%@_%@_%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,aClip.homeTeam,aClip.visitTeam,@""];
+                fileName = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 
+
                 
+                [activity.urlToFileName setObject:fileName forKey:vidUrl];
                 
-                
-                
-                Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
-                [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
             }
             
             
-            //@[gda]
-            UIActivityViewController * activityVC = [[UIActivityViewController alloc]initWithActivityItems:clipsToShare applicationActivities:@[activity]];
-            [activityVC setValue:subjectLine forKey:@"subject"];
-
-            UIPopoverController * pop = [[UIPopoverController alloc] initWithContentViewController:activityVC];
             
-            CGRect rect = [[UIScreen mainScreen] bounds];
             
-            [pop
-             presentPopoverFromRect:rect inView:self.view
-             permittedArrowDirections:0
-             animated:YES];
             
-            return;
+            Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
+            [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
         }
         
-        if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
-            BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;
+        
+        //@[gda]
+        PxpMailClipActivity * mailActivity = [[PxpMailClipActivity alloc]initWithClips:clipsBeingEmailed];
+        mailActivity.presetingViewController = self;
+        
+        
+        
+        VideoUploadRecieptActivity * videoUploadActivity = [[VideoUploadRecieptActivity alloc]initWithClips:clipsBeingEmailed];
+        
+        __weak UILabel * weakProgressLable = self.progress;
+      
+        
+        [videoUploadActivity setOnActivityProgress:^(VideoUploadRecieptActivity * activity, CGFloat cfProgress) {
             
-            if (clip.videoFiles.count > 1) {
-                // multiple video files, we need to select a source to share.
-                NSArray *srcNames = [clipVideosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
-                
-                __block UIPopoverController *sourceSelectPopover = _sourceSharePopoverViewController;
-                
-                [_sourceSharePopoverViewController setListOfButtonNames:srcNames];
-                
-                for (NSUInteger i = 0; i < srcNames.count; i++) {
-                    UIButton *button = _sourceSharePopoverViewController.arrayOfButtons[i];
-                    NSString *path = clipVideosBySourceKey[srcNames[i]];
-                    
-                    // get thumbnail image
-                    [button setBackgroundImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
-                }
-                
-                [_sourceSharePopoverViewController addOnCompletionBlock:^(NSString *srcID) {
-                    if (srcID) {
-                        [sourceSelectPopover dismissPopoverAnimated:NO];
-                        
-                        NSString *path = clipVideosBySourceKey[srcID];
-                        cell.interactionController.URL = [NSURL fileURLWithPath:path];
-                        cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
-                        
-                        [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
-                    }
-                }];
-                
-                [_sourceSharePopoverViewController presentPopoverFromRect:cell.shareButton.frame inView:cell.shareButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                
-            } else {
-                // only one clip downloaded, just use the share controller.
-                NSString *srcID = clipVideosBySourceKey.allKeys.firstObject;
-                if (srcID) {
-                    NSString *path = clipVideosBySourceKey[srcID];
-                    
-                    cell.interactionController.URL = [NSURL fileURLWithPath:path];
-                    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
-                    cell.interactionController.annotation = @{@"content":@"Stuff"};
-                    [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
-                }
+            if (weakself.progress.hidden){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakself.progress.hidden = NO;
+                    weakself.progress.text = activity.progressMessage;
+                });
             }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                 [weakself.progress setText:[NSString stringWithFormat:@"Uploading Clip: %.2f %%",(cfProgress*100.0f)]];
+            });
+           
+        }];
+        
+        
+        [videoUploadActivity setOnRequestComplete:^(VideoUploadRecieptActivity * activity) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakProgressLable.hidden = YES;
+                weakProgressLable.text = @"";
+            });
+        }];
+        
+        
+        NSArray * activities = @[mailActivity,activity,videoUploadActivity];
+        NSDictionary * setPref = [[PxpPreference dictionary] objectForKey:@"SettingsItems"];
+        if( [setPref[@"Dropbox"] boolValue]) {
+//            activities = @[activity];
         }
         
+        UIActivityViewController * activityVC = [[UIActivityViewController alloc]initWithActivityItems:clipsToShare applicationActivities:activities];
+        [activityVC setValue:subjectLine forKey:@"subject"];
+        activityVC.excludedActivityTypes = @[UIActivityTypeMail,
+                                             UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypePostToWeibo,UIActivityTypePrint,UIActivityTypeCopyToPasteboard,
+                                             UIActivityTypeAssignToContact,UIActivityTypeAddToReadingList,UIActivityTypePostToFlickr,UIActivityTypePostToTencentWeibo
+                                             ];
+
+        
+        UIPopoverController * pop = [[UIPopoverController alloc] initWithContentViewController:activityVC];
+        
+        CGRect rect = [[UIScreen mainScreen] bounds];
+        
+        [pop
+         presentPopoverFromRect:rect inView:self.view
+         permittedArrowDirections:0
+         animated:YES];
+
+   
+    
         
         
     };
-    
+    ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     //This is the condition where a cell that is selected is reused
     if (cell.translucentEditingView) {
         [cell.translucentEditingView removeFromSuperview];

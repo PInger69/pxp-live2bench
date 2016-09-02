@@ -25,6 +25,7 @@
 #import "SideTagSettingsViewController.h"
 #import "FeedMappingViewController.h"
 #import "DropboxSettingsViewController.h"
+#import "VideoRecieptTableViewController.h"
 
 @interface SettingsPageViewController () <SettingsTableViewControllerSelectDelegate>
 
@@ -94,6 +95,7 @@ NS_OPTIONS(NSInteger, style){
         CreditsViewController *creditsViewController                            = [[CreditsViewController alloc] initWithAppDelegate:appDel];
         FeedMappingViewController *feedMappingViewController                            = [[FeedMappingViewController alloc] initWithAppDelegate:appDel name:@"Feed Map" identifier:@"Feed Map"];
         
+//        VideoRecieptTableViewController * videoRecieptTableViewController       = [[VideoRecieptTableViewController alloc]init];
         
         
         // Setting Definitions to be loaded
@@ -170,6 +172,12 @@ NS_OPTIONS(NSInteger, style){
                                                                           @"Name": dropboxViewController.name,
                                                                           @"ViewController": dropboxViewController,
                                                                           @"Identifier": dropboxViewController.identifier
+                                                                          }];
+        
+        if ([setPref[@"VideoReciept"] boolValue]) [tempDefinitions addObject:@{
+                                                                          @"Name": @"Video Reciept",
+                                                                          @"ViewController": [[VideoRecieptTableViewController alloc]init]
+//                                                                 
                                                                           }];
         
         if ([setPref[@"Credits"] boolValue]) [tempDefinitions addObject:@{

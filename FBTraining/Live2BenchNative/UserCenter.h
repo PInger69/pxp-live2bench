@@ -15,16 +15,16 @@
 #define L2B_MODE_HQ                 @"hq"
 #define L2B_MODE_PROXY              @"proxy"
 #define L2B_MODE_STREAM_OPTIMIZE    @"streamOp"
+#define L2B_MODE_DUAL               @"dual"
 
 
 @interface UserCenter : NSObject
-{
-    NSURLRequest            * urlRequest;
-    NSURLConnection         * encoderConnection;
 
-    EncoderTask         * currentCommand;
 
-}
+
+
+@property (nonatomic,strong) NSOperationQueue * queue;
+
 
 @property (atomic,strong) NSMutableArray           * tagNames;
 @property (atomic,strong,readonly) NSMutableArray  * defaultTagNames;
@@ -36,6 +36,7 @@
 @property (atomic,assign) BOOL                   isEULA;
 
 @property (atomic,strong) NSString               * customerID;
+@property (atomic,strong) NSString               * customerDeviceID;
 @property (atomic,strong) NSString               * customerAuthorization;
 @property (atomic,strong) NSString               * customerEmail;
 @property (atomic,strong) NSString               * userHID;
@@ -77,8 +78,11 @@
 -(NSString*)getPickByCameraLocation:(NSString*)camLocation;
 
 
+-(void)saveVideoRecieptData:(NSDictionary*)reciept;
+-(NSArray*)videoRecieptKeys;
+-(NSDictionary*)videoRecieptDataForKey:(NSString*)key;
+-(void)videoRecieptDataClear;
 
-
-
+-(NSString*)deviceTypeHash;
 
 @end

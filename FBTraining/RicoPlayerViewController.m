@@ -188,7 +188,7 @@ static CMClockRef _masterClock;
         NSLog(@"Queue %@",self.operationQueue);
         [self.operationQueue addOperation:self.syncBlock];
     }
-
+    self.playerControlBar.playPauseButton.paused = YES;
 }
 
 
@@ -536,7 +536,7 @@ static CMClockRef _masterClock;
 {
     [self pause];
 
-    if (!self.primaryPlayer.live) {
+    if (!self.primaryPlayer.live && [self.primaryPlayer.feed.type isEqualToString: FEED_TYPE_LOCAL]) {
         for (RicoPlayer * dplayers in self.depedencyPlayers) {
             [dplayers.avPlayer.currentItem stepByCount:stepCount];
         }

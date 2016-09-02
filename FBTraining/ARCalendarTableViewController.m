@@ -134,6 +134,7 @@
 - (void)filterArray:(NSNotification *)note
 {
     NSMutableArray *eventsOfTheDay = [NSMutableArray array];
+    NSMutableArray *eventsOfTheDayLocal = [NSMutableArray array];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd";
     
@@ -142,9 +143,25 @@
         NSDate *date = [formatter dateFromString:bothStrings[0]];
         
         if ([self date: date isSameDayAsDate:note.userInfo[@"date"]]) {
-            [eventsOfTheDay addObject:event];
+           
+            // separate local and external. you dont want to have local and external at the same time
+            if (event.local) {
+                [eventsOfTheDayLocal addObject:event];
+            } else {
+                [eventsOfTheDay addObject:event];
+            }
+
         }
     }
+    
+    for (Event *event in eventsOfTheDayLocal) {
+        if (![eventsOfTheDay containsObject:event]) {
+            NSLog(@"%s",__FUNCTION__);
+             [eventsOfTheDay addObject:event];
+        }
+    }
+    
+    
     
     self.tableData = eventsOfTheDay;
     [self.setOfDeletingCells removeAllObjects];

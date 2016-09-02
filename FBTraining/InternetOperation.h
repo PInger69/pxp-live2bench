@@ -8,6 +8,13 @@
 
 #import "BooleanOperation.h"
 
-@interface InternetOperation : BooleanOperation
+@interface InternetOperation : BooleanOperation <NSURLSessionDelegate,NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
+
+@property (nonatomic,strong) NSError * error;
+@property (nonatomic,strong)    NSMutableData   * cumulatedData;
+@property (nonatomic,strong)    NSURLSession    * session;
+@property (nonatomic,strong)    NSURLRequest   * request;
+@property (nonatomic,copy) void(^checkIfInternet)(BOOL hasInternet,NSError * error);
+
 
 @end

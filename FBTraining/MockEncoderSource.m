@@ -54,6 +54,9 @@ static MockEncoderSource* server;
     } else if ([requestString rangeOfString:@"/ajax/teamsget"].location         != NSNotFound) {
 
         responce = [PxpURLResponse responseWithDictionary: @{@"leagues":@{},@"requrl":@"/ajax/teamsget",@"sender":@".device",@"teams":@{},@"teamsetup":@{}} errorCode:0];
+    } else if ([requestString rangeOfString:@"/ajax/gametags"].location         != NSNotFound) {
+        
+        responce = [PxpURLResponse responseWithDictionary: @{@"requrl":@"/ajax/teamsget",@"sender":@".device"} errorCode:0];
     }
     
     

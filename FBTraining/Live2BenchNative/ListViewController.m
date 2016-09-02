@@ -1056,6 +1056,8 @@
     
 //    [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTabBar];
+    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
+    [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
     
     
     // setFilter to this view. This is the default filtering for ListView

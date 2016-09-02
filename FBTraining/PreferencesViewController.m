@@ -56,6 +56,8 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
             self.modeSegment.selectedSegmentIndex =2;
         } else if ([mode isEqualToString:@"proxy"]) {
             self.modeSegment.selectedSegmentIndex =0;
+        } else if ([mode isEqualToString:@"dual"]) {
+            self.modeSegment.selectedSegmentIndex =3;
         }
         
     } else {
@@ -201,8 +203,13 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
                 [defaults setObject:@"hq" forKey:@"mode"];
             break;
         case 2:
+            [defaults setObject:@"streamOp" forKey:@"mode"];
+            break;
+        case 3:
+            [defaults setObject:@"dual" forKey:@"mode"];
+            break;
         default:
-                [defaults setObject:@"streamOp" forKey:@"mode"];
+            [defaults setObject:@"streamOp" forKey:@"mode"];
             break;
     }
 
@@ -225,23 +232,10 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
                                    
                                }];
     
-    
-
-    
-    
-    
     [alert addAction:okButton];
     
     [self presentViewController:alert animated:YES completion:nil];
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 }
 
 - (IBAction)toggleRegStat:(id)sender {

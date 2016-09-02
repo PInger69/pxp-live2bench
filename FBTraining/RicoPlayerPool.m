@@ -35,6 +35,8 @@ static RicoPlayerPool * instance;
             self.defaultController  = [RicoPlayerViewControllerSO new];
         } else if ([mode isEqualToString:L2B_MODE_HQ]) {
             self.defaultController  = [RicoPlayerViewController new];
+        } else if ([mode isEqualToString:L2B_MODE_DUAL]) {
+            self.defaultController  = [RicoPlayerViewController new];
         } else { // default L2B_MODE_PROXY
             self.defaultController  = [RicoPlayerViewController new];
         }

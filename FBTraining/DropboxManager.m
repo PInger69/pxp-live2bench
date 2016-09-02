@@ -119,7 +119,7 @@ static DropboxManager * _instance;
     self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
     self.restClient.delegate = self;
     
- 
+    [self.restClient loadAccountInfo];
 }
 
 
@@ -208,6 +208,11 @@ static int outstandingRequests;
 
 }
 
+- (void)restClient:(DBRestClient*)client loadedAccountInfo:(DBAccountInfo*)info
+{
+    self.linkedUserName = [info displayName];
+    if (self.onUserConnected) self.onUserConnected(self.linkedUserName);
+}
 
 
 @end

@@ -19,6 +19,7 @@
 #import "MakeEventViewController.h"
 #import "CopyDeviceVideoToOperation.h"
 #import "DeviceVideoDataSource.h"
+#import "ListPopoverController.h"
 
 @interface EncoderControlsViewController ()
 
@@ -89,6 +90,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     NSString                    * _leagueName;
     
     NSArray * (^grabNames)(NSDictionary * input);
+    ListPopoverController       *_teamPick;
 }
 
 static void *masterContext;
@@ -1028,8 +1030,7 @@ SVSignalStatus signalStatus;
     // add Video
     
      
-    (void)[[LocalMediaManager getInstance] makeLocalEvent:data];
-    // copy op
+    NSString * eventName = [[LocalMediaManager getInstance] makeLocalEvent:data];
     
     
     NSLog(@"Output video URL: %@",fileURL);
@@ -1050,8 +1051,140 @@ SVSignalStatus signalStatus;
 
 -(void)onMakeEventAndLaunch:(MakeEventViewController*)sender
 {
+    
+    
+    
+    
+    
+    
+    
+    [self makeNewLocalEvent:sender onComplete:^(Event *event) {
+           [[LocalMediaManager getInstance] refresh];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSString * eventName = event.datapath;
+            
+            Event *updatedEvent = [[LocalMediaManager getInstance] getEventByName:eventName];
+            
+            LeagueTeam * home = event.teams[@"homeTeam"];
+            LeagueTeam * away = event.teams[@"visitTeam"];
+            updatedEvent.teams = event.teams;
+            NSArray * teamNames = @[ home.name,away.name];//[event.teams allKeys];
+            
+            _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
+                                                      buttonListNames:@[
+                                                                        [teamNames firstObject],
+                                                                        [teamNames lastObject]
+                                                                        ]];
+            
+            _teamPick.contentViewController.modalInPopover = NO;
+            
+            [_teamPick addOnCompletionBlock:^(NSString *pick) {
+                
+                [UserCenter getInstance].taggingTeam = [updatedEvent.teams objectForKey:pick];
+//
+                    [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:updatedEvent userInfo:@{@"tabName":@"Live2Bench"}];
+                    [[EncoderManager getInstance] declareCurrentEvent:updatedEvent];
+                
+            }];
+            
+            [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                       animated:YES];
+            
+            
+            
+            
+            
+            
+            
+//            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:event userInfo:@{@"tabName":@"Live2Bench"}];
+//            [[EncoderManager getInstance] declareCurrentEvent:event];
+        });
 
+    }];
 }
 
+
+
+-(void)makeNewLocalEvent:(MakeEventViewController*)sender onComplete:(void (^)(Event*event))onComplete
+{
+    
+    NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc]init];
+    aDateFormatter.dateFormat = @"yyyy-MM-dd";
+    NSString * hid              = [[NSUUID UUID]UUIDString];
+    NSString * fileName         = @"main_00hq.mp4";
+    NSString * dateString       = [aDateFormatter stringFromDate:sender.datePicker.date];
+    dateString                  = [dateString stringByAppendingString:@"_12-00-00"];
+    NSString * dateString1      = [aDateFormatter stringFromDate:sender.datePicker.date];
+    dateString1                  = [dateString1 stringByAppendingString:@" 12:00:00"];
+    
+    NSString * localPath   = [LocalMediaManager getInstance].localPath;
+    
+    NSString * folderURL    = [NSString stringWithFormat:@"%@/events/%@_%@",localPath,dateString,hid];
+    NSString * fileURL     = [folderURL stringByAppendingPathComponent:fileName];
+    
+    NSMutableDictionary * data = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                 @"datapath"      : [NSString stringWithFormat:@"%@_%@",dateString,hid],
+                                                                                 @"date"          : dateString1,//@"2016-06-08 12:11:20"
+                                                                                 @"dateFmt"       : dateString,//@"2016-06-08_12-11-20"
+                                                                                 @"hid"           : hid,
+                                                                                 @"homeTeam"      : sender.homeTeamNameInput.text,
+                                                                                 @"visitTeam"     : sender.awayTeamNameInput.text,
+                                                                                 @"league"        : sender.leagueNameInput.text,
+                                                                                 @"sport"         : @"none",
+                                                                                 @"mp4"           : fileURL,
+                                                                                 @"mp4_2"         : [ @{@"s_00" : fileURL}mutableCopy],
+                                                                                 @"name"          : [NSString stringWithFormat:@"%@_%@",dateString,hid],//@"2016-06-08_12-11-20_3f30c7c14d4da656f9eda33b792838a2a0fb7236_local"
+                                                                                 @"tags"          : [@{} mutableCopy],
+                                                                                 @"vid"           : fileURL,
+                                                                                 @"vid_2"         : [@{@"s_00" : [@{
+                                                                                                                    @"hq" : fileURL,
+                                                                                                                    @"lq" : fileURL,
+                                                                                                                    @"vidsize_hq" : @"0.00MB",
+                                                                                                                    @"vidsize_lq" : @"0.00MB",
+                                                                                                                    @"vq" : @"lq"
+                                                                                                                    }mutableCopy]
+                                                                                                       }mutableCopy],
+                                                                                 
+                                                                                 }];
+    
+    
+    
+    // make the event
+    
+
+    // populating teams based off data
+    LeagueTeam  * homeTeam      = [LeagueTeam new];
+    homeTeam.name = data[@"homeTeam"];
+    
+    LeagueTeam  * visitTeam     = [LeagueTeam new];
+    visitTeam.name = data[@"visitTeam"];
+
+    
+    // add Video
+    
+    //Event*event
+    
+    NSString * eventName = [[LocalMediaManager getInstance] makeLocalEvent:data];
+    
+    PHAsset *assetFromTable = self.deviceVideoDataSource.videos[sender.videoTable.indexPathForSelectedRow.row];
+    
+    CopyDeviceVideoToOperation * copyOp = [[CopyDeviceVideoToOperation alloc]initAsset:assetFromTable outputStringURL:fileURL];
+    
+    [copyOp setCompletionBlock:^{
+        NSLog(@"Complete");
+        
+        
+        Event* event =  [[LocalMediaManager getInstance] getEventByName:[eventName lastPathComponent]];
+        event.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+        if (onComplete){
+             onComplete(event);
+        }
+    }];
+    [[NSOperationQueue mainQueue]addOperation:copyOp];
+
+
+
+}
 
 @end

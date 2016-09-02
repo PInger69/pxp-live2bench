@@ -136,10 +136,31 @@
     _sharedFilterTab    = [TabView sharedFilterTabBar];
     [_sharedFilterTab setPxpFilter:_sharedFilter];
     
-
+//    [self testFileCheck:kdocumentsDirectory];
     
     return YES;
 }
+
+
+//-(void)testFileCheck:(NSString*)docPath
+//{
+//    
+//    
+//    
+//   
+//    
+//    NSString * workingVideo     = [NSString stringWithFormat:@"%@/events/%@",docPath,@"2016-07-06_12-25-20_1dec3b359b4563602c32639acd4679263c5c3ca1_local/main_00hq.mp4"];
+//    NSString * nonworkingVideo  =  [NSString stringWithFormat:@"%@/events/%@",docPath,@"2016-07-16_08-36-16_3e0d30e03e09dc4b23273796d757281c2726cb04_local/main_00hq.mp4"];
+//
+//    BOOL isDir = NO;
+//    BOOL isFoundWorking = [[NSFileManager defaultManager] fileExistsAtPath:workingVideo isDirectory:&isDir];
+//    NSLog(@"VIDEO WV FOUND:  %@",(isFoundWorking)? @"YES":@"NO");
+//
+//    BOOL isFoundNonWorking = [[NSFileManager defaultManager] fileExistsAtPath:nonworkingVideo isDirectory:&isDir];
+//    NSLog(@"VIDEO NON FOUND: %@",(isFoundNonWorking)? @"YES":@"NO");
+//
+//    
+//}
 
 
 -(void)logoutApp:(NSNotification *)note

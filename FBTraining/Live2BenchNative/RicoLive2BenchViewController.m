@@ -171,7 +171,9 @@ static void * eventContext      = &eventContext;
     return self;
 }
 
-
+/**
+ *
+ */
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -330,6 +332,20 @@ static void * eventContext      = &eventContext;
 //        [self.ricoPlayerViewController addPlayers:justPlayer];
 //        [[RicoPlayerPool instance].pooledPlayers addObject:justPlayer];
         
+    } else if ([mode isEqualToString:@"dual"]) {
+        
+        RicoPlayer * justPlayer1 = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+        Feed * afeed1 = feeds[0];
+        
+        afeed1.quality = 1;
+        
+        //        self.ricoPlayer = justPlayer;
+        
+        [justPlayer1 loadFeed:afeed1];
+        
+        [self.ricoZoomGroup addSubview:justPlayer1];
+        [self.ricoPlayerViewController addPlayers:justPlayer1];
+        [[RicoPlayerPool instance].pooledPlayers addObject:justPlayer1];
     } else {
         
         NSString* (^getSource)(NSString*location) = ^NSString*(NSString*location) {
@@ -504,7 +520,7 @@ static void * eventContext      = &eventContext;
     }
 }
 
-
+#pragma mark -
 
 -(void)changeSourceNonPress:(NSInteger)pickedSource
 {
@@ -714,6 +730,8 @@ static void * eventContext      = &eventContext;
     } else {
         [multiBut setBackgroundColor:[UIColor lightGrayColor]];
     }
+    [self.ricoPlayerViewController cancelPressed:self.ricoPlayerControlBar];
+     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -1144,8 +1162,6 @@ static void * eventContext      = &eventContext;
     }
     
 
-    
-        
     [[RicoPlayerPool instance].pooledPlayers removeAllObjects];
 
 
@@ -1158,7 +1174,6 @@ static void * eventContext      = &eventContext;
 
     }
    
-    
     if (!self.currentEvent) {
         return;
     }
@@ -1188,7 +1203,30 @@ static void * eventContext      = &eventContext;
 
     
     
-    } else {
+    } else if ([mode isEqualToString:@"dual"]){//////////////////////////////////////////////////////////////////
+        
+        
+        NSInteger feedCount = [feeds count];//([feeds count] <4)?4:[feeds count];//
+        
+        if (feedCount > 2 ) feedCount = 2;
+        
+        for (NSInteger i = 0; i<feedCount; i++) {
+            RicoPlayer * madePlayer = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+            Feed * afeed;
+            if ([feeds count] > i){
+                afeed = feeds[i];
+            }
+
+            [madePlayer loadFeed:afeed];
+            if (i)madePlayer.hidden = YES;
+            [self.ricoZoomGroup addSubview:madePlayer];
+            [self.ricoPlayerViewController addPlayers:madePlayer];
+            [[RicoPlayerPool instance].pooledPlayers addObject:madePlayer];
+            
+        }
+
+        
+    } else { ///////////////////////////////////////////////////////////////////////////////////////////////
         
         NSString* (^getSource)(NSString*location) = ^NSString*(NSString*location) {
             FeedMapDisplay * display = [[FeedMapController instance].feedMapDisplaysDict objectForKey:location];
@@ -1266,18 +1304,51 @@ static void * eventContext      = &eventContext;
 
 -(void)buildSourceButtons
 {
-    [self.sourceButtonPicker setFrame:CGRectMake(155, 62, 300, 30)];
+    
+    // clear if made already
     [_sourceNames removeAllObjects];
+    
+    // build
+    [self.sourceButtonPicker setFrame:CGRectMake(155, 62, 300, 30)];
+    
     
     CameraResource * camResource = self.currentEvent.cameraResource;
     
     _sourceNames    = [[((Encoder*)_encoderManager.primaryEncoder).event.feeds allKeys]mutableCopy];
     
-    [_sourceNames sortedArrayUsingSelector:@selector(compare:)];
-    _sourceNames    =[[[_sourceNames reverseObjectEnumerator] allObjects]mutableCopy];
     
-    // just make one player
-    if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"]) {
+    if ([[[UserCenter getInstance]l2bMode] isEqualToString:L2B_MODE_DUAL]) {
+        [_sourceNames sortedArrayUsingSelector:@selector(compare:)];
+        NSString *sortOrder = @"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz_0123456789";
+        [_sourceNames sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            char char1 = [(NSString *)obj1 characterAtIndex: 0];
+            char char2 = [(NSString *)obj2 characterAtIndex: 0];
+            
+            int index1;
+            for (index1 = 0; index1 < sortOrder.length; index1++)
+                if ([sortOrder characterAtIndex: index1] == char1)
+                    break;
+            
+            int index2;
+            for (index2 = 0; index2 < sortOrder.length; index2++)
+                if ([sortOrder characterAtIndex: index2] == char2)
+                    break;
+            
+            if (index1 < index2)
+                return NSOrderedAscending;
+            else if (index1 > index2)
+                return NSOrderedDescending;
+            else
+                return [(NSString *)obj1 compare: obj2 options: NSCaseInsensitiveSearch];
+        }];
+        
+        
+        if ([_sourceNames count]>2) {
+            _sourceNames = [NSMutableArray arrayWithArray:[_sourceNames objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]];
+        }
+        
+        
+    } else if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"]) {
         NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];
          [_sourceNames removeAllObjects];
         for (NSInteger i=0;i< [list count]; i++) {
@@ -1285,16 +1356,37 @@ static void * eventContext      = &eventContext;
             Feed * feed = [camResource getFeedByLocation:list[i] event:self.currentEvent];
             if (feed)[_sourceNames addObject:feed.sourceName];
         }
+    } else {
+        [_sourceNames sortedArrayUsingSelector:@selector(compare:)];
+        NSString *sortOrder = @"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz_0123456789";
+        [_sourceNames sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            char char1 = [(NSString *)obj1 characterAtIndex: 0];
+            char char2 = [(NSString *)obj2 characterAtIndex: 0];
+            
+            int index1;
+            for (index1 = 0; index1 < sortOrder.length; index1++)
+                if ([sortOrder characterAtIndex: index1] == char1)
+                    break;
+            
+            int index2;
+            for (index2 = 0; index2 < sortOrder.length; index2++)
+                if ([sortOrder characterAtIndex: index2] == char2)
+                    break;
+            
+            if (index1 < index2)
+                return NSOrderedAscending;
+            else if (index1 > index2)
+                return NSOrderedDescending;
+            else
+                return [(NSString *)obj1 compare: obj2 options: NSCaseInsensitiveSearch];
+        }];
     }
-    _currentSource  = [_sourceNames firstObject];
-
-    // not hiding
-    self.multiCamButton.hidden = YES;
-        
-    if ([_sourceNames count] > 1 || [_sourceNames count]==0) {
-     self.multiCamButton.hidden = NO;
-    }
+  
     
+
+    
+    
+    _currentSource  = [_sourceNames firstObject];
     self.sourceButtonPicker.hidden = ([_sourceNames count]<=1);
 
     [self.sourceButtonPicker buildButtonsWithString:_sourceNames];
@@ -1304,21 +1396,17 @@ static void * eventContext      = &eventContext;
     
     
     
-    // just make one player
+    // just make one player and does not
     if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"]) {
-        
-        
         if (self.multiCamButton) {
             [self.multiCamButton removeFromSuperview];
         }
-        
         self.multiCamButton = [[ButtonMultiScreen alloc]initWithFrame:CGRectMake(self.sourceButtonPicker.bounds.size.width+8, 0, 40, 30)];
         [self.multiCamButton addTarget:self action:@selector(onPressMultiCamButton:) forControlEvents:UIControlEventTouchUpInside];
         [self.multiCamButton setBackgroundColor:[UIColor lightGrayColor]];
         [self.sourceButtonPicker addSubview:self.multiCamButton];
         [self.sourceButtonPicker setFrame:CGRectMake(self.sourceButtonPicker.frame.origin.x, self.sourceButtonPicker.frame.origin.y, self.sourceButtonPicker.frame.size.width +40, self.sourceButtonPicker.frame.size.height)];
     }
-    
 
 }
 
@@ -1354,7 +1442,7 @@ static void * eventContext      = &eventContext;
 //    [self.ricoPlayerViewController seekToTime:self.ricoPlayerViewController.currentTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
 //        
 //    }];
-    telestration.sourceName = self.ricoPlayerViewController.primaryPlayer.feed.sourceName;
+    telestration.sourceName = self.currentSource;
     self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = YES;
     self.ricoPlayerControlBar.playPauseButton.paused =YES;
     if(self.ricoFullScreen.fullscreen){
@@ -1547,8 +1635,10 @@ static void * eventContext      = &eventContext;
     [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
     [_tagButtonController closeAllOpenTagButtons];
-    [_bottomViewController closeAllOpenTagButtons];
     
+    if ([_bottomViewController respondsToSelector:@selector(closeAllOpenTagButtons)]){
+        [_bottomViewController closeAllOpenTagButtons];
+    }
 
     
 }
@@ -1650,6 +1740,9 @@ static void * eventContext      = &eventContext;
         }];
         [postTagOperation setOnRequestComplete:^(NSData * d, EncoderOperation * e) {
             NSLog(@"made");
+            
+            
+            
         }];
         [eventEncoder runOperation:postTagOperation];
         
@@ -1825,7 +1918,11 @@ static void * eventContext      = &eventContext;
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
     CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
 
-    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    
+    // This is changes the scrub bar to
+    if (self.ricoFullScreenControlBar.controlBar.state == RicoPlayerStateLive){
+        self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    }
     
     if (self.currentEvent.local) {
         if (sender.speed < 0.25 && sender.speed > -0.25) {

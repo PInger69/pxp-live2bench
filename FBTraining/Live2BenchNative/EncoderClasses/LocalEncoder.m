@@ -412,13 +412,14 @@ static LocalEncoder * instance;
         newTag.durationID = [tData objectForKey:@"dtagid"];
         [self.event addTag:newTag extraData:false];
     }else{
-        double newStartTime = newTag.time - 10.0;
+        
+        double newStartTime = newTag.time - [UserCenter getInstance].preRoll;
         if (newStartTime < 0) {
             newStartTime = 0.0;
         }else{
             newTag.startTime = newStartTime;
         }
-        newTag.duration = 20.0;
+        newTag.duration = [UserCenter getInstance].postRoll + [UserCenter getInstance].preRoll;
         [self.event addTag:newTag extraData:true];
     }
 

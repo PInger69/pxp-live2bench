@@ -248,7 +248,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 {
     BOOL check = NO;
     if (check){
-        CGFloat tt = 1;
+        CGFloat tt = 1; 
         self.offsetTime = CMTimeMakeWithSeconds(tt, NSEC_PER_SEC);
     }
     
@@ -256,6 +256,17 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     NSLog(@"currenttime: %f",CMTimeGetSeconds(self.currentTime));
     NSLog(@"Seeking to:  %f   tolerance: %f / %f ",CMTimeGetSeconds(time),CMTimeGetSeconds(toleranceBefore),CMTimeGetSeconds(toleranceAfter));
     NSLog(@"offsetWitj:  %f      %f",CMTimeGetSeconds(timeWithOffset),CMTimeGetSeconds(self.offsetTime));
+    NSLog(@"Has Range: %@",(CMTIMERANGE_IS_VALID(self.range))?@"YES":@"NO");
+    NSLog(@"PlayerStatus: %@",(self.avPlayer.status == AVPlayerStatusReadyToPlay)?@"Ready":@" not Ready");
+    NSLog(@"PlayerStatusItem: %@",(self.avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay)?@"Ready":@" not Ready");
+    if (CMTIMERANGE_IS_VALID(self.range)) {
+        CMTime start = self.range.start, end = CMTimeAdd(start, self.range.duration);
+        if ( CMTIME_COMPARE_INLINE(timeWithOffset, >, end) || CMTIME_COMPARE_INLINE(timeWithOffset, <, start)) {
+            timeWithOffset = CMTimeAdd(start, self.offsetTime);
+        }
+    }
+    
+    
     NSOperation * seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:timeWithOffset toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
     
     [seeker setCompletionBlock:^{
@@ -736,7 +747,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 {
     if (!DEBUG_MODE && !self.reliable) {
         _debugOutput.hidden = NO;
-        _debugOutput.text = @"Error";
+        _debugOutput.text = @"";//@"Error"
     } else {
         dispatch_async(dispatch_get_main_queue(),^ {
             _debugOutput.text = [NSString stringWithFormat:@"%@  %@\n%@\nrate: %@ \n%@\n%@\n%@\n%@\n%@",

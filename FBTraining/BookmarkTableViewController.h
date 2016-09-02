@@ -10,7 +10,7 @@
 #import "DeletableTableViewController.h"
 
 @interface BookmarkTableViewController : DeletableTableViewController
-
+@property (strong,nonatomic) UILabel * progress;
 -(BOOL) playNext;
 -(BOOL) playPrevious;
 

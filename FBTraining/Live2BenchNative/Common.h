@@ -345,7 +345,7 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
 #define SPORT_LACROSSE              @"lacrosse"
 #define SPORT_RUGBY                 @"Rugby"
 #define SPORT_CRICKET               @"Cricket"
-#define SPORT_MEDICAL               @"medical"
+#define SPORT_MEDICAL               @"Medical"
 #define SPORT_BLANK                 @""
 
 

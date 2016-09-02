@@ -26,6 +26,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 @synthesize durationID;
 @synthesize rating = _rating;
 @synthesize eventInstance = _eventInstance;
+@synthesize isLive = _isLive;
 
 + (void)initialize {
     if (self == [Tag self]) {
@@ -486,7 +487,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     _homeTeam    = tagData[@"homeTeam"];
     _visitTeam   = tagData[@"visitTeam"];
     _uniqueID    = [tagData[@"id"] intValue];
-    _isLive      = tagData[@"islive"];
+    _isLive      = [tagData[@"islive"]boolValue];
     _name        = tagData[@"name"];
     _own         = [tagData[@"own"] boolValue];
     _rating      = [tagData[@"rating"] intValue];
@@ -605,7 +606,15 @@ static NSMutableDictionary * openDurationTagsWithID;
     return _cachedThumbnail;
 }
 
+-(void)setIsLive:(BOOL)isLive
+{
+    _isLive = isLive;
+}
 
+-(BOOL)isLive
+{
+    return _isLive;
+}
 
 // duration tags dont start at startTime they start at time
 -(double)startTime

@@ -100,6 +100,10 @@
         _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:path!= nil] copy];
 
         _cameraResource     = [[CameraResourceNonLive alloc]initWithFeeds:[_feeds allValues]];
+        
+        if (_rawData[@"homeTeam"] && _rawData[@"visitTeam"]) {
+        
+        }
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDownloaded:) name:NOTIF_EVENT_DOWNLOADED object:nil];
@@ -630,6 +634,28 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_DOWNLOADED object:nil];
 }
+
+
+-(BOOL)isEqual:(id)object
+{
+    if (object == self) {
+        return YES;
+    }
+    if (!object || ![object isKindOfClass:[self class]]){
+        return NO;
+    }
+    
+    Event * otherEvent = (Event *)object;
+    if ([self.name isEqualToString:otherEvent.name])
+    {
+        return YES;
+    }
+    
+    return  NO;
+}
+
+
+
 
 @end
 

@@ -13,6 +13,8 @@
 
 @interface DropboxSettingsViewController ()
 @property (nonatomic,strong) UILabel * label;
+@property (nonatomic,strong) UILabel * labelUser;
+@property (nonatomic,strong) UIButton * button;
 
 @end
 
@@ -37,52 +39,103 @@
     };
     
     
-    UIButton * button = [[UIButton alloc]initWithFrame:CGRectMake(100, 100, 100, 100)];
+    self.button = [[UIButton alloc]initWithFrame:CGRectMake(400, 50+40, 100, 30)];
     
-    [button setTitle:@"Link" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(onLink:) forControlEvents:UIControlEventTouchUpInside];
-    button.layer.borderWidth = 1;
-    [self.view addSubview:button];
+    [self.button setTitle:@"Link" forState:UIControlStateNormal];
+    [self.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.button addTarget:self action:@selector(onLink:) forControlEvents:UIControlEventTouchUpInside];
+    self.button.layer.borderWidth = 1;
+    [self.view addSubview:self.button];
     
     
     
     UIButton * button1 = [[UIButton alloc]initWithFrame:CGRectMake(300, 100, 100, 100)];
-    
-    [button1 setTitle:@"make folder" forState:UIControlStateNormal];
-    [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [button1 addTarget:self action:@selector(onMakeFolder) forControlEvents:UIControlEventTouchUpInside];
-    button1.layer.borderWidth = 1;
-    [self.view addSubview:button1];
-    
-    
-    
-    
-    
-    [self.view addSubview:makeButton(@"Logout",CGRectMake(300, 400, 100, 100),@selector(onLogoutDropbox:))];
-    
-    
-     [self.view addSubview:makeButton(@"Upload",CGRectMake(100, 400, 100, 100),@selector(onUpload))];
-    
+//    
+//    [button1 setTitle:@"make folder" forState:UIControlStateNormal];
+//    [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//    [button1 addTarget:self action:@selector(onMakeFolder) forControlEvents:UIControlEventTouchUpInside];
+//    button1.layer.borderWidth = 1;
+//    [self.view addSubview:button1];
+//    
+
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    self.label = [[UILabel alloc]initWithFrame:CGRectMake(100, 200, 100, 100)];
-    [self.label setText:@"test"];
+    self.label = [[UILabel alloc]initWithFrame:CGRectMake(50, 50, 300, 30)];
+    [self.label setText:@"Dropbox Linked to user:"];
     [self.view addSubview:self.label];
+    
+    
+    self.labelUser = [[UILabel alloc]initWithFrame:CGRectMake(50, 50+40, 300, 30)];
+    [self.labelUser setText:@"<no linked user>"];
+    [self.view addSubview:self.labelUser];
+
+    
+    
+    
     [super viewDidLoad];
+    
+    
+    [[DropboxManager getInstance]connect];
+    
+    // check dropbox status
+//    if ([[DBSession sharedSession] isLinked]) {
+    
+        [[DropboxManager getInstance].restClient loadAccountInfo];
+//    }
+    
+    
+    
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if ([[DBSession sharedSession] isLinked]) {
+        
+        [[DropboxManager getInstance].restClient loadAccountInfo];
+    }
+    if ([[DBSession sharedSession] isLinked]) {
+        [self.button setTitle:@"Unlink" forState:UIControlStateNormal];
+
+        [[DropboxManager getInstance] setOnUserConnected:^(NSString * userName) {
+            self.labelUser.text = userName;
+        }];
+
+    } else {
+
+        self.labelUser.text = @"<no linked user>";
+        
+        [self.button setTitle:@"Link" forState:UIControlStateNormal];
+        
+    }
+    
+
+}
 
 
 
 -(void)onLink:(id)sender
 {
- 
     
-    if (![[DBSession sharedSession] isLinked]) {
+    UIButton * button = (UIButton *) sender;
+    
+    
+    
+    if ([button.titleLabel.text isEqualToString:@"Link"]) {
            [[DropboxManager getInstance]connect];
         [[DBSession sharedSession] linkFromController:self];
+        [button setTitle:@"Unlink" forState:UIControlStateNormal];
+        [[DropboxManager getInstance].restClient loadAccountInfo];
+        [[DropboxManager getInstance] setOnUserConnected:^(NSString * userName) {
+            self.labelUser.text = userName;
+            
+        }];
+    } else {
+        [[DBSession sharedSession] unlinkAll];
+        [DropboxManager getInstance].linkedUserName = nil;
+        [button setTitle:@"Link" forState:UIControlStateNormal];
+        self.labelUser.text = @"<no linked user>";
     }
     
 
@@ -102,6 +155,7 @@
 {
     if ([[DBSession sharedSession] isLinked]) {
         [[DBSession sharedSession] unlinkAll];
+        [DropboxManager getInstance].linkedUserName = nil;
     }
     
 }

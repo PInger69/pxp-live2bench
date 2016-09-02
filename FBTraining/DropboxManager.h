@@ -14,6 +14,8 @@
 
 @property (strong,nonatomic) DBRestClient   * restClient;
 @property (strong,nonatomic) DBSession      * session;
+@property (strong,nonatomic) NSString       * linkedUserName;
+@property (nonatomic,copy) void (^onUserConnected)(NSString*);
 
 +(DropboxManager*)getInstance;
 

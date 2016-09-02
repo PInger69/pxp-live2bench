@@ -20,7 +20,7 @@
 {
 
 }
-
+@property (strong,nonatomic) UILabel * progress;
 @property (nonatomic, strong)   NSMutableArray               * allClips;
 @property (nonatomic,strong)    PxpFilter                    * pxpFilter;
 @property (nonatomic,strong)    TabView                      * pxpFilterTab;
