@@ -410,6 +410,7 @@
 @implementation EncoderOperationShutdown
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
+    PXPDeviceLog(@"Shutdown Encoder: %@",self.encoder.ipAddress);
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encshutdown",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
 }
@@ -515,8 +516,24 @@
     
     if (error) {
         PXPLog(@"Error converting data to dowload Clip event");
+        PXPDeviceLog(@"Error converting data to dowload Clip event TP:%@ TT:%@",mData[@"name"],[mData[@"type"]stringValue]);
         return nil;
     }
+    
+    if ([self.encoder isKindOfClass:[Encoder class]]){
+        NSString * connectionTime;
+        double ct = ((Encoder*)self.encoder).bitrate;
+        if (ct < 0.5) {
+            connectionTime = @"G";
+        } else if (ct > 3.0) {
+            connectionTime = @"R";
+        } else {
+            connectionTime = @"Y";
+        }
+        
+        PXPDeviceLog(@"TP:%@ TT:%@  %@",mData[@"name"],[mData[@"type"]stringValue],connectionTime);
+    }
+
     
     
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonData ]];
@@ -609,6 +626,9 @@
     
     NSDictionary * dict =  [self.encoder.parseModule parse:data mode:ParseModeTagMod for:self.encoder];
     
+    
+    NSDictionary * checkIfFail = [Utility JSONDatatoDict:data];
+    self.tagData = checkIfFail;
     if ([dict[@"success"]intValue]){
     
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil userInfo:@{@"colour":dict[@"colour"],
@@ -686,6 +706,19 @@
                                         }];
  
     
+    
+    if ([UserCenter getInstance].role){
+        NSString * role = [NSString stringWithFormat:@"%ld",(long)[UserCenter getInstance].role];
+        [tagData setObject:role forKey:@"role"];
+    }
+    
+    NSInteger tygeType = [tagData[@"type"]integerValue];
+    if (tygeType == TagTypeNormal|| tygeType == TagTypeOpenDuration|| tygeType == TagTypeCloseDuration){
+        if ([UserCenter getInstance].taggingTeam){
+            [tagData setObject:[UserCenter getInstance].taggingTeam.name forKey:@"userTeam"];
+        }
+    }
+    
 //    if (period) {
 //        [tagData setValue:period forKey:@"period"];
 //    }
@@ -711,6 +744,19 @@
 
     NSDictionary * dict = [Utility URLJSONStringDict:[[[req URL]absoluteString]lastPathComponent]];
     
+    if ([self.encoder isKindOfClass:[Encoder class]]){
+        NSString * connectionTime;
+        double ct = ((Encoder*)self.encoder).bitrate;
+        if (ct < 0.5) {
+            connectionTime = @"G";
+        } else if (ct > 3.0) {
+            connectionTime = @"R";
+        } else {
+            connectionTime = @"Y";
+        }
+        
+        PXPDeviceLog(@"TagPost:%@ tType:%@  %@",tagData[@"name"],[tagData[@"type"]stringValue],connectionTime);
+    }
     return req;
 }
 
@@ -724,6 +770,9 @@
     
     
     NSArray * tags = [self.encoder.event.tags copy];
+    
+    
+    self.tagData = dict;// new
     
     for ( id <TagProtocol> aTag in tags) {
         if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
@@ -770,6 +819,124 @@
 }
 @end
 
+#pragma mark - Start Game Tag
+
+@implementation EncoderOperationStartGameTag
+
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData
+{
+    
+    if (YES /*If the event has the tag type then its a mod not a make*/) {
+    
+    } else {
+    
+    }
+    
+    self = [super init];
+    if (self) {
+        self.argData    = aData;
+        self.encoder    = (Encoder*)aEncoder;
+        self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
+        self.request    = [self buildRequest:aData]; // this build request is overrided
+    }
+    return self;
+}
+
+
+//-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+//{
+//    
+//    self.timeout = 60;
+//   
+//    NSMutableDictionary * tagData = [NSMutableDictionary new];
+//    [tagData addEntriesFromDictionary:aData];
+//    [tagData addEntriesFromDictionary:@{
+//                                        @"time"          : [aData objectForKey:@"time"],
+//                                        @"event"         : (self.encoder.event.live)?LIVE_EVENT:self.encoder.event.name,
+//                                        @"name"          : [Utility encodeSpecialCharacters:@"Start Game"],
+//                                        @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+//                                        @"user"          : [UserCenter getInstance].userHID,
+//                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+//                                        @"requesttime"   : GET_NOW_TIME_STRING
+//                                        }];
+//    
+//    NSString    * jsonString                    = [Utility dictToJSON:tagData];
+//    
+//    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagset/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonString ]];
+//    NSURLRequest * req = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+//
+//    if ([self.encoder isKindOfClass:[Encoder class]]){
+//        NSString * connectionTime;
+//        double ct = ((Encoder*)self.encoder).bitrate;
+//        if (ct < 0.5) {
+//            connectionTime = @"G";
+//        } else if (ct > 3.0) {
+//            connectionTime = @"R";
+//        } else {
+//            connectionTime = @"Y";
+//        }
+//        
+//        PXPDeviceLog(@"TagPost:%@ tType:%@  %@",tagData[@"name"],[tagData[@"type"]stringValue],connectionTime);
+//    }
+//    return req;
+//}
+//
+//-(void)parseDataToEncoder:(NSData*)data
+//{
+//    NSDictionary * dict = [self.encoder.parseModule parse:data mode:ParseModeTagSet for:self.encoder];
+//    
+//    
+//    
+//    // first check to add the real tag to the proxy
+//    
+//    
+//    NSArray * tags = [self.encoder.event.tags copy];
+//    
+//    for ( id <TagProtocol> aTag in tags) {
+//        if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
+//            // check if aTag matches the data from the dict
+//            
+//            
+//            
+//            if ([[aTag name] isEqualToString:dict[@"name"]] && [aTag time] == [dict[@"time"]doubleValue] && [dict[@"own"]boolValue]) { //match
+//                TagProxy * proxyTag         = (TagProxy *)aTag;
+//                
+//                if (proxyTag.modified) {
+//                    PXPLog(@"Tag was Modded before server responded");
+//                }
+//                
+//                id <TagProtocol> realTag    = [[Tag alloc] initWithData: dict event:self.encoder.event];//  make from data
+//                
+//                [proxyTag addTagToProxy:realTag];
+//                
+//                
+//            }
+//            
+//            
+//        }
+//    }
+//    
+//    
+//    
+//    
+//    //    if ( ![self.encoder.postedTagIDs containsObject:newTag.ID] ){
+//    //        [self.encoder.postedTagIDs addObject:newTag.ID];
+//    //        Tag * tag = [self.encoder.encoder onNewTagsEO:dict];
+//    //        if (tag)self.userInfo = @{@"tag":tag};
+//    //
+//    //    } else {
+//    //        [self.encoder.postedTagIDs removeObject:newTag.ID];
+//    //    }
+//    
+//    
+//    
+//    [super parseDataToEncoder:data];
+//    
+//    
+//    
+//}
+@end
+
 
 
 #pragma mark - Telestation
@@ -802,6 +969,16 @@
                                         @"type"             : [NSNumber numberWithInteger:TagTypeTele],
                                         @"user"             : [UserCenter getInstance].userHID
                                         }];
+    
+    if ([UserCenter getInstance].role){
+        NSString * role = [NSString stringWithFormat:@"%ld",(long)[UserCenter getInstance].role];
+        [tData setObject:role forKey:@"role"];
+    }
+    
+    
+    if ([UserCenter getInstance].taggingTeam){
+        [tData setObject:[UserCenter getInstance].taggingTeam forKey:@"userTeam"];
+    }
     
     // build default data
 //    NSData *teleData = [data objectForKey:@"telestration"];
@@ -850,6 +1027,21 @@
     // and again the delimiting boundary
     //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
     [someUrlRequest setHTTPBody:body];
+    
+    if ([self.encoder isKindOfClass:[Encoder class]]){
+        NSString * connectionTime;
+        double ct = ((Encoder*)self.encoder).bitrate;
+        if (ct < 0.5) {
+            connectionTime = @"G";
+        } else if (ct > 3.0) {
+            connectionTime = @"R";
+        } else {
+            connectionTime = @"Y";
+        }
+        
+        PXPDeviceLog(@"TP:%@ TT:%@  %@",tData[@"name"],[tData[@"type"]stringValue],connectionTime);
+    }
+
     
     return someUrlRequest;
 }
@@ -1045,7 +1237,7 @@
 -(void)EncoderOperationCheckSpace:(NSData*)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-
+//    PXPDeviceLog(@"### APP Started %@",[formatter stringFromDate:[NSDate new]]);
     [super parseDataToEncoder:data];
 }
 @end

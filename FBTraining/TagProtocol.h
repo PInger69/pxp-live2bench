@@ -85,6 +85,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (strong, nonatomic) NSString      * requestURL;
 @property (strong, nonatomic) NSString      * durationID;
 @property (assign, nonatomic) NSString      * period;
+@property (assign, nonatomic) NSString      * userTeam;
 
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 

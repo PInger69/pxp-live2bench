@@ -557,7 +557,16 @@
         [UserCenter getInstance].tagNames = temp;
     }
     
-
+    
+    
+    NSMutableSet * autoSet = [NSMutableSet new];
+    for (SideTagEditButtonDisplayView * display in self.tagSetButtons) {
+        if (display.autoSwitch.isOn) {
+            [autoSet addObject:display.name];
+        }
+    }
+    [UserCenter getInstance].tagsFlaggedForAutoDownload = [autoSet copy];
+    
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
 }

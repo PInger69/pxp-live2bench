@@ -587,6 +587,18 @@ SVSignalStatus signalStatus;
                                     handler:^(UIAlertAction * action)
                                     {
                                         EncoderOperation * operation = [[EncoderOperationStop alloc]initEncoder:encoderManager.masterEncoder data:nil];
+                                        
+                                        // TODO: Make this
+                                        if (YES /*IF has startTag and not have close Tag*/) {
+//                                            EncoderOperation * closeGameTag = [[EncoderOperationMakeTag alloc]initEncoder:encoderManager.masterEncoder data:@{}];
+//                                            [operation addDependency:closeGameTag];
+//                                            [encoderManager.masterEncoder runOperation:closeGameTag];
+                                        }
+                                        
+                                        
+                                        
+                                        
+                                        
                                         [encoderManager.masterEncoder runOperation:operation];
                                         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop"  : [NSNumber numberWithBool:YES]}];
                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];

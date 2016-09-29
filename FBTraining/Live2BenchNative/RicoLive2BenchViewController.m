@@ -80,7 +80,8 @@
 
 
 
-
+#import <Photos/Photos.h>
+#import <AVFoundation/AVFoundation.h>
 
 
 @interface RicoLive2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider,RicoBaseFullScreenDelegate,RicoSourcePickerButtonsDelegate, Live2BenchTagUIViewControllerDelegate>
@@ -299,6 +300,9 @@ static void * eventContext      = &eventContext;
     _doubleTapOnGrid.numberOfTapsRequired = 2;
     [self.ricoZoomGroup addGestureRecognizer:_doubleTapOnGrid];
     [self buildSourceButtons];
+    
+  
+    
 }
 
 -(void)debugDrawerToggle
@@ -1562,6 +1566,19 @@ static void * eventContext      = &eventContext;
         [weakSelf addPlayerView];
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                          userInfo:@{@"tabName":@"Live2Bench"}];
+        
+        
+        NSArray * temp = [weakSelf.currentEvent.tags copy];
+        
+        for (id<TagProtocol> theTag in temp) {
+            if (![theTag userTeam]) continue;
+            if (![[theTag userTeam]isEqualToString:[UserCenter getInstance].taggingTeam.name]) {
+                [weakSelf.currentEvent.tags removeObject:theTag];
+            }
+        }
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:weakSelf.currentEvent];
+        
+        
     }];
     [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                animated:YES];
@@ -1623,12 +1640,16 @@ static void * eventContext      = &eventContext;
 
     
     PXPLog(@"Pressed Live Button");
+    
     [self.ricoPlayerViewController cancelPressed:self.ricoPlayerControlBar];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
     if (_currentEvent.live) {
+        PXPDeviceLog(@"LIVE PRESSED");
         [self.ricoPlayerViewController live];
 
         return;
+    } else {
+        PXPDeviceLog(@"LIVE PRESSED changing event...");
     }
     self.ricoPlayerControlBar.state = RicoPlayerStateLive;
     self.ricoFullScreenControlBar.controlBar.state = RicoPlayerStateLive;
@@ -1723,7 +1744,8 @@ static void * eventContext      = &eventContext;
         
         NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                          @"name":button.titleLabel.text,
-                                                                                         @"time":[NSString stringWithFormat:@"%f",currentTime]
+                                                                                         @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeNormal]
                                                                                          }];
         if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
             [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
@@ -1738,13 +1760,9 @@ static void * eventContext      = &eventContext;
         [postTagOperation setCompletionBlock:^{
             NSLog(@"made done");
         }];
-        [postTagOperation setOnRequestComplete:^(NSData * d, EncoderOperation * e) {
-            NSLog(@"made");
-            
-            
-            
-        }];
-        [eventEncoder runOperation:postTagOperation];
+               [eventEncoder runOperation:postTagOperation];
+        
+        
         
 //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:[userInfo copy]];
         
@@ -1778,6 +1796,9 @@ static void * eventContext      = &eventContext;
         Encoder * eventEncoder = (Encoder *)self.currentEvent.parentEncoder;
         EncoderOperation * postTagOperation = [[EncoderOperationMakeTag alloc]initEncoder:eventEncoder data:[userInfo copy]];
         [eventEncoder runOperation:postTagOperation];
+        
+               
+       
 
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
         [_tagButtonController onEventChange:nil];
@@ -1812,6 +1833,14 @@ static void * eventContext      = &eventContext;
 
         Encoder * eventEncoder = (Encoder *)self.currentEvent.parentEncoder;
         EncoderOperation * closeTagOperation = [[EncoderOperationCloseTag alloc]initEncoder:eventEncoder tag:tagToBeClosed];
+        
+        if ([[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:tagToBeClosed.name]) {
+            //TODO: add download operation
+//            EncoderOperation * mp4Request = [EncoderOperationMakeMP4fromTag alloc]initEncoder:eventEncoder data:<#(NSDictionary *)#>
+            
+        }
+        
+        
         [eventEncoder runOperation:closeTagOperation];
 
         button.isOpen = NO;
@@ -1909,6 +1938,14 @@ static void * eventContext      = &eventContext;
 
 
 #pragma mark - tempButton press methods
+
+-(void)startGame:(id)sender
+{
+    NSLog(@"%s",__FUNCTION__);
+
+}
+
+
 - (void)seekPressed:(SeekButton *)sender {
     
     if (self.telestrationViewController.telestration) {

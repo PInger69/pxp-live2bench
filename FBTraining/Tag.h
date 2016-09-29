@@ -83,6 +83,9 @@
 //    TagTypeFootballDownTags        = 1002,
 //    TagTypeOpenDuration            = 1004,
 //    TagTypeCloseDuration           = 1006,
+
+//    TagTypeStartGame               = 1010,
+//    TagTypeEndGame                 = 1012,
 //    
 //};
 
@@ -124,6 +127,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) NSString      *period;
 @property (strong,nonatomic) NSArray        *players;
 @property (strong,nonatomic) NSDictionary   *extraDic;
+@property (strong,nonatomic) NSString       * role;
+@property (strong,nonatomic) NSString       * userTeam;
 
 /// The telestration accociated with the tag.
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;

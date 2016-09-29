@@ -38,6 +38,8 @@
 @property (strong, nonatomic) NSMutableArray *allTagsArray;
 @property (strong, nonatomic) NSString *contextString;
 
+@property (strong, nonatomic) TabView *popupTabBar;
+
 @end
 
 @implementation ClipViewController
@@ -236,6 +238,9 @@ static void * encoderTagContext = &encoderTagContext;
     self.longPressRecognizer.minimumPressDuration = 0.7;
     [self.view addGestureRecognizer: self.longPressRecognizer];
     self.isEditing = NO;
+    
+    self.popupTabBar = [TabView sharedFilterTabBar];
+
 }
 
 -(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
@@ -510,7 +515,7 @@ static void * encoderTagContext = &encoderTagContext;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
 
-
+ 
     // Get the data from the array
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
     
@@ -958,27 +963,25 @@ static void * encoderTagContext = &encoderTagContext;
 - (void)pressFilterButton
 {
     
-    TabView *popupTabBar = [TabView sharedFilterTabBar];
     
-    
-    if (popupTabBar.isViewLoaded)
+    if (self.popupTabBar.isViewLoaded)
     {
-        popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
+       self. popupTabBar.view.frame =  CGRectMake(0, 0, self.popupTabBar.preferredContentSize.width,self.popupTabBar.preferredContentSize.height);
     }
     
-    popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
-    popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
+    self.popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+    self.popupTabBar.preferredContentSize    = self.popupTabBar.view.bounds.size;
     
-    UIPopoverPresentationController *presentationController = [popupTabBar popoverPresentationController];
+    UIPopoverPresentationController *presentationController = [self.popupTabBar popoverPresentationController];
     presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
     presentationController.sourceView               = self.view;
     presentationController.permittedArrowDirections = 0;
     
-    [self presentViewController:popupTabBar animated:YES completion:nil];
+    [self presentViewController:self.popupTabBar animated:YES completion:nil];
     
     [_pxpFilter filterTags:self.allTagsArray];
     
-    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
+    if (!self.popupTabBar.pxpFilter)          self.popupTabBar.pxpFilter = _pxpFilter;
     
     Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
     [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;

@@ -50,25 +50,19 @@
 
 @interface ListViewController () <RicoBaseFullScreenDelegate>
 
-@property (strong, nonatomic, nonnull)      PxpPlayerViewController *playerViewController;
-@property (strong, nonatomic)               UIPinchGestureRecognizer *pinchGesture;
-//@property (strong, nonatomic)               ListViewFullScreenViewController *listViewFullScreenViewController;
-
-@property (strong, nonatomic)               UIButton *filterButton;
-
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
+@property (strong, nonatomic)          UIPinchGestureRecognizer *pinchGesture;
+@property (strong, nonatomic)          UIButton *filterButton;
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 @property (strong, nonatomic, nonnull) PxpListViewFullscreenViewController *fullscreenViewController;
-
-
-
-@property (strong, nonatomic, nonnull) RicoPlayer               * mainPlayer;
-@property (strong, nonatomic, nonnull) RicoVideoBar             * videoBar;
-@property (strong, nonatomic, nonnull) RicoZoomContainer        * ricoZoomContainer;
-@property (strong, nonatomic, nonnull) RicoPlayerViewController * ricoPlayerViewController;
-@property (strong, nonatomic, nonnull) RicoPlayerControlBar     * ricoPlayerControlBar;
-@property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController     * ricoFullscreenViewController;
+@property (strong, nonatomic, nonnull) RicoPlayer                       * mainPlayer;
+@property (strong, nonatomic, nonnull) RicoVideoBar                     * videoBar;
+@property (strong, nonatomic, nonnull) RicoZoomContainer                * ricoZoomContainer;
+@property (strong, nonatomic, nonnull) RicoPlayerViewController         * ricoPlayerViewController;
+@property (strong, nonatomic, nonnull) RicoPlayerControlBar             * ricoPlayerControlBar;
+@property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController * ricoFullscreenViewController;
 @property (strong, nonatomic, nonnull) RicoFullScreenControlBar         * ricoFullScreenControlBar;
-@property (strong, nonatomic, nonnull) UIButton                 * downloadAllButton;
+@property (strong, nonatomic, nonnull) UIButton                         * downloadAllButton;
 
 
 @end
@@ -94,56 +88,30 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         
-//        _playerViewController       = [[PxpPlayerViewController alloc] init];
-        _videoBar                   = [[RicoVideoBar alloc] init];
+        _videoBar                           = [[RicoVideoBar alloc] init];
+        _fullscreenViewController           = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        self.allTags                        = [[NSMutableArray alloc]init];
+        self.tagsToDisplay                  = [[NSMutableArray alloc]init];
+        _tableViewController                = [[ListTableViewController alloc]init];
+        _tableViewController.contextString  = @"TAG";
+        _tableViewController.tableData      = self.tagsToDisplay;
         
-        
-        [_videoBar.forwardSeekButton addTarget:self  action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [_videoBar.backwardSeekButton addTarget:self  action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        _fullscreenViewController   = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-        
-        
-        
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
-        
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
-        self.allTags = [[NSMutableArray alloc]init];
-        self.tagsToDisplay = [[NSMutableArray alloc]init];
-        _tableViewController = [[ListTableViewController alloc]init];
-        _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
-        //_tableViewController.listViewControllerView = self.view;
-        _tableViewController.tableData = self.tagsToDisplay;
-
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-        
-//        CGFloat playerWidth = 530 + 10;
-//        CGFloat playerHeight = playerWidth / (16.0 / 9.0);
-//       
-//        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
-////        [self.view addSubview:self.playerViewController.view];
-//        
-//        
-        
+        [_videoBar.forwardSeekButton    addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [_videoBar.backwardSeekButton   addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [_videoBar.slomoButton          addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (!selectedTag) {
-                
-                
                 [commentingField clear];
                 commentingField.enabled             = YES;
                 commentingField.text                = selectedTag.comment;
                 commentingField.ratingScale.rating  = selectedTag.rating;
-                
-
             }
         }];
-        
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
-        
         _pxpFilter = appDel.sharedFilter;
     }
     return self;
@@ -201,7 +169,6 @@
     }else{
         _currentEvent = [((id <EncoderProtocol>) note.object) event];
         
-        //[self.videoPlayer playFeed:[[_currentEvent.feeds allValues]firstObject] ];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }
@@ -767,20 +734,13 @@
         
         
 
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
-                                                                                                               @"block": blockName,
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName,
                                                                                                                @"tag": tagToDownload,
                                                                                                                @"src":src,
                                                                                                                @"key":key}];
         
  
     }
-    
-    
-    
-
-    // table reload
-//    [_tableViewController reloadData];
 
 }
 

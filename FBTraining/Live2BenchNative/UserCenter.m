@@ -40,7 +40,6 @@ static UserCenter * instance;
     NSDictionary    * rawResponce;
     
     NSArray * eventHIDs;
-    LogoutAction                * logoutAction;
     CheckLoginPlistAction     * _checkLoginPlistAction;
 }
 
@@ -59,8 +58,10 @@ static UserCenter * instance;
 @synthesize customerEmail           = _customerEmail;
 @synthesize userHID             = _userHID;
 @synthesize localPath               = _localPath;
+@synthesize role                  = _role;
 @synthesize preRoll               = _preRoll;
 @synthesize postRoll              = _postRoll;
+
 
 
 +(instancetype)getInstance
@@ -75,6 +76,8 @@ static UserCenter * instance;
     if (self) {
         
         self.queue = [NSOperationQueue new];
+        self.tagsFlaggedForAutoDownload = [[NSSet alloc]initWithObjects:@"", nil];
+        
         // paths
         _localPath       = aLocalDocsPath;
         _accountInfoPath = [_localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
@@ -93,7 +96,7 @@ static UserCenter * instance;
         eventHIDs = [[NSArray alloc]initWithContentsOfFile:[_localPath stringByAppendingPathComponent:PLIST_EVENT_HID]];
         
         _checkLoginPlistAction     = [[CheckLoginPlistAction alloc]initWithCenter:self];
-        logoutAction                = [[LogoutAction alloc]initWithUserCenter:self];
+//        logoutAction                = [[LogoutAction alloc]initWithUserCenter:self];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logUserOutOfDevice:) name:NOTIF_LOGOUT_USER object:nil];
         
@@ -231,8 +234,25 @@ static UserCenter * instance;
 
 -(void)cloudCredentialsResponce:(NSData *)data
 {
-    NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
+    
+ // role
+//    0 = superUser
+//    1 = coach
+//    2 = play
+//    3 = user
+//    4 = team admin
+//    5 = 
+    NSError * error;
+//    NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
+    NSDictionary * jsonDict = [Utility JSONDatatoDict:data error:&error];
+    
+    if (error) {
+        NSLog(@"%s",__FUNCTION__);
+
+    }
+    
     rawResponce = jsonDict;
+    
     
     if ([[rawResponce objectForKey:@"success"]boolValue]) {
         [self updateCustomerInfoWith:rawResponce];
@@ -250,6 +270,10 @@ static UserCenter * instance;
     _userHID                = [dataDict objectForKey:@"hid"];
     _customerColor          = [Utility colorWithHexString:[dataDict objectForKey:@"tagColour"]];
     _customerAuthorization  = [dataDict objectForKey:@"authorization"];
+    
+    
+    if ([dataDict objectForKey:@"role"]) self.role = [[dataDict objectForKey:@"role"]integerValue];
+    
     
     NSUserDefaults *defaults           = [NSUserDefaults standardUserDefaults];
     NSDictionary * userDefaults        = [defaults objectForKey:_customerEmail];
@@ -531,12 +555,12 @@ static UserCenter * instance;
     return [_checkLoginPlistAction reset];
 }
 
--(id<ActionListItem>)logoutAction
-{
-    logoutAction.isFinished = NO;
-    logoutAction.isSuccess  = NO;
-    return logoutAction;
-}
+//-(id<ActionListItem>)logoutAction
+//{
+//    logoutAction.isFinished = NO;
+//    logoutAction.isSuccess  = NO;
+//    return logoutAction;
+//}
 
 -(NSString*)l2bMode
 {

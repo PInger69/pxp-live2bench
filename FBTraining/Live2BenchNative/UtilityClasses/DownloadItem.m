@@ -126,6 +126,7 @@
         } while (left > 0);
         if (left) {
             PXPLog(@"stream error: %@", [stream streamError]);
+            PXPDeviceLog(@"%@ stream error: %@",CODE_ERROR,url,[stream streamError]);
         }
     } else if (downloadType == DownloadItem_TypePlist || downloadType == DownloadItem_TypeImage) {
         [_data appendData:data];
@@ -153,6 +154,7 @@
     if (!_data && _expectedBytes < 300) {
         NSError * e =  [[NSError alloc]initWithDomain:@"Unknown" code:404 userInfo:@{@"NSLocalizedDescription":@"File not found"}];
         [self connection:connection didFailWithError:e];
+        PXPDeviceLog(@"%@ Clip/Event Download FAILED url: %@  reason: %@",CODE_ERROR,url,@"File not found");
         return;
     }
     
@@ -192,6 +194,8 @@
     PXPLog(@"  url: %@ ",url);
     PXPLog(@"  reason: %@ ",failType);
     PXPLog(LOG_HASH);
+    PXPDeviceLog(@"%@ Clip/Event Download FAILED url: %@  reason: %@",CODE_ERROR,url,failType);
+    
     
     if (stream) [stream close];
     // delete file if partly downloaded

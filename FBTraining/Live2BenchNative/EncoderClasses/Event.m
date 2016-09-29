@@ -214,6 +214,9 @@
                                                                                                       @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
                                                                                                       }];
     }
+    
+    
+    
 }
 
 -(void)modifyTag:(NSDictionary *)modifiedData
@@ -323,9 +326,22 @@
        
         for (NSDictionary *tagDic in tagArray) {
             Tag *tag = [[Tag alloc]initWithData:tagDic event:self];
-            if (tag.type !=  TagTypeDeleted ) {
-            [tagResult addObject:tag];
+            
+            
+            if (tag.userTeam && [UserCenter getInstance].taggingTeam){
+                if (![tag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) continue;
+                
             }
+            
+            if (tag.type !=  TagTypeDeleted) {
+                [tagResult addObject:tag];
+            }
+            
+//            if (tag.type !=  TagTypeDeleted  && !tag.role) {
+//                [tagResult addObject:tag];
+//            } else if (tag.type !=  TagTypeDeleted  && [[UserCenter getInstance].rolePermissions containsObject:tag.role]) {
+//                [tagResult addObject:tag];
+//            }
         }
     }
     return (tagResult)?tagResult:nil;
@@ -548,6 +564,9 @@
     }
     return [tempDict copy];
 }
+
+
+
 
 // depricated this should be handled by the
 -(void)destroy

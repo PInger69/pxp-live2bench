@@ -31,6 +31,9 @@
 @property (nonatomic,strong) NSString * clipName;
 @property (nonatomic,strong) NSString * clipTime;
 @property (nonatomic,strong) NSString * clipDate;
+@property (nonatomic,strong) NSString * clipEventName;
+@property (nonatomic,strong) NSError * error;
+
 
 
 

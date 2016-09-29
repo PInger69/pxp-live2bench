@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *awayTeamLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel * labelReciept;
+@property (weak, nonatomic) IBOutlet UILabel * labelViewedBy;
 
 
 @property (nonatomic,strong) NSString * linkUrl;

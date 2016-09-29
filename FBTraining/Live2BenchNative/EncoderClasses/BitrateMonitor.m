@@ -54,9 +54,14 @@ static void * bitrateContext         = &bitrateContext;
     
     if (self) {
         
-        maxLimit    = 5;//seconds
-        lowThresh   = maxLimit * 0.33f;
-        highThresh  = lowThresh * 2;
+//        maxLimit    = 5;//seconds
+//        lowThresh   = maxLimit * 0.33f;
+//        highThresh  = lowThresh * 2;
+
+        maxLimit    = 3;//seconds
+        lowThresh   = 0.5f;
+        highThresh  = 3.0f;
+        
         //graphView   = [[GraphView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         mainview    = [[UIView alloc] initWithFrame:CGRectMake(80, -50, frame.size.width, frame.size.height*2 -50)];
         graphView   = [[GraphView alloc]initWithFrame:CGRectMake(0, frame.size.height - 35 , frame.size.width +3 , frame.size.height -10)];
@@ -181,9 +186,9 @@ static void * bitrateContext         = &bitrateContext;
     bRate = MIN(5,bRate);
     // adjust colors
     if (bRate < lowThresh){
-        [graphView setBackgroundColor:MAX_COLOR];
+        [graphView setBackgroundColor:MAX_COLOR]; // really good
     } else if (bRate > highThresh) {
-        [graphView setBackgroundColor:MIN_COLOR];
+        [graphView setBackgroundColor:MIN_COLOR]; // vary bad
     } else {
         [graphView setBackgroundColor:MID_COLOR];
     }

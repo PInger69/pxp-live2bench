@@ -528,6 +528,8 @@
 		D7A939B316ADD875006CBAB2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B216ADD875006CBAB2 /* AVFoundation.framework */; };
 		D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9F10C1B25EE72005C8B3E /* EncoderCommander.m */; };
 		D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */; };
+		D7AA9FBC1D87384C008079FC /* DeviceLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D7AA9FBB1D87384B008079FC /* DeviceLog.m */; };
+		D7AA9FBF1D87534F008079FC /* EmailActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D7AA9FBE1D87534F008079FC /* EmailActivity.m */; };
 		D7AB2D1D16B6F44D0093465F /* line-button-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D1B16B6F44D0093465F /* line-button-grey.png */; };
 		D7AB2D2416B6F4AD0093465F /* ToolBarValues.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */; };
 		D7AC062E1ADC13F10005EA73 /* Clip.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EB50AF1AD721F500CFB200 /* Clip.m */; };
@@ -549,6 +551,7 @@
 		D7B1AF961704F41700013C95 /* slineoff.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B1AF941704F41700013C95 /* slineoff.png */; };
 		D7B1EA2C16C5585400DD35B0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B1EA2B16C5585400DD35B0 /* SystemConfiguration.framework */; };
 		D7B4865216CBF05C000AA878 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B4865116CBF05C000AA878 /* ImageIO.framework */; };
+		D7B497BF1D8C367100F9275B /* DownloadClipFromTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B497BE1D8C366F00F9275B /* DownloadClipFromTag.m */; };
 		D7B5235B1760D4C100BF92EB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B5235A1760D4C100BF92EB /* CoreMedia.framework */; };
 		D7B523631760EC9F00BF92EB /* download_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B5235F1760EC9F00BF92EB /* download_selected.png */; };
 		D7B523661760EC9F00BF92EB /* download_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B523621760EC9F00BF92EB /* download_unselected@2x.png */; };
@@ -1556,6 +1559,10 @@
 		D7A939B216ADD875006CBAB2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D7A9F10C1B25EE72005C8B3E /* EncoderCommander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderCommander.m; path = Live2BenchNative/EncoderClasses/EncoderCommander.m; sourceTree = "<group>"; };
 		D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactLabelString.txt; sourceTree = "<group>"; };
+		D7AA9FBA1D87384A008079FC /* DeviceLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceLog.h; sourceTree = "<group>"; };
+		D7AA9FBB1D87384B008079FC /* DeviceLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceLog.m; sourceTree = "<group>"; };
+		D7AA9FBD1D87534F008079FC /* EmailActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailActivity.h; sourceTree = "<group>"; };
+		D7AA9FBE1D87534F008079FC /* EmailActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailActivity.m; sourceTree = "<group>"; };
 		D7AB2D1B16B6F44D0093465F /* line-button-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey.png"; sourceTree = "<group>"; };
 		D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ToolBarValues.plist; sourceTree = "<group>"; };
 		D7AC062F1ADD5A730005EA73 /* PxpLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PxpLog.h; path = Live2BenchNative/UtilityClasses/PxpLog.h; sourceTree = "<group>"; };
@@ -1580,6 +1587,8 @@
 		D7B1EA2B16C5585400DD35B0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D7B4865116CBF05C000AA878 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		D7B4867816CC037C000AA878 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDWebImage.framework; sourceTree = "<group>"; };
+		D7B497BD1D8C366F00F9275B /* DownloadClipFromTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadClipFromTag.h; sourceTree = "<group>"; };
+		D7B497BE1D8C366F00F9275B /* DownloadClipFromTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadClipFromTag.m; sourceTree = "<group>"; };
 		D7B5235A1760D4C100BF92EB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		D7B5235F1760EC9F00BF92EB /* download_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download_selected.png; sourceTree = "<group>"; };
 		D7B523621760EC9F00BF92EB /* download_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_unselected@2x.png"; sourceTree = "<group>"; };
@@ -2263,6 +2272,8 @@
 				D768BFA21D09C61800D5BFF6 /* CopyDeviceVideoToOperation.h */,
 				D713B6211CB84E2F00067746 /* GroupOperation.h */,
 				D713B6221CB84E3000067746 /* GroupOperation.m */,
+				D7B497BD1D8C366F00F9275B /* DownloadClipFromTag.h */,
+				D7B497BE1D8C366F00F9275B /* DownloadClipFromTag.m */,
 				D7525DB41CC182250074F590 /* TestGroupOperation.h */,
 				D7525DB51CC182250074F590 /* TestGroupOperation.m */,
 				D7525DA51CC14DD20074F590 /* InternetOperation.h */,
@@ -3078,8 +3089,12 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7AA9FBA1D87384A008079FC /* DeviceLog.h */,
+				D7AA9FBB1D87384B008079FC /* DeviceLog.m */,
 				D75E67D81D674C7600A38CD0 /* VideoReciept */,
 				D706AA521D4016280089A02E /* PxpMailClipActivity.h */,
+				D7AA9FBD1D87534F008079FC /* EmailActivity.h */,
+				D7AA9FBE1D87534F008079FC /* EmailActivity.m */,
 				D706AA531D4016280089A02E /* PxpMailClipActivity.m */,
 				D7EE71631D36962F002CEB8A /* Dropbox */,
 				D760DE0F1D34427A006A3541 /* GroupDropboxActivity.h */,
@@ -3862,6 +3877,7 @@
 				D7A9393C16ADA65E006CBAB2 /* Frameworks */,
 				D7A9393D16ADA65E006CBAB2 /* Resources */,
 				D73501AB190EBF6600DB9B11 /* ShellScript */,
+				D710158B1D806C8A003D5D83 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -4167,6 +4183,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D710158B1D806C8A003D5D83 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "KEYWORDS=\"TODO:|FIXME:|MARK:|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"";
+		};
 		D73501AB190EBF6600DB9B11 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4469,6 +4498,7 @@
 				D73CDD551CCA74A80006AE72 /* VKPlayerControllerBase.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */,
+				D7AA9FBC1D87384C008079FC /* DeviceLog.m in Sources */,
 				D784D9411C61103500E5B946 /* RicoL2BVideoBar.m in Sources */,
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
 				D7413B651CEB7E3D0060FB57 /* RicoBookmarkPlayerController.m in Sources */,
@@ -4522,6 +4552,7 @@
 				D7E0EDB91BFE20CD003F4F94 /* PxpReadyPlayerItemOperation.m in Sources */,
 				D746D2C51CC532A100F14FE6 /* FakeEncoderBitrate.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
+				D7AA9FBF1D87534F008079FC /* EmailActivity.m in Sources */,
 				D73CDD5F1CCA74A80006AE72 /* VKPlayerViewController.m in Sources */,
 				D7EE71621D369620002CEB8A /* DropboxManager.m in Sources */,
 				D73CDD611CCA74A80006AE72 /* VKStreamInfoView.m in Sources */,
@@ -4529,6 +4560,7 @@
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
 				AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
+				D7B497BF1D8C367100F9275B /* DownloadClipFromTag.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D7F24FD31C6937CC0012E6CB /* RicoBaseFullScreenViewController.m in Sources */,
@@ -4677,7 +4709,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "";
 				SDKROOT = iphoneos;
@@ -4704,7 +4736,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;

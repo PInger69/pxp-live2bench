@@ -31,7 +31,7 @@
     NSMutableURLRequest *request               = [[NSMutableURLRequest alloc]init];
     
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/deactivate/ajax"]]];
-    
+//        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://192.168.5.115/max/deactivate/ajax"]]];
     //create post request
     [request setHTTPMethod:@"POST"];
     [request setValue:postDataLength forHTTPHeaderField:@"Content-Length"];

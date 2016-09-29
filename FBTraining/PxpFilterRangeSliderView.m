@@ -79,6 +79,7 @@
     [self.rangeSlider setKnobWithStart:_startPoint withEnd:_endPoint];
     [self addSubview:self.rangeSlider];
     
+    
 }
 
 -(void)hide{  //delete the slider

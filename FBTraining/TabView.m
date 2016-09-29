@@ -149,9 +149,9 @@ static NSString * currentFilterSport;
     
     PxpFilterTabController *currentTab = _tabs[tabIndex];
     
-    if([self checkTabAvailability:previousTab])
+    if([self checkTabAvailability:previousTab]) {
         [self hideTab:previousTab];
-    
+    }
     [self showTab:currentTab];
     [currentTab setPxpFilter:_pxpFilter];
     previousTab = currentTab;
@@ -168,7 +168,7 @@ static NSString * currentFilterSport;
 - (void)updateTabBar {                      //Update the tab bar by readding the tab items based on tabs array
 
     if (_mainTabBar) {
-        _mainTabBar.tintColor = [UIColor orangeColor];
+        _mainTabBar.tintColor = PRIMARY_APP_COLOR;
         _mainTabBar.translucent = NO;
         NSMutableArray *tabItems = [NSMutableArray arrayWithCapacity:_tabs.count];
         [[UITabBarItem appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Arial" size:25.0f], NSFontAttributeName,nil]forState:UIControlStateNormal];

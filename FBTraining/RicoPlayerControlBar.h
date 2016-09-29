@@ -53,7 +53,8 @@ typedef NS_ENUM (NSInteger, RicoPlayerState){
 @property (assign, nonatomic) BOOL scrubbing;
 @property (assign, nonatomic) BOOL gestureEnabled;
 @property (assign, nonatomic) BOOL delegateUpdateEnabled;
-
+@property (assign, nonatomic) CMTime startOffset;
+@property (assign, nonatomic) CMTime endOffset;
 
 
 

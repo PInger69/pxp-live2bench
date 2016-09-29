@@ -15,6 +15,7 @@
 {
     SideTagButtonModes           prevMode;
     UIColor         *backgroundColor;
+    UIView          * fadeColorView;
 }
 
 @synthesize durationID = _durationID;
@@ -34,8 +35,9 @@
         [self setTitleColor:self.tintColor forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
-        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
+//        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
+//        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
+//        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR]  forState:UIControlStateNormal];
         [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[[UIColor lightGrayColor] colorWithAlphaComponent:0.25]] forState:UIControlStateNormal];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
@@ -47,6 +49,11 @@
         self.durationView = [[DurationTagButtonView alloc]initWithFrame:self.bounds];
         self.durationView.hidden = YES;
         [self addSubview:self.durationView];
+        fadeColorView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
+        [fadeColorView setBackgroundColor:PRIMARY_APP_COLOR];
+         fadeColorView.alpha = 0;
+        [fadeColorView setUserInteractionEnabled:NO];
+        [self insertSubview:fadeColorView atIndex:0];
     }
     return self;
 }
@@ -174,12 +181,42 @@
     [super setFrame:frame];
     
     [self.durationView setFrame:self.bounds];
+    [fadeColorView setFrame:self.bounds];
     
 }
 
 -(BOOL)isBusy
 {
     return _isBusy;
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+//    [UIView animateWithDuration:1 animations:^{
+        fadeColorView.alpha = 1;
+        
+//    }];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [UIView animateWithDuration:1 animations:^{
+
+        fadeColorView.alpha = 0;
+    }];
+    [super touchesEnded:touches withEvent:event];
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+//    [UIView animateWithDuration:1 animations:^{
+//
+//        fadeColorView.alpha = 0;
+//    }];
+//    
+//    
+       [super touchesMoved:touches withEvent:event];
 }
 
 

@@ -16,8 +16,9 @@
 @property (nonatomic,copy)          void (^onActivityProgress)(VideoUploadRecieptActivity*activity,CGFloat progress);
 @property (copy, nonatomic)     void(^onRequestComplete)(VideoUploadRecieptActivity* activity);
 @property (nonatomic,strong) NSString * progressMessage;
-
+@property (nonatomic,strong) NSError * error;
 
 - (instancetype)initWithClips:(NSArray*)clips;
+
 
 @end

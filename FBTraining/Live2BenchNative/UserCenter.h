@@ -51,11 +51,17 @@
 
 // Preferences
 @property (nonatomic,assign) NSInteger              preferenceLiveBuffer;
+@property (nonatomic,assign) NSInteger              role;
+@property (nonatomic,strong) NSString               * userTeam;
+@property (nonatomic,assign) NSSet                  * rolePermissions;
+@property (nonatomic,assign) NSPredicate            * teamPredicate;
 
 @property (nonatomic,strong) NSString               * l2bMode;
 
 @property (nonatomic,assign) double preRoll;
 @property (nonatomic,assign) double postRoll;
+
+@property (nonatomic,strong) NSSet              * tagsFlaggedForAutoDownload;
 
 +(instancetype)getInstance;
 
@@ -68,7 +74,7 @@
 -(void)verifyGet:(NSMutableDictionary *)tData  timeStamp:(NSNumber *)aTimeStamp;
 // Action methods
 
--(id<ActionListItem>)logoutAction;
+
 -(id<ActionListItem>)checkLoginPlistAction;
 
 -(NSDictionary*)namedCamerasByUser;

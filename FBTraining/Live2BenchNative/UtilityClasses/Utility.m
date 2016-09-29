@@ -34,6 +34,7 @@ static InternetMonitor* internetMonitor;
 
 //translate seconds to hh:mm:ss format
 +(NSString*)translateTimeFormat:(float)time{
+    
     NSUInteger dTotalSeconds = fabsf(time);
     NSUInteger dHours = floor(dTotalSeconds / 3600);
     NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);

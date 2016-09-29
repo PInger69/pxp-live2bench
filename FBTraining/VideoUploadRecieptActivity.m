@@ -92,13 +92,13 @@
         
         
         UploadOperation * uploadOp = [[UploadOperation alloc]initWith:location fileToBeUploaded:fileUrl];
-        uploadOp.league     = theClip.rawData[@"displaytime"];
-        uploadOp.vTeam      = theClip.rawData[@"visitTeam"];
-        uploadOp.hTeam      = theClip.rawData[@"homeTeam"];
-        uploadOp.clipName   = theClip.name;
-        uploadOp.clipTime   = theClip.rawData[@"displaytime"];
-        uploadOp.clipDate   = [Utility dateFromEvent:theClip.localRawData[@"event"]];
-        
+        uploadOp.league         = theClip.rawData[@"displaytime"];
+        uploadOp.vTeam          = theClip.rawData[@"visitTeam"];
+        uploadOp.hTeam          = theClip.rawData[@"homeTeam"];
+        uploadOp.clipName       = theClip.name;
+        uploadOp.clipTime       = theClip.rawData[@"displaytime"];
+        uploadOp.clipDate       = [Utility dateFromEvent:theClip.localRawData[@"event"]];
+        uploadOp.clipEventName  = theClip.localRawData[@"event"];
         
         __weak VideoUploadRecieptActivity * weakActivity = self;
         
@@ -109,18 +109,20 @@
         [uploadOp setOnRequestRecieved:^(UploadOperation * op) {
            NSMutableDictionary * dict = [[Utility JSONDatatoDict:op.data] mutableCopy];
             
-            
-            if (!dict[@"success"]) {
+            self.error = op.error;
+            if (![dict[@"success"]boolValue]) {
                 NSLog(@"ERROR  %@",dict);
+                
             }
             
             
-            [dict setObject:op.clipName forKey:@"name"];
-            [dict setObject:op.vTeam forKey:@"vTeam"];
-            [dict setObject:op.hTeam forKey:@"hTeam"];
-            [dict setObject:op.league forKey:@"league"];
-            [dict setObject:op.clipTime forKey:@"time"];
-            [dict setObject:op.clipDate forKey:@"date"];
+            [dict setObject:op.clipName         forKey:@"name"];
+            [dict setObject:op.vTeam            forKey:@"vTeam"];
+            [dict setObject:op.hTeam            forKey:@"hTeam"];
+            [dict setObject:op.league           forKey:@"league"];
+            [dict setObject:op.clipTime         forKey:@"time"];
+            [dict setObject:op.clipDate         forKey:@"date"];
+            [dict setObject:op.clipEventName    forKey:@"event"];
             
             NSLog(@"%@",dict);
             if (dict&& dict[@"xsURL"]) {
@@ -165,8 +167,9 @@
         [text appendString:self.links[i]];
         [text appendString:@"\n"];
     }
-    
-    [self makeEmail:text];
+    if (!self.error){
+        [self makeEmail:text];
+    }
     self.onRequestComplete(self);
     [super activityDidFinish:completed];
 
@@ -176,6 +179,9 @@
 -(void)makeEmail:(NSString*)message
 {
     self.mailComposeViewController = [[MFMailComposeViewController alloc] init];
+    
+
+    
     if (self.mailComposeViewController) {
         //TODO: make no email Error
         self.mailComposeViewController.mailComposeDelegate = self;
@@ -196,8 +202,10 @@
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
+    
+
     [self.mailComposeViewController dismissViewControllerAnimated:YES completion:^{
-        
+//        [self findEmailAddresses:self.mailComposeViewController.view depth:4];
     }];
 }
 
@@ -230,7 +238,38 @@
 
 }
 
-
-
+//- (NSString *)findEmailAddresses:(UIView *)view depth:(NSInteger)count
+//{
+//    NSString *eAddress = nil;
+//    if (!view){
+//        return eAddress;
+//    }
+//    NSMutableString *tabString = [NSMutableString stringWithCapacity:count];
+//    for (int i = 0; i < count; i++)
+//        [tabString appendString:@"-- "];
+//    NSLog(@"%@%@", tabString, view);
+//    
+//    if ([view isKindOfClass:[UITextField class]])
+//    {
+//        // MAGIC: debugger shows email address(es) in first textField
+//        // but only if it's about max 35 characters
+//        if (((UITextField *)view).text)
+//        {
+//            eAddress = [NSString stringWithString:((UITextField *)view).text];
+//            NSLog(@"FOUND UITextField: %@", eAddress ? eAddress : @"");
+//        }
+//    }
+//    
+//    NSArray *subviews = [view subviews];
+//    if (subviews) {
+//        for (UIView *view in subviews)
+//        {
+//            NSString *s = [self findEmailAddresses:view depth:count+1];
+//            if (s) eAddress = s;
+//        }
+//    }
+//    
+//    return eAddress;
+//}
 
 @end

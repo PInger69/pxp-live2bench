@@ -81,23 +81,13 @@
     
     self.imageAssetManager.pathForFolderContainingImages = imageAssets;
     
-    
-    
-    
     _screenController       = [[ScreenController alloc]init];
     _loginController        = [[LoginViewController alloc]init];
     _eulaViewController     = [[EulaModalViewController alloc]init];
-    
-    
     _actionList             = [[ActionList alloc]init];
     _userCenter             = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
-    //[_userCenter enableObservers:YES];
-    
-    _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
+    _encoderManager         = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
-    
-
-    
     self.tabBarController           = [[CustomTabBar alloc]init];
     self.window.rootViewController  = self.tabBarController;
     self.window.tintColor           = PRIMARY_APP_COLOR;
@@ -114,53 +104,29 @@
     requestEulaAction = [[RequestEulaAction alloc]initWithAppDelegate:self];
     
     // run main logic for status checking
-
     
     [self actionListBlock];
     
     [_actionList onFinishList:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
-//        _loginController        = nil;
-//        _eulaViewController     = nil;
-
     }];
-    
-
     
     [_actionList start];
     
     _toastObserver = [[ToastObserver alloc]init];
     _toastObserver.parentView = self.window.rootViewController.view;
-    
     _sharedFilter       = [[PxpFilter alloc]init];
     _sharedFilterTab    = [TabView sharedFilterTabBar];
     [_sharedFilterTab setPxpFilter:_sharedFilter];
     
-//    [self testFileCheck:kdocumentsDirectory];
+    
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd";
+    PXPDeviceLog(@"### APP Started %@",[formatter stringFromDate:[NSDate new]]);
     
     return YES;
 }
-
-
-//-(void)testFileCheck:(NSString*)docPath
-//{
-//    
-//    
-//    
-//   
-//    
-//    NSString * workingVideo     = [NSString stringWithFormat:@"%@/events/%@",docPath,@"2016-07-06_12-25-20_1dec3b359b4563602c32639acd4679263c5c3ca1_local/main_00hq.mp4"];
-//    NSString * nonworkingVideo  =  [NSString stringWithFormat:@"%@/events/%@",docPath,@"2016-07-16_08-36-16_3e0d30e03e09dc4b23273796d757281c2726cb04_local/main_00hq.mp4"];
-//
-//    BOOL isDir = NO;
-//    BOOL isFoundWorking = [[NSFileManager defaultManager] fileExistsAtPath:workingVideo isDirectory:&isDir];
-//    NSLog(@"VIDEO WV FOUND:  %@",(isFoundWorking)? @"YES":@"NO");
-//
-//    BOOL isFoundNonWorking = [[NSFileManager defaultManager] fileExistsAtPath:nonworkingVideo isDirectory:&isDir];
-//    NSLog(@"VIDEO NON FOUND: %@",(isFoundNonWorking)? @"YES":@"NO");
-//
-//    
-//}
 
 
 -(void)logoutApp:(NSNotification *)note
@@ -168,7 +134,8 @@
     if ([[note.userInfo objectForKey:@"success"]boolValue]){
 
         // when log out it will clear our all encoders
-        for (Encoder * enc in _encoderManager.authenticatedEncoders) {
+        NSArray * temp = [_encoderManager.authenticatedEncoders copy];
+        for (Encoder * enc in temp) {
             [_encoderManager unRegisterEncoder:enc];
         }
         
@@ -185,6 +152,7 @@
         }];
         
         [_actionList start];
+        PXPDeviceLog(@"USER LOGGED OUT");
     }
 }
 
@@ -205,7 +173,7 @@
                                     }];
     [alert addAction:cancelButtons];
     
-//    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+    PXPDeviceLog(@"!Wifi is lost");
      [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:self.tabBarController animated:YES style:AlertImportant completion:nil];
     lostWifiIsRun = true;
     [_encoderManager declareCurrentEvent:nil];
@@ -254,17 +222,17 @@
     //save all the tags when the app exit
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.  
-    
+    PXPDeviceLog(@"!applicationDidEnterBackground");
 }
 
 - (void)applicationDidEnterForeground:(UIApplication *)application
 {
-   
+   PXPDeviceLog(@"!applicationDidEnterForeground");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-
+    PXPDeviceLog(@"!!! app Terminate");
 }
 
 - (UIWindow*)window {
@@ -315,7 +283,7 @@
     } onItemFinish:^(BOOL succsess) {
         PXPLog(@"Cloud Connection Checking...");
         PXPLog(succsess?@"   SUCCESS":@"   FAIL");
-        if (!succsess)PXPLog(@"   NO INTERNET FOUND!");
+        if (!succsess)PXPLog(@"   No Connection to cloud found!");
         weakSelf.loginController.hasInternet = succsess;
     }];
     

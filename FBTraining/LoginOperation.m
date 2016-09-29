@@ -32,6 +32,7 @@
     [request setHTTPBody:postData];
     
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/activate/ajax"]]];
+//    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://192.168.5.115/max/activate/ajax"]]];
 
     
     self = [super initWithNSURLRequest:request];

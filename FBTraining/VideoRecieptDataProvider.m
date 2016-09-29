@@ -72,6 +72,19 @@ static UIImage * _orangeFill;
     
 }
 
+
+// MARK:
+// TODO:
+// FIXME:
+// ???:
+// !!!:
+
+//MARK:
+//TODO:
+//FIXME:
+//???:
+//!!!:
+
 -(void)refreshOnRefreshComplete:(void(^)())refreshComplete
 {
     
@@ -83,6 +96,10 @@ static UIImage * _orangeFill;
             [self refresh];
         } else {
             NSLog(@"NO INTERNET");
+            
+
+
+            
             self.onRefreshComplete();
         }
     }];
@@ -105,6 +122,18 @@ static UIImage * _orangeFill;
     
     
     NSBlockOperation * blocker = [NSBlockOperation blockOperationWithBlock:^{
+        NSSortDescriptor *sorter1 = [NSSortDescriptor
+                                     sortDescriptorWithKey:@"date"
+                                     ascending:YES
+                                     selector:@selector(compare:)];
+        NSSortDescriptor *sorter2 =[NSSortDescriptor
+                                    sortDescriptorWithKey:@"time"
+                                    ascending:YES
+                                    selector:@selector(caseInsensitiveCompare:)];
+        
+        [self.dataList sortUsingDescriptors:@[sorter1,sorter2]];
+        
+        
         self.onRefreshComplete();
     }];
     
@@ -137,8 +166,16 @@ static UIImage * _orangeFill;
         
         [self.queue addOperation:checkVideo];
     }
+    
+
+    // TODO: sort by date and time
+    
     [self.queue addOperation:blocker];
 }
+
+
+
+
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -206,6 +243,17 @@ static UIImage * _orangeFill;
     cell.homeTeamLabel.text = hTeam;
     cell.awayTeamLabel.text = vTeam;
     
+    if ([accessArray count]){
+        
+        NSMutableString * txt = [NSMutableString new];
+        for (NSDictionary * accessDic in accessArray) {
+            [txt appendFormat:accessDic[@"who"],@" "];
+        }
+        
+        cell.labelViewedBy.text = [NSString stringWithFormat:@"Viewed By: %@",txt];
+    } else {
+        cell.labelViewedBy.text = @"";
+    }
     
     return cell;
 }

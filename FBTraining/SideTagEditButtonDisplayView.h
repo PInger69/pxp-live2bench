@@ -12,6 +12,7 @@
 
 @property (nonatomic,weak) IBOutlet UILabel     * typeLabel;
 @property (nonatomic,weak) IBOutlet UIButton    * button;
+@property (nonatomic,weak) IBOutlet UISwitch    * autoSwitch;
 @property (nonatomic,strong) NSString * name;
 @property (nonatomic,strong) NSString * position;
 @property (nonatomic,strong) NSNumber * order;

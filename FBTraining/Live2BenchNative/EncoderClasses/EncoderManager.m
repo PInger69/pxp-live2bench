@@ -130,6 +130,7 @@ static EncoderManager * instance;
     
     for (Encoder * enc in allEnc) {
         PXPLog(@"Logged out of Encoder");
+        PXPDeviceLog(@"Logged out of Encoder - %@",enc.name);
         [self unRegisterEncoder:enc];
     }
     [_authenticatedEncoders removeAllObjects];
@@ -265,6 +266,7 @@ static EncoderManager * instance;
         PXPLog(@"*** Registered Encoder ***");
         PXPLog(@"    %@ - %@",newEncoder.name,ip);
         PXPLog(@"**************************");
+        PXPDeviceLog(@"Registered Encoder: %@  ip: %@", newEncoder.name,ip);
     
     } else if ([dictOfEncoders objectForKey:name] == nil || [((Encoder*)[dictOfEncoders objectForKey:name]).name isEqualToString:@"trashed"]) {
         newEncoder        = [[Encoder alloc]initWithIP:ip];
@@ -276,7 +278,7 @@ static EncoderManager * instance;
         PXPLog(@"*** Registered Encoder ***");
         PXPLog(@"    %@ - %@",newEncoder.name,ip);
         PXPLog(@"**************************");
-        
+        PXPDeviceLog(@"Registered Encoder: %@  ip: %@ v:", newEncoder.name,ip,newEncoder.version);
         
     }
 }
@@ -395,6 +397,7 @@ static EncoderManager * instance;
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
     PXPLog(@"!!! ENCODER REMOVED !!! %@",aEncoder.name);
+    PXPDeviceLog(@"Encoder removed: %@", aEncoder.name);
     if (aEncoder == self.primaryEncoder){
         [aEncoder removeFromPrimary];
         [self declareCurrentEvent:nil];
@@ -506,7 +509,8 @@ static EncoderManager * instance;
     
     if (theEvent.isBuilt){
         PXPLog(@"Event Download started!");
-        NSLog(@"Event Download started!");
+        PXPDeviceLog(@"Event Download: %@",theEvent.name);
+
         __block Event * weakEvent = theEvent;
 
         
@@ -539,6 +543,8 @@ static EncoderManager * instance;
         
     } else {
         PXPLog(@"Event Download Failed... Event was not built... please try again later");
+        
+        PXPDeviceLog(@"%@ Event Download Failed. Event not ready on server",CODE_ERROR);
     }
 }
 

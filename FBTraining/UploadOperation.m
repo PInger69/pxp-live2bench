@@ -8,6 +8,7 @@
 
 #import "UploadOperation.h"
 #import "UserCenter.h"
+#import "CustomAlertControllerQueue.h"
 
 #define DEVICE_ID    @"v0"
 #define CUSTOMER_ID  @"v4"
@@ -68,8 +69,8 @@
     
     NSURLSessionConfiguration *sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfig.allowsCellularAccess              = NO;
-    sessionConfig.timeoutIntervalForRequest         = 10;
-    sessionConfig.timeoutIntervalForResource        = 10;
+    sessionConfig.timeoutIntervalForRequest         = 30;
+    sessionConfig.timeoutIntervalForResource        = 30;
     sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
 //    sessionConfig.protocolClasses                   = @[[PxpURLProtocol class],
 //                                                        [MockURLProtocol class]
@@ -86,7 +87,23 @@
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                
                                       if (error) {
+                                          self.error = error;
                                           NSLog(@"error :%@",error);
+                                          UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pxp Alert"
+                                                                                                          message:[error localizedDescription]
+                                                                                                   preferredStyle:UIAlertControllerStyleAlert];
+                                          // build NO button
+                                          UIAlertAction* cancelButtons = [UIAlertAction
+                                                                          actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleCancel
+                                                                          handler:^(UIAlertAction * action)
+                                                                          {
+                                                                              [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                                          }];
+                                          [alert addAction:cancelButtons];
+                                          
+                                          [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+
                                       }
                                       NSString * text = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                                       
@@ -230,10 +247,11 @@
     
     [body appendData: addField(@"v0",deviceID)]; // device
     [body appendData: addField(@"v4",customerID)]; // customer
-    if (self.league)    [body appendData: addField(@"league",self.league)];
-    if (self.hTeam)     [body appendData: addField(@"hteam",self.hTeam)];
-    if (self.vTeam)     [body appendData: addField(@"vteam",self.vTeam)];
-    if (self.clipName)  [body appendData: addField(@"clip",self.clipName)];
+    if (self.league)        [body appendData: addField(@"league",self.league)];
+    if (self.hTeam)         [body appendData: addField(@"hteam",self.hTeam)];
+    if (self.vTeam)         [body appendData: addField(@"vteam",self.vTeam)];
+    if (self.clipName)      [body appendData: addField(@"clip",self.clipName)];
+    if (self.clipEventName) [body appendData: addField(@"event",self.clipEventName)];
     
     
 //    [body appendData:[[NSString stringWithString:[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"v0\"; \r\n\r\n"]] dataUsingEncoding:NSUTF8StringEncoding]];

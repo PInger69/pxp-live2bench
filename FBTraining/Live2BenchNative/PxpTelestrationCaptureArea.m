@@ -52,7 +52,7 @@
     [self reportTouch:touches.anyObject];
 }
 
-- (void)touchesCancelled:(nullable NSSet *)touches withEvent:(nullable UIEvent *)event {
+- (void)touchesCancelled:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
     [self reportTouch:touches.anyObject];
 }
 

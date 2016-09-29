@@ -16,17 +16,12 @@
 @interface thumbnailCell : UICollectionViewCell
 {
     UIImageView *imageView;
-    UILabel *_thumbPeriod;
-    UILabel *_thumbTime;
-    UILabel *_thumbDur;
+//    UILabel *_thumbPeriod;
+//    UILabel *_thumbTime;
+//    UILabel *_thumbDur;
     ClipCornerView *_thumbColour;
-    UILabel *_thumbName;
+//    UILabel *_thumbName;
     UIActivityIndicatorView *_activityInd;
-//    UIImageView *_thumbRatingOne;
-//    UIImageView *_thumbRatingTwo;
-//    UIImageView *_thumbRatingThree;
-//    UIImageView *_thumbRatingFour;
-//    UIImageView *_thumbRatingFive;
     CustomButton *_thumbDeleteButton;
     NSIndexPath *_iPath;
     UIView *translucentEditingView;

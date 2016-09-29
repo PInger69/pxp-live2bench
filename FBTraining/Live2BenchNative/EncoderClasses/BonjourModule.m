@@ -166,7 +166,9 @@
     if ([dictOfIPs count]) {
         [searchingTimer invalidate];
         searchingTimer = nil;
+        PXPDeviceLogHash(@"BonjourModuleSearchSuccess", @"IP found searching stopped");
     } else {
+        PXPDeviceLogHash(@"BonjourModuleSearchFail", @"No IPs found searching again..");
         [self clear];
         [self reset];
     }

@@ -686,7 +686,7 @@ static LocalEncoder * instance;
     _event      =  event;
     [self didChangeValueForKey:@"event"];
     _eventContext.event = event;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":_event.eventType}];
 }
 
 

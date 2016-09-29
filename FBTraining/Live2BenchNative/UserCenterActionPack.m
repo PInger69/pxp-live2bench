@@ -36,7 +36,7 @@
     NSDictionary * userData;
     
     
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"tempData" ofType:@"plist"];
+//    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"tempData" ofType:@"plist"];
     
     
     if ([[NSFileManager defaultManager] fileExistsAtPath: userCenter.accountInfoPath])
@@ -48,24 +48,8 @@
         self.isSuccess = YES;
 
 
-        
-    }
-//    else if ([[NSFileManager defaultManager] fileExistsAtPath: plistPath]) {
-//    
-//        userData                    = [[NSMutableDictionary alloc] initWithContentsOfFile: plistPath];
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_INFO_RETRIEVED object:userData];
-//                userCenter.accountInfoPath = plistPath;
-//        
-//        [UserCenter getInstance].customerID                 = @"Guest";//userData[@"customer"];
-//        [UserCenter getInstance].customerEmail              = @"Guest";//userData[@"emailAddress"];
-//        [UserCenter getInstance].customerAuthorization      = userData[@"authorization"];
-//        [UserCenter getInstance].userHID                    = userData[@"hid"];
-//        [UserCenter getInstance].tagNames                   = [@[] mutableCopy];
-//        self.isSuccess = YES;
-//    }
-    else {
-        
-        
+        PXPDeviceLog(@"User was Logged in: %@", userCenter.customerEmail);
+    } else {
         self.isSuccess = NO;
     }
     

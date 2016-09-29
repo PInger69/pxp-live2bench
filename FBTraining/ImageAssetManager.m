@@ -69,7 +69,8 @@ static ImageAssetManager * instance;
 -(void)thumbnailsUnload:(NSArray*)list
 {
     for (NSString * itemUrl in list) {
-        [_arrayOfClipImages delete:itemUrl];
+//        [_arrayOfClipImages delete:itemUrl];
+        [_arrayOfClipImages removeObjectForKey:itemUrl];
     }
 }
 

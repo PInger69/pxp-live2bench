@@ -257,7 +257,9 @@ static CMClockRef _masterClock;
         
         if (readyOp) [seekOp addDependency:readyOp];
         [playOp addDependency:seekOp];
+        PXPDeviceLog(@"Player %@ Seekable Time Ranges Dur: %@",player.name,[Utility translateTimeFormat:CMTimeGetSeconds(player.duration)]);
         
+
     }
     [[NSOperationQueue mainQueue]addOperation:blk];
 

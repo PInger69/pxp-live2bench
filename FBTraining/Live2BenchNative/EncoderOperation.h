@@ -87,6 +87,7 @@
 
 @interface EncoderOperationCloseTag : EncoderOperation
 @property (nonatomic,weak) Tag * tag;
+@property (nonatomic,strong) NSDictionary* tagData;
 - (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder tag:(Tag*)tag;
 - (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag;
 @end
@@ -96,7 +97,11 @@
 @end
 
 @interface EncoderOperationMakeTag : EncoderOperation
+@property (nonatomic,strong) NSDictionary* tagData;
 @property (nonatomic,assign)    BOOL generateProxyTag;
+@end
+
+@interface EncoderOperationStartGameTag : EncoderOperation
 @end
 
 

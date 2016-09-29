@@ -14,6 +14,8 @@
 #import "EncoderManager.h"
 #import "RicoPlayerPool.h"
 //#import "EncoderProtocol.h"
+#import "DeviceLog.h"
+#import "EmailActivity.h"
 
 
 @interface PxpLogViewController ()
@@ -26,6 +28,7 @@
 @property (nonatomic,strong)  CustomButton * encoderButton;
 @property (nonatomic,strong)  CustomButton * eventButton;
 @property (nonatomic,strong)  CustomButton * crashButton;
+@property (nonatomic,strong)  EmailActivity * logEmail;
 
 @end
 
@@ -58,15 +61,15 @@
         self.upButton.layer.borderWidth = 1;
         self.upButton.layer.borderColor = [[UIColor grayColor]CGColor];
         [self.upButton setBackgroundColor:[UIColor lightGrayColor]];
-        [self.upButton setTitle:@"Top" forState:UIControlStateNormal];
-        [self.upButton addTarget:self action:@selector(onScroll:) forControlEvents:UIControlEventTouchUpInside];
+        [self.upButton setTitle:@"Email Log" forState:UIControlStateNormal];
+        [self.upButton addTarget:self action:@selector(emailLog:) forControlEvents:UIControlEventTouchUpInside];
         
         self.downButton = [[CustomButton alloc]init];
         self.downButton.layer.borderWidth = 1;
         self.downButton.layer.borderColor = [[UIColor grayColor]CGColor];
         [self.downButton setBackgroundColor:[UIColor lightGrayColor]];
-        [self.downButton setTitle:@"Bottom" forState:UIControlStateNormal];
-        [self.downButton addTarget:self action:@selector(onScroll:) forControlEvents:UIControlEventTouchUpInside];
+        [self.downButton setTitle:@"ClearDeviceLog" forState:UIControlStateNormal];
+        [self.downButton addTarget:self action:@selector(onClearDevice:) forControlEvents:UIControlEventTouchUpInside];
         
         
         self.camButton = [[CustomButton alloc]init];
@@ -106,10 +109,10 @@
 
 
 
-
 -(void)viewDidLoad
 {
 
+    
     NSArray * buttons = @[self.clearButton,self.upButton,self.downButton,self.camButton,self.encoderButton,self.eventButton,self.crashButton];
     CGFloat buttonH = 50;
     CGFloat buttonW = 100;//self.view.bounds.size.width / [buttons count];
@@ -154,6 +157,12 @@
 {
     [PxpLog clear];
 }
+-(void)onClearDevice:(id)sender
+{
+    NSLog(@"onClearDevice");
+    [PxpLog clearDeviceLog];
+}
+
 
 -(void)onScroll:(id)sender
 {
@@ -173,6 +182,44 @@
 
     }
 }
+
+-(void)emailLog:(id)sender
+{
+    
+//    [Utility hasInternetOnComplete:^(BOOL succsess) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([Utility hasInternet]) {
+                self.logEmail = [EmailActivity new];
+                self.logEmail.presetingViewController = self;
+                [self.logEmail launch];
+            } else {
+                
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:self];
+                    
+                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pxp"
+                                                                                    message:@"Internet not found."
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                    // build NO button
+                    UIAlertAction* cancelButtons = [UIAlertAction
+                                                    actionWithTitle:OK_BUTTON_TXT
+                                                    style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction * action)
+                                                    {
+                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                    }];
+                    [alert addAction:cancelButtons];
+                    
+                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+                    
+                
+
+            }
+//        });
+        
+//    }];
+ 
+}
+
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {

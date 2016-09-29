@@ -60,8 +60,10 @@
 //        [self setNeedsUpdateConstraints];
     }
     
-    
 
+    [self.autoSwitch setOnTintColor:PRIMARY_APP_COLOR];
+    [self.autoSwitch setTintColor:PRIMARY_APP_COLOR];
+//    [self.autoSwitch setThumbTintColor:[UIColor grayColor]];
     self.button.layer.borderWidth   = 1;
     self.button.layer.cornerRadius  = 5;
     self.enabled = YES;
@@ -85,7 +87,10 @@
     _enabled = enabled;
     
     self.button.enabled = _enabled;
-
+//    self.autoSwitch.enabled = _enabled;
+    
+    
+    
     if (_enabled) {
         self.button.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     } else {

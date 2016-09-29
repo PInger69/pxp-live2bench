@@ -16,25 +16,17 @@
 @interface RicoPlayerControlBar () <PxpPlayPauseButtonDelegate>
 
 @property (strong, nonatomic, nullable) NSNumber *seek; // the number is the orginal playback rate
-
-
-
 @property (strong, nonatomic, nonnull) UIView *container;
 @property (strong, nonatomic, nonnull) UIView *blurContainer;
-
 @property (strong, nonatomic, nonnull) UIView *blurView;
-
-
 @property (strong, nonatomic, nonnull) UILabel *leftLabel;
 @property (strong, nonatomic, nonnull) UILabel *rightLabel;
-
 @property (strong, nonatomic, nonnull) PxpPlayerLight *liveLight;
 @property (strong, nonatomic, nonnull) PxpCancelButton *rangeCancelButton;
-
 @property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *hideGestureRecognizer;
 @property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *showGestureRecognizer;
-
 @property (strong, nonatomic, nullable) id periodicObserver;
+
 
 @end
 
@@ -243,7 +235,7 @@
 
 -(void)setState:(RicoPlayerState)state
 {
-    float f             =     self.slider.value; // this is to force a refresh
+    float f             = self.slider.value; // this is to force a refresh
     self.slider.value   = -0.01;
     self.slider.value   = f;
     

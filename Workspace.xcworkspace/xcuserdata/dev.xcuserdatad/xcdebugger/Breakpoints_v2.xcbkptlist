@@ -20,13 +20,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488736986.566441"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "706"
-            endingLineNumber = "706"
+            startingLineNumber = "739"
+            endingLineNumber = "739"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -51,13 +51,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "872"
-            endingLineNumber = "872"
+            startingLineNumber = "1064"
+            endingLineNumber = "1064"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -67,13 +67,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "798"
-            endingLineNumber = "798"
+            startingLineNumber = "965"
+            endingLineNumber = "965"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -91,13 +91,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488494785.701999"
+            timestampString = "495490962.869931"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "536"
-            endingLineNumber = "536"
+            startingLineNumber = "553"
+            endingLineNumber = "553"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -128,7 +128,7 @@
             startingLineNumber = "351"
             endingLineNumber = "351"
             landmarkName = "-onDownloadClip:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -144,7 +144,7 @@
             startingLineNumber = "463"
             endingLineNumber = "463"
             landmarkName = "-teleTag:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -160,7 +160,7 @@
             startingLineNumber = "410"
             endingLineNumber = "410"
             landmarkName = "-makeTag:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -176,7 +176,7 @@
             startingLineNumber = "984"
             endingLineNumber = "984"
             landmarkName = "-allEventsGet:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -186,13 +186,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489425763.437463"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "473"
-            endingLineNumber = "473"
+            startingLineNumber = "493"
+            endingLineNumber = "493"
             landmarkName = "-reSeek"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -332,13 +332,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "489342391.498261"
+            timestampString = "495485362.952071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "287"
-            endingLineNumber = "287"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
             landmarkName = "-onRegisterEncoderCompleted:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -402,7 +402,7 @@
             startingLineNumber = "980"
             endingLineNumber = "980"
             landmarkName = "-allEventsGet:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -490,7 +490,7 @@
             startingLineNumber = "1057"
             endingLineNumber = "1057"
             landmarkName = "-startEvent:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -516,7 +516,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/FeedMapController.m"
-                  timestampString = "494542314.068718"
+                  timestampString = "496853390.487239"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "192"
@@ -531,7 +531,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/FeedMapController.m"
-                  timestampString = "494542314.068886"
+                  timestampString = "496853390.489425"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "192"
@@ -548,13 +548,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488736986.566441"
+            timestampString = "495668682.195787"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "637"
-            endingLineNumber = "637"
+            startingLineNumber = "657"
+            endingLineNumber = "657"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -564,13 +564,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
-            timestampString = "492032740.316881"
+            timestampString = "496780421.480504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "428"
-            endingLineNumber = "428"
+            startingLineNumber = "444"
+            endingLineNumber = "444"
             landmarkName = "-buildFeeds:isLive:isLocal:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -589,13 +589,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
-            timestampString = "492032740.316881"
+            timestampString = "496780421.480504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "417"
-            endingLineNumber = "417"
+            startingLineNumber = "433"
+            endingLineNumber = "433"
             landmarkName = "-buildFeeds:isLive:isLocal:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -605,13 +605,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
-            timestampString = "492032740.316881"
+            timestampString = "496780421.480504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "424"
-            endingLineNumber = "424"
+            startingLineNumber = "440"
+            endingLineNumber = "440"
             landmarkName = "-buildFeeds:isLive:isLocal:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -621,13 +621,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488736986.566441"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "755"
-            endingLineNumber = "755"
+            startingLineNumber = "804"
+            endingLineNumber = "804"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -652,13 +652,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488736986.566441"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "710"
-            endingLineNumber = "710"
+            startingLineNumber = "743"
+            endingLineNumber = "743"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -696,7 +696,7 @@
             startingLineNumber = "848"
             endingLineNumber = "848"
             landmarkName = "-modifyTag:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -706,13 +706,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
-            timestampString = "492032740.316881"
+            timestampString = "495668682.195787"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "251"
-            endingLineNumber = "251"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
             landmarkName = "-modifyTag:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -728,7 +728,7 @@
             startingLineNumber = "1574"
             endingLineNumber = "1574"
             landmarkName = "-onModifyTags:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -744,7 +744,7 @@
             startingLineNumber = "868"
             endingLineNumber = "868"
             landmarkName = "-modifyTag:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -782,7 +782,7 @@
             startingLineNumber = "849"
             endingLineNumber = "849"
             landmarkName = "-modifyTag:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -792,13 +792,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496779121.158314"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1615"
-            endingLineNumber = "1615"
+            startingLineNumber = "1614"
+            endingLineNumber = "1614"
             landmarkName = "-onNewTags:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -808,13 +808,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496765556.410069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1697"
-            endingLineNumber = "1697"
+            startingLineNumber = "1733"
+            endingLineNumber = "1733"
             landmarkName = "-onNewTagsEO:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -830,7 +830,7 @@
             startingLineNumber = "1154"
             endingLineNumber = "1154"
             landmarkName = "-connectionDidFinishLoading:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -840,13 +840,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496765556.410069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2314"
-            endingLineNumber = "2314"
+            startingLineNumber = "2364"
+            endingLineNumber = "2364"
             landmarkName = "-destroy"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -865,13 +865,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "956"
-            endingLineNumber = "956"
+            startingLineNumber = "1148"
+            endingLineNumber = "1148"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -881,13 +881,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "493053880.695799"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "728"
-            endingLineNumber = "728"
+            startingLineNumber = "777"
+            endingLineNumber = "777"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -897,13 +897,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488736986.566441"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "735"
-            endingLineNumber = "735"
+            startingLineNumber = "784"
+            endingLineNumber = "784"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -922,29 +922,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496765556.410069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1702"
-            endingLineNumber = "1702"
+            startingLineNumber = "1738"
+            endingLineNumber = "1738"
             landmarkName = "-onNewTagsEO:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1620"
-            endingLineNumber = "1620"
-            landmarkName = "-onNewTags:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -954,13 +938,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496765556.410069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1646"
-            endingLineNumber = "1646"
+            startingLineNumber = "1682"
+            endingLineNumber = "1682"
             landmarkName = "-onNewTags:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -985,7 +969,7 @@
             startingLineNumber = "231"
             endingLineNumber = "231"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1001,7 +985,7 @@
             startingLineNumber = "213"
             endingLineNumber = "213"
             landmarkName = "-initEncoder:customerID:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1011,13 +995,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496765556.410069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2108"
-            endingLineNumber = "2108"
+            startingLineNumber = "2158"
+            endingLineNumber = "2158"
             landmarkName = "-getAllEventsResponse:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1033,7 +1017,7 @@
             startingLineNumber = "102"
             endingLineNumber = "102"
             landmarkName = "-initWithDocsPath:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1049,7 +1033,7 @@
             startingLineNumber = "225"
             endingLineNumber = "225"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1059,13 +1043,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1173"
-            endingLineNumber = "1173"
+            startingLineNumber = "1365"
+            endingLineNumber = "1365"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Sound">
@@ -1083,13 +1067,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1175"
-            endingLineNumber = "1175"
+            startingLineNumber = "1367"
+            endingLineNumber = "1367"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Sound">
@@ -1107,13 +1091,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488736986.566441"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "766"
-            endingLineNumber = "766"
+            startingLineNumber = "815"
+            endingLineNumber = "815"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1123,13 +1107,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488494676.796684"
+            timestampString = "495485362.952071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "512"
-            endingLineNumber = "512"
+            startingLineNumber = "513"
+            endingLineNumber = "513"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1139,13 +1123,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "488494864.439589"
+            timestampString = "495485362.952071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "496"
-            endingLineNumber = "496"
+            startingLineNumber = "497"
+            endingLineNumber = "497"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1161,7 +1145,7 @@
             startingLineNumber = "1125"
             endingLineNumber = "1125"
             landmarkName = "-connectionDidFinishLoading:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1171,13 +1155,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "492962545.028401"
+            timestampString = "496765556.410069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2018"
-            endingLineNumber = "2018"
+            startingLineNumber = "2068"
+            endingLineNumber = "2068"
             landmarkName = "-camerasGetResponce:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1187,13 +1171,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489425763.437463"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "175"
-            endingLineNumber = "175"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -1212,13 +1196,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489425763.437463"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
             landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1228,13 +1212,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "489342391.498261"
+            timestampString = "495485362.952071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "521"
-            endingLineNumber = "521"
+            startingLineNumber = "525"
+            endingLineNumber = "525"
             landmarkName = "-notificationDownloadEvent:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1250,7 +1234,7 @@
             startingLineNumber = "100"
             endingLineNumber = "100"
             landmarkName = "-initWithLocalDocPath:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1266,7 +1250,7 @@
             startingLineNumber = "98"
             endingLineNumber = "98"
             landmarkName = "-initWithLocalDocPath:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1276,13 +1260,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489425763.437463"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
             landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1292,13 +1276,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489424928.473539"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "-initWithPlayerItem:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -1316,13 +1300,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489427068.472451"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
             landmarkName = "-initWithPlayerItem:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1332,13 +1316,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489600898.348367"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "443"
-            endingLineNumber = "443"
+            startingLineNumber = "463"
+            endingLineNumber = "463"
             landmarkName = "-update"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1348,13 +1332,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoOperations.m"
-            timestampString = "489607628.913984"
+            timestampString = "495580166.865985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
+            startingLineNumber = "414"
+            endingLineNumber = "414"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -1402,7 +1386,7 @@
             startingLineNumber = "229"
             endingLineNumber = "229"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1418,7 +1402,7 @@
             startingLineNumber = "369"
             endingLineNumber = "369"
             landmarkName = "-onDownloadClip:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1434,7 +1418,7 @@
             startingLineNumber = "356"
             endingLineNumber = "356"
             landmarkName = "-onDownloadClip:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -1497,7 +1481,7 @@
             startingLineNumber = "1271"
             endingLineNumber = "1271"
             landmarkName = "-authenticateResponse:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1507,13 +1491,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "490647828.763507"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "741"
-            endingLineNumber = "741"
+            startingLineNumber = "790"
+            endingLineNumber = "790"
             landmarkName = "-parseDataToEncoder:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1529,7 +1513,7 @@
             startingLineNumber = "874"
             endingLineNumber = "874"
             landmarkName = "-modifyTag:timeStamp:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1539,13 +1523,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "809"
-            endingLineNumber = "809"
+            startingLineNumber = "986"
+            endingLineNumber = "986"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1555,13 +1539,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
-            timestampString = "491166730.899193"
+            timestampString = "496784374.72416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "807"
-            endingLineNumber = "807"
+            startingLineNumber = "984"
+            endingLineNumber = "984"
             landmarkName = "-buildRequest:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1571,29 +1555,29 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496787510.249312"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1913"
-            endingLineNumber = "1913"
+            startingLineNumber = "1950"
+            endingLineNumber = "1950"
             landmarkName = "-seekPressed:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/ListViewController.m"
-            timestampString = "491238043.775037"
+            timestampString = "495384953.47038"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1137"
-            endingLineNumber = "1137"
+            startingLineNumber = "1097"
+            endingLineNumber = "1097"
             landmarkName = "-clipCancelNotification:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1609,7 +1593,7 @@
             startingLineNumber = "172"
             endingLineNumber = "172"
             landmarkName = "-URLSession:task:didCompleteWithError:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1619,13 +1603,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "415"
-            endingLineNumber = "415"
+            startingLineNumber = "419"
+            endingLineNumber = "419"
             landmarkName = "-onPressButton:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -1659,13 +1643,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1385"
-            endingLineNumber = "1385"
+            startingLineNumber = "1389"
+            endingLineNumber = "1389"
             landmarkName = "-buildSourceButtons"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -1683,13 +1667,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1387"
-            endingLineNumber = "1387"
+            startingLineNumber = "1391"
+            endingLineNumber = "1391"
             landmarkName = "-buildSourceButtons"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -1713,7 +1697,7 @@
             startingLineNumber = "748"
             endingLineNumber = "748"
             landmarkName = "-updateDebugOutput"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1729,7 +1713,7 @@
             startingLineNumber = "52"
             endingLineNumber = "52"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1739,29 +1723,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/BookmarkTableViewController.m"
-            timestampString = "494448319.536395"
+            timestampString = "495053354.472371"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/BookmarkTableViewController.m"
-            timestampString = "493748687.875107"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1771,13 +1739,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492036246.618187"
+            timestampString = "495657028.276695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1036"
-            endingLineNumber = "1036"
+            startingLineNumber = "1048"
+            endingLineNumber = "1048"
             landmarkName = "-onMakeEvent:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1787,13 +1755,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492039831.700631"
+            timestampString = "495657028.276695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1100"
-            endingLineNumber = "1100"
+            startingLineNumber = "1112"
+            endingLineNumber = "1112"
             landmarkName = "-onMakeEventAndLaunch:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -1803,11 +1771,11 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/EncoderControlsViewController.m"
-                  timestampString = "494542314.08461"
+                  timestampString = "496853390.580799"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1102"
-                  endingLineNumber = "1102"
+                  startingLineNumber = "1114"
+                  endingLineNumber = "1114"
                   offsetFromSymbolStart = "1528">
                </Location>
                <Location
@@ -1818,11 +1786,11 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/EncoderControlsViewController.m"
-                  timestampString = "494542314.084741"
+                  timestampString = "496853390.582679"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1102"
-                  endingLineNumber = "1102"
+                  startingLineNumber = "1114"
+                  endingLineNumber = "1114"
                   offsetFromSymbolStart = "116">
                </Location>
                <Location
@@ -1833,11 +1801,11 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/EncoderControlsViewController.m"
-                  timestampString = "494542314.084887"
+                  timestampString = "496853390.584603"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1102"
-                  endingLineNumber = "1102"
+                  startingLineNumber = "1114"
+                  endingLineNumber = "1114"
                   offsetFromSymbolStart = "64">
                </Location>
             </Locations>
@@ -1850,45 +1818,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492039831.700631"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1072"
-            endingLineNumber = "1072"
-            landmarkName = "-onMakeEventAndLaunch:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492036246.618187"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1062"
-            endingLineNumber = "1062"
-            landmarkName = "-onMakeEventAndLaunch:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492039831.700631"
+            timestampString = "495657028.276695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1084"
             endingLineNumber = "1084"
             landmarkName = "-onMakeEventAndLaunch:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1898,13 +1834,45 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492039831.700631"
+            timestampString = "495657028.276695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1080"
-            endingLineNumber = "1080"
+            startingLineNumber = "1074"
+            endingLineNumber = "1074"
             landmarkName = "-onMakeEventAndLaunch:"
-            landmarkType = "5">
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/EncoderControlsViewController.m"
+            timestampString = "495657028.276695"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1096"
+            endingLineNumber = "1096"
+            landmarkName = "-onMakeEventAndLaunch:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/EncoderControlsViewController.m"
+            timestampString = "495657028.276695"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1092"
+            endingLineNumber = "1092"
+            landmarkName = "-onMakeEventAndLaunch:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1930,13 +1898,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492039831.700631"
+            timestampString = "495657028.276695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1167"
-            endingLineNumber = "1167"
+            startingLineNumber = "1179"
+            endingLineNumber = "1179"
             landmarkName = "-makeNewLocalEvent:onComplete:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1946,13 +1914,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/EncoderControlsViewController.m"
-            timestampString = "492039765.779222"
+            timestampString = "495657028.276695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1067"
-            endingLineNumber = "1067"
+            startingLineNumber = "1079"
+            endingLineNumber = "1079"
             landmarkName = "-onMakeEventAndLaunch:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1968,7 +1936,7 @@
             startingLineNumber = "259"
             endingLineNumber = "259"
             landmarkName = "-seekToTime:toleranceBefore:toleranceAfter:completionHandler:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1984,7 +1952,7 @@
             startingLineNumber = "476"
             endingLineNumber = "476"
             landmarkName = "-setFeed:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2026,13 +1994,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "492722082.786609"
+            timestampString = "495485362.952071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "821"
-            endingLineNumber = "821"
+            startingLineNumber = "827"
+            endingLineNumber = "827"
             landmarkName = "-onFail:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2048,7 +2016,7 @@
             startingLineNumber = "1238"
             endingLineNumber = "1238"
             landmarkName = "-connection:didFailWithError:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2080,7 +2048,7 @@
             startingLineNumber = "462"
             endingLineNumber = "462"
             landmarkName = "-setFeed:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2096,7 +2064,7 @@
             startingLineNumber = "304"
             endingLineNumber = "304"
             landmarkName = "-loadFeed:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2160,7 +2128,7 @@
             startingLineNumber = "1097"
             endingLineNumber = "1097"
             landmarkName = "-connection:didReceiveData:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2176,7 +2144,7 @@
             startingLineNumber = "1268"
             endingLineNumber = "1268"
             landmarkName = "-authenticateResponse:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2234,13 +2202,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "321"
+            endingLineNumber = "321"
             landmarkName = "-reloadPlayers"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2250,13 +2218,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "337"
-            endingLineNumber = "337"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
             landmarkName = "-reloadPlayers"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2266,13 +2234,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "417"
-            endingLineNumber = "417"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
             landmarkName = "-onPressButton:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2282,13 +2250,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
+            startingLineNumber = "578"
+            endingLineNumber = "578"
             landmarkName = "-changeSourceNonPress:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2298,29 +2266,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
-            timestampString = "493654447.20822"
+            timestampString = "496336936.59799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "616"
-            endingLineNumber = "616"
+            startingLineNumber = "620"
+            endingLineNumber = "620"
             landmarkName = "-changeSource:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpURLProtocol.m"
-            timestampString = "493662077.60725"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "-startLoading"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2330,13 +2282,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "-URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -2355,13 +2307,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
             landmarkName = "-URLSession:task:didCompleteWithError:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2371,13 +2323,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496685831.916251"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2387,13 +2339,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2403,13 +2355,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -2427,13 +2379,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
             landmarkName = "-buildRequest"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -2471,17 +2423,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2497,7 +2449,7 @@
             startingLineNumber = "119"
             endingLineNumber = "119"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2513,7 +2465,7 @@
             startingLineNumber = "49"
             endingLineNumber = "49"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2529,7 +2481,7 @@
             startingLineNumber = "97"
             endingLineNumber = "97"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2545,7 +2497,7 @@
             startingLineNumber = "125"
             endingLineNumber = "125"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
@@ -2569,7 +2521,7 @@
             startingLineNumber = "117"
             endingLineNumber = "117"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2579,13 +2531,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/UserCenter.m"
-            timestampString = "494371449.389451"
+            timestampString = "496701711.064939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "440"
-            endingLineNumber = "440"
+            startingLineNumber = "462"
+            endingLineNumber = "462"
             landmarkName = "-saveVideoRecieptData:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2595,29 +2547,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/BookmarkTableViewController.m"
-            timestampString = "494348793.829733"
+            timestampString = "495053354.472371"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "284"
-            endingLineNumber = "284"
+            startingLineNumber = "308"
+            endingLineNumber = "308"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/VideoUploadRecieptActivity.m"
-            timestampString = "494542312.316113"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "-performActivity"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2633,7 +2569,7 @@
             startingLineNumber = "66"
             endingLineNumber = "66"
             landmarkName = "-start"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2643,13 +2579,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/UserCenter.m"
-            timestampString = "494360651.096829"
+            timestampString = "496694775.061655"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "-cloudCredentialsResponce:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2659,13 +2595,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "-buildRequest"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2675,13 +2611,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/UploadOperation.m"
-            timestampString = "494449038.89633"
+            timestampString = "496686497.95412"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "238"
-            endingLineNumber = "238"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
             landmarkName = "-buildRequest"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2697,7 +2633,7 @@
             startingLineNumber = "187"
             endingLineNumber = "187"
             landmarkName = "-URLSession:task:didCompleteWithError:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2707,13 +2643,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/VideoUploadRecieptActivity.m"
-            timestampString = "494542312.316113"
+            timestampString = "496596267.517757"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "114"
             endingLineNumber = "114"
             landmarkName = "-performActivity"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2729,7 +2665,7 @@
             startingLineNumber = "49"
             endingLineNumber = "49"
             landmarkName = "-viewDidAppear:"
-            landmarkType = "5">
+            landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -2748,13 +2684,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/VideoUploadRecieptActivity.m"
-            timestampString = "494542312.316113"
+            timestampString = "496596267.517757"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "-processProgress:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2764,11 +2700,339 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/BookmarkTableViewController.m"
-            timestampString = "494449633.649618"
+            timestampString = "495053354.472371"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
+            startingLineNumber = "315"
+            endingLineNumber = "315"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoUploadRecieptActivity.m"
+            timestampString = "494542312.316113"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "-performActivity"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoUploadRecieptActivity.m"
+            timestampString = "494542312.316113"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "-performActivity"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoRecieptDataProvider.m"
+            timestampString = "494957976.15912"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "-refresh"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoRecieptDataProvider.m"
+            timestampString = "496599353.315494"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "366"
+            endingLineNumber = "366"
+            landmarkName = "-logButton:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/SideTagButton.m"
+            timestampString = "494891964.664531"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "-setHighlighted:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/SideTagButton.m"
+            timestampString = "494950608.254705"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "-initWithFrame:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/SideTagButton.m"
+            timestampString = "494950729.378342"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
+            landmarkName = "-setFrame:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
+            timestampString = "495668682.195787"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "632"
+            endingLineNumber = "632"
+            landmarkName = "-parseDataToEncoder:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoRecieptDataProvider.m"
+            timestampString = "494957883.937897"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "-refresh"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/BookmarkTableViewController.m"
+            timestampString = "495045110.434932"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "7">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "po fileName">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/BookmarkTableViewController.m"
+            timestampString = "495052547.602455"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "268"
+            endingLineNumber = "268"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UserCenter.m"
+            timestampString = "495485362.952071"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "-verifyGet:timeStamp:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UserCenter.m"
+            timestampString = "496694775.061655"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
+            landmarkName = "-cloudCredentialsResponce:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/SideTagEditButtonDisplayView.m"
+            timestampString = "495143510.949393"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "-initWithCoder:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UserCenter.m"
+            timestampString = "496694775.061655"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "266"
+            endingLineNumber = "266"
+            landmarkName = "-updateCustomerInfoWith:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/AppDelegate.m"
+            timestampString = "495485362.952071"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "-application:didFinishLaunchingWithOptions:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
+            timestampString = "496784374.72416"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1136"
+            endingLineNumber = "1136"
+            landmarkName = "-buildRequest:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
+            timestampString = "496784374.72416"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1240"
+            endingLineNumber = "1240"
+            landmarkName = "-EncoderOperationCheckSpace:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+            timestampString = "496787510.249312"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1944"
+            endingLineNumber = "1944"
+            landmarkName = "-startGame:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/ListTableViewController.m"
+            timestampString = "495733987.337516"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "345"
+            endingLineNumber = "345"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -2779,14 +3043,287 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/VideoUploadRecieptActivity.m"
-            timestampString = "494542312.316113"
+            filePath = "FBTraining/ListTableViewController.m"
+            timestampString = "495734003.200159"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "-performActivity"
+            startingLineNumber = "372"
+            endingLineNumber = "372"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Tag.m"
+            timestampString = "495736170.973764"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "-initWithData:event:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "495993619.407437"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "773"
+            endingLineNumber = "773"
+            landmarkName = "-setSearchForEncoders:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/BonjourModule.m"
+            timestampString = "496079670.274527"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "-searchPing"
+            landmarkType = "7">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.Sound">
+                  <ActionContent
+                     soundName = "Tink">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/BonjourModule.m"
+            timestampString = "496346543.338326"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "-netServiceDidResolveAddress:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UtilityClasses/PxpLog.m"
+            timestampString = "495995130.63369"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "+deviceLogID:msg:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/PxpLogViewController.m"
+            timestampString = "496004024.081658"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "-emailLog:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoOperations.m"
+            timestampString = "496079586.620574"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "442"
+            endingLineNumber = "442"
+            landmarkName = "-start"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UtilityClasses/PxpLog.m"
+            timestampString = "496337329.179804"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "+deviceLogID:msg:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/ClipViewController.m"
+            timestampString = "496340808.449191"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "980"
+            endingLineNumber = "980"
+            landmarkName = "-pressFilterButton"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/BonjourModule.m"
+            timestampString = "496346341.685375"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "-netServiceDidResolveAddress:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/BonjourModule.m"
+            timestampString = "496347301.055495"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "-netServiceDidResolveAddress:"
+            landmarkType = "7">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.Log">
+                  <ActionContent
+                     message = "Found @ipString@"
+                     conveyanceType = "0">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/PxpFilterRangeSliderView.m"
+            timestampString = "496356479.912647"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "-show"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoRecieptDataProvider.m"
+            timestampString = "496596522.758613"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "-refresh"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoUploadRecieptActivity.m"
+            timestampString = "496684103.780561"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "-performActivity"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/UploadOperation.m"
+            timestampString = "496686497.95412"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
+            landmarkName = "-URLSession:task:didCompleteWithError:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoUploadRecieptActivity.m"
+            timestampString = "496684533.345034"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "-performActivity"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2796,13 +3333,260 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/VideoUploadRecieptActivity.m"
-            timestampString = "494542312.316113"
+            timestampString = "496684537.984744"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
             landmarkName = "-performActivity"
-            landmarkType = "5">
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/VideoUploadRecieptActivity.m"
+            timestampString = "496686425.467182"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "-activityDidFinish:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/UserCenter.m"
+            timestampString = "496694775.061655"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
+            landmarkName = "-cloudCredentialsResponce:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderOperation.m"
+            timestampString = "496702427.128802"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "710"
+            endingLineNumber = "710"
+            landmarkName = "-buildRequest:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
+            timestampString = "496781419.7925"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
+            landmarkName = "-buildTags:"
+            landmarkType = "7">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "po tagDic">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
+            timestampString = "496781759.482856"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "332"
+            endingLineNumber = "332"
+            landmarkName = "-buildTags:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
+            timestampString = "496781854.541667"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "-buildTags:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Event.m"
+            timestampString = "496782549.830614"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "327"
+            endingLineNumber = "327"
+            landmarkName = "-buildTags:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+            timestampString = "496783296.076988"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1571"
+            endingLineNumber = "1571"
+            landmarkName = "-gotLiveEvent"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+            timestampString = "496787510.249312"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1581"
+            endingLineNumber = "1581"
+            landmarkName = "-gotLiveEvent"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__44-[RicoLive2BenchViewController gotLiveEvent]_block_invoke"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+                  timestampString = "496784532.394449"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1580"
+                  endingLineNumber = "1580"
+                  offsetFromSymbolStart = "1400">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__copy_helper_block_.772"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+                  timestampString = "496784532.396845"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1580"
+                  endingLineNumber = "1580"
+                  offsetFromSymbolStart = "96">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__destroy_helper_block_.773"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+                  timestampString = "496784532.399005"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1580"
+                  endingLineNumber = "1580"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "496784971.765616"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "767"
+            endingLineNumber = "767"
+            landmarkName = "-makeTag:timeStamp:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoPlayerControlBar.m"
+            timestampString = "496854058.279985"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
+            landmarkName = "-update:duration:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoPlayerControlBar.m"
+            timestampString = "496854299.335678"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
+            landmarkName = "-update:duration:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

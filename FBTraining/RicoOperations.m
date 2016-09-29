@@ -9,7 +9,8 @@
 #import "RicoOperations.h"
 #import "RicoPlayer.h"
 #import "RicoPlayerViewController.h"
-
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVPlayerItem.h>
 @implementation RicoOperations
 
 
@@ -412,6 +413,14 @@
         
 //        NSLog(@"Start Rico Seek");
         
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"HH:mm:ss";
+        if (!CMTIME_IS_VALID(self.seekToTime)) {
+            PXPDeviceLog(@"Seek to invalid time");
+        } else {
+            PXPDeviceLog(@"Seek to %@",[Utility translateTimeFormat:CMTimeGetSeconds(self.seekToTime)]);
+        }
+        
         
         
         [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
@@ -429,6 +438,17 @@
     } else {
         [self completeOperation];
         NSLog(@"Seeking Complete FAIL");
+        
+        NSString * dur = @"";
+        if([self.player.currentItem.seekableTimeRanges count]) {
+            CMTimeRange tempRange = [[self.player.currentItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue];
+            
+
+           
+            dur = [Utility translateTimeFormat:CMTimeGetSeconds( tempRange.duration)];
+        }
+        
+        PXPDeviceLog(@"Seeking Complete FAIL to %@  ",[Utility translateTimeFormat:CMTimeGetSeconds(self.seekToTime)],dur);
     }
 }
 

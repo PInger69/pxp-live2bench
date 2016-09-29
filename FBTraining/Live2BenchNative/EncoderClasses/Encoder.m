@@ -1625,7 +1625,43 @@
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
 
+        if (newTag.role){
+//            if (![[UserCenter getInstance].rolePermissions containsObject:newTag.role]) return;
+        }
+        
+        if (newTag.userTeam){
+            if (![newTag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) return;
             
+        }
+        
+            // AutoDownload check
+            if ([[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:newTag.name]) {
+                    for (NSString *key in [newTag.thumbnails allKeys]) {
+                        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",newTag.ID,key ];
+                        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+                        
+                        NSString *src = [NSString stringWithFormat:@"%@hq", key];
+                        
+                        // this takes the download item and attaches it to the cell
+                        void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+
+                        };
+
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+                                                                                                                            @"block": blockName,
+                                                                                                                               @"tag": newTag,
+                                                                                                                               @"src":src,
+                                                                                                                               @"key":key}];
+                        
+                    }
+                    
+                    
+                    NSLog(@"%s",__FUNCTION__);
+            }
+
+        
+        
+        
             
             if ( ![self.postedTagIDs containsObject:newTag.ID] ){
                 [self.postedTagIDs addObject:newTag.ID];
@@ -1662,7 +1698,7 @@
                     } else if (proxyTag == nil && [newTag own])  { //this is not your tag add it
                         [encoderEvent addTag:newTag extraData:true];
                     } else if (![newTag own]){
-                        [encoderEvent addTag:newTag extraData:false];
+                        [encoderEvent addTag:newTag extraData:true]; // WAS FALSE
                     }
                     
                     
@@ -1707,6 +1743,8 @@
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
             
+            
+            
             if (self.event == encoderEvent) {
                 [encoderEvent addTag:newTag extraData:true];
             }else{
@@ -1750,6 +1788,16 @@
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             
             Tag *newTag = [[Tag alloc] initWithData: tData event:encoderEvent];
+            
+            if (newTag.role){
+                if (![[UserCenter getInstance].rolePermissions containsObject:newTag.role]) return;
+            }
+            
+            if (newTag.userTeam){
+                if (![newTag.userTeam isEqualToString:[UserCenter getInstance].userTeam]) return;
+                
+            }
+            
             if ([tData objectForKey:@"telestration"]) {
                 newTag.telestration = [PxpTelestration telestrationFromData:[tData objectForKey:@"telestration"]];
             }
@@ -1834,6 +1882,8 @@
 {
     self.bitrate = (double)[[NSDate date] timeIntervalSinceDate:startTime];
 }
+
+
 
 -(BOOL)checkEncoderVersion
 {

@@ -78,29 +78,20 @@
 {
     
     self.backgroundView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
-//    [self.backgroundView setFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
     [self.backgroundView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
-//    [self.backgroundView setImage:[UIImage imageNamed:@"clip-back-just.png"]];
     [self addSubview:self.backgroundView];
     self.backgroundView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     self.backgroundView.layer.borderWidth = 3;
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
-    //self.imageView.contentMode = UIViewContentModeCenter;
+
     [self.imageView setFrame:CGRectMake(2, 2, self.backgroundView.bounds.size.width - 5, 131.0f)];
-    //CGRect aspectRect = [self frameWithAspectRatioForImage:self.imageView withFrame:self.imageView.frame];
-    //[self.imageView setFrame:aspectRect];
-    //[self.imageView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
+
     [self.backgroundView addSubview:self.imageView];
     
     self.thumbColour = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width-30, 0.0f, 30, 30)];
     [self.thumbColour setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
-    /*
-    self.thumbColour.layer.masksToBounds = YES;
-    self.thumbColour.layer.cornerRadius = 1; // if you like rounded corners
-    self.thumbColour.layer.shadowOffset = CGSizeMake(-1, 0);
-    self.thumbColour.layer.shadowRadius = 2;
-    self.thumbColour.layer.shadowOpacity = 0.8;
-     */
+
+    
     [self.imageView addSubview:self.thumbColour];
    
     self.thumbName = [[UILabel alloc] initWithFrame:CGRectMake(self.imageView.frame.origin.x+PADDING, 140.0f, self.imageView.bounds.size.width*3/4, 18.0f)];
@@ -140,32 +131,6 @@
     ratingscale = [[RatingOutput alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width -300, self.imageView.frame.size.height -18.0f, 16.0f, 16.0f)];
     [self.imageView addSubview:ratingscale];
     
-    
-    //self.thumbColour.frame.size.width - 5*16.0f - 4*9.0f
-    /*self.thumbRatingOne = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.thumbRatingOne setContentMode:UIViewContentModeScaleAspectFit];
-    [self.thumbRatingOne setFrame:CGRectMake(50, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingOne];
-    
-    self.thumbRatingTwo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.thumbRatingTwo setContentMode:UIViewContentModeScaleAspectFit];
-    [self.thumbRatingTwo setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingOne.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingTwo];
-    
-    self.thumbRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.thumbRatingThree setContentMode:UIViewContentModeScaleAspectFit];
-    [self.thumbRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingTwo.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingThree];
-    
-    self.thumbRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.thumbRatingFour setContentMode:UIViewContentModeScaleAspectFit];
-    [self.thumbRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingThree.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingFour];
-
-    self.thumbRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.thumbRatingFive setContentMode:UIViewContentModeScaleAspectFit];
-    [self.thumbRatingFive setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingFive];*/
      imageLoaded = FALSE;
     
     self.activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -214,19 +179,19 @@
 -(void)prepareForReuse
 {
     _data = nil;
-    self.imageView.image = [UIImage imageNamed:@"live.png"];
-    self.thumbPeriod.text = @"";
-    self.thumbName.text = @"";
-    self.thumbTime.text = @"";
-    self.thumbDur.text = @"";
-    self.thumbColour.backgroundColor = nil;
-    self.backgroundView = nil;
-    self.data = nil;
-    self.ratingscale.rating = 0;
-
-    
-    self.checkmarkOverlay.hidden = YES;
-    self.translucentEditingView.hidden = YES;
+//    self.imageView.image = [UIImage imageNamed:@"live.png"];
+//    self.thumbPeriod.text = @"";
+//    self.thumbName.text = @"";
+//    self.thumbTime.text = @"";
+//    self.thumbDur.text = @"";
+//    self.thumbColour.backgroundColor = nil;
+//    self.backgroundView = nil;
+//    self.data = nil;
+//    self.ratingscale.rating = 0;
+//
+//    
+//    self.checkmarkOverlay.hidden = YES;
+//    self.translucentEditingView.hidden = YES;
     [super prepareForReuse];
 
 }

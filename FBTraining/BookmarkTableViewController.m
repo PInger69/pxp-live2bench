@@ -231,22 +231,22 @@
 //        clipsToShare = @[[clipsToShare firstObject]];
         ////////////////////////////////////////////////////////////
 
-        PxpDropboxActivity * activity = [[PxpDropboxActivity alloc]init];
+        PxpDropboxActivity * activityDropbox = [[PxpDropboxActivity alloc]init];
 //
 //        
         __weak BookmarkTableViewController * weakself = self;
-        [activity setOnActivityStart:^(UIActivity *activity) {
+        [activityDropbox setOnActivityStart:^(UIActivity *activity) {
             [weakself.progress setHidden:NO];
             if([[DropboxManager getInstance].session isLinked]){
                 [[DropboxManager getInstance].restClient createFolder:@"/Live2BenchNative/"]; // make the folder if its not thay
             }
         }];
         
-        [activity setOnActivityProgress:^(PxpDropboxActivity *activity, CGFloat cfProgress) {
-            [weakself.progress setText:[NSString stringWithFormat:@"%ld of %ld files uploaded: %.2f %%",(long)activity.filesUploaded,(long)activity.fileCount,(cfProgress*100.0f)]];
+        [activityDropbox setOnActivityProgress:^(PxpDropboxActivity *activityDropbox, CGFloat cfProgress) {
+            [weakself.progress setText:[NSString stringWithFormat:@"%ld of %ld files uploaded: %.2f %%",(long)activityDropbox.filesUploaded,(long)activityDropbox.fileCount,(cfProgress*100.0f)]];
         }];
         
-        [activity setOnActivityComplete:^(UIActivity *activity) {
+        [activityDropbox setOnActivityComplete:^(UIActivity *activity) {
             [weakself.progress setHidden:YES];
         }];
 //
@@ -254,24 +254,48 @@
         for (NSIndexPath * index2 in clipsBeingShared) {
             Clip *aClip = [self.tableData objectAtIndex:index2.row];
             //make sure comment and rating are updated
-            for (NSURL * vidUrl in aClip.videoFiles) {
-//                    NSString * src;
-                NSString *eventDate = [aClip.eventName substringToIndex:18];
-                NSString *fileName = [NSString stringWithFormat:@"%@_%@_%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,aClip.homeTeam,aClip.visitTeam,@""];
-                fileName = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            
+            NSArray * allKeys = [aClip.videosBySrcKey allKeys];
+            
+            for (NSString * key in allKeys) {
+                NSString *eventDate     = [aClip.eventName substringToIndex:18];
+                NSString * sourceKey    = key;
+                NSURL * vidUrl          = (NSURL *)[aClip.videosBySrcKey objectForKey:key];
+                NSString *fileName      = [NSString stringWithFormat:@"%@_%@_%@_%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,sourceKey,aClip.homeTeam,aClip.visitTeam,@""];
+                fileName                = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 
-
                 
-                [activity.urlToFileName setObject:fileName forKey:vidUrl];
                 
+                [activityDropbox.urlToFileName setObject:fileName forKey:vidUrl];
             }
+            
+            
+//            for (NSURL * vidUrl in aClip.videoFiles) {
+//
+//                NSString *eventDate = [aClip.eventName substringToIndex:18];
+//                NSString * sourceKey = @"";
+//                for (NSString * val in [aClip.videosBySrcKey allValues]) {
+//                    NSLog(@"%s",__FUNCTION__);
+//aClip.videosBySrcKey k
+//                }
+//                NSString *fileName = [NSString stringWithFormat:@"%@_%@_%@__%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,sourceKey,aClip.homeTeam,aClip.visitTeam,@""];
+//                fileName = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+//                
+//
+//                
+//                [activityDropbox.urlToFileName setObject:fileName forKey:vidUrl];
+//                
+//            }
             
             
             
             
             
             Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
-            [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
+//            [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
+            for (NSString * vidfile in aClip2.videoFiles) {
+                    [clipsToShare addObject:[NSURL fileURLWithPath:vidfile]];
+            }
         }
         
         
@@ -286,12 +310,12 @@
         __weak UILabel * weakProgressLable = self.progress;
       
         
-        [videoUploadActivity setOnActivityProgress:^(VideoUploadRecieptActivity * activity, CGFloat cfProgress) {
+        [videoUploadActivity setOnActivityProgress:^(VideoUploadRecieptActivity * activityDropbox, CGFloat cfProgress) {
             
             if (weakself.progress.hidden){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     weakself.progress.hidden = NO;
-                    weakself.progress.text = activity.progressMessage;
+                    weakself.progress.text = activityDropbox.progressMessage;
                 });
             }
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -309,7 +333,7 @@
         }];
         
         
-        NSArray * activities = @[mailActivity,activity,videoUploadActivity];
+        NSArray * activities = @[mailActivity,activityDropbox,videoUploadActivity];
         NSDictionary * setPref = [[PxpPreference dictionary] objectForKey:@"SettingsItems"];
         if( [setPref[@"Dropbox"] boolValue]) {
 //            activities = @[activity];
