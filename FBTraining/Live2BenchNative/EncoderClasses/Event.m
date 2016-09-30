@@ -327,11 +327,26 @@
         for (NSDictionary *tagDic in tagArray) {
             Tag *tag = [[Tag alloc]initWithData:tagDic event:self];
             
-            
-            if (tag.userTeam && [UserCenter getInstance].taggingTeam){
-                if (![tag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) continue;
+            if ([UserCenter getInstance].role){
+                if (tag.role){
+                    if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeTele || tag.type == TagTypeOpenDuration) {
+                            if (![[UserCenter getInstance].rolePermissions containsObject:[NSNumber numberWithInteger:tag.role]]) {
+                             continue;
+                            }
+                    }
+                    
+
+                    
+                    if (tag.userTeam && [UserCenter getInstance].taggingTeam.name !=nil){
+                        if (![tag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) {
+                            continue;
+                        }
+                        
+                    }
                 
+                }
             }
+            
             
             if (tag.type !=  TagTypeDeleted) {
                 [tagResult addObject:tag];
@@ -647,6 +662,18 @@
     
     return txt;
 }
+
+-(float)gameStartTime
+{
+    return 0;
+}
+
+-(float)gameEndTime
+{
+    return 0;
+}
+
+
 
 
 -(void)dealloc

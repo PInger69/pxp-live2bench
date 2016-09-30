@@ -8,6 +8,7 @@
 
 #import "InfoSettingViewController.h"
 #import "CustomAlertControllerQueue.h"
+#import "UserCenter.h"
 
 @interface InfoSettingViewController () <SwipeableCellDelegate, UITableViewDataSource, UIAlertViewDelegate>
 
@@ -16,6 +17,7 @@
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *appVersionCell;
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *systemVersionCell;
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *userCell;
+@property (strong, nonatomic, nonnull) SwipeableTableViewCell *roleCell;
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *wifiCell;
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *eulaCell;
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *colorCell;
@@ -37,7 +39,7 @@
         [self.tableView registerClass:[SwipeableTableViewCell class] forCellReuseIdentifier:@"SwipeableCell"];
         [self.view addSubview:self.tableView];
         
-        NSInteger nCells = 6;
+        NSInteger nCells = 7;
         NSMutableArray *cells = [NSMutableArray arrayWithCapacity:6];
         for (NSInteger i = 0; i < nCells; i++) {
             SwipeableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"SwipeableCell"];
@@ -77,8 +79,13 @@
         wifi.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Wifi Connection", nil)];
         [wifi.functionalButton setTitle:[Utility myWifiName] forState:UIControlStateNormal];
         self.wifiCell = wifi;
+
+        SwipeableTableViewCell *role = cells[4];
+        role.myTextLabel.text = [NSString stringWithFormat:@"%@:", @"Role"];
+        [role.functionalButton setTitle:[UserCenter getInstance].roleName forState:UIControlStateNormal];
+        self.roleCell = role;
         
-        SwipeableTableViewCell *eula = cells[4];
+        SwipeableTableViewCell *eula = cells[5];
         eula.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"EULA", nil)];
         [eula.functionalButton setTitle:NSLocalizedString(@"View", nil) forState:UIControlStateNormal];
         [eula.functionalButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
@@ -86,7 +93,7 @@
         eula.functionalButton.enabled = YES;
         self.eulaCell = eula;
         
-        SwipeableTableViewCell *color = cells[5];
+        SwipeableTableViewCell *color = cells[6];
         color.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Color", nil)];
         /*[color.functionalButton setTitle:@"" forState:UIControlStateNormal];
         [color.functionalButton setFrame:CGRectMake(color.frame.size.width - 240, 30, 120, color.frame.size.height-50)];

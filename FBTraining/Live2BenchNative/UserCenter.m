@@ -30,6 +30,13 @@
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 
+#define ROLE_SUPERUSER    0
+#define ROLE_COACH        1
+#define ROLE_PLAYER       2
+#define ROLE_USER         3
+#define ROLE_TEAMADMIN    4
+#define ROLE_MEDICAL      5
+
 static UserCenter * instance;
 @implementation UserCenter
 {
@@ -235,6 +242,8 @@ static UserCenter * instance;
 -(void)cloudCredentialsResponce:(NSData *)data
 {
     
+
+    
  // role
 //    0 = superUser
 //    1 = coach
@@ -251,6 +260,8 @@ static UserCenter * instance;
 
     }
     
+
+    
     rawResponce = jsonDict;
     
     
@@ -265,6 +276,60 @@ static UserCenter * instance;
 
 -(void)updateCustomerInfoWith:(NSDictionary *)dataDict
 {
+    /*
+     ROLE_SUPERUSER
+     ROLE_COACH
+     ROLE_PLAYER
+     ROLE_USER
+     ROLE_TEAMADMIN
+     ROLE_MEDICAL
+     
+     */
+    
+    self.role               = [[dataDict objectForKey:@"role"]integerValue];
+    if ([dataDict objectForKey:@"role"]){
+        NSInteger checkRole = [[dataDict objectForKey:@"role"] integerValue];
+//        checkRole               = ROLE_MEDICAL;
+        self.role               = checkRole;
+        switch (checkRole) {
+            case ROLE_SUPERUSER :
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_SUPERUSER,@ROLE_COACH, @ROLE_PLAYER,@ROLE_TEAMADMIN,@ROLE_USER,@ROLE_MEDICAL]];
+                self.roleName = @"Super User";
+                break;
+            case ROLE_COACH :
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_COACH, @ROLE_PLAYER,@ROLE_TEAMADMIN,@ROLE_USER]];
+                self.roleName = @"Coach";
+                break;
+            case ROLE_PLAYER :
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_COACH, @ROLE_PLAYER,@ROLE_TEAMADMIN,@ROLE_USER]];
+                self.roleName = @"Player";
+                break;
+            case ROLE_USER :
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_COACH, @ROLE_PLAYER,@ROLE_TEAMADMIN,@ROLE_USER]];
+                self.roleName = @"User";
+                break;
+            case ROLE_TEAMADMIN :
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_COACH, @ROLE_PLAYER,@ROLE_TEAMADMIN,@ROLE_USER]];
+                self.roleName = @"Team Admin";
+                break;
+            case ROLE_MEDICAL :
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_MEDICAL]];
+                self.roleName = @"Medical";
+                break;
+            default:
+                self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_COACH, @ROLE_PLAYER,@ROLE_TEAMADMIN,@ROLE_USER]];
+                self.roleName = @"Coach";
+                break;
+        }
+        
+    } else {
+        
+        self.rolePermissions = [[NSSet alloc]initWithArray:@[@ROLE_COACH, @ROLE_PLAYER]];
+    }
+    
+    
+    
+    
     _customerID             = [dataDict objectForKey:@"customer"];
     _customerEmail          = [dataDict objectForKey:@"emailAddress"];
     _userHID                = [dataDict objectForKey:@"hid"];
@@ -272,7 +337,7 @@ static UserCenter * instance;
     _customerAuthorization  = [dataDict objectForKey:@"authorization"];
     
     
-    if ([dataDict objectForKey:@"role"]) self.role = [[dataDict objectForKey:@"role"]integerValue];
+//    if ([dataDict objectForKey:@"role"]) self.role = [[dataDict objectForKey:@"role"]integerValue];
     
     
     NSUserDefaults *defaults           = [NSUserDefaults standardUserDefaults];

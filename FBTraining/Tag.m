@@ -93,7 +93,8 @@ static NSMutableDictionary * openDurationTagsWithID;
         _coachPick           = [tagData[@"coachpick"] boolValue];
         
         
-        if ([tagData objectForKey:@"role"]) self.role = [tagData objectForKey:@"role"];
+     
+        if ([tagData objectForKey:@"role"]) self.role = [[tagData objectForKey:@"role"]integerValue];
         if ([tagData objectForKey:@"userTeam"]) self.userTeam = [tagData objectForKey:@"userTeam"];
             
         if (tagData[@"dtagid"]) self.durationID = tagData[@"dtagid"];

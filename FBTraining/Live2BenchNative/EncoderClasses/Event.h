@@ -75,7 +75,8 @@
 -(void)modifyTag:(NSDictionary *)modifiedData;
 -(NSArray*)getTagsByID:(NSString*)tagId;
 
-
+-(float)gameStartTime;
+-(float)gameEndTime;
 
 
 -(void)build;

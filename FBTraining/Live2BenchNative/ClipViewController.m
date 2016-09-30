@@ -529,7 +529,13 @@ static void * encoderTagContext = &encoderTagContext;
     
     [cell.thumbName setText:[[thumbNameStr stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"%" withString:@""]];
     [cell.thumbName setFont:[UIFont boldSystemFontOfSize:18.0f]];
-    [cell.thumbTime setText: tagSelect.displayTime];
+    
+    
+    
+    NSString * theDisplayTime = [Utility translateTimeFormat:tagSelect.time - [_currentEvent gameStartTime] ];
+    [cell.thumbTime setText: theDisplayTime];
+//    [Utility translateTimeFormat:tagSelect.time]
+    
     [cell.thumbDur setText:[NSString stringWithFormat:@"%.2ds",tagSelect.duration]];
     cell.ratingscale.rating = tagSelect.rating;
     cell.checkmarkOverlay.hidden = YES;

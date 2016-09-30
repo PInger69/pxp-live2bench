@@ -577,8 +577,8 @@
         [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
     }
     
-
-    [cell.tagtime setText: tag.displayTime];
+    NSString * theDisplayTime = [Utility translateTimeFormat:tag.time - [tag.eventInstance gameStartTime] ];
+    [cell.tagtime setText: theDisplayTime];
     
     
 

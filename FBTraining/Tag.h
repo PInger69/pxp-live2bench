@@ -127,7 +127,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) NSString      *period;
 @property (strong,nonatomic) NSArray        *players;
 @property (strong,nonatomic) NSDictionary   *extraDic;
-@property (strong,nonatomic) NSString       * role;
+@property (assign,nonatomic) NSInteger      role;
 @property (strong,nonatomic) NSString       * userTeam;
 
 /// The telestration accociated with the tag.

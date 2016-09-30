@@ -21,11 +21,6 @@
 @synthesize thumbColour=_thumbColour;
 @synthesize activityInd=_activityInd;
 @synthesize thumbPeriod = _thumbPeriod;
-//@synthesize thumbRatingOne = _thumbRatingOne;
-//@synthesize thumbRatingTwo = _thumbRatingTwo;
-//@synthesize thumbRatingThree = _thumbRatingThree;
-//@synthesize thumbRatingFour = _thumbRatingFour;
-//@synthesize thumbRatingFive = _thumbRatingFive;
 @synthesize thumbDeleteButton=_thumbDeleteButton;
 @synthesize iPath=_iPath;
 @synthesize imageLoaded;
@@ -152,8 +147,6 @@
     [checkmarkOverlay setUserInteractionEnabled:TRUE];
     [checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self addSubview:checkmarkOverlay];
-//    self.layer.borderWidth = 1;
-//    self.layer.borderColor = [[UIColor grayColor]CGColor];
     
     self.thumbDeleteButton = [[CustomButton alloc] initWithFrame: CGRectMake(-22, -17, 45, 45)];
     [self.thumbDeleteButton setImage: [self deleteImage] forState:UIControlStateNormal];
@@ -209,23 +202,12 @@
 }
 
 -(void)wiggleView {
-    
-//    CAKeyframeAnimation *animation = [CAKeyframeAnimation animation];
-//    animation.keyPath = @"position.x";
-//    animation.values = @[ @0, @8, @-8, @4, @0 ];
-//    animation.keyTimes = @[ @0, @(1 / 6.0), @(3 / 6.0), @(5 / 6.0), @1 ];
-//    animation.duration = 0.4;
-//    animation.additive = YES;
-//    animation.repeatCount = HUGE_VALF;
-//    [self.layer addAnimation:animation forKey:@"wiggle"];
-    
     CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
     animation.values = @[@(-0.03f), @(0.03f)];
     animation.autoreverses = YES;
     animation.duration = 0.1;
     animation.repeatCount = HUGE_VALF;
     [self.layer addAnimation:animation forKey:@"wiggle"];
-    
 }
 
 -(UIImage *) deleteImage{

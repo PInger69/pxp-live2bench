@@ -157,11 +157,7 @@ NS_OPTIONS(NSInteger, style){
                                            @"Identifier": tagSetSettingViewController.identifier
                                            }];
         
-        if ([setPref[@"Log"] boolValue]) [tempDefinitions addObject:@{
-                                           @"Name": NSLocalizedString(@"Log", nil),
-                                           @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
-                                           }];
-        if ([setPref[@"FeedMap"] boolValue]) [tempDefinitions addObject:@{
+                if ([setPref[@"FeedMap"] boolValue]) [tempDefinitions addObject:@{
                                            @"Name": feedMappingViewController.name,
                                            @"ViewController": feedMappingViewController,
                                            @"Identifier": feedMappingViewController.identifier
@@ -188,7 +184,11 @@ NS_OPTIONS(NSInteger, style){
 
         
 
-        
+        if ([setPref[@"Log"] boolValue]) [tempDefinitions addObject:@{
+                                                                      @"Name": NSLocalizedString(@"Log", nil),
+                                                                      @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
+                                                                      }];
+
         [tempDefinitions addObject:@{
                                      @"Name": @"Logout",
                                      @"Identifier": @"Logout"

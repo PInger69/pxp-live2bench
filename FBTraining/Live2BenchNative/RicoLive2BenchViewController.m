@@ -1571,9 +1571,14 @@ static void * eventContext      = &eventContext;
         NSArray * temp = [weakSelf.currentEvent.tags copy];
         
         for (id<TagProtocol> theTag in temp) {
-            if (![theTag userTeam]) continue;
-            if (![[theTag userTeam]isEqualToString:[UserCenter getInstance].taggingTeam.name]) {
-                [weakSelf.currentEvent.tags removeObject:theTag];
+            if ([UserCenter getInstance].role == 0) {
+                continue;
+            } else if (![theTag userTeam]) {
+                continue;
+            } else {
+                if (![[theTag userTeam]isEqualToString:[UserCenter getInstance].taggingTeam.name]) {
+                    [weakSelf.currentEvent.tags removeObject:theTag];
+                }
             }
         }
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:weakSelf.currentEvent];

@@ -1625,14 +1625,24 @@
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
 
-        if (newTag.role){
-//            if (![[UserCenter getInstance].rolePermissions containsObject:newTag.role]) return;
-        }
         
-        if (newTag.userTeam){
-            if (![newTag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) return;
-            
-        }
+        // role and perission check
+          if (newTag.role){
+                if (newTag.type == TagTypeNormal || newTag.type == TagTypeCloseDuration || newTag.type == TagTypeTele || newTag.type == TagTypeOpenDuration) {
+                  
+                        if (![[UserCenter getInstance].rolePermissions containsObject:[NSNumber numberWithInteger:newTag.role]]) {
+                            return;
+                        }
+                   
+                }
+                
+                
+                if (newTag.userTeam && newTag.role){
+                    if (![newTag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) return;
+                    
+                }
+         }
+        
         
             // AutoDownload check
             if ([[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:newTag.name]) {
@@ -1789,9 +1799,9 @@
             
             Tag *newTag = [[Tag alloc] initWithData: tData event:encoderEvent];
             
-            if (newTag.role){
-                if (![[UserCenter getInstance].rolePermissions containsObject:newTag.role]) return;
-            }
+            
+         
+            
             
             if (newTag.userTeam){
                 if (![newTag.userTeam isEqualToString:[UserCenter getInstance].userTeam]) return;

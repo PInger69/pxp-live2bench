@@ -52,9 +52,10 @@
 // Preferences
 @property (nonatomic,assign) NSInteger              preferenceLiveBuffer;
 @property (nonatomic,assign) NSInteger              role;
+@property (nonatomic,assign) NSString               * roleName;
 @property (nonatomic,strong) NSString               * userTeam;
-@property (nonatomic,assign) NSSet                  * rolePermissions;
-@property (nonatomic,assign) NSPredicate            * teamPredicate;
+@property (nonatomic,strong) NSSet                  * rolePermissions;
+@property (nonatomic,strong) NSPredicate            * teamPredicate;
 
 @property (nonatomic,strong) NSString               * l2bMode;
 
