@@ -532,8 +532,19 @@ static void * encoderTagContext = &encoderTagContext;
     
     
     
-    NSString * theDisplayTime = [Utility translateTimeFormat:tagSelect.time - [_currentEvent gameStartTime] ];
+    NSString * theDisplayTime = [Utility translateTimeFormat:tagSelect.time];
     [cell.thumbTime setText: theDisplayTime];
+    
+    
+    if (_currentEvent.gameStartTag){
+    
+        float startTime = tagSelect.time - ([_currentEvent.gameStartTag time]);
+        [cell.thumbGameTime setText: [NSString stringWithFormat:@"%@",[Utility translateTimeFormat:startTime]]];
+    }
+    
+    [cell.thumbTime setText: theDisplayTime];
+    
+    
 //    [Utility translateTimeFormat:tagSelect.time]
     
     [cell.thumbDur setText:[NSString stringWithFormat:@"%.2ds",tagSelect.duration]];

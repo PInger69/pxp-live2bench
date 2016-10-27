@@ -8,11 +8,11 @@
 
 #import "Clip.h"
 #import "Feed.h"
-
+#import "LocalMediaManager.h"
 
 @implementation Clip
 {
-    NSDictionary * _videosBySrcKey;
+//    NSDictionary * _videosBySrcKey;
 }
 
 /**
@@ -42,9 +42,9 @@
         _rating             = [data[@"rating"] intValue];
         _comment            = data[@"comment"];
         _path               = aPath;
-        _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
+        self.videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         _localRawData[@"plistPath"] = aPath;
-        _localRawData[@"fileNamesByKey"] = _videosBySrcKey;
+        _localRawData[@"fileNamesByKey"] = self.videosBySrcKey;
         //_localRawData[@"fileNames"] = data[@"fileNames"];
         _eventName = data[@"event"];
         _localRawData[@"event"] = _eventName;
@@ -53,7 +53,20 @@
         //_displayTime = _rawData[@"displaytime"];
         
        // _rawData[@"plistPath"] = aPath;
-        
+        NSArray * fileNames = [self videoFiles];
+        if ([self.videosBySrcKey count]<[fileNames count]) {
+            NSDictionary * temp = _localRawData[@"url"];
+            NSArray * temp2 = [temp allKeys];
+            for (NSString*key in temp2) {
+                for (NSString*key2 in fileNames) {
+                    if ([key2 containsString:key]) {
+                        [self.videosBySrcKey setObject:key2 forKey:key];
+                    }
+                    
+                }
+            }
+        }
+
         
         [_localRawData writeToFile:self.path atomically:YES];
         //[_rawData writeToFile:self.path atomically:YES];
@@ -87,12 +100,28 @@
         _comment            = data[@"comment"];
         _path               = [data objectForKey:@"plistPath"];
 
-        _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
+        self.videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[[data objectForKey:@"fileNamesByKey"] mutableCopy ]:[NSMutableDictionary new];
         _localRawData[@"plistPath"] = _path;
-        _localRawData[@"fileNamesByKey"] = _videosBySrcKey;
+        _localRawData[@"fileNamesByKey"] = [self.videosBySrcKey copy];
         if (data[@"fileNames"]) _localRawData[@"fileNames"] = data[@"fileNames"];
         _eventName = data[@"event"];
         _localRawData[@"event"] = _eventName;
+        
+        NSArray * fileNames = [self videoFiles];
+        if ([self.videosBySrcKey count]<[fileNames count]) {
+            NSDictionary * temp = _localRawData[@"url"];
+            NSArray * temp2 = [temp allKeys];
+            for (NSString*key in temp2) {
+                for (NSString*key2 in fileNames) {
+                    if ([key2 containsString:key]) {
+                        [self.videosBySrcKey setObject:key2 forKey:key];
+                    }
+                    
+                }
+            }
+        }
+
+        
         //_videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         //_event = _rawData[@"event"];
         //_displayTime = _rawData[@"displaytime"];
@@ -189,6 +218,24 @@
     NSSet * uniqueFileNames = [[NSSet alloc]initWithArray:list];
     mutableDict[@"fileNames"]   = [uniqueFileNames allObjects];
     
+    if ([self.videosBySrcKey count]<[uniqueFileNames count]) {
+        NSDictionary * temp = _localRawData[@"url"];
+        NSArray * temp2 = [temp allKeys];
+        for (NSString*key in temp2) {
+            for (NSString*key2 in uniqueFileNames) {
+                if ([key2 containsString:key]) {
+                    if(![key2 containsString:@"bookmark"]) {
+                        [self.videosBySrcKey setObject:[NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance]bookmarkedVideosPath],key2] forKey:key];
+                    } else {
+                        [self.videosBySrcKey setObject:key2 forKey:key];
+                    }
+                   
+                }
+            
+            }
+        }
+    }
+    mutableDict[@"fileNamesByKey"] = self.videosBySrcKey;
     _localRawData = mutableDict;
     
     @try {
@@ -263,41 +310,41 @@
     return [NSString stringWithFormat:@"%@_%@", _eventName, _clipId];
 }
 
-- (nonnull NSDictionary *)sourcesForVideoPaths:(NSArray *)paths {
-    NSMutableDictionary *sources = [NSMutableDictionary dictionary];
-    
-    for (NSString *path in self.videoFiles) {
-        
-        // I <3 C, so get the UF8 encoded C string.
-        const char *s = path.UTF8String;
-        
-        // find locations of '+' and "hq.mp4" to grab source from.
-        const char *a = strchr(s, '+');
-        const char *b = a ? strstr(a, "hq.mp4") : NULL;
-        
-        // check that locations exist for both '+' and "hq.mp4".
-        if (a && b) {
-            // calculate length of the string needed from (a + 1) to b. safe to assume a + 1 <= b.
-            const size_t n = b - (a + 1);
-            
-            // stack allocate string with NULL character.
-            char source[n + 1];
-            source[n] = '\0';
-            
-            // copy the string from (a + 1) to b.
-            strncpy(source, a + 1, n);
-            
-            // add to dictionary.
-            sources[[NSString stringWithUTF8String:source]] = path;
-        }
-    }
-    
-    return sources;
-}
-
-- (nonnull NSDictionary *)videosBySrcKey {
-    return [self sourcesForVideoPaths:self.videoFiles];
-}
+//- (nonnull NSDictionary *)sourcesForVideoPaths:(NSArray *)paths {
+//    NSMutableDictionary *sources = [NSMutableDictionary dictionary];
+//    
+//    for (NSString *path in self.videoFiles) {
+//        
+//        // I <3 C, so get the UF8 encoded C string.
+//        const char *s = path.UTF8String;
+//        
+//        // find locations of '+' and "hq.mp4" to grab source from.
+//        const char *a = strchr(s, '+');
+//        const char *b = a ? strstr(a, "hq.mp4") : NULL;
+//        
+//        // check that locations exist for both '+' and "hq.mp4".
+//        if (a && b) {
+//            // calculate length of the string needed from (a + 1) to b. safe to assume a + 1 <= b.
+//            const size_t n = b - (a + 1);
+//            
+//            // stack allocate string with NULL character.
+//            char source[n + 1];
+//            source[n] = '\0';
+//            
+//            // copy the string from (a + 1) to b.
+//            strncpy(source, a + 1, n);
+//            
+//            // add to dictionary.
+//            sources[[NSString stringWithUTF8String:source]] = path;
+//        }
+//    }
+//    
+//    return sources;
+//}
+//
+//- (nonnull NSDictionary *)videosBySrcKey {
+//    return [self sourcesForVideoPaths:self.videoFiles];
+//}
 
 
 -(NSString*)path

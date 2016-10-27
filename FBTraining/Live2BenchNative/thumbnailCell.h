@@ -36,6 +36,7 @@
 @property (strong, nonatomic) UIImageView *imageView;
 @property (strong,nonatomic) UILabel *thumbPeriod;
 @property (strong,nonatomic) UILabel *thumbTime;
+@property (strong,nonatomic) UILabel *thumbGameTime;
 @property (strong,nonatomic) UILabel *thumbDur;
 @property (strong, nonatomic) UILabel *thumbName;
 //@property (strong, nonatomic) UIImageView *thumbRatingOne;

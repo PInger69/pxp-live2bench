@@ -8,9 +8,7 @@
 #import "GroupOperation.h"
 
 @interface GroupOperation ()
-@property (nonatomic,strong) NSOperationQueue * internalQueue;
-@property (nonatomic,strong) NSBlockOperation * startingOperation;
-@property (nonatomic,strong) NSBlockOperation * finishingOperation;
+
 @end
 
 
@@ -18,6 +16,39 @@
 {
     BOOL _isFinished;
     BOOL _isExecuting;
+}
+
+
+
+- (instancetype)initWithOperations:(NSArray*)operations withQueue:(NSOperationQueue*)queue
+{
+    self = [super init];
+    if (self) {
+        _isExecuting                = NO;
+        _isFinished                 = NO;
+        
+        // empty operation to to make all other operation dependant on
+        self.startingOperation      = [NSBlockOperation blockOperationWithBlock:^{}];
+        
+        // finishing block that will depend on all other operation
+        __block GroupOperation * weakSelf = self;
+        self.finishingOperation      = [NSBlockOperation blockOperationWithBlock:^{
+            [weakSelf completeOperation];
+        }];
+        
+        self.internalQueue           = queue;
+        self.internalQueue.maxConcurrentOperationCount = 1;
+        self.internalQueue.suspended = YES;
+        [self.internalQueue addOperation:self.startingOperation];
+        
+        for (NSOperation * ops  in operations) {
+            [ops addDependency:self.startingOperation];
+            [self.finishingOperation addDependency:ops];
+            [self.internalQueue addOperation:ops];
+        }
+        
+    }
+    return self;
 }
 
 - (instancetype)initWithOperations:(NSArray*)operations
@@ -28,7 +59,10 @@
         _isFinished                 = NO;
         
         // empty operation to to make all other operation dependant on
-        self.startingOperation      = [NSBlockOperation blockOperationWithBlock:^{}];
+        self.startingOperation      = [NSBlockOperation blockOperationWithBlock:^{
+            NSLog(@"%s",__FUNCTION__);
+
+        }];
         
         // finishing block that will depend on all other operation
         __block GroupOperation * weakSelf = self;
@@ -86,8 +120,11 @@
 -(void)cancel
 {
     [self.internalQueue cancelAllOperations];
+    
     [self setExecuting:NO];
     [self setFinished:YES];
+    
+    
     [super cancel];
 }
 

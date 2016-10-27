@@ -14,4 +14,6 @@ extern NSString * const PxpErrorDomain;
 extern NSInteger  const PLAYER_ERROR_NO_DURATION;
 extern NSInteger  const PLAYER_ERROR_LOAD_ITEM;
 
+extern NSInteger  const DOWNLOAD_CLIP_ERROR;
+
 @end

@@ -248,8 +248,6 @@ static NSDictionary * _professionMapData;
     return sport;
 }
 
-
-
 #pragma mark -
 +(Profession*)buildRugby
 {
@@ -332,10 +330,16 @@ static NSDictionary * _professionMapData;
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStart]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                                                                   ]];
+                                                                                   
+                                                                                       ]];
     
     
-    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[ [NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerHalfStop]
+                                                                                            ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerZoneStop]
+                                                                                            ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerHalfStart]
+                                                                                            ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeSoccerZoneStart]
+                                                                                            ,[NSPredicate predicateWithFormat:@"duration != 0"]
+                                                                                            ]];
     
     
     

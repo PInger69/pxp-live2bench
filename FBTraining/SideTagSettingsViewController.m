@@ -165,38 +165,63 @@
     for (SideTagEditButtonDisplayView * d in self.tagSetButtons) {
         d.typeLabel.text = @"None";
         d.typeLabel.textColor = [UIColor grayColor];
-        [d.button setTitle:@" " forState:UIControlStateNormal];
+        [d.button setTitle:@"" forState:UIControlStateNormal];
         d.enabled = ![self.currentTagSetName isEqualToString:DEFAULT_TAG_SET];        // you cant mod the default
     }
     
-    for (NSInteger i = 0; i<[tags count]; i++) {
-//        if ([tags count] >= 24)break;
-        NSInteger order = [tags[i][@"order"]integerValue];
-        NSString * pos  = tags[i][@"position"];
+    if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
+    
+        NSArray *sortedTags = [tags sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
+            NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
+            NSComparisonResult result =  [first compare:second];
+            return result;
+        }];
         
-        if (order < 12 && [pos isEqualToString:@"right"]){
-            order += 12;
-           // tags[i][@"order"] = [NSNumber numberWithInteger:order];
+        
+        
+        NSInteger rightCount = 0;
+        for (NSInteger i = 0; i<[tags count]; i++) {
+            NSString * pos  = tags[i][@"position"];
+            NSInteger offset = i;
+            
+            if ([pos isEqualToString:@"right"]){
+                offset = rightCount+12;
+                rightCount += 1;
+            }
+            SideTagEditButtonDisplayView * display = self.tagSetButtons[offset];
+            
+            [display.button setTitle:tags[i][@"name"] forState:UIControlStateNormal];
+            display.typeLabel.text = (tags[i][@"type"])?tags[i][@"type"]:@"Normal";
+            
+            if ([display.typeLabel.text isEqualToString:@"Normal"]) {
+                display.typeLabel.textColor = [UIColor blackColor];
+            }
         }
 
-        SideTagEditButtonDisplayView * display = self.tagSetButtons[order];
-
-//        if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
-//            display.enabled = NO;
-//        }
-//        display.button.titleLabel.text = tags[i][@"name"];
-        [display.button setTitle:tags[i][@"name"] forState:UIControlStateNormal];
-        display.typeLabel.text = (tags[i][@"type"])?tags[i][@"type"]:@"Normal";
-        
-        
-        if ([display.typeLabel.text isEqualToString:@"Normal"]) {
-            display.typeLabel.textColor = [UIColor blackColor];
-        } else {
-//            display.typeLabel.textColor = [UIColor grayColor];        
+    } else {
+    
+        for (NSInteger i = 0; i<[tags count]; i++) {
+            NSInteger order = [tags[i][@"order"]integerValue];
+            NSString * pos  = tags[i][@"position"];
+            
+            if (order < 12 && [pos isEqualToString:@"right"]){
+                order += 12;
+            }
+            
+            SideTagEditButtonDisplayView * display = self.tagSetButtons[order];
+            [display.button setTitle:tags[i][@"name"] forState:UIControlStateNormal];
+            display.typeLabel.text = (tags[i][@"type"])?tags[i][@"type"]:@"Normal";
+            
+            if ([display.typeLabel.text isEqualToString:@"Normal"]) {
+                display.typeLabel.textColor = [UIColor blackColor];
+            }
         }
-        
+
+    
     }
-    if (!tags.count){
+    
+      if (!tags.count){
         self.tagSetData = [NSMutableArray new];
     } else {
         self.tagSetData = [tags mutableCopy];  // Saves Data
@@ -305,7 +330,7 @@
     
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = display.name;
+        textField.text = @"";//display.name;
     }];
     
 

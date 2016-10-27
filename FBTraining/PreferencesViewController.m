@@ -71,7 +71,36 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     
     [self.recToggle setOnTintColor:PRIMARY_APP_COLOR];
     [self.recToggle setTintColor:PRIMARY_APP_COLOR];
-    [self.recToggle setThumbTintColor:[UIColor grayColor]];
+//    [self.recToggle setThumbTintColor:[UIColor grayColor]];
+    
+    [self.lockStart setOnTintColor:PRIMARY_APP_COLOR];
+    [self.lockStart setTintColor:PRIMARY_APP_COLOR];
+//    [self.lockStart setThumbTintColor:[UIColor grayColor]];
+    
+     [UserCenter getInstance].isStartLocked = self.lockStart.isOn;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    self.lockStart.on = [UserCenter getInstance].isStartLocked ;
+    PXPLog(@"%@ is %@",[[UserCenter getInstance]userHID],[[EncoderManager getInstance].liveEvent.gameStartTag user]);
+    if (![[[UserCenter getInstance]userHID] isEqualToString:[[EncoderManager getInstance].liveEvent.gameStartTag user]]) {
+        self.lockStart.enabled = NO;
+    } else  {
+        self.lockStart.enabled = YES;
+        
+    }
+    
+    
+}
+
+- (IBAction)onLockStartTime:(id)sender {
+    UISwitch * swit = (UISwitch *)sender;
+    [UserCenter getInstance].isStartLocked = swit.isOn;
+    
+    
     
 }
 

@@ -121,6 +121,12 @@
     if (!_open){
        _tags = [self buildTags:_rawData];
        _open = YES;
+        
+        NSPredicate *bPredicate = [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeGameStart];
+        NSArray * searchForGameTags =[_tags filteredArrayUsingPredicate:bPredicate];
+        if ([searchForGameTags count]) {
+            self.gameStartTag = [searchForGameTags firstObject];
+        }
     }
 }
 
@@ -327,6 +333,10 @@
         for (NSDictionary *tagDic in tagArray) {
             Tag *tag = [[Tag alloc]initWithData:tagDic event:self];
             
+            if (tag.type == TagTypeGameStart ) {
+                self.gameStartTag = tag;
+            }
+            
             if ([UserCenter getInstance].role){
                 if (tag.role){
                     if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeTele || tag.type == TagTypeOpenDuration) {
@@ -503,7 +513,7 @@
 {
     NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {        
         Tag * obj = evaluatedObject;
-        return [obj.name isEqualToString:tagId];
+        return [obj.ID isEqualToString:tagId];
     }];
     
     return [self.tags filteredArrayUsingPredicate:pred];

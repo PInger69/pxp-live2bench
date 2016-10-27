@@ -48,6 +48,7 @@ typedef NS_ENUM (NSInteger,TagType){
     TagTypeFootballDownTags        = 1002,
     TagTypeOpenDuration            = 1004,
     TagTypeCloseDuration           = 1006,
+    TagTypeGameStart               = 1008
     
 };
 

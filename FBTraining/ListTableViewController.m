@@ -24,6 +24,11 @@
 //#import "ProfessionMap.h"
 #import "CustomAlertControllerQueue.h"
 
+#import "DownloaderQueue.h"
+#import "DownloadOperation.h"
+#import "EncoderOperation.h"
+#import "DownloadClipFromTag.h"
+
 @interface ListTableViewController ()
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
@@ -33,6 +38,8 @@
 
 
 @end
+
+static NSOperationQueue * queue;
 
 @implementation ListTableViewController
 {
@@ -44,6 +51,11 @@
 -(instancetype)init{
     self = [super init];
     if(self){
+        if (!queue){
+            queue = [NSOperationQueue new];
+            queue.maxConcurrentOperationCount = 1;
+            self.downloadQueue = queue;
+        }
         self.isEditable = YES;
         //self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - (TABLE_WIDTH+1) - 85 , LABEL_HEIGHT + 60, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStyleGrouped];
         self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - TABLE_WIDTH, LABEL_HEIGHT + 55, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStylePlain];
@@ -333,71 +345,162 @@
         tagKey = key;//[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
         
         
-        NSLog(@"Looking for Key: %@",tagKey);
+
+        
+        // TODO: build new downloader
         
         
         
-        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] != nil &&   [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] isKindOfClass:[NSString class]]) {
-            // This means the place holder is found to set the button to look like its downloaded
+//        NSString *src1 = [NSString stringWithFormat:@"%@hq", key];
+        NSString *src2 = [NSString stringWithFormat:@"%@", key];
+
+        NSString *tagGlobalID  = [NSString stringWithFormat:@"%@_%@_%@", tag.event, tag.ID,src2];
+        
+//         If you have an operation link it to progress
+        if ([DownloaderQueue getQueueItemByKey:tagGlobalID]) {
+            DownloadOperation * dOp = (DownloadOperation *)[DownloaderQueue getQueueItemByKey:tagGlobalID];
+            
             collapsableCell.downloadButton.isPressed    = YES;
-            collapsableCell.downloadButton.progress     = 0;
-        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey]) {
-            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
-            __block FeedSelectCell *weakerCell = weakCell;
-            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                weakerCell.downloadButton.progress = progress;
-                [weakerCell.downloadButton setNeedsDisplay];
+            collapsableCell.downloadButton.progress     = (dOp.isFinished)?1:0;
+           if (dOp.isFinished) collapsableCell.downloadButton.downloadComplete = 1.0;
+            
+            [dOp setOnRequestProgress:^(DownloadOperation * op) {
+                CGFloat progress = (CGFloat)(((CGFloat)op.receivedBytes) / ((CGFloat)op.expectedBytes));
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    weakCell.downloadButton.progress = progress;
+                    [weakCell.downloadButton setNeedsDisplay];
+                    if (progress >= 1.0) {
+                        weakCell.downloadButton.downloadComplete = 1.0;
+                    }
+                });
             }];
-            //[key isEqualToString:@"onlySource"]
+            
         } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(tagKey)?tagKey:nil]){
             collapsableCell.downloadButton.downloadComplete = YES;
             collapsableCell.downloadButton.progress         = 1;
         }
 
-        NSString * otherKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
-        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] && [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] isKindOfClass:[DownloadItem class]]) {
-            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
-            __block FeedSelectCell *weakerCell = weakCell;
-            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                weakerCell.downloadButton.progress = progress;
-                [weakerCell.downloadButton setNeedsDisplay];
-            }];
-        }
         
         
-        // When the download button is pressed
         collapsableCell.downloadButtonBlock = ^(){
+            
+            
+            DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src2]];
+            
+            [downloadClip setOnFail:^(NSError *e) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@ %@",tag.name,src2];
+                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                                    message:errorMessage
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                    // build NO button
+                    UIAlertAction* cancelButtons = [UIAlertAction
+                                                    actionWithTitle:@"OK"
+                                                    style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction * action)
+                                                    {
+                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                    }];
+                    [alert addAction:cancelButtons];
 
-            // this will at a place holder for the downloader so the clock will show up r 3ems anight away
-            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
-            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
-            
-            // this takes the download item and attaches it to the cell
-            void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
-                //videoItem = downloadItem;
-                 weakCell.downloadButton.downloadItem = downloadItem;
-                 __block FeedSelectCell *weakerCell = weakCell;
-                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        weakerCell.downloadButton.progress = progress;
-                        if (progress >= 1.0) {
-                            weakerCell.downloadButton.downloadComplete = 1.0;
-                        }
-                        
-                        [weakerCell.downloadButton setNeedsDisplay];
-                    });
-                }];
-            };
-            
-            NSString *src = [NSString stringWithFormat:@"%@hq", key];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
-                                                                                                                   @"block": blockName,
-                                                                                                                   @"tag": tag,
-                                                                                                                   @"src":src,
-                                                                                                                   @"key":key}];
+                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+                });
+            }];
             
             
+            [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+                NSLog(@"Re Load Cells");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                });
+                
+            }];
+            
+            [downloadClip setCompletionBlock:^{
+                NSLog(@"%s",__FUNCTION__);
+
+            }];
+            
+            [queue addOperation:downloadClip];
+
         };
+
+        
+        
+         // !!!:
+        
+        
+//        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] != nil &&   [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] isKindOfClass:[NSString class]]) {
+//            // This means the place holder is found to set the button to look like its downloaded
+//            collapsableCell.downloadButton.isPressed    = YES;
+//            collapsableCell.downloadButton.progress     = 0;
+//        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey]) {
+//            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
+//            __block FeedSelectCell *weakerCell = weakCell;
+//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+//                weakerCell.downloadButton.progress = progress;
+//                [weakerCell.downloadButton setNeedsDisplay];
+//            }];
+//            //[key isEqualToString:@"onlySource"]
+//        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(tagKey)?tagKey:nil]){
+//            collapsableCell.downloadButton.downloadComplete = YES;
+//            collapsableCell.downloadButton.progress         = 1;
+//        }
+//
+//        NSString * otherKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+//        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] && [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] isKindOfClass:[DownloadItem class]]) {
+//            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
+//            __block FeedSelectCell *weakerCell = weakCell;
+//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+//                weakerCell.downloadButton.progress = progress;
+//                [weakerCell.downloadButton setNeedsDisplay];
+//            }];
+//        }
+//        
+//        
+//        // When the download button is pressed
+//        collapsableCell.downloadButtonBlock = ^(){
+//
+//            // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+//            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+//            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+//            
+//            // this takes the download item and attaches it to the cell
+//            void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+//                //videoItem = downloadItem;
+//                 weakCell.downloadButton.downloadItem = downloadItem;
+//                 __block FeedSelectCell *weakerCell = weakCell;
+//                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+//                    dispatch_async(dispatch_get_main_queue(), ^(){
+//                        weakerCell.downloadButton.progress = progress;
+//                        if (progress >= 1.0) {
+//                            weakerCell.downloadButton.downloadComplete = 1.0;
+//                        }
+//                        
+//                        [weakerCell.downloadButton setNeedsDisplay];
+//                    });
+//                }];
+//            };
+//            
+//            NSString *src = [NSString stringWithFormat:@"%@hq", key];
+//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+//                                                                                                                   @"block": blockName,
+//                                                                                                                   @"tag": tag,
+//                                                                                                                   @"src":src,
+//                                                                                                                   @"key":key}];
+//            
+//            
+//        };
+//        
+//        
+//        
+//        
+        
+           // !!!:
+
+        
+        
         
         /*if (firstDownloadCellPath.row < indexPath.row) {
             tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
@@ -435,6 +538,14 @@
     ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
     cell.currentTag = tag;
+    
+    if (tag.eventInstance.gameStartTag){
+        
+        float startTime = tag.time - ([tag.eventInstance.gameStartTag time]);
+        [cell.tagtimeFromGameStart setText: [NSString stringWithFormat:@"%@",[Utility translateTimeFormat:startTime]]];
+    } else {
+        cell.tagtimeFromGameStart.hidden = YES;
+    }
     
     cell.swipeRecognizerLeft.enabled = self.swipeableMode;
     cell.swipeRecognizerRight.enabled = self.swipeableMode;

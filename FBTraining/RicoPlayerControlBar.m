@@ -107,6 +107,7 @@
     _leftLabel.layer.shadowRadius = 11.0;
     _leftLabel.layer.shadowOpacity = 1.0;
     _leftLabel.layer.shadowOffset = CGSizeZero;
+    _rightLabel.userInteractionEnabled = NO;
     
     _rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(_container.bounds.size.width - 49.5 - 55, 0, 55, _container.bounds.size.height)];
     _rightLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
@@ -120,18 +121,18 @@
     _rightLabel.layer.shadowRadius = 11.0;
     _rightLabel.layer.shadowOpacity = 1.0;
     _rightLabel.layer.shadowOffset = CGSizeZero;
-    
+    _rightLabel.userInteractionEnabled = NO;
     [self addSubview:_container];
     [_container addSubview:_blurContainer];
     [_blurContainer addSubview:_blurView];
 
-    [_container addSubview:_playPauseButton];
+    
     [_container addSubview:_liveLight];
     [_container addSubview:_rangeCancelButton];
     [_container addSubview:_leftLabel];
     [_container addSubview:_rightLabel];
     [_container addSubview:_slider];
-
+    [_container addSubview:_playPauseButton];
     
     
     
@@ -311,7 +312,7 @@
     self.slider.enabled = enabled;
     self.playPauseButton.enabled = enabled;
     self.playPauseButton.alpha = (enabled)?1.0:0.5;
-    self.state = RicoPlayerStateDisabled;
+    self.state = (enabled)?RicoPlayerStateNormal:RicoPlayerStateDisabled;
 }
 
 #pragma mark - Gesture Recognizers

@@ -170,6 +170,9 @@
     
     [self parseDataToEncoder:self.cumulatedData];
 
+    
+    
+//    [self.session finishTasksAndInvalidate];
     [self setExecuting:NO];
     [self setFinished:YES];
 }
@@ -530,8 +533,8 @@
         } else {
             connectionTime = @"Y";
         }
-        
-        PXPDeviceLog(@"TP:%@ TT:%@  %@",mData[@"name"],[mData[@"type"]stringValue],connectionTime);
+        NSString * typelog = mData[@"type"];
+        PXPDeviceLog(@"TP:%@ TT:%@  %@",mData[@"name"],typelog,connectionTime);
     }
 
     
@@ -648,6 +651,7 @@
     NSError     * error;
     NSString    * jsonData = [Utility dictToJSON:aData];
     
+    
     if (error) {
         PXPLog(@"Error converting data to dowload Clip event");
         return nil;
@@ -655,13 +659,17 @@
     
     
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonData ]];
-    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+
+    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30];
     
 }
 
 -(void)parseDataToEncoder:(NSData*)data
 {
+    
+
     [super parseDataToEncoder:data];
+    
     [self.encoder.parseModule parse:data mode:ParseModeTagMakeMP4 for:self.encoder];
 }
 @end
@@ -732,6 +740,11 @@
         id <TagProtocol> proxyTag = [[TagProxy alloc]initWithTagData:proxyData ownEvent:event];
         BOOL postToast = YES;
         [event addTag:proxyTag extraData:postToast];
+        
+        
+        if ([proxyTag type] == TagTypeGameStart){
+            event.gameStartTag = proxyTag;
+        }
     }
     
     
@@ -977,7 +990,7 @@
     
     
     if ([UserCenter getInstance].taggingTeam){
-        [tData setObject:[UserCenter getInstance].taggingTeam forKey:@"userTeam"];
+        [tData setObject:[UserCenter getInstance].taggingTeam.name forKey:@"userTeam"];
     }
     
     // build default data

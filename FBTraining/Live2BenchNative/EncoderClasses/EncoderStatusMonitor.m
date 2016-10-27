@@ -70,7 +70,7 @@
                                 [NSNumber numberWithInteger:EncoderMonitorSyncMe]
                                 ];
         _urlProtocol        = @"http";
-        maxFailCount        = 10; // 3 tries   0 index
+        maxFailCount        = 5; // 3 tries   0 index
         currentFailCount    = maxFailCount;
 
         sessionConfig                                   = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -100,7 +100,8 @@
         PXPLog(@"EncoderStatus Shutdown Monitor");
     } else {
         NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
-        PXPLog(@"EncoderStatus Error Countdown %i: %@", currentFailCount,failType);
+        PXPLog(@"EncoderStatus Error Countdown %i: %@ %@", currentFailCount,failType,ipAddress);
+        
     }
 
     if (![Utility hasWiFi]) {
@@ -188,7 +189,7 @@
     
     
     NSURLSession * sess = [NSURLSession sessionWithConfiguration:sessionConfig delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
-    
+    __weak NSURLSession * weakSess = sess;
     NSURLSessionDataTask * dataT = [sess dataTaskWithRequest:_urlRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         statusSync                          = YES;
         if (error){
@@ -197,7 +198,7 @@
             [checkedEncoder onTagsChange:data];
             currentFailCount    = maxFailCount;
         }
-    
+//        [weakSess finishTasksAndInvalidate];
     }];
     [dataT resume];
 }
@@ -289,12 +290,12 @@
     
    NSURLSessionConfiguration* sessionConfig2        = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfig2.allowsCellularAccess              = NO;
-    sessionConfig2.timeoutIntervalForRequest         = 1;
-    sessionConfig2.timeoutIntervalForResource        = 1;
+    sessionConfig2.timeoutIntervalForRequest         = 3;
+    sessionConfig2.timeoutIntervalForResource        = 3;
     sessionConfig2.HTTPMaximumConnectionsPerHost     = 1;
     
     NSURLSession * sess = [NSURLSession sessionWithConfiguration:sessionConfig2 delegate:nil delegateQueue:nil];
-    
+    __weak NSURLSession * weakSess = sess;
     NSURLSessionDataTask * dataT = [sess dataTaskWithRequest:urlRequestShutdown completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
 
         if (error){
@@ -302,6 +303,8 @@
         } else {
             currentCount = maxCount;
         }
+        
+//        [weakSess finishTasksAndInvalidate];
 
     }];
     [dataT resume];

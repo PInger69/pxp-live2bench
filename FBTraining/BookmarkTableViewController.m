@@ -592,9 +592,11 @@ message:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure 
 // let the local encoder destroy the clips, this class does not need to have blood on its hands
 -(void)deleteClipAtIndex:(NSIndexPath*)indexPth
 {
-    Clip * clipToDelete = self.tableData[indexPth.row];
-    [self.tableData removeObject:clipToDelete];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:clipToDelete userInfo:nil];
+    if ([self.tableData count]) {
+        Clip * clipToDelete = self.tableData[indexPth.row];
+        [self.tableData removeObject:clipToDelete];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:clipToDelete userInfo:nil];
+    }
 }
 
 

@@ -301,8 +301,99 @@ static void * eventContext      = &eventContext;
     [self.ricoZoomGroup addGestureRecognizer:_doubleTapOnGrid];
     [self buildSourceButtons];
     
-  
+    self.gameTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_X, MEDIA_PLAYER_Y, 78.0f*2, 17.0f*2)];
+    self.gameTimeLabel.text = @"";
+    self.gameTimeLabel.alpha = 0.5;
+    self.gameTimeLabel.hidden = YES;
+    [self.gameTimeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.gameTimeLabel setBackgroundColor:[UIColor blackColor]];
+    [self.gameTimeLabel setTextColor:[UIColor whiteColor]];
+    [self.gameTimeLabel setFont:[UIFont defaultFontOfSize:20.0f]];
     
+    
+    
+    self.gameStart = [[UIButton alloc]initWithFrame:CGRectMake(0,PADDING + MEDIA_PLAYER_HEIGHT + 95, 130, LITTLE_ICON_DIMENSIONS)];
+    [self.gameStart setTitle:@"Mark Game Start " forState:UIControlStateNormal];
+    [self.gameStart setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    self.gameStart.font = [UIFont systemFontOfSize:14.0];
+    self.gameStart.layer.borderWidth = 1;
+    self.gameStart.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    [self.gameStart addTarget:self action:@selector(startGameButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+
+    [self.view addSubview:self.gameTimeLabel];
+    [self.view addSubview:self.gameStart];
+}
+
+
+-(void)startGameButton:(id)sender
+{
+    UIButton * button = sender;
+    
+    button.enabled = NO;
+    button.alpha = 0.5;
+    self.gameTimeLabel.hidden = NO;
+    [UserCenter getInstance].isStartLocked = YES;
+    
+    BOOL found;
+    for (id<TagProtocol> cTag in self.currentEvent.tags) {
+        if ([cTag type] == TagTypeGameStart) {
+            found = YES;
+            break;
+        }
+    }
+    
+    
+    NSTimeInterval currentTime =     CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayer.currentTime);
+    id<EncoderProtocol>  eventEncoder = self.currentEvent.parentEncoder;
+    
+    
+    if (found && self.currentEvent.gameStartTag) {
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:self.currentEvent.gameStartTag];
+        self.currentEvent.gameStartTag = nil;
+        NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                         @"name":@"Game Start",
+                                                                                         @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeGameStart]
+                                                                                         }];
+
+        EncoderOperation * postTagOperation = [[EncoderOperationMakeTag alloc]initEncoder:eventEncoder data:[userInfo copy]];
+        [postTagOperation setCompletionBlock:^{
+            NSLog(@"Start Time set");
+        }];
+        [eventEncoder runOperation:postTagOperation];
+        
+        
+    } else {
+    
+        NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                         @"name":@"Game Start",
+                                                                                         @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeGameStart]
+                                                                                         }];
+        
+        
+        EncoderOperation * postTagOperation = [[EncoderOperationMakeTag alloc]initEncoder:eventEncoder data:[userInfo copy]];
+        [postTagOperation setCompletionBlock:^{
+            NSLog(@"Start Time set");
+        }];
+        [eventEncoder runOperation:postTagOperation];
+//        self.gameStart.enabled = false;
+    }
+    
+    
+   
+    
+}
+
+-(void)updateOnPlayerTick;
+{
+    if  (self.currentEvent.gameStartTag) {
+        float startTime = (float)[self currentTimeInSeconds] - ([self.currentEvent.gameStartTag time]);
+        startTime = (startTime < 0)?0:startTime;
+        self.gameTimeLabel.text = [NSString stringWithFormat:@"%@",[Utility translateTimeFormat:startTime]];
+    }
 }
 
 -(void)debugDrawerToggle
@@ -787,8 +878,20 @@ static void * eventContext      = &eventContext;
     }
     [self.view addSubview:self.debugDrawer];
 
+    [self.view addSubview:self.gameTimeLabel];
+    [self.view addSubview:self.gameStart];
+
+    self.gameStart.enabled = NO;
+    self.gameStart.alpha = 0.5;
+    self.gameTimeLabel.hidden = (self.currentEvent.gameStartTag == nil);
+    if (self.currentEvent.gameStartTag == nil || ![UserCenter getInstance].isStartLocked){
+        
+        self.gameStart.enabled = YES;
+        self.gameStart.alpha = 1;
+    }
     
     
+
     if (wasMulti) {
         self.ricoZoomGroup.gridMode = YES;
         self.ricoPlayerViewController.syncronizePlayers = YES;
@@ -952,7 +1055,8 @@ static void * eventContext      = &eventContext;
 
 -(void)eventChanged:(NSNotification*)note
 {
- 
+    self.gameTimeLabel.text = @"Game Start";
+
     if (_teamPick){ // pick teams is up get rid of it safly
         [_teamPick clear];
         [_teamPick dismissPopoverAnimated:NO];
@@ -986,6 +1090,7 @@ static void * eventContext      = &eventContext;
     if (_currentEvent != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:nil];
     }
 
     if (!_currentEvent.live) {
@@ -1010,6 +1115,10 @@ static void * eventContext      = &eventContext;
         [_tagButtonController allToggleOnOpenTags:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateOnPlayerTick) name:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:nil];
+        
+        
+        
     
         [self displayLable];
     }
@@ -1555,7 +1664,10 @@ static void * eventContext      = &eventContext;
     LeagueTeam *awayTeam = [_currentEvent.teams objectForKey:@"visitTeam"];
     NSDictionary *team = @{homeTeam.name:homeTeam,awayTeam.name:awayTeam};
     
-    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[[[team allKeys]firstObject], [[team allKeys]lastObject]]];
+//    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[[[team allKeys]firstObject], [[team allKeys]lastObject]]];
+   
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[homeTeam.name, awayTeam.name]];
+   
     
     __block RicoLive2BenchViewController *weakSelf = self;
     [_teamPick addOnCompletionBlock:^(NSString *pick){

@@ -48,6 +48,11 @@
 #import "RicoFullScreenControlBar.h"
 #import "EncoderOperation.h"
 
+#import "DownloaderQueue.h"
+#import "DownloadOperation.h"
+#import "DownloadClipFromTag.h"
+
+
 @interface ListViewController () <RicoBaseFullScreenDelegate>
 
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
@@ -242,7 +247,7 @@
 
 - (void)viewDidLoad
 {
-    NSLog(@"List View Load");
+    
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -361,8 +366,7 @@
     [self.downloadAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.downloadAllButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
     [self.view addSubview:self.downloadAllButton];
-//    [self.downloadAllButton setEnabled:NO];
-    NSLog(@"List View done Load");
+
 }
 
 -(void)getNextTag
@@ -397,7 +401,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    NSLog(@"viewDidAppear");
+    
     [super viewDidAppear:animated];
 //    [_playerViewController viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
@@ -445,7 +449,6 @@
     [self.view bringSubviewToFront:self.ricoFullscreenViewController.view];
     
 
-    NSLog(@"viewDidAppear done");
 }
 
 
@@ -487,7 +490,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-        NSLog(@"viewWillAppear");
+
     [super viewWillAppear:animated];
     
 //    _fullscreenViewController.fullscreen = NO;
@@ -523,13 +526,7 @@
 
     
     self.videoPlayer.mute = NO;
-    
-    NSLog(@"viewWillAppear done");
-    
-    
 
-
-    
 }
 
 
@@ -693,54 +690,99 @@
 -(void)downloadWholeCurrentTag
 {
     if (!selectedTag) return;
+    NSArray *keys = [selectedTag.eventInstance.feeds allKeys];
+    __weak ListTableViewController * tbweak = _tableViewController;
+    DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:selectedTag encoder:selectedTag.eventInstance.parentEncoder sources:keys];
     
-    Tag * tagToDownload =  selectedTag;
-
-    // get all tag keys
     
-    NSArray *keys = [tagToDownload.eventInstance.feeds allKeys];
-    
-    for (NSString * key in keys) {
-        
-        
-        // this will at a place holder for the downloader so the clock will show up r 3ems anight away
-        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tagToDownload.ID,key ];
-        NSString *src = [NSString stringWithFormat:@"%@hq", key];
-        
-        
-        NSLog(@"Added Placeholder key: %@",placeHolderKey);
-        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
-        
-        
-        // this takes the download item and attaches it to the cell
-        void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
-            //videoItem = downloadItem;
-//            weakCell.downloadButton.downloadItem = downloadItem;
-//            __block FeedSelectCell *weakerCell = weakCell;
-//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-//                dispatch_async(dispatch_get_main_queue(), ^(){
-//                    weakerCell.downloadButton.progress = progress;
-//                    if (progress >= 1.0) {
-//                        weakerCell.downloadButton.downloadComplete = 1.0;
-//                    }
-//                    
-//                    [weakerCell.downloadButton setNeedsDisplay];
-//                });
-//            }];
+    [downloadClip setOnFail:^(NSError *e) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-               [_tableViewController reloadData];
-        };
+            NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",selectedTag.name];
+            NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+            
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                            message:errorMessage
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:@"OK"
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+        });
+    }];
 
+    
+    
+    [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+        NSLog(@"Re Load Cells");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tbweak reloadData];
+        });
         
-        
-
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName,
-                                                                                                               @"tag": tagToDownload,
-                                                                                                               @"src":src,
-                                                                                                               @"key":key}];
-        
- 
-    }
+    }];
+    
+    //
+    [downloadClip setCompletionBlock:^{
+        NSLog(@"%s",__FUNCTION__);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tbweak reloadData];
+        });
+    }];
+    
+    
+    [_tableViewController.downloadQueue addOperation:downloadClip];
+    
+    
+//    
+//    
+//    for (NSString * key in keys) {
+//        
+//        
+//        // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+//        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tagToDownload.ID,key ];
+//        NSString *src = [NSString stringWithFormat:@"%@hq", key];
+//        
+//        
+//        NSLog(@"Added Placeholder key: %@",placeHolderKey);
+//        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+//        
+//        
+//        // this takes the download item and attaches it to the cell
+//        void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+//            //videoItem = downloadItem;
+////            weakCell.downloadButton.downloadItem = downloadItem;
+////            __block FeedSelectCell *weakerCell = weakCell;
+////            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+////                dispatch_async(dispatch_get_main_queue(), ^(){
+////                    weakerCell.downloadButton.progress = progress;
+////                    if (progress >= 1.0) {
+////                        weakerCell.downloadButton.downloadComplete = 1.0;
+////                    }
+////                    
+////                    [weakerCell.downloadButton setNeedsDisplay];
+////                });
+////            }];
+//            
+//               [_tableViewController reloadData];
+//        };
+//
+//        
+//        
+//
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName,
+//                                                                                                               @"tag": tagToDownload,
+//                                                                                                               @"src":src,
+//                                                                                                               @"key":key}];
+//        
+// 
+//    }
 
 }
 

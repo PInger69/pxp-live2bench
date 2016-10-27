@@ -140,17 +140,6 @@ SVSignalStatus signalStatus;
         _homeTeam            = DEFAULT_HOME_TEAM;
         _awayTeam            = DEFAULT_AWAY_TEAM;
         
-//        self.pauseAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Pause Event", nil) message:NSLocalizedString(@"Are you sure you want to pause the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
-//        self.pauseAlertView.type = AlertIndecisive;
-        
-//        self.stopAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Stop Event", nil) message:NSLocalizedString(@"Are you sure you want to stop the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
-//        self.stopAlertView.type = AlertIndecisive;
-//        
-//        self.shutdownAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Shutdown Encoder", nil) message:NSLocalizedString(@"Are you sure you want to shutdown the encoder?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
-//        self.shutdownAlertView.type = AlertIndecisive;
-        
-//        self.startAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"myplayXplay", nil) message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-
         self.deviceVideoDataSource = [DeviceVideoDataSource new];
     }
     return self;
@@ -1083,11 +1072,12 @@ SVSignalStatus signalStatus;
             updatedEvent.teams = event.teams;
             NSArray * teamNames = @[ home.name,away.name];//[event.teams allKeys];
             
-            _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
-                                                      buttonListNames:@[
-                                                                        [teamNames firstObject],
-                                                                        [teamNames lastObject]
-                                                                        ]];
+//            _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
+//                                                      buttonListNames:@[
+//                                                                        [teamNames firstObject],
+//                                                                        [teamNames lastObject]
+//                                                                        ]];
+            _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[home.name, away.name]];
             
             _teamPick.contentViewController.modalInPopover = NO;
             

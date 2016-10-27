@@ -93,40 +93,47 @@
     [self.thumbName setText:NSLocalizedString(@"Name", nil)];
     [self.thumbName setTextColor:[UIColor darkGrayColor]];
     [self.thumbName setBackgroundColor:[UIColor clearColor]];
-    [self.thumbName setFont:[UIFont systemFontOfSize:17.0f]];
+    [self.thumbName setFont:[UIFont systemFontOfSize:15.0f]];
     [self addSubview:self.thumbName];
     
-    self.thumbPeriod = [[UILabel alloc] initWithFrame:CGRectMake(self.thumbName.frame.origin.x+PADDING, CGRectGetMaxY(self.thumbName.frame), self.imageView.bounds.size.width/2, 18.0f)];
+    self.thumbPeriod = [[UILabel alloc] initWithFrame:CGRectMake(self.thumbName.frame.origin.x+PADDING, CGRectGetMaxY(self.thumbName.frame), self.imageView.bounds.size.width/2, 16.0f)];
     [self.thumbPeriod setText:NSLocalizedString(@"Period", nil)];
     [self.thumbPeriod setTextColor:[UIColor darkGrayColor]];
     [self.thumbPeriod setBackgroundColor:[UIColor clearColor]];
-    [self.thumbPeriod setFont:[UIFont systemFontOfSize:17.0f]];
+    [self.thumbPeriod setFont:[UIFont systemFontOfSize:15.0f]];
     [self.thumbPeriod setHidden:YES];
     [self addSubview:self.thumbPeriod];
     
-    self.thumbDur = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbName.frame)-(7*PADDING), self.thumbName.frame.origin.y, self.imageView.bounds.size.width/3 + 2*PADDING, 18.0f)];
+    self.thumbDur = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbName.frame)-(7*PADDING), self.thumbName.frame.origin.y, self.imageView.bounds.size.width/3 + 2*PADDING, 16.0f)];
     [self.thumbDur setText:@"s"];
     [self.thumbDur setTextAlignment:NSTextAlignmentRight];
     [self.thumbDur setTextColor:[UIColor darkGrayColor]];
     [self.thumbDur setBackgroundColor:[UIColor clearColor]];
-    [self.thumbDur setFont:[UIFont systemFontOfSize:17.0f]];
+    [self.thumbDur setFont:[UIFont systemFontOfSize:15.0f]];
     [self addSubview:self.thumbDur];
     
     
-    self.thumbTime = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbPeriod.frame)-(3*PADDING), CGRectGetMaxY(self.thumbDur.frame), self.imageView.bounds.size.width/2, 18.0f)];
+    self.thumbTime = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbPeriod.frame)-(3*PADDING), CGRectGetMaxY(self.thumbDur.frame), self.imageView.bounds.size.width/2, 16.0f)];
     [self.thumbTime setText: NSLocalizedString(@"Time", nil)];
     [self.thumbTime setTextAlignment:NSTextAlignmentRight];
     [self.thumbTime setTextColor:[UIColor darkGrayColor]];
     [self.thumbTime setBackgroundColor:[UIColor clearColor]];
-    [self.thumbTime setFont:[UIFont systemFontOfSize:17.0f]];
+    [self.thumbTime setFont:[UIFont systemFontOfSize:15.0f]];
     [self addSubview:self.thumbTime];
     
+    self.thumbGameTime = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbPeriod.frame)-(3*PADDING), CGRectGetMaxY(self.thumbTime.frame), self.imageView.bounds.size.width/2, 16.0f)];
+
+    [self.thumbGameTime setTextAlignment:NSTextAlignmentRight];
+    [self.thumbGameTime setTextColor:[UIColor darkGrayColor]];
+    [self.thumbGameTime setBackgroundColor:[UIColor clearColor]];
+    [self.thumbGameTime setFont:[UIFont systemFontOfSize:15.0f]];
+    [self addSubview:self.thumbGameTime];
     
 
     ratingscale = [[RatingOutput alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width -300, self.imageView.frame.size.height -18.0f, 16.0f, 16.0f)];
     [self.imageView addSubview:ratingscale];
     
-     imageLoaded = FALSE;
+    imageLoaded = FALSE;
     
     self.activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [self.activityInd setFrame:CGRectMake((self.thumbColour.frame.size.width - self.activityInd.frame.size.width)/2, CGRectGetMaxY(self.thumbColour.frame) + 62.0f, 37.0f, 37.0f)];

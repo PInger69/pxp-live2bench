@@ -49,6 +49,7 @@ NSString* const RicoPlayerDidPlayerItemFailNotification             = @"RicoPlay
 
 static void * feedContext = &feedContext;
 static void * itemContext = &itemContext;
+
 static NSInteger playerCounter = 0; // count the number of players created and give unique names
 
 
@@ -146,6 +147,25 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
+    
+     AVPlayerItem * playerItembufferCheck = object;
+    if (object == self.player.currentItem && [keyPath isEqualToString:@"playbackBufferEmpty"])
+    {
+        if (playerItembufferCheck.playbackBufferEmpty) {
+            //Your code here
+        }
+    }
+    
+    else if (object == self.player.currentItem && [keyPath isEqualToString:@"playbackLikelyToKeepUp"])
+    {
+        if (playerItembufferCheck.playbackLikelyToKeepUp)
+        {
+            //Your code here
+        }
+    }
+    
+    
+    
     if (context == &feedContext) {
         NSLog(@"quality change");
     } else if (context == &itemContext) {
@@ -254,6 +274,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     
     CMTime timeWithOffset = CMTimeAdd(time, self.offsetTime);
     NSLog(@"currenttime: %f",CMTimeGetSeconds(self.currentTime));
+    NSLog(@"MaxTime: %f",CMTimeGetSeconds(self.duration));
     NSLog(@"Seeking to:  %f   tolerance: %f / %f ",CMTimeGetSeconds(time),CMTimeGetSeconds(toleranceBefore),CMTimeGetSeconds(toleranceAfter));
     NSLog(@"offsetWitj:  %f      %f",CMTimeGetSeconds(timeWithOffset),CMTimeGetSeconds(self.offsetTime));
     NSLog(@"Has Range: %@",(CMTIMERANGE_IS_VALID(self.range))?@"YES":@"NO");
@@ -326,6 +347,11 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
             [_avPlayer.currentItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:0 context:&itemContext];
+        
+//            [_avPlayer.currentItem addObserver:self forKeyPath:NSStringFromSelector(@selector(playbackBufferEmpty)) options:NSKeyValueObservingOptionNew context:nil];
+//            [_avPlayer.currentItem addObserver:self forKeyPath:NSStringFromSelector(@selector(playbackLikelyToKeepUp)) options:NSKeyValueObservingOptionNew context:nil];
+        
+        
             _avPlayerLayer          = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
             _avPlayerLayer.frame    = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 //        _avPlayerLayer.contentsCenter = _avPlayerLayer.frame;
@@ -435,6 +461,9 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         [self.avPlayer.currentItem cancelPendingSeeks];
         [self.avPlayer.currentItem.asset cancelLoading];
         [_avPlayer.currentItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&itemContext];
+//        [_avPlayer.currentItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(playbackBufferEmpty))context:nil];
+//        [_avPlayer.currentItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(playbackLikelyToKeepUp))context:nil];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
         _avPlayer               = nil;
     }

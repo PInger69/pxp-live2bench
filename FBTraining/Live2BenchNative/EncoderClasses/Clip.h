@@ -26,7 +26,7 @@
 @property (nonatomic,strong)            NSString       * path;
 //@property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
-@property (nonatomic, strong, readonly)         NSDictionary        * videosBySrcKey;
+@property (nonatomic, strong,)         NSMutableDictionary        * videosBySrcKey;
 
 @property (strong, nonatomic) NSString *eventName;
 //@property (strong, nonatomic) NSString *displayTime;

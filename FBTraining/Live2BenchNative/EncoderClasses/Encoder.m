@@ -24,7 +24,8 @@
 #import "ImageAssetManager.h"
 #import "ParseModuleDefault.h"
 #import "FeedMapController.h"
-
+#import "DownloaderQueue.h"
+#import "DownloadClipFromTag.h"
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -563,6 +564,22 @@
         DownloadItem* dlitem = userInfo[@"downloadItem"];
         dItemBlock(dlitem);
     }];
+
+    
+    
+    NSOperation * testOp = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"Done");
+
+    }];
+    
+    [DownloaderQueue addDownloadItem:testOp key:@"asdfasdf"];
+    
+    
+    NSOperation * testOp1 = [DownloaderQueue getQueueItemByKey:@"asdfasdf"];
+    
+    
+    
+    NSLog(@"%s",__FUNCTION__);
 
 }
 
@@ -1625,7 +1642,9 @@
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
 
-        
+            if (newTag.type == TagTypeGameStart ) {
+                encoderEvent.gameStartTag = newTag;
+            }
         // role and perission check
           if (newTag.role){
                 if (newTag.type == TagTypeNormal || newTag.type == TagTypeCloseDuration || newTag.type == TagTypeTele || newTag.type == TagTypeOpenDuration) {
@@ -1646,26 +1665,70 @@
         
             // AutoDownload check
             if ([[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:newTag.name]) {
-                    for (NSString *key in [newTag.thumbnails allKeys]) {
-                        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",newTag.ID,key ];
-                        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+//                    for (NSString *key in [newTag.thumbnails allKeys]) {
+//                        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",newTag.ID,key ];
+//                        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+//                        
+//                        NSString *src = [NSString stringWithFormat:@"%@hq", key];
+//                        
+//                        // this takes the download item and attaches it to the cell
+//                        void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+//                            NSLog(@"%s",__FUNCTION__);
+//
+//                        };
+//
+//                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+//                                                                                                                            @"block": blockName,
+//                                                                                                                               @"tag": newTag,
+//                                                                                                                               @"src":src,
+//                                                                                                                               @"key":key}];
+//                        
+//                    }
+                
+                DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:newTag encoder:self sources:[newTag.thumbnails allKeys]];
+                
+                
+                [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+                    NSLog(@"Re Load Cells");
+                   
+                }];
+                
+                
+                [downloadClip setCompletionBlock:^{
+                    NSLog(@"%s",__FUNCTION__);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];    
                         
-                        NSString *src = [NSString stringWithFormat:@"%@hq", key];
-                        
-                        // this takes the download item and attaches it to the cell
-                        void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
-
-                        };
-
-                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
-                                                                                                                            @"block": blockName,
-                                                                                                                               @"tag": newTag,
-                                                                                                                               @"src":src,
-                                                                                                                               @"key":key}];
-                        
-                    }
+                    });
                     
+                }];
+                
+                [downloadClip setOnFail:^(NSError *e) {
+                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",newTag.name];
+                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
                     
+                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                                    message:errorMessage
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                    // build NO button
+                    UIAlertAction* cancelButtons = [UIAlertAction
+                                                    actionWithTitle:@"OK"
+                                                    style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction * action)
+                                                    {
+                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                    }];
+                    [alert addAction:cancelButtons];
+                    
+                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+    
+                }];
+                
+                 [self.operationQueue addOperation:downloadClip];
+                
+                
+                
+            } else {
                     NSLog(@"%s",__FUNCTION__);
             }
 
@@ -1745,6 +1808,7 @@
     }
     
     
+    
     if ([data objectForKey:@"id"]) {
         
         if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
@@ -1754,6 +1818,9 @@
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
             
             
+            if (newTag.type == TagTypeGameStart ) {
+                encoderEvent.gameStartTag = newTag;
+            }
             
             if (self.event == encoderEvent) {
                 [encoderEvent addTag:newTag extraData:true];
@@ -1803,10 +1870,11 @@
          
             
             
-            if (newTag.userTeam){
-                if (![newTag.userTeam isEqualToString:[UserCenter getInstance].userTeam]) return;
+            if (newTag.userTeam && newTag.role){
+                if (![newTag.userTeam isEqualToString:[UserCenter getInstance].taggingTeam.name]) return;
                 
             }
+            
             
             if ([tData objectForKey:@"telestration"]) {
                 newTag.telestration = [PxpTelestration telestrationFromData:[tData objectForKey:@"telestration"]];
@@ -1850,6 +1918,8 @@
 -(void)onTagsChange:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
+
+    
     if ([results isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
     if([results isKindOfClass:[NSDictionary class]]){
         if ( [results objectForKey: @"tags"]) {
@@ -1864,18 +1934,27 @@
                     || [tag[@"type"]intValue]  == TagTypeNormal
                     || [tag[@"type"]intValue]  == TagTypeCloseDuration
                     || [tag[@"type"]intValue]  == TagTypeOpenDuration
+                    || [tag[@"type"]intValue]  == TagTypeGameStart
                     ) {
                   
                     
+                    NSString * vv = [[tag objectForKey:@"id"] stringValue];
+                    
+                    
+                    NSArray* tagsByID = [self.event getTagsByID:vv];
+                    
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
+                        
+                    }else if([tagsByID count]==0 && [tag[@"modified"]boolValue]){
+                        [self onNewTags:tag];
                     }else if([tag[@"modified"]boolValue]){
                         [self onModifyTags:tag];
                     }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
                         [self onModifyTags:tag];
                     }else if ([tag[@"type"]intValue] == TagTypeTele){
                         [self onTeleTags:tag]; // its showing double
-                    }else{
+                    }else {
                         [self onNewTags:tag];
                     }
 
@@ -2404,7 +2483,7 @@
 {
        NSDictionary    * results               = [Utility JSONDatatoDict:data];
     // break up the the data to make a good url
-    NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+    NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];
     PXPLog(LOG_HASH);
     PXPLog(@"%@",results);
     

@@ -343,6 +343,7 @@
 		D760736719D21AD6000E35C2 /* seeklarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D760736519D21AD6000E35C2 /* seeklarge@2x.png */; };
 		D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D760737219D4A513000E35C2 /* FullScreenViewController.m */; };
 		D760DE111D34427A006A3541 /* GroupDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D760DE101D34427A006A3541 /* GroupDropboxActivity.m */; };
+		D76286551DB17D7E005367AB /* DownloadOperationDepricated.m in Sources */ = {isa = PBXBuildFile; fileRef = D76286541DB17D7D005367AB /* DownloadOperationDepricated.m */; };
 		D763D0581CFDE7490048798A /* DurationTagButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D763D0571CFDE7490048798A /* DurationTagButtonView.m */; };
 		D763D05F1CFF31750048798A /* CFLBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D763D05E1CFF31750048798A /* CFLBottomViewController.m */; };
 		D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7652C501B39C40A006B46E3 /* SideTagButton.m */; };
@@ -352,6 +353,8 @@
 		D767EEF01B72560700DDD815 /* PxpFilterRangeSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D767EEEF1B72560700DDD815 /* PxpFilterRangeSliderView.m */; };
 		D767EF121B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D767EF101B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m */; };
 		D767EF131B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D767EF111B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib */; };
+		D7681E0D1DB53381004A2F62 /* DownloadOperationSuperOld.m in Sources */ = {isa = PBXBuildFile; fileRef = D7681E0C1DB53380004A2F62 /* DownloadOperationSuperOld.m */; };
+		D7681E101DB6A2A8004A2F62 /* DelayOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7681E0E1DB6A2A8004A2F62 /* DelayOperation.m */; };
 		D768BF9D1D086FB500D5BFF6 /* MakeEventView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D768BF9C1D086FB500D5BFF6 /* MakeEventView.xib */; };
 		D768BFA01D08754F00D5BFF6 /* MakeEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D768BF9F1D08754F00D5BFF6 /* MakeEventViewController.m */; };
 		D768BFA31D09C61800D5BFF6 /* CopyDeviceVideoToOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D768BFA11D09C61800D5BFF6 /* CopyDeviceVideoToOperation.m */; };
@@ -576,6 +579,7 @@
 		D7C113D91D0F50A8008F8B54 /* PxpTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C113D81D0F50A8008F8B54 /* PxpTag.m */; };
 		D7C113DC1D0F50D1008F8B54 /* TagProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C113DB1D0F50D1008F8B54 /* TagProxy.m */; };
 		D7C113E01D11DB97008F8B54 /* RicoPlayerViewControllerSO.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C113DF1D11DB96008F8B54 /* RicoPlayerViewControllerSO.m */; };
+		D7C5DCCB1DA59873005883B6 /* DownloaderQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5DCCA1DA59873005883B6 /* DownloaderQueue.m */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
@@ -1273,6 +1277,8 @@
 		D760737219D4A513000E35C2 /* FullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullScreenViewController.m; sourceTree = "<group>"; };
 		D760DE0F1D34427A006A3541 /* GroupDropboxActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDropboxActivity.h; sourceTree = "<group>"; };
 		D760DE101D34427A006A3541 /* GroupDropboxActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDropboxActivity.m; sourceTree = "<group>"; };
+		D76286531DB17D7D005367AB /* DownloadOperationDepricated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadOperationDepricated.h; sourceTree = "<group>"; };
+		D76286541DB17D7D005367AB /* DownloadOperationDepricated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadOperationDepricated.m; sourceTree = "<group>"; };
 		D763A0461731677E0089D132 /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		D763A0471731677F0089D132 /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
 		D763D0561CFDE7480048798A /* DurationTagButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationTagButtonView.h; sourceTree = "<group>"; };
@@ -1294,6 +1300,10 @@
 		D767EF0F1B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterHockeyTabViewController.h; sourceTree = "<group>"; };
 		D767EF101B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterHockeyTabViewController.m; sourceTree = "<group>"; };
 		D767EF111B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterHockeyTabViewController.xib; sourceTree = "<group>"; };
+		D7681E0B1DB53380004A2F62 /* DownloadOperationSuperOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadOperationSuperOld.h; sourceTree = "<group>"; };
+		D7681E0C1DB53380004A2F62 /* DownloadOperationSuperOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadOperationSuperOld.m; sourceTree = "<group>"; };
+		D7681E0E1DB6A2A8004A2F62 /* DelayOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DelayOperation.m; sourceTree = "<group>"; };
+		D7681E0F1DB6A2A8004A2F62 /* DelayOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelayOperation.h; sourceTree = "<group>"; };
 		D768BF9C1D086FB500D5BFF6 /* MakeEventView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MakeEventView.xib; sourceTree = "<group>"; };
 		D768BF9E1D08754F00D5BFF6 /* MakeEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MakeEventViewController.h; sourceTree = "<group>"; };
 		D768BF9F1D08754F00D5BFF6 /* MakeEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MakeEventViewController.m; sourceTree = "<group>"; };
@@ -1628,6 +1638,8 @@
 		D7C113DD1D0F50FE008F8B54 /* TagProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagProtocol.h; sourceTree = "<group>"; };
 		D7C113DE1D11DB96008F8B54 /* RicoPlayerViewControllerSO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoPlayerViewControllerSO.h; sourceTree = "<group>"; };
 		D7C113DF1D11DB96008F8B54 /* RicoPlayerViewControllerSO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoPlayerViewControllerSO.m; sourceTree = "<group>"; };
+		D7C5DCC91DA59873005883B6 /* DownloaderQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloaderQueue.h; sourceTree = "<group>"; };
+		D7C5DCCA1DA59873005883B6 /* DownloaderQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloaderQueue.m; sourceTree = "<group>"; };
 		D7C5F37F19BF894A008190CE /* ScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenController.h; sourceTree = "<group>"; };
 		D7C5F38019BF894A008190CE /* ScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenController.m; sourceTree = "<group>"; };
 		D7C624E6180EDBF700C2DDD7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -2294,6 +2306,8 @@
 				D723F5481D64FFB2003C9149 /* UploadOperation.m */,
 				D726755F1D70C5D000477A9A /* VideoRecieptStatusOperation.h */,
 				D72675601D70C5D100477A9A /* VideoRecieptStatusOperation.m */,
+				D7C5DCC91DA59873005883B6 /* DownloaderQueue.h */,
+				D7C5DCCA1DA59873005883B6 /* DownloaderQueue.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -3089,6 +3103,12 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7681E0B1DB53380004A2F62 /* DownloadOperationSuperOld.h */,
+				D7681E0E1DB6A2A8004A2F62 /* DelayOperation.m */,
+				D7681E0F1DB6A2A8004A2F62 /* DelayOperation.h */,
+				D7681E0C1DB53380004A2F62 /* DownloadOperationSuperOld.m */,
+				D76286531DB17D7D005367AB /* DownloadOperationDepricated.h */,
+				D76286541DB17D7D005367AB /* DownloadOperationDepricated.m */,
 				D7AA9FBA1D87384A008079FC /* DeviceLog.h */,
 				D7AA9FBB1D87384B008079FC /* DeviceLog.m */,
 				D75E67D81D674C7600A38CD0 /* VideoReciept */,
@@ -4233,6 +4253,7 @@
 				D7AC062E1ADC13F10005EA73 /* Clip.m in Sources */,
 				D73FE3331A41DBF000341D57 /* L2BFullScreenViewController.m in Sources */,
 				BD9209A817F0B1A1005E8648 /* LoginViewController.m in Sources */,
+				D7C5DCCB1DA59873005883B6 /* DownloaderQueue.m in Sources */,
 				D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */,
 				D7525DA01CBC31D30074F590 /* NameCameraCellView.m in Sources */,
 				BD9209A717F0B199005E8648 /* BorderButton.m in Sources */,
@@ -4262,6 +4283,7 @@
 				D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */,
 				AEDD7CA41B4AB92C003C82F3 /* PxpPlayerSwapView.m in Sources */,
 				D74E318F1D186C6100B64E43 /* LocalTagSyncManager.m in Sources */,
+				D7681E101DB6A2A8004A2F62 /* DelayOperation.m in Sources */,
 				D788262D1B42D9D400969D43 /* LocalMediaManager.m in Sources */,
 				AA0FED2C19589951001D25EB /* ClipSharePopoverViewController.m in Sources */,
 				D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */,
@@ -4612,6 +4634,7 @@
 				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				D7541D3F1C6BC9C00069233F /* BooleanOperation.m in Sources */,
+				D76286551DB17D7E005367AB /* DownloadOperationDepricated.m in Sources */,
 				D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */,
 				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
 				D72DAF491BDE9F0100A97824 /* ParseModuleDefault.m in Sources */,
@@ -4620,6 +4643,7 @@
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,
 				D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */,
+				D7681E0D1DB53381004A2F62 /* DownloadOperationSuperOld.m in Sources */,
 				D7525DAD1CC16C290074F590 /* LogoutOperation.m in Sources */,
 				D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */,
 				D727798A1A2FBEBE0034DD66 /* LiveButton.m in Sources */,

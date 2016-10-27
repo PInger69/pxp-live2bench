@@ -208,7 +208,10 @@ static InternetMonitor* internetMonitor;
     NSDictionary *results;
     if(NSClassFromString(@"NSJSONSerialization"))
     {
-        
+        if (!data) {
+//            &aError = [[NSError alloc]initWithDomain:0 code:0 userInfo:@{}];
+            return@{};
+        }
         id object = [NSJSONSerialization
                      JSONObjectWithData:data
                      options:NSJSONReadingAllowFragments

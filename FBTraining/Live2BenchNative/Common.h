@@ -86,6 +86,8 @@
 #define NOTIF_RELOAD_PLAYERS                @"NOTIF_RELOAD_PLAYERS"
 // Log Comments
 
+#define NOTIF_AUTO_DOWNLOAD_COMPLETE                   @"NOTIF_AUTO_DOWNLOAD_COMPLETE"
+
 #define LOG_HASH                            @"######################################################"
 
 

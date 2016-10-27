@@ -30,7 +30,7 @@
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 
-
+@property (strong, nonatomic) NSOperationQueue * downloadQueue;
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath;
 -(void)collaspOpenCell;

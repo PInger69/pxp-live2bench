@@ -137,16 +137,20 @@
     [super viewDidLoad];
    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSelectedToPlay:) name:NOTIF_CLIP_SELECTED object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipsSelectedToBedeleted:) name:NOTIF_DELETE_CLIPS object:nil];
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REMOVE_INFORMATION object:nil queue:nil usingBlock:^(NSNotification *note){
         [clipContentDisplay displayClip:nil];
     }];
-    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
-        [self.allClips removeObjectIdenticalTo:note.userInfo];
-    }];
+//    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
+//        [self.allClips removeObjectIdenticalTo:note.userInfo];
+//    }];
     
     [self setupView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipAutoSaved:) name:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self.tableViewController selector:@selector(reloadData) name:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBookmarkPlayerControlerChange:) name:BOOKMARK_PLAYER_CONTROLLER_CHANGE object:nil];
   
     // This is for the tag count
@@ -188,8 +192,8 @@
     self.ricoPlayerController.playerControlBar = self.ricoPlayerControlBar;
     self.ricoPlayerControlBar.delegate                                      = self.ricoPlayerController;
     self.ricoPlayerControlBar.state                                         = RicoPlayerStateNormal;
-
-    _fullscreenViewController               = [[RicoBaseFullScreenViewController alloc] initWithView:self.ricoBookmarkPlayerController.view];
+    
+       _fullscreenViewController               = [[RicoBaseFullScreenViewController alloc] initWithView:self.ricoBookmarkPlayerController.view];
     _fullscreenViewController.delegate      = self;
 
     _ricoFullScreenControlBar               = [[RicoFullScreenControlBar alloc]init];
@@ -238,7 +242,7 @@
     self.telestrationViewController.telestration = nil;
     Clip *clipToPlay = note.userInfo[@"clip"];
     self.currentClip = clipToPlay;
-    NSString *source = note.userInfo[@"source"];
+//    NSString *source = note.userInfo[@"source"];
     __block BookmarkViewController *weakSelf = self;
     
     self.ricoFullScreenControlBar.currentTagLabel.text = clipToPlay.name;
@@ -259,12 +263,54 @@
     [self.ricoBookmarkPlayerController playClip:clipToPlay];
 }
 
-- (void)clipSaved:(NSNotification *)note {
-    [self.allClips addObject:note.object];
-    self.tableViewController.tableData = _tagsToDisplay;
-    [self.tableViewController reloadData];
-    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
+-(void)clipsSelectedToBedeleted:(NSNotification*)note
+{
+    Clip * deletedClip = note.object;
+    
+    if (deletedClip == self.currentClip) {
+    
+        self.telestrationViewController.telestration = nil;
+        self.ricoFullScreenControlBar.currentTagLabel.text = @"";
+        
+        [clipContentDisplay displayClip:nil];
+        
+        clipContentDisplay.enable = NO;
+        clipContentDisplay.ratingAndCommentingView.tagUpdate = nil;
+        
+        [_videoBar setSelectedTag:nil];
+        [_videoBar.tagExtendEndButton setHidden:YES];
+        [_videoBar.tagExtendStartButton setHidden:YES];
+        self.ricoPlayerControlBar.enabled = NO;
+        [self.ricoPlayerControlBar clear];
+        [self.ricoBookmarkPlayerController clear];
+
+        self.currentClip = nil;
+    }
 }
+
+
+
+- (void)clipSaved:(NSNotification *)note {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.allClips addObject:note.object];
+        self.tableViewController.tableData = _tagsToDisplay;
+        [self.tableViewController reloadData];
+        [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
+    });
+}
+
+- (void)clipAutoSaved:(NSNotification *)note {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
+        [_pxpFilter filterTags:self.allClips];
+        _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
+        self.tableViewController.tableData = _tagsToDisplay;
+        [self.tableViewController reloadData];
+        [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
+    });
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -286,6 +332,7 @@
    _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
     self.tableViewController.tableData = _tagsToDisplay;
     [self.tableViewController.tableView reloadData];
+
 }
 
 
@@ -458,8 +505,7 @@
 
 -(void)useCustomSort:(id)sender
 {
-    if(self.tableViewController.editing == NO)
-        [self.tableViewController setEditing:YES];
+    if(self.tableViewController.editing == NO)         [self.tableViewController setEditing:YES];
     else
         [self.tableViewController setEditing:NO];
 }

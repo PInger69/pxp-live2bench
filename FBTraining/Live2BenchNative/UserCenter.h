@@ -34,6 +34,7 @@
 @property (atomic,strong) NSMutableDictionary    * currentEventThumbnails;
 @property (atomic,assign) BOOL                   isLoggedIn;
 @property (atomic,assign) BOOL                   isEULA;
+@property (atomic,assign) BOOL                   isStartLocked;
 
 @property (atomic,strong) NSString               * customerID;
 @property (atomic,strong) NSString               * customerDeviceID;

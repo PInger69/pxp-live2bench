@@ -1,14 +1,14 @@
 //
-//  DownloadOperation.h
+//  DownloadOperationSuperOld.h
 //  Live2BenchNative
 //
-//  Created by dev on 2015-12-08.
-//  Copyright © 2015 DEV. All rights reserved.
+//  Created by dev on 2016-10-17.
+//  Copyright © 2016 DEV. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface DownloadOperation : NSOperation <NSURLSessionDelegate,NSURLSessionDataDelegate,NSURLSessionTaskDelegate,NSURLSessionDownloadDelegate>
+@interface DownloadOperationSuperOld : NSOperation
 {
     BOOL        executing;
     BOOL        finished;
@@ -28,9 +28,11 @@
 @property (nonatomic,assign)    NSInteger       attempts;
 @property (nonatomic,strong)    NSError         * error;
 
-@property (copy, nonatomic)     void(^onRequestProgress)(DownloadOperation* operation);
-@property (copy, nonatomic)     void(^onRequestRecieved)(DownloadOperation* operation);
-@property (copy, nonatomic)     void(^onFail)(NSError*error);
+@property (copy, nonatomic)     void(^onRequestProgress)(NSOperation* operation);
+@property (copy, nonatomic)     void(^onRequestRecieved)(NSOperation* operation);
+
+
+
 - (instancetype)initWith:(NSURL*)url destination:(NSString*)destination;
 
 @end

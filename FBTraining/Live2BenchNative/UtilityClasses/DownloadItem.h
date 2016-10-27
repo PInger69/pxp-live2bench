@@ -74,6 +74,8 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 @property (nonatomic,weak)  id <DownloadItemDelegate>  delegate;
 @property (nonatomic, copy) void(^onComplete)();
 
+@property (nonatomic,strong) NSError           * error; 
+
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath;
 
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath type:(DownloadType)aType;

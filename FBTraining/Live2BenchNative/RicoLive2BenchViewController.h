@@ -20,5 +20,10 @@
 }
 
 @property (nonatomic,strong)    Event  * currentEvent;
+@property (nonatomic,strong)    UILabel  * gameTimeLabel;
+@property (nonatomic,strong)    UIButton  * gameStart;
+
+
+-(void)updateOnPlayerTick;
 
 @end

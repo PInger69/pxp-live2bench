@@ -50,7 +50,7 @@
         // Build Quad player
         self.ricoGroup              = [[RicoPlayerGroupContainer alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         
-        [self.ricoGroup setBackgroundColor:[UIColor greenColor]];
+        [self.ricoGroup setBackgroundColor:[UIColor grayColor]];
         
         
         
@@ -86,25 +86,18 @@
 
 -(void)playClip:(Clip *)clip
 {
-    NSInteger c = 0;
-    
+
     NSMutableDictionary *videos = [clip.videosBySrcKey mutableCopy];
-    
-    if (c != 0) {
-        [videos setObject:@"/var/mobile/Containers/Data/Application/FF2D24CA-2CB3-45A5-8D1A-E51899C1236B/Documents/bookmark/bookmarkvideo/2016-05-18_11-01-56_ec594b21d7146478d513918e9488bd5f816724bb_local_vid_10+00hq.mp4" forKey:@"01"];
-    }
     for (RicoPlayer * p in self.players) {
         p.reliable = NO;
         p.feed = nil;
-  
-        
     }
     
     
     Feed * feed;
     if (videos.allKeys.count > 0) {
         NSString * akey;
-        
+ 
         for (RicoPlayer * p in self.players) {
             p.hidden = YES;
             [p.streamStatus removeFromSuperview];
@@ -113,9 +106,23 @@
         }
         
         for (NSInteger i=0; i<videos.allKeys.count; i++) {
-            
+
             akey = videos.allKeys[i];
-            feed = [[Feed alloc] initWithFileURL:videos[akey]];
+        
+            
+            // change the app directory
+            NSString * videoPath = videos[akey];
+            
+            
+            videoPath = [NSString stringWithFormat:@"%@/bookmark/bookmarkvideo/%@",[UserCenter getInstance].localPath,[videoPath lastPathComponent]];
+            
+            
+            if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+                [videos removeObjectForKey:akey];
+                continue;
+            }
+            
+            feed = [[Feed alloc] initWithFileURL:videoPath];
 
             RicoPlayer * p = self.players[i];
             [p loadFeed:feed];
@@ -127,12 +134,7 @@
         }
         [self.ricoPlayerController play];
         self.ricoGroup.gridMode = (videos.allKeys.count >1);
-//        self.ricoGroup.gridMode = ! self.ricoGroup.gridMode ;
     }
-    
-    
-
-    
     [[NSNotificationCenter defaultCenter]postNotificationName:BOOKMARK_PLAYER_CONTROLLER_CHANGE object:self];
 }
 
@@ -176,6 +178,10 @@
 
 -(void)clear
 {
+    for (RicoPlayer * p in self.players) {
+        [p pause];
+        p.hidden = YES;
+    }
 
 }
 

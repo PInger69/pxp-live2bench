@@ -29,6 +29,7 @@
 }
 @property (nonatomic, strong) UILabel *tagname;
 @property (nonatomic, strong) UILabel *tagtime;
+@property (nonatomic, strong) UILabel *tagtimeFromGameStart;
 @property (nonatomic, strong) ClipCornerView *tagcolor;
 @property (nonatomic, strong) UIButton *coachpickButton;
 @property (nonatomic, strong) UIImageView *tagImage;

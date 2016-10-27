@@ -11,6 +11,12 @@
  
  */
 @interface GroupOperation : NSOperation
+@property (nonatomic,strong) NSOperationQueue * internalQueue;
+@property (nonatomic,strong) NSBlockOperation * startingOperation;
+@property (nonatomic,strong) NSBlockOperation * finishingOperation;
+
+
+- (instancetype)initWithOperations:(NSArray*)operations withQueue:(NSOperationQueue*)queue;
 
 /**
  *  Create GroupOperation instance

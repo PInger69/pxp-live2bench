@@ -535,6 +535,8 @@ static LocalMediaManager * instance;
         
     } else if ([foundClip.videosBySrcKey objectForKey:[scrKey stringByReplacingOccurrencesOfString:@"s_" withString:@""]]) {
         return foundClip;
+    } else if ([foundClip.videosBySrcKey objectForKey:scrKey]) {
+        return foundClip;
     }
     
     return nil;

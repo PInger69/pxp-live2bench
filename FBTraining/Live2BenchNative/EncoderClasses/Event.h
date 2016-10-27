@@ -63,6 +63,7 @@
 
 @property (nonatomic,assign,readonly) BOOL                   open;
 
+@property (nonatomic,strong) id <TagProtocol>   gameStartTag;
 
 
 -(instancetype)initWithDict:(NSDictionary*)data isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;

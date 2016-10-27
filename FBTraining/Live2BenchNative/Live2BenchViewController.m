@@ -621,7 +621,8 @@ static void * eventContext      = &eventContext;
     LeagueTeam *awayTeam = [_currentEvent.teams objectForKey:@"visitTeam"];
     NSDictionary *team = @{homeTeam.name:homeTeam,awayTeam.name:awayTeam};
     
-    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[[[team allKeys]firstObject], [[team allKeys]lastObject]]];
+//    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[[[team allKeys]firstObject], [[team allKeys]lastObject]]];
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[homeTeam.name, awayTeam.name]];
     
     __block Live2BenchViewController *weakSelf = self;
     [_teamPick addOnCompletionBlock:^(NSString *pick){

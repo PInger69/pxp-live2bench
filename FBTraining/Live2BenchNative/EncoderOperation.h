@@ -94,6 +94,7 @@
 
 
 @interface EncoderOperationMakeMP4fromTag : EncoderOperation
+
 @end
 
 @interface EncoderOperationMakeTag : EncoderOperation

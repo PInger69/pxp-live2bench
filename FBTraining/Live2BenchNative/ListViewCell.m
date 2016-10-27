@@ -151,6 +151,17 @@
     [tagtime setFont:[UIFont defaultFontOfSize:17.0f]];
     [self.tagImage addSubview:tagtime];
     
+    
+    
+    self.tagtimeFromGameStart = [[UILabel alloc] initWithFrame:CGRectMake(0, tagImage.frame.size.height - 18.0f, 78.0f, 17.0f)];
+//    [self.tagtimeFromGameStart setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
+    [self.tagtimeFromGameStart setText:NSLocalizedString(@"Time", nil)];
+    [self.tagtimeFromGameStart setTextAlignment:NSTextAlignmentCenter];
+    [self.tagtimeFromGameStart setBackgroundColor:[UIColor blackColor]];
+    [self.tagtimeFromGameStart setTextColor:[UIColor whiteColor]];
+    [self.tagtimeFromGameStart setFont:[UIFont defaultFontOfSize:17.0f]];
+    [self.tagImage addSubview:self.tagtimeFromGameStart];
+    
    
     self.ratingscale = [ [RatingOutput alloc] initWithFrame:CGRectMake(tagImage.frame.size.width - 332, tagImage.frame.size.height - 26.0f, 70.0f, 17.0f)];
     [self.tagImage addSubview:ratingscale];

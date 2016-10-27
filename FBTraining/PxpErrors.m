@@ -12,4 +12,5 @@
 NSString * const PxpErrorDomain              = @"PxpErrorDomain";
 NSInteger  const PLAYER_ERROR_NO_DURATION    = -100;
 NSInteger  const PLAYER_ERROR_LOAD_ITEM      = -101;
+NSInteger  const DOWNLOAD_CLIP_ERROR         = -201;
 @end
