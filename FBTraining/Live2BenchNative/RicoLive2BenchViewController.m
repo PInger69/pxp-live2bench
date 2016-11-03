@@ -251,7 +251,7 @@ static void * eventContext      = &eventContext;
     
     // build fullScreen
     self.ricoFullScreen = [[RicoBaseFullScreenViewController alloc]initWithView:self.ricoZoomContainer];
-    [_videoBar.fullscreenButton addTarget:self.ricoFullScreen action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.fullscreenButton addTarget:self action:@selector(onFullScreenButton:) forControlEvents:UIControlEventTouchUpInside];
     
 
     [self addChildViewController:self.ricoFullScreen];
@@ -273,7 +273,7 @@ static void * eventContext      = &eventContext;
     [self.ricoFullScreenControlBar.frameBackward                addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.frameForward                 addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.controlBar.playPauseButton   addTarget:self action:@selector(controlBarPlay) forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.fullscreenButton             addTarget:self.ricoFullScreen action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.fullscreenButton             addTarget:self action:@selector(onFullScreenButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreen.bottomBar                              addSubview:self.ricoFullScreenControlBar];
     
     self.sourceButtonPicker = [[RicoSourcePickerButtons alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
@@ -502,7 +502,7 @@ static void * eventContext      = &eventContext;
 #pragma mark - Source Button delegate method
 -(void)onPressButton:(RicoSourcePickerButtons *)picker
 {
-
+    [self.ricoZoomContainer setZoomScale:1];
     
     wasMulti = NO;
 //    [self changeSourceNonPress:picker.selectedTag];
@@ -566,25 +566,27 @@ static void * eventContext      = &eventContext;
         CameraResource * camResource = enc.cameraResource;
         NSString* pick;
         
-        
-        switch (picker.selectedTag) {
-            case 0:
-                pick = ((Feed *) [camResource getFeedByLocation:kQuad1of4 event:self.currentEvent]).sourceName;
-                break;
-            case 1:
-                pick = ((Feed *) [camResource getFeedByLocation:kQuad2of4 event:self.currentEvent]).sourceName;
-                break;
-            case 2:
-                pick = ((Feed *) [camResource getFeedByLocation:kQuad3of4 event:self.currentEvent]).sourceName;
-                break;
-            case 3:
-                pick = ((Feed *) [camResource getFeedByLocation:kQuad4of4 event:self.currentEvent]).sourceName;
-                break;
-                
-            default:
-                break;
+        if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"dual"]){
+            switch (picker.selectedTag) {
+                case 0:
+                    pick = ((Feed *) [camResource getFeedByLocation:kQuad1of4 event:self.currentEvent]).sourceName;
+                    break;
+                case 1:
+                    pick = ((Feed *) [camResource getFeedByLocation:kQuad2of4 event:self.currentEvent]).sourceName;
+                    break;
+                case 2:
+                    pick = ((Feed *) [camResource getFeedByLocation:kQuad3of4 event:self.currentEvent]).sourceName;
+                    break;
+                case 3:
+                    pick = ((Feed *) [camResource getFeedByLocation:kQuad4of4 event:self.currentEvent]).sourceName;
+                    break;
+                    
+                default:
+                    break;
+            }
+        } else {
+            pick = _currentSource;
         }
-        
         
         for (RicoPlayer * rp in rPlayers) {
             if ([rp.feed.sourceName isEqualToString:pick]) {
@@ -619,6 +621,7 @@ static void * eventContext      = &eventContext;
 
 -(void)changeSourceNonPress:(NSInteger)pickedSource
 {
+        [self.ricoZoomContainer setZoomScale:1];
     // Getting user preferences
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString * mode =  [defaults objectForKey:@"mode"];
@@ -707,7 +710,7 @@ static void * eventContext      = &eventContext;
 
 -(void)changeSource:(NSString*)sourceName
 {
-    
+        [self.ricoZoomContainer setZoomScale:1];
     [self.multiCamButton setBackgroundColor:[UIColor lightGrayColor]];
     BOOL wasLive = (self.ricoPlayerControlBar.state == RicoPlayerStateLive);
     
@@ -814,6 +817,7 @@ static void * eventContext      = &eventContext;
 
 -(void)onPressMultiCamButton:(id)sender
 {
+        [self.ricoZoomContainer setZoomScale:1];
     wasMulti = YES;
     [self.sourceButtonPicker deselectAll];
     UIButton * multiBut = sender;
@@ -1153,7 +1157,7 @@ static void * eventContext      = &eventContext;
 
 -(void)onTapOnQuad:(id)sender
 {
-    
+        [self.ricoZoomContainer setZoomScale:1];
     UITapGestureRecognizer * gest = sender;
 
     RicoPlayerGroupContainer * group =  (RicoPlayerGroupContainer *) gest.view;
@@ -1419,6 +1423,16 @@ static void * eventContext      = &eventContext;
 {
     
     // clear if made already
+    
+    if (self.sourceButtonPicker){
+        NSInteger indx  = [self.view indexOfAccessibilityElement:self.sourceButtonPicker];
+        [self.sourceButtonPicker removeFromSuperview];
+        self.sourceButtonPicker.delegate = nil;
+        
+        self.sourceButtonPicker = [[RicoSourcePickerButtons alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+        self.sourceButtonPicker.delegate = self;
+        [self.view addSubview:self.sourceButtonPicker];
+    }
     [_sourceNames removeAllObjects];
     
     // build
@@ -1606,8 +1620,19 @@ static void * eventContext      = &eventContext;
 #pragma mark -
 #pragma mark RicoBaseFullScreen Protocol Methods
 
+
+-(void)onFullScreenButton:(id)sender
+{
+    [self.ricoZoomContainer setZoomScale:1];
+    [self.ricoFullScreen fullscreenResponseHandler:sender];
+//[_videoBar.fullscreenButton addTarget:self.ricoFullScreen action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.ricoFullScreenControlBar.fullscreenButton             addTarget:self.ricoFullScreen action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+
+}
+
 -(void)onFullScreenShow:(RicoBaseFullScreenViewController*)fullscreenController
 {
+
     self.ricoPlayerViewController.playerControlBar                  = self.ricoFullScreenControlBar.controlBar;
     self.ricoFullScreenControlBar.controlBar.delegate               = self.ricoPlayerViewController;
     self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = self.ricoPlayerControlBar.playPauseButton.paused; // make sure the play pause are the sames state
@@ -1615,8 +1640,10 @@ static void * eventContext      = &eventContext;
     if (self.telestrationViewController.telestrating){
         _tagButtonController.leftTray.hidden    = YES;
         _tagButtonController.rightTray.hidden   = YES;
+    
     }
-   
+    
+
     
     // moving to telestartion to full screen
     
@@ -1633,14 +1660,18 @@ static void * eventContext      = &eventContext;
                                  self.ricoZoomContainer.frame.size.height
                                  );
     [self.telestrationViewController.view setFrame:tempRect];
+    
+    
 }
 
 -(void)onFullScreenLeave:(RicoBaseFullScreenViewController*)fullscreenController
 {
+    
     self.ricoPlayerViewController.playerControlBar      = self.ricoPlayerControlBar;
     self.ricoPlayerControlBar.delegate                  = self.ricoPlayerViewController;
     self.ricoPlayerControlBar.playPauseButton.paused    = self.ricoFullScreenControlBar.controlBar.playPauseButton.paused; // make sure the play pause are the sames state
 
+   
 
         _tagButtonController.leftTray.hidden    = NO;
         _tagButtonController.rightTray.hidden   = NO;
@@ -1650,6 +1681,7 @@ static void * eventContext      = &eventContext;
     
 
     [self.telestrationViewController.view setFrame:CGRectMake(MEDIA_PLAYER_X, MEDIA_PLAYER_Y, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+        [self.ricoZoomContainer setZoomScale:1];
 }
 
 
@@ -1751,10 +1783,20 @@ static void * eventContext      = &eventContext;
 
 - (void)goToLive
 {
+    self.ricoPlayerViewController.slomo                 = NO;
     self.ricoFullScreenControlBar.slomoButton.slomoOn   = NO;
     _videoBar.slomoButton.slomoOn                       = NO;
     
-
+    
+//    self.ricoPlayerControlBar.state                     = RicoPlayerStateNormal;
+//    self.ricoFullScreenControlBar.controlBar.state      = RicoPlayerStateNormal;
+    
+    
+    
+    
+    
+    
+    
     
     PXPLog(@"Pressed Live Button");
     

@@ -1622,6 +1622,71 @@
             
 
     }
+    
+    
+    NSString * tagID = [[data objectForKey:@"id"]stringValue];
+    NSPredicate * autoDownloadPredicate =  [NSPredicate predicateWithFormat:@"type = %ld",TagTypeCloseDuration];
+    Tag * newTag = [[self.event getTagsByID:tagID] firstObject];
+    
+    
+    BOOL checkClips = YES;
+    for (NSString*k  in [newTag.thumbnails allKeys]) {
+        if ([[LocalMediaManager getInstance]getClipByTag:newTag scrKey:k]){
+            checkClips = NO;
+        }
+    }
+    
+    
+    
+    if (newTag != nil && checkClips &&[[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:newTag.name] && [autoDownloadPredicate evaluateWithObject:newTag]) {
+
+        DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:newTag encoder:self sources:[newTag.thumbnails allKeys]];
+        
+        
+        [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+            NSLog(@"Re Load Cells");
+            
+        }];
+        
+        
+        [downloadClip setCompletionBlock:^{
+            NSLog(@"%s",__FUNCTION__);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];
+                
+            });
+            
+        }];
+        
+        [downloadClip setOnFail:^(NSError *e) {
+            NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",newTag.name];
+            NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+            
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                            message:errorMessage
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:@"OK"
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+            
+        }];
+        
+        [self.operationQueue addOperation:downloadClip];
+        
+        
+        
+    } else {
+        NSLog(@"%s",__FUNCTION__);
+    }
+
 }
 
 
@@ -1664,7 +1729,11 @@
         
         
             // AutoDownload check
-            if ([[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:newTag.name]) {
+        
+        NSPredicate * autoDownloadPredicate =  [NSPredicate predicateWithFormat:@"type != %ld",TagTypeOpenDuration];
+        
+        
+            if ([[UserCenter getInstance].tagsFlaggedForAutoDownload containsObject:newTag.name] && [autoDownloadPredicate evaluateWithObject:newTag]) {
 //                    for (NSString *key in [newTag.thumbnails allKeys]) {
 //                        NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",newTag.ID,key ];
 //                        [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
@@ -1735,7 +1804,7 @@
         
         
         
-            
+            // if new is not in
             if ( ![self.postedTagIDs containsObject:newTag.ID] ){
                 [self.postedTagIDs addObject:newTag.ID];
                 if (self.event == encoderEvent) {
@@ -1926,21 +1995,22 @@
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
 //                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine ||  [tag[@"type"]intValue] == TagTypeSoccerZoneStop) {
-                if (   [tag[@"type"]intValue]  == TagTypeHockeyStrengthStop
-                    || [tag[@"type"]intValue]  == TagTypeHockeyStopOLine
-                    || [tag[@"type"]intValue]  == TagTypeHockeyStopDLine
-                    || [tag[@"type"]intValue]  == TagTypeSoccerZoneStop
-                    || [tag[@"type"]intValue]  == TagTypeTele
-                    || [tag[@"type"]intValue]  == TagTypeNormal
-                    || [tag[@"type"]intValue]  == TagTypeCloseDuration
-                    || [tag[@"type"]intValue]  == TagTypeOpenDuration
-                    || [tag[@"type"]intValue]  == TagTypeGameStart
-                    ) {
-                  
+//                if (   [tag[@"type"]intValue]  == TagTypeHockeyStrengthStop
+//                    || [tag[@"type"]intValue]  == TagTypeHockeyStopOLine
+//                    || [tag[@"type"]intValue]  == TagTypeHockeyStopDLine
+//                    || [tag[@"type"]intValue]  == TagTypeSoccerZoneStop
+//                    || [tag[@"type"]intValue]  == TagTypeTele
+//                    || [tag[@"type"]intValue]  == TagTypeNormal
+//                    || [tag[@"type"]intValue]  == TagTypeCloseDuration
+//                    || [tag[@"type"]intValue]  == TagTypeOpenDuration
+//                    || [tag[@"type"]intValue]  == TagTypeGameStart
+//                    ) {
+                
                     
                     NSString * vv = [[tag objectForKey:@"id"] stringValue];
-                    
-                    
+                    NSPredicate * modCheck =  [NSPredicate predicateWithFormat:@"type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld",(long)TagTypeFootballQuarterStop ,(long)TagTypeFootballDownStop ,(long)TagTypeSoccerZoneStop ,(long)TagTypeSoccerHalfStop ,(long)TagTypeHockeyStopOLine ,(long)TagTypeHockeyStopDLine ,(long)TagTypeHockeyOppOLineStop ,(long)TagTypeHockeyStrengthStop ,(long)TagTypeCloseDuration];
+               
+                
                     NSArray* tagsByID = [self.event getTagsByID:vv];
                     
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
@@ -1950,7 +2020,13 @@
                         [self onNewTags:tag];
                     }else if([tag[@"modified"]boolValue]){
                         [self onModifyTags:tag];
+                    }else if([modCheck evaluateWithObject:tag]){
+                        [self onModifyTags:tag];
+                        NSLog(@"%s",__FUNCTION__);
+
                     }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
+                        [self onModifyTags:tag];
+                    }else if([tag[@"type"]intValue] == TagTypeHockeyStrengthStop){
                         [self onModifyTags:tag];
                     }else if ([tag[@"type"]intValue] == TagTypeTele){
                         [self onTeleTags:tag]; // its showing double
@@ -1958,7 +2034,7 @@
                         [self onNewTags:tag];
                     }
 
-                }
+//                }
                 
                 
             }

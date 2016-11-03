@@ -635,7 +635,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 -(NSDictionary*)thumbnails
 {
-    NSLog(@"%@",_thumbnails);
+//    NSLog(@"%@",_thumbnails);
     return _thumbnails;
 }
 

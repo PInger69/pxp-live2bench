@@ -28,7 +28,7 @@
 
 -(void)buildButtonsWithString:(NSArray*)arrayOfString
 {
-    self.stringArray = arrayOfString;
+    self.stringArray = [arrayOfString sortedArrayUsingSelector:@selector(compare:)];
     
     // clear any old buttons
     for (UIButton * b in self.buttonArray) {

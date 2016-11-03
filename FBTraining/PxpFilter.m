@@ -195,10 +195,26 @@
 // Main output 
 -(NSArray*)filteredTags
 {
-    // anything that matches ghost pred then remove
-    NSArray * tags = [_filteredTagsPool filteredArrayUsingPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:_ghostPredicates]];
+    // anything that matches ghost pred then remove[NSCompoundPredicate andPredicateWithSubpredicates:_ghostPredicates]
     
-    return tags;
+    if ([_ghostPredicates count]) {
+        NSPredicate * aPred = [_ghostPredicates firstObject];
+        
+        
+        for (Tag * t in _filteredTagsPool) {
+            NSLog(@"%@",t);
+            NSLog(@"%d",t.duration);
+        }
+        
+        
+        
+        NSArray * tags = [_filteredTagsPool filteredArrayUsingPredicate:aPred];
+        
+        return tags;
+    } else {
+        return _filteredTagsPool;
+    }
+    
 }
 
 

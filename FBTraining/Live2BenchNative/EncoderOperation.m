@@ -553,7 +553,7 @@
    NSDictionary * dict =  [self.encoder.parseModule parse:data mode:ParseModeTagMod for:self.encoder];
     
     
-    NSLog(@"%s",__FUNCTION__);
+    
 
 }
 
@@ -608,8 +608,10 @@
     [mData removeObjectForKey:@"url"];
     [mData removeObjectForKey:@"url_2"];
     [mData removeObjectForKey:@"duration"];
+//    [NSNumber numberWithFloat:[[mData objectForKey:@"closetime"]floatValue] - [[mData objectForKey:@"starttime"]floatValue]];
+    [mData setObject:[NSNumber numberWithFloat:[[mData objectForKey:@"closetime"]floatValue] - [[mData objectForKey:@"starttime"]floatValue]] forKey:@"duration"];
     NSString    * jsonData = [Utility dictToJSON:mData];
-    
+    PXPLog(@"CLOSE TAG %ld  StartTime:%f Time:%f closeTime:%f",[[mData objectForKey:@"type"]integerValue],[[mData objectForKey:@"starttime"]floatValue],[[mData objectForKey:@"time"]floatValue],[[mData objectForKey:@"closetime"]floatValue]);
     if (error) {
         PXPLog(@"Error converting data to dowload Clip event");
         return nil;
@@ -628,7 +630,7 @@
     
     
     NSDictionary * dict =  [self.encoder.parseModule parse:data mode:ParseModeTagMod for:self.encoder];
-    
+    PXPLog(@"CLOSE TAG RESPONCE %ld  StartTime:%f Time:%f closeTime:%f duration:%f",[[dict objectForKey:@"type"]integerValue],[[dict objectForKey:@"starttime"]floatValue],[[dict objectForKey:@"time"]floatValue],[[dict objectForKey:@"closetime"]floatValue],[[dict objectForKey:@"duration"]floatValue]);
     
     NSDictionary * checkIfFail = [Utility JSONDatatoDict:data];
     self.tagData = checkIfFail;
@@ -786,7 +788,7 @@
     
     
     self.tagData = dict;// new
-    
+    PXPLog(@"MAKE TAG %@  StartTime:%@ Time:%@ duration:%@",dict[@"starttime"],dict[@"time"],dict[@"duration"]);
     for ( id <TagProtocol> aTag in tags) {
         if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
             // check if aTag matches the data from the dict

@@ -195,10 +195,19 @@
 
 -(void)addTag:(id<TagProtocol>)newtag extraData:(BOOL)notifPost
 {
-    if ((newtag.type == TagTypeDeleted ) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
+//    if ((newtag.type == TagTypeDeleted ) &&
+//        newtag.type != TagTypeHockeyStrengthStop &&
+//        newtag.type != TagTypeHockeyStopOLine &&
+//        newtag.type != TagTypeHockeyStopDLine &&
+//        newtag.type != TagTypeSoccerZoneStop) {
+//        return;
+//    }
+//    
+    
+    if (newtag.type == TagTypeDeleted ){
         return;
     }
-    
+
     
     
     [_tags addObject:newtag];
@@ -211,7 +220,18 @@
     if ((newtag.type == TagTypeCloseDuration
          || newtag.type == TagTypeTele
          || newtag.type == TagTypeNormal
-
+//         || newtag.type == TagTypeHockeyStartOLine
+         || newtag.type == TagTypeHockeyStopOLine
+//         || newtag.type == TagTypeHockeyStartDLine
+         || newtag.type == TagTypeHockeyStopDLine
+//         || newtag.type == TagTypeHockeyPeriodStart
+//         || newtag.type == TagTypeHockeyPeriodStop
+//         || newtag.type == TagTypeHockeyOppOLineStart
+         || newtag.type == TagTypeHockeyOppOLineStop
+//         || newtag.type == TagTypeHockeyOppDLineStart
+         || newtag.type == TagTypeHockeyOppDLineStop
+//         || newtag.type == TagTypeHockeyStrengthStart
+         || newtag.type == TagTypeHockeyStrengthStop
          )&& _primary && notifPost ) {
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
@@ -241,24 +261,38 @@
         
         NSArray *filteredArray = [_tags filteredArrayUsingPredicate:pred];
         Tag *tagToBeModded = [filteredArray firstObject];
-        
-        if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
+    
+        NSPredicate * closeType =  [NSPredicate predicateWithFormat:@"type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld",(long)TagTypeFootballQuarterStop ,(long)TagTypeFootballDownStop ,(long)TagTypeSoccerZoneStop ,(long)TagTypeSoccerHalfStop ,(long)TagTypeHockeyStopOLine ,(long)TagTypeHockeyStopDLine ,(long)TagTypeHockeyOppOLineStop ,(long)TagTypeHockeyStrengthStop ,(long)TagTypeCloseDuration];
+        NSPredicate * openType  =  [NSPredicate predicateWithFormat:@"type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld OR type = %ld",(long)TagTypeFootballQuarterStart ,(long)TagTypeFootballDownStart ,(long)TagTypeSoccerZoneStart ,(long)TagTypeSoccerHalfStart ,(long)TagTypeHockeyStartOLine ,(long)TagTypeHockeyStartDLine ,(long)TagTypeHockeyOppOLineStart ,(long)TagTypeHockeyStrengthStart ,(long)TagTypeOpenDuration];
+    
+   
+//    if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
+    if (  [closeType evaluateWithObject:modifiedData] && [openType evaluateWithObject:tagToBeModded]) {
            
             if ([Tag getOpenTagByDurationId:modifiedData[@"dtagid"]]) {
                 tagToBeModded = [Tag getOpenTagByDurationId:modifiedData[@"dtagid"]];
             }
-            
-            
+        
+        
             NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
-            double openTime                 = tagToBeModded.time;
-            double closeTime                = [dictToChange[@"closetime"]doubleValue];
             
-            if (!closeTime) {
-                return;
+            if (((TagType)modifiedData[@"type"])==TagTypeCloseDuration) {
+                double openTime                 = tagToBeModded.time;
+                double closeTime                = [dictToChange[@"closetime"]doubleValue];
+                if (!closeTime) {
+                    return;
+                }
+                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
+            } else {
+                dictToChange[@"duration"]       = modifiedData[@"duration"];
             }
             
-            dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
-            dictToChange[@"type"]           = [NSNumber numberWithInteger:TagTypeCloseDuration];
+        
+        
+        
+            
+        
+            dictToChange[@"type"]           = [NSNumber numberWithInteger:tagToBeModded.type];
             
             
             [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
@@ -269,9 +303,6 @@
                                                                                                               @"colour":tagToBeModded.colour,
                                                                                                               @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
                                                                                                               }];
-            
-            NSLog(@"%s Notif removed to prevent double tag mod posts",__FUNCTION__);
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:[tagToBeModded makeTagData]];
             
      
         }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){

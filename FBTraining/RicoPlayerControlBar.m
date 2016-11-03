@@ -149,18 +149,18 @@
     
     
     
-    
+    [self layoutSubviews];
 }
 
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
     
+    [super layoutSubviews];
     self.slider.frame               = CGRectMake(110, 0, self.container.bounds.size.width - 2 * 110, self.container.bounds.size.height);
     self.playPauseButton.center     = CGPointMake(22.0, 0.5 * self.container.bounds.size.height);
     self.liveLight.center           = CGPointMake(self.container.bounds.size.width - 22.0, 0.5 * self.container.bounds.size.height);
     self.rangeCancelButton.center   = CGPointMake(self.container.bounds.size.width - 22.0, 0.5 * self.container.bounds.size.height);
-
+    
 }
 
 
