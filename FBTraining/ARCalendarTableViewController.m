@@ -191,19 +191,26 @@
 {
     if (!self.selectedEvent) return;
     
-    __block Event * selectedEvent                       = self.selectedEvent;
+    __weak Event * selectedEvent                       = self.selectedEvent;
     __block ARCalendarTableViewController * weakSelf    = self;
     
     NSArray * sourceList = [selectedEvent.feeds allKeys];
-    
+    [selectedEvent build];
     [selectedEvent setOnComplete:^{
-        for (NSString * sourceKey in sourceList) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:selectedEvent userInfo:@{@"source":sourceKey}];
+        
+        if (selectedEvent.isBuilt) {
+        
+            for (NSString * sourceKey in sourceList) {
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:selectedEvent userInfo:@{@"source":sourceKey}];
+            }
+            [weakSelf reloadData];
+        } else {
+            NSLog(@"%s",__FUNCTION__);
+
         }
-        [weakSelf reloadData];
     }];
     
-    [selectedEvent build];
+    
     
     
 

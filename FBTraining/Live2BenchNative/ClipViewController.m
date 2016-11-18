@@ -796,6 +796,27 @@ static void * encoderTagContext = &encoderTagContext;
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
     
     
+    if ([tagSelect.name isEqualToString:@"telestration"]) {
+        
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                        message:[NSString stringWithFormat:@"Can not view Telestartions generated from Encoders Below version %@",OLD_VERSION]
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* okayButton = [UIAlertAction
+                                     actionWithTitle:@"Okay"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action)
+                                     {
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                     }];
+        
+        [alert addAction:okayButton];
+        (void)[[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+
+        return;
+    }
+    
+    
     if (self.isEditing) {
         thumbnailCell *cell = (thumbnailCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
         cell.checkmarkOverlay.hidden = !cell.checkmarkOverlay.hidden;

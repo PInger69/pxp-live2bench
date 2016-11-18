@@ -50,9 +50,19 @@ static LocalMediaManager * instance;
         
         grabAllThumbNamesFromEvent = ^NSArray *(Event *input) {
             NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+            
+            
             for (Tag * item in input.tags) {
-                [collection addObjectsFromArray:[item.thumbnails allValues]];
+                NSArray * tags = [item.thumbnails allValues];
+                for (NSString * paths in tags) {
+                    NSString * fname = [paths lastPathComponent];
+                    
+                    NSString * thumbPath = [NSString stringWithFormat:@"%@/events/%@/thumbnails/%@",aDocsPath,input.datapath,fname];
+                    [collection addObject:thumbPath];
+                }
+                
             }
+
             return [collection copy];
         };
         
@@ -602,6 +612,7 @@ static LocalMediaManager * instance;
 //        [self scanForBookmarks];
         NSString *bookmarkPlistPath     = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalID];
         NSMutableDictionary *clipData   = [NSMutableDictionary dictionaryWithDictionary:tagData];
+        [clipData setObject:@[aName] forKey:@"fileNames"];
         clipData[@"plistPath"]          = bookmarkPlistPath;
         aClip                           = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
         [_clips setObject:aClip forKey:aClip.globalID];

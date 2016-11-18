@@ -1,5 +1,6 @@
 
 
+
 //  Encoder.m
 //  Live2BenchNative
 //
@@ -568,7 +569,7 @@
     
     
     NSOperation * testOp = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"Done");
+//        NSLog(@"Done");
 
     }];
     
@@ -579,7 +580,7 @@
     
     
     
-    NSLog(@"%s",__FUNCTION__);
+//    NSLog(@"%s",__FUNCTION__);
 
 }
 
@@ -1392,6 +1393,10 @@
         PXPLog(@"**************************");
     }
 
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_VERSION_SET
+                                                        object:self
+                                                      userInfo:nil];
+
 }
 
 
@@ -1443,7 +1448,7 @@
     for (NSDictionary * tData in rawTeams) {
         LeagueTeam  * lTeam = [[LeagueTeam alloc]init];
         NSString    * lHID  = tData[@"league"];
-        lTeam.extra         = tData[@"extra"];
+        lTeam.extra         = tData[@"extra"]?:@"";
         lTeam.hid           = tData[@"hid"];
         lTeam.name          = tData[@"name"];
         lTeam.sport         = tData[@"sport"];
@@ -1644,13 +1649,13 @@
         
         
         [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
-            NSLog(@"Re Load Cells");
+        
             
         }];
         
         
         [downloadClip setCompletionBlock:^{
-            NSLog(@"%s",__FUNCTION__);
+//            NSLog(@"%s",__FUNCTION__);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];
                 
@@ -1684,7 +1689,7 @@
         
         
     } else {
-        NSLog(@"%s",__FUNCTION__);
+//        NSLog(@"%s",__FUNCTION__);
     }
 
 }
@@ -1758,13 +1763,13 @@
                 
                 
                 [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
-                    NSLog(@"Re Load Cells");
+                  
                    
                 }];
                 
                 
                 [downloadClip setCompletionBlock:^{
-                    NSLog(@"%s",__FUNCTION__);
+//                    NSLog(@"%s",__FUNCTION__);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];    
                         
@@ -1798,7 +1803,7 @@
                 
                 
             } else {
-                    NSLog(@"%s",__FUNCTION__);
+//                    NSLog(@"%s",__FUNCTION__);
             }
 
         
@@ -2016,16 +2021,16 @@
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
                         
+                    }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
+                        [self onModifyTags:tag];
                     }else if([tagsByID count]==0 && [tag[@"modified"]boolValue]){
                         [self onNewTags:tag];
                     }else if([tag[@"modified"]boolValue]){
                         [self onModifyTags:tag];
                     }else if([modCheck evaluateWithObject:tag]){
                         [self onModifyTags:tag];
-                        NSLog(@"%s",__FUNCTION__);
+                        
 
-                    }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
-                        [self onModifyTags:tag];
                     }else if([tag[@"type"]intValue] == TagTypeHockeyStrengthStop){
                         [self onModifyTags:tag];
                     }else if ([tag[@"type"]intValue] == TagTypeTele){

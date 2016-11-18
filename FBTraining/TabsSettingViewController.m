@@ -161,6 +161,8 @@
 }
 
 - (void)settingsRequest:(NSNotification *)note {
+       
+    
     if ([self isKindOfClass:note.userInfo[@"Class"]]) {
         void(^block)(NSArray *tabs) = note.userInfo[@"Block"];
         

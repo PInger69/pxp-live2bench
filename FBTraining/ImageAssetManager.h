@@ -22,6 +22,7 @@
 -(void)imageForURL: (nonnull NSString *) imageURLString atImageView: (nonnull UIImageView *) viewReference withTelestration:(nullable PxpTelestration *)telestration;
 
 -(void)thumbnailsPreload:(NSArray*)list;
+-(void)thumbnailsPreloadLocal:(NSArray*)list;
 -(void)thumbnailsUnload:(NSArray*)list;
 -(void)thumbnailsUnloadAll;
 -(void)thumbnailsLoadedToView:(UIImageView*)imageView imageURL:(NSString*)aImageUrl;

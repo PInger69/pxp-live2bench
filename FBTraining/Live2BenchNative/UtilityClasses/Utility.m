@@ -371,7 +371,7 @@ static InternetMonitor* internetMonitor;
     
     for (NSUInteger i = 0; i < maxCount; ++i) {
         int version1Number = [version1Array[i] intValue];
-        int version2Number = [version1Array[i] intValue];
+        int version2Number = [version2Array[i] intValue];
         
         if (version1Number > version2Number) {
             return NSOrderedDescending;

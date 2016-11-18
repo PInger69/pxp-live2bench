@@ -70,6 +70,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     LoginViewController * loginViewController;
 }
 
+
 -(id)init
 {
     appDel              = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -80,7 +81,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     
     self = [super init];
     if (self) {
-        
+
     }
     return self;
 }
@@ -101,6 +102,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     // Add Observers
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationSelectTab:)   name:NOTIF_SELECT_TAB object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTabs:) name:NOTIF_TABS_SETTING_CHANGED object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encoderVersionCheck:) name:NOTIF_VERSION_SET object:nil];
 }
 
 /**
@@ -222,6 +224,39 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAB_CREATED object:nil];
     [self createTabButtons];
     //[self refreshTabs];
+}
+
+-(void)encoderVersionCheck:(NSNotification *)notification
+{
+
+    if ([notification.object isKindOfClass:[Encoder class]]) {
+        Encoder * encoder = notification.object;
+        
+        
+        if ([Utility compareVersion:encoder.version withVersion:OLD_VERSION] <= 0){
+            [self removeTabByName:@"DualView"];
+        }
+        
+        
+    }
+    
+
+}
+
+-(void)removeTabByName:(NSString*)tabName
+{
+    
+    
+    
+    for (CustomTabViewController *vc in [self.tabs copy]) {
+        if ([self check:vc array:@[tabName]]) {
+            [vc removeFromParentViewController];
+            [self.tabs removeObject:vc];
+        }
+        
+    }
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAB_CREATED object:nil];
+    [self createTabButtons];
 }
 
 -(void)viewDidAppear:(BOOL)animated

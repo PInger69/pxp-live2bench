@@ -389,6 +389,12 @@ static NSMutableDictionary * openDurationTagsWithID;
              //@"feeds" : (self.feeds ? self.feeds: @"nil")
              }];
     
+    if ([_rawData objectForKey:@"telesrc"]){
+        [tagDict setObject:[_rawData objectForKey:@"telesrc"] forKey:@"telesrc"];
+    }
+
+    
+    
     if (self.requestURL) {
         [tagDict addEntriesFromDictionary:@{@"requrl":self.requestURL}];
     }
@@ -445,6 +451,10 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (self.closeTime) {
         [tagData setObject:[NSString stringWithFormat:@"%f", self.closeTime] forKey:@"closetime"];
+    }
+    
+    if (([tagData[@"type"]integerValue] == TagTypeTele) && [self.rawData objectForKey:@"telesrc"]){
+         [tagData setObject:[self.rawData objectForKey:@"telesrc"] forKey:@"telesrc"];
     }
     
     
@@ -574,10 +584,10 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
     
-    if (_cachedThumbnail) {
-    
-        return _cachedThumbnail;
-    }
+//    if (_cachedThumbnail) {
+//    
+//        return _cachedThumbnail;
+//    }
     
     Feed *feed = source && self.eventInstance.feeds[source] ? self.eventInstance.feeds[source] : self.eventInstance.feeds.allValues.firstObject;
     

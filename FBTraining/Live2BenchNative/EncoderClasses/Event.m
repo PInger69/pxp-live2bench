@@ -100,7 +100,7 @@
         _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:path!= nil] copy];
 
         _cameraResource     = [[CameraResourceNonLive alloc]initWithFeeds:[_feeds allValues]];
-        
+        _tags               = [self buildTags:_rawData];
         if (_rawData[@"homeTeam"] && _rawData[@"visitTeam"]) {
         
         }
@@ -172,22 +172,28 @@
 
 -(void)addAllTags:(NSDictionary *)allTagData
 {
-    NSMutableArray *tagsReceived = [NSMutableArray array];
+//    NSMutableArray *tagsReceived = [NSMutableArray array];
     
-//     NSArray *tagArray = [allTagData allValues];
-//     for (NSDictionary *newTagDic in tagArray) {
-//         Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
-//         [_tags addObject:newTag];
+     NSArray *tagArray = [allTagData allValues];
+     for (NSDictionary *newTagDic in tagArray) {
+         Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
+         
+         if (newTag.type == TagTypeOpenDuration) {
+             newTag.type = TagTypeCloseDuration;
+         }
+         
+         
+         [_tags addObject:newTag];
 //         [tagsReceived addObject:newTag];
-//     }
+     }
     _rawData[@"tags"]   = [allTagData copy];
     
      self.isBuilt = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
-                                                        object:self
-                                                      userInfo:@{
-                                                                 @"tags": tagsReceived
-                                                                 }];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
+//                                                        object:self
+//                                                      userInfo:@{
+//                                                                 @"tags": tagsReceived
+//                                                                 }];
     
 }
 
@@ -275,8 +281,8 @@
         
         
             NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
-            
-            if (((TagType)modifiedData[@"type"])==TagTypeCloseDuration) {
+        
+            if ( [modifiedData[@"type"]integerValue] ==TagTypeCloseDuration) {
                 double openTime                 = tagToBeModded.time;
                 double closeTime                = [dictToChange[@"closetime"]doubleValue];
                 if (!closeTime) {
@@ -292,7 +298,7 @@
         
             
         
-            dictToChange[@"type"]           = [NSNumber numberWithInteger:tagToBeModded.type];
+            dictToChange[@"type"]           = [NSNumber numberWithInteger: [modifiedData[@"type"]integerValue]];
             
             
             [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];

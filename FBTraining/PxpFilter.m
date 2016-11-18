@@ -201,10 +201,10 @@
         NSPredicate * aPred = [_ghostPredicates firstObject];
         
         
-        for (Tag * t in _filteredTagsPool) {
-            NSLog(@"%@",t);
-            NSLog(@"%d",t.duration);
-        }
+//        for (Tag * t in _filteredTagsPool) {
+//            NSLog(@"%@",t);
+//            NSLog(@"%d",t.duration);
+//        }
         
         
         

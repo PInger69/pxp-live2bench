@@ -708,7 +708,7 @@
         _currentEvent = nil;
     }else{
         _currentEvent = event;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enableButton:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enableButton:) name:NOTIF_TAG_RECEIVED object:nil];
     }
 }
 

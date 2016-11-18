@@ -61,12 +61,17 @@
                                                   @"event": (tag.isLive)?LIVE_EVENT:tag.event,
                                                   @"requesttime":GET_NOW_TIME_STRING,
                                                   @"bookmark":@"1",
-                                                  @"user":[UserCenter getInstance].userHID,
-                                                  @"name":tag.name,
-                                                  @"srcValue":srcKeyQ, // used by encoder to locate and cut clip
-                                                  @"sidx":srcKeyQ
+                                                  @"user":[UserCenter getInstance].userHID
                                                   }];
         
+        
+        if (![[self.encoder version] isEqualToString:@"0.94.5"]) {
+            [data addEntriesFromDictionary:@{
+                                           @"name":tag.name
+                                           ,@"srcValue":srcKeyQ // used by encoder to locate and cut clip
+                                           ,@"sidx":srcKeyQ
+                                             }];
+        }
         
         
         // make operation to download but send it to the encoder operation and make it dependant on it
@@ -104,39 +109,57 @@
             }
             
             
+            
             NSString     * urlForImageOnServer   = (NSString *)[paredData objectForKey:@"vidurl"];
             if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
             
-            // this part can be replaced with a regex
-            NSString * sidx     = paredData[@"requrl"];
-            NSRange  d          =  [sidx rangeOfString:@"sidx\":\""];
-            d                       = NSMakeRange(0, d.length+d.location);
-            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
-            d =  [sidx rangeOfString:@"\""];
-            d = NSMakeRange( d.location,[sidx length]-d.location);
-            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
-            NSString *src = sidx;
             
             
-            // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
-            NSString * videoName        = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",paredData[@"event"],paredData[@"id"], src];
-            NSString * tagID             = paredData[@"id"];
-            NSString * ip                = [weakSelf.encoder ipAddress];
-            NSString * remoteSrc         = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
-            NSString * downloaderRefKey  =  paredData[@"srcValue"]; // this is used for the downloader and the localmedia manager
-            NSString * eventName        = ([weakSelf.encoder event].live)?LIVE_EVENT:paredData[@"event"] ;
+            NSString    * remotePath;       // Where the file is on the server
+            NSString    * videoName;
+            NSString    * tagID             = paredData[@"id"];
+            
+             if (![[self.encoder version] isEqualToString:@"0.94.5"]) {
+                 // this part can be replaced with a regex
+                 NSString * sidx     = paredData[@"requrl"];
+                 NSRange  d          =  [sidx rangeOfString:@"sidx\":\""];
+                 d                       = NSMakeRange(0, d.length+d.location);
+                 sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
+                 d =  [sidx rangeOfString:@"\""];
+                 d = NSMakeRange( d.location,[sidx length]-d.location);
+                 sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
+                 NSString *src = sidx;
+             
+                 
+                 // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
+                 videoName        = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",paredData[@"event"],paredData[@"id"], src];
+                 
+                 NSString * ip                = [weakSelf.encoder ipAddress];
+                 NSString * remoteSrc         = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
+                 NSString * downloaderRefKey  =  paredData[@"srcValue"]; // this is used for the downloader and the localmedia manager
+                 NSString * eventName        = ([weakSelf.encoder event].live)?LIVE_EVENT:paredData[@"event"] ;
+                 
+                 
+                 remotePath       = [NSString stringWithFormat:@"http://%@/events/%@/video/%@_vid_%@.mp4", ip,eventName, remoteSrc, tagID];
+                 
+                 
+                
+//                 NSString        * dlKey = [NSString stringWithFormat:@"%@-%@",tagID,downloaderRefKey ];
+                 
+
+             } else {
+                 remotePath = urlForImageOnServer;
+                 videoName        = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",paredData[@"event"],paredData[@"id"], @"s_00hq"];
+             }
             
             
-            NSString * remotePath       = [NSString stringWithFormat:@"http://%@/events/%@/video/%@_vid_%@.mp4", ip,eventName, remoteSrc, tagID];
-            
-            
-            NSString        * pth   = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-            NSString        * dlKey = [NSString stringWithFormat:@"%@-%@",tagID,downloaderRefKey ];
+
+            NSString    * destinationPath  = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
             
             
             
             downloadOperation.source        = [NSURL URLWithString:remotePath];
-            downloadOperation.destination   = pth;
+            downloadOperation.destination   = destinationPath;
             downloadOperation.onFail        = (weakSelf.onFail)?weakSelf.onFail:nil;
 
             [downloadOperation setCompletionBlock:^{

@@ -91,15 +91,37 @@ static EncoderManager * instance;
         
         
         grabAllThumbNamesFromEvent = ^NSArray *(Event *input) {
+            
             NSMutableArray  * collection    = [[NSMutableArray alloc]init];
-            for (Tag * item in input.tags) {
-                
-                NSArray * tags = [item.thumbnails allValues];
-                
-                
-                [collection addObjectsFromArray:[item.thumbnails allValues]];
+
+            
+            if (input.local){
+//
+            
+                for (Tag * item in input.tags) {
+                    NSArray * tags = [item.thumbnails allValues];
+                    for (NSString * paths in tags) {
+                        NSString * fname = [paths lastPathComponent];
+                        
+                        NSString * thumbPath = [NSString stringWithFormat:@"%@/events/%@/thumbnails/%@",aLocalDocsPath,input.datapath,fname];
+                        [collection addObject:thumbPath];
+                    }
+                    
+                }
+            
+                return [collection copy];
+//
+            } else {
+                for (Tag * item in input.tags) {
+                    
+                    NSArray * tags = [item.thumbnails allValues];
+                    [collection addObjectsFromArray:[item.thumbnails allValues]];
+                }
+                return [collection copy];
+            
             }
-            return [collection copy];
+        
+            
         };
 
         
@@ -235,8 +257,11 @@ static EncoderManager * instance;
             }
             
             // Pool all thumb nails
-            [[ImageAssetManager getInstance]thumbnailsPreload:grabAllThumbNamesFromEvent(event)];
-            
+            if (event.local){
+                [[ImageAssetManager getInstance]thumbnailsPreloadLocal:grabAllThumbNamesFromEvent(event)];
+            } else {
+                [[ImageAssetManager getInstance]thumbnailsPreload:grabAllThumbNamesFromEvent(event)];
+            }
             
         }
 

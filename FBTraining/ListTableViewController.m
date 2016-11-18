@@ -309,15 +309,7 @@ static NSOperationQueue * queue;
     return CELL_HEIGHT;
 }
 
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    // Return the number of sections.
-//    return 1;
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    // Return the number of rows in the section.
-//    return [self.tagsToDisplay count];
-//}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
@@ -381,50 +373,61 @@ static NSOperationQueue * queue;
         }
 
         
+        if (!tag.eventInstance.local) {
+            collapsableCell.downloadButtonBlock = ^(){
+                [self downloadExternal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath];
+            };
+        } else { // local event
+            collapsableCell.downloadButtonBlock = ^(){
+                [self downloadLocal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath cell:weakCell];
+            };
+        }
         
-        collapsableCell.downloadButtonBlock = ^(){
-            
-            
-            DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src2]];
-            
-            [downloadClip setOnFail:^(NSError *e) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@ %@",tag.name,src2];
-                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
-                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
-                                                                                    message:errorMessage
-                                                                             preferredStyle:UIAlertControllerStyleAlert];
-                    // build NO button
-                    UIAlertAction* cancelButtons = [UIAlertAction
-                                                    actionWithTitle:@"OK"
-                                                    style:UIAlertActionStyleCancel
-                                                    handler:^(UIAlertAction * action)
-                                                    {
-                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                                    }];
-                    [alert addAction:cancelButtons];
-
-                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
-                });
-            }];
-            
-            
-            [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
-                NSLog(@"Re Load Cells");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                });
-                
-            }];
-            
-            [downloadClip setCompletionBlock:^{
-                NSLog(@"%s",__FUNCTION__);
-
-            }];
-            
-            [queue addOperation:downloadClip];
-
-        };
+//        collapsableCell.downloadButtonBlock = ^(){
+//            
+//            
+//            
+//            
+//            DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src2]];
+//            
+//            [downloadClip setOnFail:^(NSError *e) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@ %@",tag.name,src2];
+//                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+//                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+//                                                                                    message:errorMessage
+//                                                                             preferredStyle:UIAlertControllerStyleAlert];
+//                    // build NO button
+//                    UIAlertAction* cancelButtons = [UIAlertAction
+//                                                    actionWithTitle:@"OK"
+//                                                    style:UIAlertActionStyleCancel
+//                                                    handler:^(UIAlertAction * action)
+//                                                    {
+//                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+//                                                    }];
+//                    [alert addAction:cancelButtons];
+//
+//                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+//                });
+//            }];
+//            
+//            
+//            [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+//              
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+//                });
+//                
+//            }];
+//            
+//            [downloadClip setCompletionBlock:^{
+//                NSLog(@"%s",__FUNCTION__);
+//
+//            }];
+//            
+//            [queue addOperation:downloadClip];
+//
+//        };
 
         
         
@@ -707,6 +710,90 @@ static NSOperationQueue * queue;
     
     return cell;
 }
+
+-(void)downloadExternal:(Tag *)tag source:(NSString*)src tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src]];
+    
+    [downloadClip setOnFail:^(NSError *e) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@ %@",tag.name,src];
+            NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                            message:errorMessage
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:@"OK"
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+        });
+    }];
+    
+    
+    [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        });
+        
+    }];
+    
+    [downloadClip setCompletionBlock:^{
+        NSLog(@"%s",__FUNCTION__);
+        
+    }];
+    
+    [queue addOperation:downloadClip];
+
+}
+
+
+-(void)downloadLocal:(Tag *)tag source:(NSString*)src tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath cell:(FeedSelectCell *)cell
+{
+    NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
+    NSArray *keys = [[NSMutableArray arrayWithArray:[tag.eventInstance.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSString *key = keys[indexPath.row - firstIndexPath.row];
+    
+    
+    // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+    NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+    [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+
+    // this takes the download item and attaches it to the cell
+    void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+        //videoItem = downloadItem;
+         cell.downloadButton.downloadItem = downloadItem;
+         __block FeedSelectCell *weakerCell = cell;
+        [cell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                weakerCell.downloadButton.progress = progress;
+                if (progress >= 1.0) {
+                    weakerCell.downloadButton.downloadComplete = 1.0;
+                }
+
+                [weakerCell.downloadButton setNeedsDisplay];
+            });
+        }];
+    };
+
+//    NSString *src = [NSString stringWithFormat:@"%@hq", key];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+                                                                                                           @"block": blockName,
+                                                                                                           @"tag": tag,
+                                                                                                           @"src":src,
+                                                                                                           @"key":key}];
+}
+
+
+
+
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {

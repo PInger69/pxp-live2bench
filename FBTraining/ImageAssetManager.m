@@ -66,6 +66,22 @@ static ImageAssetManager * instance;
 
 }
 
+-(void)thumbnailsPreloadLocal:(NSArray*)list
+{
+    for (NSString * itemUrl in list) {
+       
+        
+//        NSString *filePath = [self.pathForFolderContainingImages stringByAppendingString: imageURL];
+        
+        UIImage *returningImage = [UIImage imageWithContentsOfFile:itemUrl];
+        if (!returningImage) return;
+        [_arrayOfClipImages setObject:returningImage forKey:[itemUrl lastPathComponent]];
+    }
+    
+}
+
+
+
 -(void)thumbnailsUnload:(NSArray*)list
 {
     for (NSString * itemUrl in list) {
@@ -80,7 +96,7 @@ static ImageAssetManager * instance;
     [_arrayOfClipImages removeAllObjects];
 }
 
-
+// Download from server
 -(void)thumbnailsLoadedToView:(UIImageView*)imageView imageURL:(NSString*)aImageUrl
 {
     DownloadThumbnailOperation * downloadThumb = [[DownloadThumbnailOperation alloc]initImageAssetManager:self url:aImageUrl imageView:imageView];
@@ -100,6 +116,8 @@ static ImageAssetManager * instance;
     UIImage *theImage;
     
     if (imageURLString != nil) {
+        
+        
         theImage = [self checkImageCacheForImageURL:imageURLString];
     }
     //UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
@@ -146,9 +164,11 @@ static ImageAssetManager * instance;
 }
 
 -(UIImage *) checkImageCacheForImageURL: (NSString *) imageURL{
-    //NSString *filePath = [self.pathForFolderContainingImages stringByAppendingString: imageURL];
-    //UIImage *returningImage = [UIImage imageWithContentsOfFile:filePath];
+    
     UIImage *returningImage = _arrayOfClipImages[imageURL];
+    if (!returningImage) {
+        returningImage = _arrayOfClipImages[[imageURL lastPathComponent]];
+    }
     return returningImage;
 }
 

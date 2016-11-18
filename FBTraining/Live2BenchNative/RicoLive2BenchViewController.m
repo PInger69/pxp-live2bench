@@ -1599,6 +1599,13 @@ static void * eventContext      = &eventContext;
     NSTimeInterval timeTele = CMTimeGetSeconds([self.ricoPlayerViewController currentTime]) ;//CMTimeGetSeconds([self.ricoPlayerViewController currentTimeFromSourceName:_currentSource]);//
 
 //    tele.sourceName = _currentSource;//self.playerViewController.playerView.activePlayerName;
+    
+    
+    if ([Utility compareVersion:[_currentEvent.parentEncoder version] withVersion:OLD_VERSION] <= 0){
+        tele.sourceName = @"onlySource";
+        
+    }
+    
     NSDictionary * dict = @{
                             @"time":            [NSString stringWithFormat:@"%f",timeTele],
                             @"duration":        @"1",//[NSString stringWithFormat:@"%i",(int)roundf(tele.duration)]

@@ -121,7 +121,7 @@
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encresume/",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
-    return   [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5];
+    return   [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
 
 }
 
@@ -641,7 +641,7 @@
                                                                                                     @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]}];
     }
     
-    NSLog(@"%s",__FUNCTION__);
+    
     
 }
 @end
@@ -662,7 +662,7 @@
     
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonData ]];
 
-    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30];
+    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
     
 }
 
@@ -788,7 +788,7 @@
     
     
     self.tagData = dict;// new
-    PXPLog(@"MAKE TAG %@  StartTime:%@ Time:%@ duration:%@",dict[@"starttime"],dict[@"time"],dict[@"duration"]);
+    if ([dict count])PXPLog(@"MAKE TAG %@  StartTime:%@ Time:%@ duration:%@",dict[@"starttime"],dict[@"time"],dict[@"duration"]);
     for ( id <TagProtocol> aTag in tags) {
         if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
             // check if aTag matches the data from the dict
@@ -969,7 +969,7 @@
     
     NSMutableDictionary * tData = [NSMutableDictionary new];
 
-    NSLog(@"Time Getting sent to server: %@",[aData objectForKey:@"time"]);
+//    NSLog(@"Time Getting sent to server: %@",[aData objectForKey:@"time"]);
     [tData addEntriesFromDictionary:@{
 
 //
@@ -1147,8 +1147,16 @@
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
     self.timeout = 60;
+    NSString *jsonString;
     
-    NSString *jsonString    = [Utility dictToJSON:@{@"sidx":@"*",@"event":@"live"}];
+    if (self.encoder.event) {
+        jsonString    = [Utility dictToJSON:@{@"sidx":@"*",@"event":@"live",@"evtpath":self.encoder.event.hid}];
+    } else {
+        jsonString    = [Utility dictToJSON:@{@"sidx":@"*",@"event":@"live",@"evtpath":@""}];
+    }
+    
+    
+    
 //    http://localhost/min/ajax/rec_stat/{"sidx":"00hq","event":"live"}
     
     NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/rec_stat/%@",self.encoder.urlProtocol,self.encoder.ipAddress,jsonString] ];
@@ -1169,7 +1177,7 @@
     for (NSString * key in list) {
         if([key rangeOfString:@"ctime-"].location != NSNotFound) {
             NSString * k = [key substringFromIndex:6];
-            NSLog(@"%@",[key substringFromIndex:6]);
+//            NSLog(@"%@",[key substringFromIndex:6]);
             [dict setObject:results[key] forKey:k];
         }
     }
@@ -1198,7 +1206,7 @@
     [allKey enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         PXPLog(@"  %@ %@",obj,dict[obj]);
     }];
-    
+    PXPLog(@"--------------------");
     
     
     
@@ -1220,7 +1228,7 @@
             [feed.offsetDict setObject:dict[key3] forKey:quality];
             
             
-            NSLog(@"");
+//            NSLog(@"");
          }
         
         

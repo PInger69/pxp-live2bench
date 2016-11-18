@@ -53,7 +53,7 @@
         //_displayTime = _rawData[@"displaytime"];
         
        // _rawData[@"plistPath"] = aPath;
-        NSArray * fileNames = [self videoFiles];
+        NSArray * fileNames = data[@"fileNames"];
         if ([self.videosBySrcKey count]<[fileNames count]) {
             NSDictionary * temp = _localRawData[@"url"];
             NSArray * temp2 = [temp allKeys];
@@ -67,6 +67,10 @@
             }
         }
 
+        if (![self.videosBySrcKey count] && [fileNames count]==1) {
+            [self.videosBySrcKey setObject:[fileNames firstObject] forKey:@"s_00"];
+        }
+        
         
         [_localRawData writeToFile:self.path atomically:YES];
         //[_rawData writeToFile:self.path atomically:YES];
@@ -121,6 +125,10 @@
             }
         }
 
+        
+        if (![self.videosBySrcKey count] && [fileNames count]==1) {
+            [self.videosBySrcKey setObject:[fileNames firstObject] forKey:@"s_00"];
+        }
         
         //_videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         //_event = _rawData[@"event"];
