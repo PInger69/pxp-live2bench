@@ -364,6 +364,15 @@ static InternetMonitor* internetMonitor;
 }
 
 +(NSComparisonResult)compareVersion: (NSString *)version1 withVersion: (NSString *)version2{
+  
+    if ([version1 isEqualToString:@"local"] && [version2 isEqualToString:@"local"]) {
+        return NSOrderedSame;
+    } else if ([version1 isEqualToString:@"local"] && ![version2 isEqualToString:@"local"]) {
+        return NSOrderedAscending;
+    } else if (![version1 isEqualToString:@"local"] && [version2 isEqualToString:@"local"]) {
+         return NSOrderedDescending;
+    }
+    
     NSArray *version1Array = [version1 componentsSeparatedByString:@"."];
     NSArray *version2Array = [version2 componentsSeparatedByString:@"."];
     

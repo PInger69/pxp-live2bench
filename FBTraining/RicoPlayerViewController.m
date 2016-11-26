@@ -160,11 +160,11 @@ static CMClockRef _masterClock;
             [[player play] addDependency:self.syncBlock];
         } else {
             (void)[player play];
+             self.playerControlBar.playPauseButton.paused = NO;
         }
     }
     
     if (self.syncBlock && !self.syncBlock.isFinished && !self.syncBlock.isExecuting  ) {
-        NSLog(@"Queue %@",self.operationQueue);
         [self.operationQueue addOperation:self.syncBlock];
     }
 }

@@ -574,7 +574,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 
 -(NSString *)description{
-    return [NSString stringWithFormat:@"name: %@, type: %@,displayTime: %@, thumbnails: %@  feeds: %@", self.name,[NSString stringWithFormat:@"%ld",(long)self.type],self.displayTime, self.thumbnails, self.feeds];
+    return [NSString stringWithFormat:@"name: %@, ID: %@, type: %@,displayTime: %@, thumbnails: %@  feeds: %@", self.name,self.ID,[NSString stringWithFormat:@"%ld",(long)self.type],self.displayTime, self.thumbnails, self.feeds];
 }
 
 -(void)dealloc{

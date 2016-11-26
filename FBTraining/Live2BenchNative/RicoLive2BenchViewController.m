@@ -1601,7 +1601,7 @@ static void * eventContext      = &eventContext;
 //    tele.sourceName = _currentSource;//self.playerViewController.playerView.activePlayerName;
     
     
-    if ([Utility compareVersion:[_currentEvent.parentEncoder version] withVersion:OLD_VERSION] <= 0){
+    if ([_currentEvent.parentEncoder isKindOfClass:[Encoder class]]&& [Utility compareVersion:[_currentEvent.parentEncoder version] withVersion:OLD_VERSION] <= 0){
         tele.sourceName = @"onlySource";
         
     }
@@ -1639,10 +1639,12 @@ static void * eventContext      = &eventContext;
 
 -(void)onFullScreenShow:(RicoBaseFullScreenViewController*)fullscreenController
 {
-
+    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerViewController.playerControlBar.state;
     self.ricoPlayerViewController.playerControlBar                  = self.ricoFullScreenControlBar.controlBar;
     self.ricoFullScreenControlBar.controlBar.delegate               = self.ricoPlayerViewController;
     self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = self.ricoPlayerControlBar.playPauseButton.paused; // make sure the play pause are the sames state
+    
+    
     
     if (self.telestrationViewController.telestrating){
         _tagButtonController.leftTray.hidden    = YES;
@@ -1678,7 +1680,7 @@ static void * eventContext      = &eventContext;
     self.ricoPlayerControlBar.delegate                  = self.ricoPlayerViewController;
     self.ricoPlayerControlBar.playPauseButton.paused    = self.ricoFullScreenControlBar.controlBar.playPauseButton.paused; // make sure the play pause are the sames state
 
-   
+    self.ricoPlayerViewController.playerControlBar.state = self.ricoFullScreenControlBar.controlBar.state;
 
         _tagButtonController.leftTray.hidden    = NO;
         _tagButtonController.rightTray.hidden   = NO;
@@ -1812,7 +1814,8 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live) {
         PXPDeviceLog(@"LIVE PRESSED");
         [self.ricoPlayerViewController live];
-
+        self.ricoPlayerControlBar.state = RicoPlayerStateLive;
+        self.ricoFullScreenControlBar.controlBar.state = RicoPlayerStateLive;
         return;
     } else {
         PXPDeviceLog(@"LIVE PRESSED changing event...");
@@ -2118,14 +2121,21 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
     }
     
-    CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
+    CMTimeScale	timescale = self.ricoPlayerViewController.primaryPlayer.currentTime.timescale;
+    
+    CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, timescale);
     CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
 
     
     // This is changes the scrub bar to
     if (self.ricoFullScreenControlBar.controlBar.state == RicoPlayerStateLive){
-        self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+        self.ricoFullScreenControlBar.controlBar.state = RicoPlayerStateNormal;
     }
+    
+    if (self.ricoPlayerControlBar.state == RicoPlayerStateLive){
+        self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    }
+    
     
     if (self.currentEvent.local) {
         if (sender.speed < 0.25 && sender.speed > -0.25) {
@@ -2144,7 +2154,7 @@ static void * eventContext      = &eventContext;
         }
         
     } else {
-    
+        CMTime atimeof =CMTimeAdd(cTime, sTime);
         [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
     }
 }

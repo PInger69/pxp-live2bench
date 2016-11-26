@@ -63,6 +63,7 @@ static LocalEncoder * instance;
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
 
+
 @synthesize eventContext = _eventContext;
 
 // ActionListItems
@@ -90,6 +91,7 @@ static LocalEncoder * instance;
 //        _eventContext                   = [PxpEventContext context];
         _urlProtocol                    = @"local";
         _ipAddress                      = @"ip";
+        _version                        = @"local";
         closeTags = @{[NSNumber numberWithInteger:TagTypeSoccerZoneStart]:[NSNumber numberWithInteger:TagTypeSoccerZoneStop],[NSNumber numberWithInteger:TagTypeSoccerHalfStart]:[NSNumber numberWithInteger:TagTypeSoccerHalfStop],[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]:[NSNumber numberWithInteger:TagTypeHockeyPeriodStop],[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]:[NSNumber numberWithInteger:TagTypeHockeyStrengthStop],[NSNumber numberWithInteger:TagTypeHockeyStartOLine]:[NSNumber numberWithInteger:TagTypeHockeyStopOLine],[NSNumber numberWithInteger:TagTypeHockeyStartDLine]:[NSNumber numberWithInteger:TagTypeHockeyStopDLine],[NSNumber numberWithInteger:TagTypeFootballQuarterStart]:[NSNumber numberWithInteger:TagTypeFootballQuarterStop]};
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
@@ -399,7 +401,7 @@ static LocalEncoder * instance;
     NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
 //    double tagArePresentCount       = tagArePresent.count + 1;
 //    newTag.uniqueID                 = tagArePresentCount;
-    newTag.uniqueID                 = (int)[self.event.tags count]+1;
+    newTag.uniqueID                 = (int)[self.event.tags count]+100;
     
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
     newTag.own                      = YES;
@@ -421,6 +423,7 @@ static LocalEncoder * instance;
         }
         newTag.duration = [UserCenter getInstance].postRoll + [UserCenter getInstance].preRoll;
         [self.event addTag:newTag extraData:true];
+
     }
 
    

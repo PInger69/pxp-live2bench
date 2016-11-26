@@ -41,7 +41,7 @@
 @property (nonatomic,strong)    NSString        *urlProtocol;//http
 @property (nonatomic,strong)    NSString        * ipAddress;
 @property (nonatomic,strong) LocalTagSyncManager    * localTagSyncManager;
-
+@property (nonatomic,strong)  NSString        * version;
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 
 #pragma mark - EncoderProtocol Methods
