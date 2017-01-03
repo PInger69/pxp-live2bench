@@ -24,23 +24,20 @@
 #import "DeviceAssetLibrary.h"
 #import <DropboxSDK/DropboxSDK.h>
 
+@interface AppDelegate()
+
+@property (nonatomic, strong) ToastObserver* toastObserver;
+@property (nonatomic, strong) ActionList* actionList;
+@property (nonatomic, strong) RequestUserInfoAction* requestInfoAction;
+@property (nonatomic, strong) RequestEulaAction* requestEulaAction;
+
+@property (nonatomic, assign) BOOL lostWifiIsRun;
+
+@end
+
 @implementation AppDelegate
-{
-    ActionList                  * _actionList;
-    RequestUserInfoAction       * requestInfoAction;
-    RequestEulaAction           * requestEulaAction;
-    ToastObserver               * _toastObserver;
-    
-    BOOL                        lostWifiIsRun;
-}
 
 @synthesize window;
-@synthesize tabBarController;
-@synthesize screenController    = _screenController;
-@synthesize encoderManager      = _encoderManager;
-@synthesize loginController     = _loginController;
-@synthesize eulaViewController  = _eulaViewController;
-
 
 //this loads first when you launch the app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -84,12 +81,12 @@
     
     self.imageAssetManager.pathForFolderContainingImages = imageAssets;
     
-    _screenController       = [[ScreenController alloc]init];
-    _loginController        = [[LoginViewController alloc]init];
-    _eulaViewController     = [[EulaModalViewController alloc]init];
-    _actionList             = [[ActionList alloc]init];
-    _userCenter             = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
-    _encoderManager         = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
+    self.screenController       = [[ScreenController alloc]init];
+    self.loginController        = [[LoginViewController alloc]init];
+    self.eulaViewController     = [[EulaModalViewController alloc]init];
+    self.actionList             = [[ActionList alloc]init];
+    self.userCenter             = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
+    self.encoderManager         = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
     self.tabBarController           = [[CustomTabBar alloc]init];
     self.window.rootViewController  = self.tabBarController;
@@ -103,24 +100,24 @@
 
     
     // action creation
-    requestInfoAction = [[RequestUserInfoAction alloc]initWithAppDelegate:self];
-    requestEulaAction = [[RequestEulaAction alloc]initWithAppDelegate:self];
+    self.requestInfoAction = [[RequestUserInfoAction alloc]initWithAppDelegate:self];
+    self.requestEulaAction = [[RequestEulaAction alloc]initWithAppDelegate:self];
     
     // run main logic for status checking
     
     [self actionListBlock];
     
-    [_actionList onFinishList:^{
+    [self.actionList onFinishList:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
     }];
     
-    [_actionList start];
+    [self.actionList start];
     
-    _toastObserver = [[ToastObserver alloc]init];
-    _toastObserver.parentView = self.window.rootViewController.view;
-    _sharedFilter       = [[PxpFilter alloc]init];
-    _sharedFilterTab    = [TabView sharedFilterTabBar];
-    [_sharedFilterTab setPxpFilter:_sharedFilter];
+    self.toastObserver = [[ToastObserver alloc]init];
+    self.toastObserver.parentView = self.window.rootViewController.view;
+    self.sharedFilter       = [[PxpFilter alloc]init];
+    self.sharedFilterTab    = [TabView sharedFilterTabBar];
+    [self.sharedFilterTab setPxpFilter:self.sharedFilter];
     
     
     
@@ -137,30 +134,30 @@
     if ([[note.userInfo objectForKey:@"success"]boolValue]){
 
         // when log out it will clear our all encoders
-        NSArray * temp = [_encoderManager.authenticatedEncoders copy];
+        NSArray * temp = [self.encoderManager.authenticatedEncoders copy];
         for (Encoder * enc in temp) {
-            [_encoderManager unRegisterEncoder:enc];
+            [self.encoderManager unRegisterEncoder:enc];
         }
         
-        _loginController        = [[LoginViewController alloc]init];
-        _eulaViewController     = [[EulaModalViewController alloc]init];
-        [_actionList clear];
+        self.loginController        = [[LoginViewController alloc]init];
+        self.eulaViewController     = [[EulaModalViewController alloc]init];
+        [self.actionList clear];
         [self actionListBlock];
         
-        [_actionList onFinishList:^{
+        [self.actionList onFinishList:^{
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
 //            _loginController        = nil;
 //            _eulaViewController     = nil;
             
         }];
         
-        [_actionList start];
+        [self.actionList start];
         PXPDeviceLog(@"USER LOGGED OUT");
     }
 }
 
 -(void)lostWifi{
-    NSString *string = [NSString stringWithFormat:@"encoder count:%lu",(unsigned long)_encoderManager.authenticatedEncoders.count];
+    NSString *string = [NSString stringWithFormat:@"encoder count:%lu",(unsigned long)self.encoderManager.authenticatedEncoders.count];
     PXPLog(string);
   
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
@@ -178,13 +175,13 @@
     
     PXPDeviceLog(@"!Wifi is lost");
      [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:self.tabBarController animated:YES style:AlertImportant completion:nil];
-    lostWifiIsRun = true;
-    [_encoderManager declareCurrentEvent:nil];
+    self.lostWifiIsRun = true;
+    [self.encoderManager declareCurrentEvent:nil];
 }
 
 -(void)lostEvent:(NSNotification*)note{
-    if (!lostWifiIsRun) {
-        lostWifiIsRun = false;
+    if (!self.lostWifiIsRun) {
+        self.lostWifiIsRun = false;
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
                                                                         message:@"Live Event is stopped"
                                                                  preferredStyle:UIAlertControllerStyleAlert];
@@ -255,21 +252,19 @@
  */
 -(void)actionListBlock
 {
- 
-    //Richard I really don't know what to do anymore, at the moment i'm just praciting typing which i'm pretty sure i don't need practice doing, but i need to do something, theis is work. I'm typing to type with my eyes closed. since this is the only chanllange that I can think of/ Please somenoe . give me an task/ please please please/ I'm gpoing to type the alphabet. abcdefghijkl,mp[qrstuvwxyz/ now l's see if i'm orrect/not too bad/ 
     [SpinnerView initTheGlobalSpinner];
  
-    __block EncoderManager * weakEM             = _encoderManager;
+    __block EncoderManager * weakEM             = self.encoderManager;
     __block AppDelegate    * weakSelf           = self;
-    __block ActionList     * weakAList          = _actionList;
-    __block id<ActionListItem> weakReq          = [requestInfoAction reset];
-    __block id<ActionListItem> weakEula         = [requestEulaAction reset];
+    __block ActionList     * weakAList          = self.actionList;
+    __block id<ActionListItem> weakReq          = [self.requestInfoAction reset];
+    __block id<ActionListItem> weakEula         = [self.requestEulaAction reset];
    
     
     
     
     //Check wifi
-    [_actionList addItem:_encoderManager.checkForWiFiAction     onItemStart:^{
+    [self.actionList addItem:self.encoderManager.checkForWiFiAction     onItemStart:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking for WiFi..." progress:.1 animated:YES]];
@@ -279,7 +274,7 @@
     }];
 
     //Check Cloud
-    [_actionList addItem:_encoderManager.checkForACloudAction   onItemStart:^{
+    [self.actionList addItem:self.encoderManager.checkForACloudAction   onItemStart:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking for Cloud..." progress:.2 animated:YES]];
@@ -291,7 +286,7 @@
     }];
     
     //Check if user plist exists
-    [_actionList addItem:[_userCenter checkLoginPlistAction]    onItemStart:^{
+    [self.actionList addItem:[self.userCenter checkLoginPlistAction]    onItemStart:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking user credentials..." progress:.3 animated:YES]];

@@ -27,15 +27,17 @@
 		<key>TagSets</key>
 		<true/>
 		<key>VideoReciept</key>
-		<true/>
+		<false/>
 		<key>Log</key>
-		<true/>
+		<false/>
 		<key>FeedMap</key>
-		<true/>
+		<false/>
 		<key>Dropbox</key>
-		<true/>
+		<false/>
 		<key>Credits</key>
-		<true/>
+		<false/>
+		<key>Logout</key>
+		<false/>
 	</dict>
 	<key>Tabs</key>
 	<dict>
