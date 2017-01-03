@@ -306,7 +306,6 @@
 		D7541D3C1C6959A60069233F /* RicoFullScreenControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D3B1C6959A60069233F /* RicoFullScreenControlBar.m */; };
 		D7541D3F1C6BC9C00069233F /* BooleanOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D3E1C6BC9C00069233F /* BooleanOperation.m */; };
 		D7579AA91D0B3D1E007D4C62 /* PxpEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7579AA81D0B3D1E007D4C62 /* PxpEncoder.m */; };
-		D7581EDF196342A50029C5DD /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7581EDE196342A50029C5DD /* Crashlytics.framework */; };
 		D7581EE519634B6D0029C5DD /* NumberedSeekerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */; };
 		D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE419634B6D0029C5DD /* SeekButton.m */; };
 		D7581EE9196441160029C5DD /* MemoryBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE8196441160029C5DD /* MemoryBar.m */; };
@@ -670,6 +669,8 @@
 		D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */; };
 		D7F9966E1C7F706600CD528A /* DownloadThumbnailOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F9966D1C7F706500CD528A /* DownloadThumbnailOperation.m */; };
 		D7FE04801D1B322300662E62 /* LocalVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FE047F1D1B322300662E62 /* LocalVideoCell.m */; };
+		D81D5F801E1B0CCA008F4046 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81D5F7F1E1B0CCA008F4046 /* Fabric.framework */; };
+		D81D5F821E1B0E96008F4046 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81D5F811E1B0E96008F4046 /* Crashlytics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1211,7 +1212,6 @@
 		D7541D3E1C6BC9C00069233F /* BooleanOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BooleanOperation.m; sourceTree = "<group>"; };
 		D7579AA71D0B3D1E007D4C62 /* PxpEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpEncoder.h; sourceTree = "<group>"; };
 		D7579AA81D0B3D1E007D4C62 /* PxpEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpEncoder.m; sourceTree = "<group>"; };
-		D7581EDE196342A50029C5DD /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		D7581EE119634B6D0029C5DD /* NumberedSeekerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberedSeekerButton.h; sourceTree = "<group>"; };
 		D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberedSeekerButton.m; sourceTree = "<group>"; };
 		D7581EE319634B6D0029C5DD /* SeekButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeekButton.h; sourceTree = "<group>"; };
@@ -1799,6 +1799,8 @@
 		D7F9966D1C7F706500CD528A /* DownloadThumbnailOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadThumbnailOperation.m; sourceTree = "<group>"; };
 		D7FE047E1D1B322300662E62 /* LocalVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalVideoCell.h; sourceTree = "<group>"; };
 		D7FE047F1D1B322300662E62 /* LocalVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalVideoCell.m; sourceTree = "<group>"; };
+		D81D5F7F1E1B0CCA008F4046 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		D81D5F811E1B0E96008F4046 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1806,6 +1808,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D81D5F821E1B0E96008F4046 /* Crashlytics.framework in Frameworks */,
 				D73CDD6A1CCA78BA0006AE72 /* AudioToolbox.framework in Frameworks */,
 				D73CDD681CCA78A60006AE72 /* OpenGLES.framework in Frameworks */,
 				D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */,
@@ -1825,8 +1828,8 @@
 				D73CDD501CCA74A80006AE72 /* libswscale.a in Frameworks */,
 				D7A49124170CAB850070A7DB /* MessageUI.framework in Frameworks */,
 				D73CDD4F1CCA74A80006AE72 /* libswresample.a in Frameworks */,
-				D7581EDF196342A50029C5DD /* Crashlytics.framework in Frameworks */,
 				D7A7B63A16D3CD1B000D3A84 /* MobileCoreServices.framework in Frameworks */,
+				D81D5F801E1B0CCA008F4046 /* Fabric.framework in Frameworks */,
 				D73CDD521CCA74A80006AE72 /* libssl.a in Frameworks */,
 				D7A7B63816D3CD0D000D3A84 /* CFNetwork.framework in Frameworks */,
 				D73CDD4D1CCA74A80006AE72 /* libavformat.a in Frameworks */,
@@ -3372,6 +3375,8 @@
 		D7A9394216ADA65E006CBAB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D81D5F811E1B0E96008F4046 /* Crashlytics.framework */,
+				D81D5F7F1E1B0CCA008F4046 /* Fabric.framework */,
 				D7EE71651D36995E002CEB8A /* DropboxSDK.framework */,
 				D73CDD691CCA78BA0006AE72 /* AudioToolbox.framework */,
 				D73CDD671CCA78A60006AE72 /* OpenGLES.framework */,
@@ -3380,7 +3385,6 @@
 				D72FC94E1C4576FF007C15FF /* PhotosUI.framework */,
 				D72FC94A1C4574EC007C15FF /* Photos.framework */,
 				D72FC9481C45648E007C15FF /* AssetsLibrary.framework */,
-				D7581EDE196342A50029C5DD /* Crashlytics.framework */,
 				D7B5235A1760D4C100BF92EB /* CoreMedia.framework */,
 				D71B46B2170E1DCD00D402B5 /* AdSupport.framework */,
 				D797CCF6170DB9D300A6E62B /* Accounts.framework */,
@@ -3938,7 +3942,7 @@
 				ORGANIZATIONNAME = DEV;
 				TargetAttributes = {
 					D7A9393E16ADA65E006CBAB2 = {
-						DevelopmentTeam = XFAUEUBKQC;
+						DevelopmentTeam = 2X2KT7S5K3;
 						SystemCapabilities = {
 							com.apple.iCloud = {
 								enabled = 0;
@@ -4227,7 +4231,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run cd63aefd0fa9df5e632e5dc77360ecaae90108a1";
+			shellScript = "./Crashlytics.framework/run 641798b3e14e69b71f69425feebd13f4d2699f67 c309c35c58b04aeb9eade11ad691ef1a5e2967ee75d4597ba5eb6eddaabc71b2";
 		};
 		D7A9397216ADA65E006CBAB2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4779,6 +4783,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2X2KT7S5K3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4814,7 +4819,7 @@
 					"-all_load",
 					"-Objc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.avocatec.mypXpLive2Bench;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.intelliware.com.avocatec.mypXpLive2Bench;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -4833,6 +4838,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2X2KT7S5K3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4865,7 +4871,7 @@
 					"-all_load",
 					"-Objc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.avocatec.mypXpLive2Bench;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.intelliware.com.avocatec.mypXpLive2Bench;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;

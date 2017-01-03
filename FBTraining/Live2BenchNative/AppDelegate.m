@@ -7,6 +7,7 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
+#import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "AppDelegate.h"
 
@@ -45,7 +46,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 
-    [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
+    [Fabric with:@[[Crashlytics class]]];
+
+//    [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
     
     //
     [DeviceAssetLibrary getInstance];
