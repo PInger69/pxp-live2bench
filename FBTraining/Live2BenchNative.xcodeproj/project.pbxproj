@@ -55,7 +55,6 @@
 		AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */; };
 		AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */; };
 		AE5073AA1AFC1DCE002C361D /* SettingItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A11AFC1DCE002C361D /* SettingItemViewController.m */; };
-		AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */; };
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE683C531B7148DA00458F80 /* PxpFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */; };
@@ -237,7 +236,6 @@
 		D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBDA1AA77F33002D682D /* BookmarkTableViewController.m */; };
 		D73CDBE11AA8B096002D682D /* DeletableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBE01AA8B096002D682D /* DeletableTableViewCell.m */; };
 		D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBE31AA8BF66002D682D /* DeletableTableViewController.m */; };
-		D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */; };
 		D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEF1AAF283C002D682D /* AccountsViewController.m */; };
 		D73CDC4A1CC7E3570006AE72 /* CameraResource.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDC491CC7E3570006AE72 /* CameraResource.m */; };
 		D73CDD4B1CCA74A70006AE72 /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D73CDC4D1CCA74A60006AE72 /* cmdutils.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -395,7 +393,6 @@
 		D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF271AA4B0560068D260 /* CKCalendarView.m */; };
 		D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF291AA4B0560068D260 /* CKViewController.m */; };
 		D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */; };
-		D784EF3F1AA4B0570068D260 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF301AA4B0570068D260 /* SettingsTableViewController.m */; };
 		D784EF401AA4B0570068D260 /* SwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */; };
 		D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF341AA4B0570068D260 /* CalendarTableViewController.m */; };
 		D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF361AA4B0570068D260 /* CalendarBar.m */; };
@@ -627,8 +624,6 @@
 		D7DB754817EA0EFC009C402F /* gotolive.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DB754617EA0EFC009C402F /* gotolive.png */; };
 		D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB754E17EA6068009C402F /* UIFont+Default.m */; };
 		D7DB755317EA690F009C402F /* LoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB755217EA690F009C402F /* LoginTextField.m */; };
-		D7DEF2791BA7494D0037D848 /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DEF2781BA7494D0037D848 /* PreferencesViewController.m */; };
-		D7DEF27B1BA755BE0037D848 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7DEF27A1BA755BE0037D848 /* PreferencesView.xib */; };
 		D7DEF27E1BA883E40037D848 /* ProfessionMap.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DEF27D1BA883E40037D848 /* ProfessionMap.m */; };
 		D7DFD4A71827FA5F00D98BE7 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DFD4A51827FA5F00D98BE7 /* appicon.png */; };
 		D7DFD4A81827FA5F00D98BE7 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DFD4A61827FA5F00D98BE7 /* appicon@2x.png */; };
@@ -671,6 +666,11 @@
 		D81D5FE21E1C13D8008F4046 /* League.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FDD1E1C13D8008F4046 /* League.m */; };
 		D81D5FE31E1C13D8008F4046 /* LeagueTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FDF1E1C13D8008F4046 /* LeagueTeam.m */; };
 		D81D5FE41E1C13D8008F4046 /* TeamPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FE11E1C13D8008F4046 /* TeamPlayer.m */; };
+		D81D5FEA1E1C2AA9008F4046 /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FE71E1C2AA9008F4046 /* SettingsPageViewController.m */; };
+		D81D5FEB1E1C2AAA008F4046 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FE91E1C2AA9008F4046 /* SettingsTableViewController.m */; };
+		D81D5FF11E1C2BA6008F4046 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D81D5FEC1E1C2BA6008F4046 /* PreferencesView.xib */; };
+		D81D5FF21E1C2BA6008F4046 /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FEE1E1C2BA6008F4046 /* PreferencesViewController.m */; };
+		D81D5FF31E1C2BA6008F4046 /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -746,8 +746,6 @@
 		AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
 		AE5073A01AFC1DCE002C361D /* SettingItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingItemViewController.h; sourceTree = "<group>"; };
 		AE5073A11AFC1DCE002C361D /* SettingItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingItemViewController.m; sourceTree = "<group>"; };
-		AE5073A21AFC1DCE002C361D /* TabsSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabsSettingViewController.h; sourceTree = "<group>"; };
-		AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
 		AE5073A41AFC1DCE002C361D /* ToastObserverSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastObserverSettingViewController.h; sourceTree = "<group>"; };
 		AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToastObserverSettingViewController.m; sourceTree = "<group>"; };
 		AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleSettingViewController.h; sourceTree = "<group>"; };
@@ -1080,8 +1078,6 @@
 		D73CDBE01AA8B096002D682D /* DeletableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewCell.m; sourceTree = "<group>"; };
 		D73CDBE21AA8BF66002D682D /* DeletableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewController.h; sourceTree = "<group>"; };
 		D73CDBE31AA8BF66002D682D /* DeletableTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewController.m; sourceTree = "<group>"; };
-		D73CDBEB1AAE17FC002D682D /* SettingsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPageViewController.h; sourceTree = "<group>"; };
-		D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
 		D73CDBEE1AAF283C002D682D /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsViewController.h; sourceTree = "<group>"; };
 		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
 		D73CDC481CC7E3570006AE72 /* CameraResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraResource.h; sourceTree = "<group>"; };
@@ -1367,8 +1363,6 @@
 		D784EF2A1AA4B0560068D260 /* ARCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewCell.h; sourceTree = "<group>"; };
 		D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
 		D784EF2C1AA4B0560068D260 /* CKViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKViewController.h; sourceTree = "<group>"; };
-		D784EF2F1AA4B0570068D260 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
-		D784EF301AA4B0570068D260 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		D784EF311AA4B0570068D260 /* SwipeableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeableTableViewCell.h; sourceTree = "<group>"; };
 		D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeableTableViewCell.m; sourceTree = "<group>"; };
 		D784EF331AA4B0570068D260 /* CalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CalendarTableViewController.h; path = ../CalendarTableViewController.h; sourceTree = "<group>"; };
@@ -1724,9 +1718,6 @@
 		D7DB754E17EA6068009C402F /* UIFont+Default.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+Default.m"; sourceTree = "<group>"; };
 		D7DB755117EA690F009C402F /* LoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginTextField.h; sourceTree = "<group>"; };
 		D7DB755217EA690F009C402F /* LoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginTextField.m; sourceTree = "<group>"; };
-		D7DEF2771BA7494D0037D848 /* PreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesViewController.h; sourceTree = "<group>"; };
-		D7DEF2781BA7494D0037D848 /* PreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesViewController.m; sourceTree = "<group>"; };
-		D7DEF27A1BA755BE0037D848 /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
 		D7DEF27C1BA883E40037D848 /* ProfessionMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfessionMap.h; sourceTree = "<group>"; };
 		D7DEF27D1BA883E40037D848 /* ProfessionMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfessionMap.m; sourceTree = "<group>"; };
 		D7DFD4A51827FA5F00D98BE7 /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
@@ -1801,6 +1792,15 @@
 		D81D5FDF1E1C13D8008F4046 /* LeagueTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeagueTeam.m; sourceTree = "<group>"; };
 		D81D5FE01E1C13D8008F4046 /* TeamPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TeamPlayer.h; sourceTree = "<group>"; };
 		D81D5FE11E1C13D8008F4046 /* TeamPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TeamPlayer.m; sourceTree = "<group>"; };
+		D81D5FE61E1C2AA9008F4046 /* SettingsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPageViewController.h; sourceTree = "<group>"; };
+		D81D5FE71E1C2AA9008F4046 /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
+		D81D5FE81E1C2AA9008F4046 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		D81D5FE91E1C2AA9008F4046 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
+		D81D5FEC1E1C2BA6008F4046 /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
+		D81D5FED1E1C2BA6008F4046 /* PreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesViewController.h; sourceTree = "<group>"; };
+		D81D5FEE1E1C2BA6008F4046 /* PreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesViewController.m; sourceTree = "<group>"; };
+		D81D5FEF1E1C2BA6008F4046 /* TabsSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabsSettingViewController.h; sourceTree = "<group>"; };
+		D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1887,8 +1887,6 @@
 				AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */,
 				AE5073A01AFC1DCE002C361D /* SettingItemViewController.h */,
 				AE5073A11AFC1DCE002C361D /* SettingItemViewController.m */,
-				AE5073A21AFC1DCE002C361D /* TabsSettingViewController.h */,
-				AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */,
 				AE5073A41AFC1DCE002C361D /* ToastObserverSettingViewController.h */,
 				AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */,
 				AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */,
@@ -3075,6 +3073,7 @@
 		D7A677DF17CB1D8D00EC20D1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D81D5FE51E1C2A5D008F4046 /* Settings */,
 				D7F2BFAD1B38A76400EA8BF0 /* CreditsViewController */,
 				AECF63121B0BC02900C98555 /* DualView */,
 				D7A2E5E519B6231800022795 /* VideoBarViewControllers */,
@@ -3213,10 +3212,8 @@
 				D72DAF481BDE9F0100A97824 /* ParseModuleDefault.m */,
 				D76B905C1BEA74EE0037B255 /* ParseModuleAlpha.h */,
 				D76B905D1BEA74EF0037B255 /* ParseModuleAlpha.m */,
-				D7DEF2771BA7494D0037D848 /* PreferencesViewController.h */,
 				D7E0EDB71BFE20CD003F4F94 /* PxpReadyPlayerItemOperation.h */,
 				D7E0EDB81BFE20CD003F4F94 /* PxpReadyPlayerItemOperation.m */,
-				D7DEF2781BA7494D0037D848 /* PreferencesViewController.m */,
 				D7D9DCC11BA0CC0500D04CE0 /* ThumbnailDownloader.h */,
 				D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */,
 				D75C55A11BF3A2FF00556ACA /* Model */,
@@ -3253,7 +3250,6 @@
 				D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */,
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */,
-				D7DEF27A1BA755BE0037D848 /* PreferencesView.xib */,
 				D7A022391B6A7A6000959EBE /* ortrileft.png */,
 				AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */,
 				D7A0223A1B6A7A6000959EBE /* ortriright.png */,
@@ -3295,8 +3291,6 @@
 				D7CCE7F31AC1E48500D85095 /* SegmentedView.m */,
 				D784EF4B1AA4B6620068D260 /* RangeSlider.h */,
 				D784EF4C1AA4B6620068D260 /* RangeSlider.m */,
-				D73CDBEB1AAE17FC002D682D /* SettingsPageViewController.h */,
-				D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */,
 				D784EF2A1AA4B0560068D260 /* ARCalendarTableViewCell.h */,
 				D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */,
 				D784EF481AA4B6230068D260 /* TestFilterViewController.h */,
@@ -3310,8 +3304,6 @@
 				D784EF451AA4B3090068D260 /* ARCalendarTableViewController.h */,
 				D784EF461AA4B3090068D260 /* ARCalendarTableViewController.m */,
 				D784EF2C1AA4B0560068D260 /* CKViewController.h */,
-				D784EF2F1AA4B0570068D260 /* SettingsTableViewController.h */,
-				D784EF301AA4B0570068D260 /* SettingsTableViewController.m */,
 				D784EF311AA4B0570068D260 /* SwipeableTableViewCell.h */,
 				D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */,
 				D784EF371AA4B0570068D260 /* HeaderBarForListView.h */,
@@ -3890,6 +3882,23 @@
 			name = CreditsViewController;
 			sourceTree = "<group>";
 		};
+		D81D5FE51E1C2A5D008F4046 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D81D5FEC1E1C2BA6008F4046 /* PreferencesView.xib */,
+				D81D5FED1E1C2BA6008F4046 /* PreferencesViewController.h */,
+				D81D5FEE1E1C2BA6008F4046 /* PreferencesViewController.m */,
+				D81D5FE61E1C2AA9008F4046 /* SettingsPageViewController.h */,
+				D81D5FE71E1C2AA9008F4046 /* SettingsPageViewController.m */,
+				D81D5FE81E1C2AA9008F4046 /* SettingsTableViewController.h */,
+				D81D5FE91E1C2AA9008F4046 /* SettingsTableViewController.m */,
+				D81D5FEF1E1C2BA6008F4046 /* TabsSettingViewController.h */,
+				D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */,
+			);
+			name = Settings;
+			path = "View Controllers/Settings";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3976,6 +3985,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7EE1E4B1828596300CA36CF /* gotolive@2x.png in Resources */,
+				D81D5FF11E1C2BA6008F4046 /* PreferencesView.xib in Resources */,
 				D73CDD5E1CCA74A80006AE72 /* license-form.plist in Resources */,
 				D7581F2D196461ED0029C5DD /* InfoPlist.strings in Resources */,
 				D7EE1E4C1828596400CA36CF /* clipTab@2x.png in Resources */,
@@ -4048,7 +4058,6 @@
 				D7C903AE17F4B7A0002A1FDD /* continue_unselected@2x.png in Resources */,
 				BDD2D30217ECF343004D5D9A /* chevrect@2x.png in Resources */,
 				D7525D9D1CBC29630074F590 /* NameCameraCellView.xib in Resources */,
-				D7DEF27B1BA755BE0037D848 /* PreferencesView.xib in Resources */,
 				D78F68C718073DC70096C793 /* GreenSettingsButton.png in Resources */,
 				D773A36C16D87DE5007A0BA9 /* coach@2x.png in Resources */,
 				D7A0223B1B6A7A6000959EBE /* ortrileft.png in Resources */,
@@ -4295,7 +4304,6 @@
 				D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */,
 				D73CDC4A1CC7E3570006AE72 /* CameraResource.m in Sources */,
 				D7A391721A6959DF00BFD353 /* ActionList.m in Sources */,
-				D7DEF2791BA7494D0037D848 /* PreferencesViewController.m in Sources */,
 				D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */,
 				AEE5F8B71B8CFB4100EC2F00 /* UIImage+Blend.m in Sources */,
 				D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */,
@@ -4306,6 +4314,7 @@
 				D7D619351BDFF1BD003F9B39 /* PxpPlayerRebooter.m in Sources */,
 				D7A7380719A3A27B0080B882 /* TagPopOverContent.m in Sources */,
 				D7A9395416ADA65E006CBAB2 /* AppDelegate.m in Sources */,
+				D81D5FEB1E1C2AAA008F4046 /* SettingsTableViewController.m in Sources */,
 				D7CCE7F81AC1E48500D85095 /* SegmentedView.m in Sources */,
 				D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */,
 				D74F48DB1CFF6D1E001648D8 /* PxpFilterCFLTabController.m in Sources */,
@@ -4337,7 +4346,6 @@
 				AEDD7C961B4AB830003C82F3 /* PxpPlayerControlSlider.m in Sources */,
 				9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */,
 				D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */,
-				D784EF3F1AA4B0570068D260 /* SettingsTableViewController.m in Sources */,
 				D7EE84D019F19DC000DEC82B /* EncoderManager.m in Sources */,
 				D7CCE8041AC5FB0000D85095 /* VideoCuttingTool.m in Sources */,
 				D73CDBE11AA8B096002D682D /* DeletableTableViewCell.m in Sources */,
@@ -4519,8 +4527,8 @@
 				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				D706AA541D4016290089A02E /* PxpMailClipActivity.m in Sources */,
-				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7EE715F1D359348002CEB8A /* DropboxSettingsViewController.m in Sources */,
+				D81D5FF31E1C2BA6008F4046 /* TabsSettingViewController.m in Sources */,
 				D73CDD551CCA74A80006AE72 /* VKPlayerControllerBase.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */,
@@ -4583,7 +4591,6 @@
 				D7EE71621D369620002CEB8A /* DropboxManager.m in Sources */,
 				D73CDD611CCA74A80006AE72 /* VKStreamInfoView.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
-				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
 				AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7B497BF1D8C367100F9275B /* DownloadClipFromTag.m in Sources */,
@@ -4611,6 +4618,7 @@
 				D797790B1AEAF26B008A99E0 /* PxpLogViewController.m in Sources */,
 				D72779AE1A38994E0034DD66 /* Live2BenchTagUIViewController.m in Sources */,
 				94B9A582192FEE750009547B /* TeleView.m in Sources */,
+				D81D5FF21E1C2BA6008F4046 /* PreferencesViewController.m in Sources */,
 				AEDD7CA01B4AB8E2003C82F3 /* PxpPlayerSingleView.m in Sources */,
 				D769AB8D19BE5E8400DF68BC /* PxpRangeModifierButton.m in Sources */,
 				D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */,
@@ -4649,6 +4657,7 @@
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,
 				D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */,
 				D7681E0D1DB53381004A2F62 /* DownloadOperationSuperOld.m in Sources */,
+				D81D5FEA1E1C2AA9008F4046 /* SettingsPageViewController.m in Sources */,
 				D7525DAD1CC16C290074F590 /* LogoutOperation.m in Sources */,
 				D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */,
 				D727798A1A2FBEBE0034DD66 /* LiveButton.m in Sources */,
