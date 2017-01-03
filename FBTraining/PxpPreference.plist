@@ -65,9 +65,9 @@
 		<key>DuelView</key>
 		<dict>
 			<key>Active</key>
-			<true/>
+			<false/>
 			<key>Visible</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Live2Bench</key>
 		<dict>
