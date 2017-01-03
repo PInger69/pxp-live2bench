@@ -273,9 +273,6 @@
 		D74480891B3AF0CA005EC775 /* pxp_blank_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = D74480881B3AF0CA005EC775 /* pxp_blank_bg.png */; };
 		D746D2C51CC532A100F14FE6 /* FakeEncoderBitrate.m in Sources */ = {isa = PBXBuildFile; fileRef = D746D2C41CC532A100F14FE6 /* FakeEncoderBitrate.m */; };
 		D74719CA1D1C2FF4007636BF /* DeviceVideoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D74719C91D1C2FF4007636BF /* DeviceVideoCollectionViewController.m */; };
-		D74860FC1B5FDD3300CEC9DD /* TeamPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D74860FB1B5FDD3300CEC9DD /* TeamPlayer.m */; };
-		D74860FF1B5FDE4300CEC9DD /* LeagueTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */; };
-		D74861021B5FE59400CEC9DD /* League.m in Sources */ = {isa = PBXBuildFile; fileRef = D74861011B5FE59400CEC9DD /* League.m */; };
 		D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D7493D4C1B7282710081075C /* PxpFilterUserButtons.m */; };
 		D74965F11C9DD61F00D6B5EA /* tempData.plist in Resources */ = {isa = PBXBuildFile; fileRef = D74965F01C9DD61F00D6B5EA /* tempData.plist */; };
 		D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B75C1A72ADED00258D63 /* AppDelegateActionPack.m */; };
@@ -671,6 +668,9 @@
 		D7FE04801D1B322300662E62 /* LocalVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FE047F1D1B322300662E62 /* LocalVideoCell.m */; };
 		D81D5F801E1B0CCA008F4046 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81D5F7F1E1B0CCA008F4046 /* Fabric.framework */; };
 		D81D5F821E1B0E96008F4046 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81D5F811E1B0E96008F4046 /* Crashlytics.framework */; };
+		D81D5FE21E1C13D8008F4046 /* League.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FDD1E1C13D8008F4046 /* League.m */; };
+		D81D5FE31E1C13D8008F4046 /* LeagueTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FDF1E1C13D8008F4046 /* LeagueTeam.m */; };
+		D81D5FE41E1C13D8008F4046 /* TeamPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FE11E1C13D8008F4046 /* TeamPlayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1148,12 +1148,6 @@
 		D746D2C41CC532A100F14FE6 /* FakeEncoderBitrate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeEncoderBitrate.m; sourceTree = "<group>"; };
 		D74719C81D1C2FF4007636BF /* DeviceVideoCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceVideoCollectionViewController.h; sourceTree = "<group>"; };
 		D74719C91D1C2FF4007636BF /* DeviceVideoCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceVideoCollectionViewController.m; sourceTree = "<group>"; };
-		D74860FA1B5FDD3300CEC9DD /* TeamPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TeamPlayer.h; path = Live2BenchNative/TeamPlayer.h; sourceTree = "<group>"; };
-		D74860FB1B5FDD3300CEC9DD /* TeamPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TeamPlayer.m; path = Live2BenchNative/TeamPlayer.m; sourceTree = "<group>"; };
-		D74860FD1B5FDE4300CEC9DD /* LeagueTeam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeagueTeam.h; path = Live2BenchNative/LeagueTeam.h; sourceTree = "<group>"; };
-		D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeagueTeam.m; path = Live2BenchNative/LeagueTeam.m; sourceTree = "<group>"; };
-		D74861001B5FE59400CEC9DD /* League.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = League.h; path = Live2BenchNative/League.h; sourceTree = "<group>"; };
-		D74861011B5FE59400CEC9DD /* League.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = League.m; path = Live2BenchNative/League.m; sourceTree = "<group>"; };
 		D7493D4B1B7282710081075C /* PxpFilterUserButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterUserButtons.h; sourceTree = "<group>"; };
 		D7493D4C1B7282710081075C /* PxpFilterUserButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterUserButtons.m; sourceTree = "<group>"; };
 		D74965F01C9DD61F00D6B5EA /* tempData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = tempData.plist; sourceTree = "<group>"; };
@@ -1801,6 +1795,12 @@
 		D7FE047F1D1B322300662E62 /* LocalVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalVideoCell.m; sourceTree = "<group>"; };
 		D81D5F7F1E1B0CCA008F4046 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		D81D5F811E1B0E96008F4046 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		D81D5FDC1E1C13D8008F4046 /* League.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = League.h; sourceTree = "<group>"; };
+		D81D5FDD1E1C13D8008F4046 /* League.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = League.m; sourceTree = "<group>"; };
+		D81D5FDE1E1C13D8008F4046 /* LeagueTeam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeagueTeam.h; sourceTree = "<group>"; };
+		D81D5FDF1E1C13D8008F4046 /* LeagueTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeagueTeam.m; sourceTree = "<group>"; };
+		D81D5FE01E1C13D8008F4046 /* TeamPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TeamPlayer.h; sourceTree = "<group>"; };
+		D81D5FE11E1C13D8008F4046 /* TeamPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TeamPlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2805,16 +2805,16 @@
 		D75C55A11BF3A2FF00556ACA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D74860FB1B5FDD3300CEC9DD /* TeamPlayer.m */,
-				D74860FA1B5FDD3300CEC9DD /* TeamPlayer.h */,
-				D74860FD1B5FDE4300CEC9DD /* LeagueTeam.h */,
-				D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */,
-				D74861001B5FE59400CEC9DD /* League.h */,
-				D74861011B5FE59400CEC9DD /* League.m */,
+				D81D5FDC1E1C13D8008F4046 /* League.h */,
+				D81D5FDD1E1C13D8008F4046 /* League.m */,
+				D81D5FDE1E1C13D8008F4046 /* LeagueTeam.h */,
+				D81D5FDF1E1C13D8008F4046 /* LeagueTeam.m */,
 				D7DEF27C1BA883E40037D848 /* ProfessionMap.h */,
 				D7DEF27D1BA883E40037D848 /* ProfessionMap.m */,
+				D81D5FE01E1C13D8008F4046 /* TeamPlayer.h */,
+				D81D5FE11E1C13D8008F4046 /* TeamPlayer.m */,
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		D75C55A21BF3A32D00556ACA /* BottomViewControllers */ = {
@@ -4332,6 +4332,7 @@
 				AEDD7C831B4AB7CD003C82F3 /* PxpClipContext.m in Sources */,
 				AED484B81B56A23600769EEF /* PxpTelestrationButton.m in Sources */,
 				D75F2D1D1CB2B0A80059678F /* FeedMapIcon.m in Sources */,
+				D81D5FE31E1C13D8008F4046 /* LeagueTeam.m in Sources */,
 				D7A673DB180EC8A1001C68D1 /* BookmarkViewController.m in Sources */,
 				AEDD7C961B4AB830003C82F3 /* PxpPlayerControlSlider.m in Sources */,
 				9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */,
@@ -4382,7 +4383,6 @@
 				AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */,
 				D7E1A18A1C07AD8C001055E2 /* RicoPlayerViewController.m in Sources */,
 				D7541D391C69504A0069233F /* RicoPlayerGroupContainer.m in Sources */,
-				D74860FC1B5FDD3300CEC9DD /* TeamPlayer.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
 				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
 				AE76FFC41B01065B0089F53F /* PxpTagDisplayBar.mm in Sources */,
@@ -4456,6 +4456,7 @@
 				AE06A3711B691E02001840D0 /* PxpFullscreenButton.m in Sources */,
 				D75E67DB1D674E9600A38CD0 /* VideoRecieptTableViewController.m in Sources */,
 				D743D47F1B696EF400533070 /* PxpFilterButtonScrollView.m in Sources */,
+				D81D5FE41E1C13D8008F4046 /* TeamPlayer.m in Sources */,
 				AED484B71B56A23600769EEF /* PxpTelestrationAction.m in Sources */,
 				D75E67E21D677F6400A38CD0 /* VideoRecieptTableViewCell.m in Sources */,
 				D75F2D201CB2C29B0059678F /* StreamViewVideoKit.m in Sources */,
@@ -4513,7 +4514,6 @@
 				D7F443761C73BD83007F6924 /* MockURLProtocol.m in Sources */,
 				D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */,
 				D7581EF1196454B00029C5DD /* CommentingRatingField.m in Sources */,
-				D74860FF1B5FDE4300CEC9DD /* LeagueTeam.m in Sources */,
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
 				D70F36971D396D0B000C1B00 /* PxpDropboxActivity.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
@@ -4591,6 +4591,7 @@
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D7F24FD31C6937CC0012E6CB /* RicoBaseFullScreenViewController.m in Sources */,
 				D7E3C4B81C176714004F2A8C /* DownloadOperation.m in Sources */,
+				D81D5FE21E1C13D8008F4046 /* League.m in Sources */,
 				AEA25FA31B790FF1006C83C3 /* PxpPlayer+Feed.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
 				D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */,
@@ -4654,7 +4655,6 @@
 				AE44C3311B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m in Sources */,
 				D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */,
 				D768BFA31D09C61800D5BFF6 /* CopyDeviceVideoToOperation.m in Sources */,
-				D74861021B5FE59400CEC9DD /* League.m in Sources */,
 				D767EF121B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m in Sources */,
 				D705569D1C77819B00948E2C /* ButtonMultiScreen.m in Sources */,
 				D76B6DDB1A8AC13000601BAF /* ListPopoverControllerWithImages.m in Sources */,
