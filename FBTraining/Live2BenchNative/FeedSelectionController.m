@@ -208,7 +208,7 @@
     [self.tableView selectRowAtIndexPath:indexP animated:NO scrollPosition:nil];
     
 //    
-    UITableViewCell *cell =[self.tableView cellForRowAtIndexPath:indexP];
+//    UITableViewCell *cell =[self.tableView cellForRowAtIndexPath:indexP];
 //    cell.textLabel.s
 //    cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
 //    cell.backgroundColor = [UIColor clearColor];

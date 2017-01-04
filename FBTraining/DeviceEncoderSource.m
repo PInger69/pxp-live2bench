@@ -45,7 +45,6 @@ static DeviceEncoderSource* server;
     NSString* requestString = request.URL.path;
     
     PxpURLResponse * responce;
-    NSString * locat;
     NSInteger num = [requestString rangeOfString:@"/auth"].location;
     
     //    NSRange match;

@@ -38,12 +38,6 @@
         NSUInteger rows = [self numberOfRowsInGridView:self] ;
         NSUInteger columns = [self numberOfColumnsInGridView:self] ;
         
-        
-        NSUInteger count =        [self.subviews count];
-
-        
-
-        
         // update views
         NSUInteger i=0;
         CGFloat width = self.bounds.size.width / columns;

@@ -52,7 +52,7 @@
     const CGFloat width = self.bottomBar.bounds.size.width, height = self.bottomBar.bounds.size.height;
     
     const CGFloat margin = 8.0;
-    const CGFloat modifierHeight = height - 2.0 * margin, modifierWidth = modifierHeight * (6.0 / 5.0);
+//    const CGFloat modifierHeight = height - 2.0 * margin, modifierWidth = modifierHeight * (6.0 / 5.0);
     
     
     const CGFloat currentTagWidth = 150.0, currentTagHeight = 44.0;

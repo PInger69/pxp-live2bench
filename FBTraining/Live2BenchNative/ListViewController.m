@@ -568,7 +568,7 @@
     commentingField.ratingScale.rating  = selectedTag.rating;
     
     // find the first player with the source name we are looking for
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
 //    PxpPlayer *player = [_playerViewController.playerView.context.players filteredArrayUsingPredicate:predicate].firstObject;
     
     // put the player in focus.

@@ -97,8 +97,7 @@ static void *masterContext;
 
 
 
-UIPopoverController *signalPop;
-SVSignalStatus signalStatus;
+//SVSignalStatus signalStatus;
 
 -(id)initWithAppDelegate:(AppDelegate*)appDel
 {
@@ -349,7 +348,7 @@ SVSignalStatus signalStatus;
 
     if ([stringStatus isEqualToString:@"stopped"]) stringStatus= @"ready"; // This is just to make the display more user friendly
     if ([stringStatus length] == 0) {
-        stringStatus = @"No Encoder";
+        stringStatus = status == ENCODER_STATUS_INIT ? @"Initializing" : @"No Encoder";
     }
     [_encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }

@@ -108,7 +108,6 @@
         
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.offsetDict        = [NSMutableDictionary dictionaryWithDictionary:@{LOW_QUALITY:@0,HIGH_QUALITY:@0}];
-        __block NSError *error = nil;
 
         _qualities = @{HIGH_QUALITY: url};
         _assets = [NSMutableDictionary dictionaryWithDictionary:@{HIGH_QUALITY: asset}];

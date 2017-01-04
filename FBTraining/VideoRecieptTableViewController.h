@@ -12,7 +12,4 @@
 
 
 
--(void)cellEmailButton:(id)sender;
--(void)cellCopyButton:(id)sender;
-
 @end

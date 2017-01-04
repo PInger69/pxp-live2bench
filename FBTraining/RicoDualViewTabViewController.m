@@ -947,13 +947,7 @@ static Feed * _bottomPick;
     BOOL wasLive = (self.playerControls.state == RicoPlayerStateLive);
     [self.playerViewController cancelPressed:self.playerControls];
     
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString * mode =  [UserCenter getInstance].l2bMode;
-    
-
-    
-    
     RicoPlayer * aplayer;
     
     for (RicoPlayer * p in [RicoPlayerPool instance].pooledPlayers) {

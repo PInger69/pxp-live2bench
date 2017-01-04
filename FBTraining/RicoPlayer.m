@@ -594,13 +594,10 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     } else if (!CMTimeCompare(_avPlayer.currentItem.duration, kCMTimeIndefinite)) {
         // we might have to check the asset instead of the item
         
-        AVPlayerItem * zzz =  _avPlayer.currentItem;
-        NSArray * xxx = zzz.seekableTimeRanges;
-        
         if (_avPlayer.currentItem.seekableTimeRanges.count > 0) {
             CMTimeRange seekableRange = [_avPlayer.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-            NSArray * testlist = _avPlayer.currentItem.loadedTimeRanges;
-            CMTimeRange loadedRange = [_avPlayer.currentItem.loadedTimeRanges.firstObject CMTimeRangeValue];
+//            NSArray * testlist = _avPlayer.currentItem.loadedTimeRanges;
+//            CMTimeRange loadedRange = [_avPlayer.currentItem.loadedTimeRanges.firstObject CMTimeRangeValue];
             return seekableRange.duration;
         } else {
             return kCMTimeZero;

@@ -621,7 +621,7 @@
 #pragma mark -
 -(void)onBookmarkPlayerControlerChange:(NSNotification*)note
 {
-    RicoBookmarkPlayerController * controller = (RicoBookmarkPlayerController *)note.object;
+//    RicoBookmarkPlayerController * controller = (RicoBookmarkPlayerController *)note.object;
     
     // if its more then one feed then hide the telestaration
 }

@@ -170,7 +170,7 @@
     NSLog(@"Receiving...");
     if (self.expectedBytes < 300) {
         // something is worng
-        NSString* newStr = [NSString stringWithUTF8String:[data bytes]];
+//        NSString* newStr = [NSString stringWithUTF8String:[data bytes]];
         NSLog(@" download error");
         
     }

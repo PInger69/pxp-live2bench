@@ -136,7 +136,7 @@
                  
                  NSString * ip                = [weakSelf.encoder ipAddress];
                  NSString * remoteSrc         = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
-                 NSString * downloaderRefKey  =  paredData[@"srcValue"]; // this is used for the downloader and the localmedia manager
+//                 NSString * downloaderRefKey  =  paredData[@"srcValue"]; // this is used for the downloader and the localmedia manager
                  NSString * eventName        = ([weakSelf.encoder event].live)?LIVE_EVENT:paredData[@"event"] ;
                  
                  

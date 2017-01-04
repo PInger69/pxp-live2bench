@@ -300,7 +300,6 @@
 		D7541D391C69504A0069233F /* RicoPlayerGroupContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D381C69504A0069233F /* RicoPlayerGroupContainer.m */; };
 		D7541D3C1C6959A60069233F /* RicoFullScreenControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D3B1C6959A60069233F /* RicoFullScreenControlBar.m */; };
 		D7541D3F1C6BC9C00069233F /* BooleanOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D3E1C6BC9C00069233F /* BooleanOperation.m */; };
-		D7579AA91D0B3D1E007D4C62 /* PxpEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7579AA81D0B3D1E007D4C62 /* PxpEncoder.m */; };
 		D7581EE519634B6D0029C5DD /* NumberedSeekerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */; };
 		D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE419634B6D0029C5DD /* SeekButton.m */; };
 		D7581EE9196441160029C5DD /* MemoryBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE8196441160029C5DD /* MemoryBar.m */; };
@@ -1201,8 +1200,6 @@
 		D7541D3B1C6959A60069233F /* RicoFullScreenControlBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoFullScreenControlBar.m; sourceTree = "<group>"; };
 		D7541D3D1C6BC9BF0069233F /* BooleanOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BooleanOperation.h; sourceTree = "<group>"; };
 		D7541D3E1C6BC9C00069233F /* BooleanOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BooleanOperation.m; sourceTree = "<group>"; };
-		D7579AA71D0B3D1E007D4C62 /* PxpEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpEncoder.h; sourceTree = "<group>"; };
-		D7579AA81D0B3D1E007D4C62 /* PxpEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpEncoder.m; sourceTree = "<group>"; };
 		D7581EE119634B6D0029C5DD /* NumberedSeekerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberedSeekerButton.h; sourceTree = "<group>"; };
 		D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberedSeekerButton.m; sourceTree = "<group>"; };
 		D7581EE319634B6D0029C5DD /* SeekButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeekButton.h; sourceTree = "<group>"; };
@@ -3127,8 +3124,6 @@
 				D7D665811D2413B200B22E86 /* PxpErrors.h */,
 				D7D665821D2413B200B22E86 /* PxpErrors.m */,
 				D7C113D61D0F503F008F8B54 /* TagClasses */,
-				D7579AA71D0B3D1E007D4C62 /* PxpEncoder.h */,
-				D7579AA81D0B3D1E007D4C62 /* PxpEncoder.m */,
 				D74719C71D1C2F32007636BF /* DeviceVideoBrowes */,
 				D768BF9C1D086FB500D5BFF6 /* MakeEventView.xib */,
 				D768BF9E1D08754F00D5BFF6 /* MakeEventViewController.h */,
@@ -4481,7 +4476,6 @@
 				AED484B71B56A23600769EEF /* PxpTelestrationAction.m in Sources */,
 				D75E67E21D677F6400A38CD0 /* VideoRecieptTableViewCell.m in Sources */,
 				D75F2D201CB2C29B0059678F /* StreamViewVideoKit.m in Sources */,
-				D7579AA91D0B3D1E007D4C62 /* PxpEncoder.m in Sources */,
 				AED484B61B56A23600769EEF /* PxpTelestration.m in Sources */,
 				AEDD7C931B4AB830003C82F3 /* PxpCancelButton.m in Sources */,
 				D798850D1B9745BD000F8667 /* InternetMonitor.m in Sources */,

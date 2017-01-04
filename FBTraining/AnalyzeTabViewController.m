@@ -112,7 +112,6 @@ static NSMutableArray * analyzedClips;
 
 
     CGFloat x = self.view.frame.size.width - 50;
-    CGFloat y;
     
     NSArray * keys = [dict allKeys];
     

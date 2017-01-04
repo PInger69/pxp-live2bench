@@ -205,10 +205,7 @@ static FeedMapController * _instance;
         NSArray * displayList = [self.feedMapDisplaysDict allValues];
     
         [displayList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FeedMapDisplay * fm = (FeedMapDisplay *)obj;
-            
-//            fm
-            NSLog(@"");
+
         }];
 
 
