@@ -44,7 +44,7 @@
 @property (strong, nonatomic) NSString      * ID;
 @property (strong, nonatomic) NSString      * requestURL;
 @property (strong, nonatomic) NSString      * durationID;
-@property (assign, nonatomic) NSString      * period;
+@property (strong, nonatomic) NSString      * period;
 
 // optionals? check
 @property (assign, nonatomic) BOOL         	 synced; // depricated

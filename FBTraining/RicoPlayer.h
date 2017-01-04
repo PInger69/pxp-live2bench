@@ -70,7 +70,7 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 
 -(NSOperation*)play;
 -(NSOperation*)pause;
--(NSOperation*)preroll:(float)rate;
+//-(NSOperation*)preroll:(float)rate;
 -(NSOperation*)loadFeed:(Feed *)feed;
 -(NSOperation*)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@class EncoderProtocol;
+@protocol EncoderProtocol;
 @protocol EncoderParseProtocol <NSObject>
 
 
@@ -44,6 +44,6 @@ typedef NS_ENUM (NSInteger, ParseMode){
 
 
 
--(NSDictionary *)parse:(NSData*)data mode:(ParseMode)mode for:(EncoderProtocol*)encoder;
+-(NSDictionary *)parse:(NSData*)data mode:(ParseMode)mode for:(id<EncoderProtocol>)encoder;
 
 @end

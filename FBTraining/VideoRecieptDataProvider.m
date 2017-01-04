@@ -73,18 +73,6 @@ static UIImage * _orangeFill;
 }
 
 
-// MARK:
-// TODO:
-// FIXME:
-// ???:
-// !!!:
-
-//MARK:
-//TODO:
-//FIXME:
-//???:
-//!!!:
-
 -(void)refreshOnRefreshComplete:(void(^)())refreshComplete
 {
     

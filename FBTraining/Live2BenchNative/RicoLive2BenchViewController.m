@@ -315,7 +315,7 @@ static void * eventContext      = &eventContext;
     self.gameStart = [[UIButton alloc]initWithFrame:CGRectMake(0,PADDING + MEDIA_PLAYER_HEIGHT + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [self.gameStart setTitle:@"Mark Game Start " forState:UIControlStateNormal];
     [self.gameStart setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-    self.gameStart.font = [UIFont systemFontOfSize:14.0];
+    self.gameStart.titleLabel.font = [UIFont systemFontOfSize:14.0];
     self.gameStart.layer.borderWidth = 1;
     self.gameStart.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     [self.gameStart addTarget:self action:@selector(startGameButton:) forControlEvents:UIControlEventTouchUpInside];

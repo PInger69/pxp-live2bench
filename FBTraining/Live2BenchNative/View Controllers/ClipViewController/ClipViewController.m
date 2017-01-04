@@ -37,6 +37,7 @@
 @property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) NSMutableArray *allTagsArray;
 @property (strong, nonatomic) NSString *contextString;
+@property (strong, nonatomic) UIButton *deSelectButton;
 
 @property (strong, nonatomic) TabView *popupTabBar;
 
@@ -51,7 +52,6 @@
     id                              clipViewTagObserver;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
-    UIButton                        *deSelectButton;
     
 }
 
@@ -292,12 +292,12 @@ static void * encoderTagContext = &encoderTagContext;
     [self.filterButton addTarget:self action:@selector(pressFilterButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
-    deSelectButton = [[UIButton alloc]initWithFrame:CGRectMake(900, 65, 80, 30)];
-    [deSelectButton setTitle:@"Deselect" forState:UIControlStateNormal];
-    [deSelectButton setBackgroundColor:[UIColor grayColor]];
-    deSelectButton.titleLabel.adjustsFontSizeToFitWidth = true;
-    [deSelectButton addTarget:self action:@selector(deselectAllCell) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:deSelectButton];
+    self.deSelectButton = [[UIButton alloc]initWithFrame:CGRectMake(900, 65, 80, 30)];
+    [self.deSelectButton setTitle:@"Deselect" forState:UIControlStateNormal];
+    [self.deSelectButton setBackgroundColor:[UIColor grayColor]];
+    self.deSelectButton.titleLabel.adjustsFontSizeToFitWidth = true;
+    [self.deSelectButton addTarget:self action:@selector(deselectAllCell) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.deSelectButton];
     
 
 }

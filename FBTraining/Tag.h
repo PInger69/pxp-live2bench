@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) BOOL          coachPick;
 @property (strong, nonatomic) NSDictionary  *feeds;
 @property (strong, nonatomic) NSString      *durationID;
-@property (assign, nonatomic) NSString      *period;
+@property (strong, nonatomic) NSString      *period;
 @property (strong,nonatomic) NSArray        *players;
 @property (strong,nonatomic) NSDictionary   *extraDic;
 @property (assign,nonatomic) NSInteger      role;

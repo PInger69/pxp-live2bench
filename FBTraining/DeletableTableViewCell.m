@@ -12,10 +12,6 @@ static CGFloat const kBounceValue = 15.0f;
 
 @implementation DeletableTableViewCell
 
-- (void)awakeFromNib {
-    // Initialization code
-}
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
     

@@ -1210,12 +1210,10 @@
     
     
     
-    Encoder * enc = self.encoder;
-    Event * liveEvent = enc.liveEvent;
+    Event * liveEvent = self.encoder.liveEvent;
     
     if (liveEvent) {
-        NSArray         * kList     = [enc.liveEvent.feeds allKeys];
-        NSDictionary    * dictFeeds = enc.liveEvent.feeds;
+        NSDictionary    * dictFeeds = self.encoder.liveEvent.feeds;
         
         for (NSString * key3 in list2) {
             
@@ -1227,11 +1225,7 @@
             
             [feed.offsetDict setObject:dict[key3] forKey:quality];
             
-            
-//            NSLog(@"");
          }
-        
-        
     }
     
     

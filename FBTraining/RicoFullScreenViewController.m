@@ -25,8 +25,7 @@
 
 }
 
-
-- (nonnull instancetype)initWithPlayerViewController:(nonnull RicoFullScreenViewController *)playerViewController {
+- (nonnull instancetype)initWithPlayerViewController:(nonnull RicoPlayerViewController *)playerViewController {
     self = [super init];
     if (self) {
         _contentView        = [[UIView alloc] init];
