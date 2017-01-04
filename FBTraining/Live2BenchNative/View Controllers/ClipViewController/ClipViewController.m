@@ -49,18 +49,15 @@
     NSString                        * eventType;
     EncoderManager                  * _encoderManager;
     id                              clipViewTagObserver;
-    //ImageAssetManager               * _imageAssetManager;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
     UIButton                        *deSelectButton;
     
 }
 
-@synthesize collectionView=_collectionView;
 @synthesize tagsToDisplay=_tagsToDisplay;
 
 
-//static const NSInteger kDeleteAlertTag = 423;
 static void * encoderTagContext = &encoderTagContext;
 
 - (id)init //controller:(Live2BenchViewController *)lbv
@@ -134,7 +131,6 @@ static void * encoderTagContext = &encoderTagContext;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
-    //    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
 
         
         [_pxpFilter filterTags:self.allTagsArray];
@@ -152,7 +148,7 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)clear{
     [self.tagsToDisplay removeAllObjects];
     [self.allTagsArray removeAllObjects];
-    [_collectionView reloadData];
+    [self.collectionView reloadData];
 }
 
 
@@ -212,7 +208,7 @@ static void * encoderTagContext = &encoderTagContext;
         
 
     }
-    [_collectionView reloadData];
+    [self.collectionView reloadData];
 
 }
 
@@ -248,7 +244,7 @@ static void * encoderTagContext = &encoderTagContext;
     if(longPress.state == UIGestureRecognizerStateBegan){
         self.isEditing = !self.isEditing;
         
-        for (thumbnailCell *cell in _collectionView.visibleCells) {
+        for (thumbnailCell *cell in self.collectionView.visibleCells) {
             [cell setDeletingMode: self.isEditing];
         }
         
@@ -307,16 +303,6 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 -(void)deleteAllButtonTarget{
-//    CustomAlertView *alert = [[CustomAlertView alloc] init];
-//    alert.type = AlertImportant;
-//    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-//    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
-//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-//    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-//    [alert showView];
-    
-    
     
     // Build Alert
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
@@ -415,7 +401,7 @@ static void * encoderTagContext = &encoderTagContext;
     
     
     //pause the video palyer in live2bench view and my clip view
-    for (thumbnailCell *cell in _collectionView.visibleCells) {
+    for (thumbnailCell *cell in self.collectionView.visibleCells) {
         [cell setDeletingMode: self.isEditing];
     }
     
@@ -454,23 +440,6 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 
--(void)deleteCells
-{
-//    if (!arrayToBeDeleted || !arrayToBeDeleted.count) {
-//        return;
-//    }
-//    
-//    CustomAlertView *alert = [[CustomAlertView alloc] init];
-//    alert.tag = kDeleteAlertTag;
-//    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-//    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete these tags?",nil)];
-//    [alert setDelegate:self];
-//    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-//    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-//    [alert showView];
-    
-}
-
 
 //how many thumbnails?
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section
@@ -495,7 +464,7 @@ static void * encoderTagContext = &encoderTagContext;
     if (self.isEditing) {
         self.isEditing = !self.isEditing;
         
-        for (thumbnailCell *cell in _collectionView.visibleCells) {
+        for (thumbnailCell *cell in self.collectionView.visibleCells) {
             [cell setDeletingMode: self.isEditing];
         }
         
@@ -629,7 +598,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
     thumbnailCell *cell = (thumbnailCell *)sender.superview;
-    NSIndexPath *pathToDelete = [_collectionView indexPathForCell: cell];
+    NSIndexPath *pathToDelete = [self.collectionView indexPathForCell: cell];
     self.editingIndexPath = pathToDelete;
     
     Tag *tag        = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
@@ -1055,7 +1024,7 @@ static void * encoderTagContext = &encoderTagContext;
 //                NSLog(@"%@",tt.ID);
 //    }
     
-    [_collectionView reloadData];
+    [self.collectionView reloadData];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
@@ -1071,7 +1040,7 @@ static void * encoderTagContext = &encoderTagContext;
     
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
     _tagsToDisplay = [NSMutableArray arrayWithArray:[uTags sortedArrayUsingDescriptors:@[sorter]]];
-    [_collectionView reloadData];
+    [self.collectionView reloadData];
 }
 
 @end

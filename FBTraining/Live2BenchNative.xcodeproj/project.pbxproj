@@ -2402,6 +2402,7 @@
 				D7DA236116B85B4500143102 /* ClipViewController.m */,
 			);
 			name = ClipViewController;
+			path = "View Controllers/ClipViewController";
 			sourceTree = "<group>";
 		};
 		D732ABE016BD93AA00E73657 /* TeleViewController */ = {

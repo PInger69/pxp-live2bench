@@ -24,7 +24,6 @@
 
 @interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, PxpFilterDelegate>
 {
-    UICollectionView    * _collectionView;      //collection view for displaying thumbnails in clip view
     NSMutableArray      * _tagsToDisplay;       // array of tags which will display in clip view
     UILabel             * filterBreadCrumbs;
     BOOL                isEditingClips;
