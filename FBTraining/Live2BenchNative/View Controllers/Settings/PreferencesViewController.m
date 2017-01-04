@@ -68,7 +68,7 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     
     // get user defaults
     
-    
+/*
     [self.recToggle setOnTintColor:PRIMARY_APP_COLOR];
     [self.recToggle setTintColor:PRIMARY_APP_COLOR];
 //    [self.recToggle setThumbTintColor:[UIColor grayColor]];
@@ -76,7 +76,7 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     [self.lockStart setOnTintColor:PRIMARY_APP_COLOR];
     [self.lockStart setTintColor:PRIMARY_APP_COLOR];
 //    [self.lockStart setThumbTintColor:[UIColor grayColor]];
-    
+*/    
      [UserCenter getInstance].isStartLocked = self.lockStart.isOn;
 }
 

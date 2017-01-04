@@ -671,6 +671,7 @@
 		D81D5FF11E1C2BA6008F4046 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D81D5FEC1E1C2BA6008F4046 /* PreferencesView.xib */; };
 		D81D5FF21E1C2BA6008F4046 /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FEE1E1C2BA6008F4046 /* PreferencesViewController.m */; };
 		D81D5FF31E1C2BA6008F4046 /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */; };
+		D81D5FF71E1D4F8F008F4046 /* PxpTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FF61E1D4F8F008F4046 /* PxpTheme.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1801,6 +1802,8 @@
 		D81D5FEE1E1C2BA6008F4046 /* PreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesViewController.m; sourceTree = "<group>"; };
 		D81D5FEF1E1C2BA6008F4046 /* TabsSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabsSettingViewController.h; sourceTree = "<group>"; };
 		D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
+		D81D5FF51E1D4F8F008F4046 /* PxpTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTheme.h; sourceTree = "<group>"; };
+		D81D5FF61E1D4F8F008F4046 /* PxpTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTheme.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3403,6 +3406,7 @@
 		D7A9394916ADA65E006CBAB2 /* Live2BenchNative */ = {
 			isa = PBXGroup;
 			children = (
+				D81D5FF41E1D4F6E008F4046 /* Theme */,
 				D7D47E501BCD5A1A005BC1EC /* EncoderOperations */,
 				AE683C4C1B71029100458F80 /* PxpFullscreen */,
 				AED484931B56A22600769EEF /* PxpTelestration */,
@@ -3897,6 +3901,15 @@
 			);
 			name = Settings;
 			path = "View Controllers/Settings";
+			sourceTree = "<group>";
+		};
+		D81D5FF41E1D4F6E008F4046 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				D81D5FF51E1D4F8F008F4046 /* PxpTheme.h */,
+				D81D5FF61E1D4F8F008F4046 /* PxpTheme.m */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -4654,6 +4667,7 @@
 				D77351301B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
+				D81D5FF71E1D4F8F008F4046 /* PxpTheme.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,
 				D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */,
 				D7681E0D1DB53381004A2F62 /* DownloadOperationSuperOld.m in Sources */,

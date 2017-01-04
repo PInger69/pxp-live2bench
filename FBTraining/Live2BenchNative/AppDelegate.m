@@ -79,6 +79,9 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:imageAssets withIntermediateDirectories:YES attributes:nil error:NULL];
     }
     
+    self.theme = [PxpTheme new];
+    [self.theme activate];
+    
     self.imageAssetManager.pathForFolderContainingImages = imageAssets;
     
     self.screenController       = [[ScreenController alloc]init];

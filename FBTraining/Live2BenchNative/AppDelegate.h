@@ -19,6 +19,7 @@
 
 #import "TabView.h"
 #import "PxpFilter.h"
+#import "PxpTheme.h"
 
 @class CustomTabBar;
 @class EncoderManager;
@@ -40,5 +41,7 @@
 @property (strong, nonatomic) ImageAssetManager         * imageAssetManager;
 @property (strong, nonatomic) TabView                   * sharedFilterTab;
 @property (strong, nonatomic) PxpFilter                 * sharedFilter;
+
+@property (strong, nonatomic) PxpTheme                  * theme;
 
 @end
