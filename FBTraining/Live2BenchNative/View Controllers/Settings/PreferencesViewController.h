@@ -12,7 +12,6 @@
 @interface PreferencesViewController : SettingItemViewController <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton               * connectButton;
-@property (weak, nonatomic) IBOutlet UISwitch *recToggle;
 @property (weak, nonatomic) IBOutlet UITextField            * urlInputTextArea;
 @property (weak, nonatomic) IBOutlet UISegmentedControl     * liveBuffer;
 @property (nonatomic,weak) IBOutlet UISwitch    * lockStart;
