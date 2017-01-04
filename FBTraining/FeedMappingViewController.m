@@ -44,7 +44,7 @@
     [self.view setBackgroundColor:[UIColor lightGrayColor]];
     
     NSString        * mode      = [UserCenter getInstance].l2bMode;
-    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
+    if ([mode isEqualToString:L2B_MODE_DUAL]) {
         UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 500, 100)];
         [label setText:@"Feed map is disabled in 'dual mode'"];
         [self.view addSubview:label];
@@ -380,7 +380,7 @@
     [super viewDidAppear:animated];
     
     NSString        * mode      = [UserCenter getInstance].l2bMode;
-    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
+    if ([mode isEqualToString:L2B_MODE_DUAL]) {
         
         return;
     }
