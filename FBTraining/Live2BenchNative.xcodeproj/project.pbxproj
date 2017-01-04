@@ -4825,9 +4825,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/3rd-party/ffmpeg/lib",
-					"$(PROJECT_DIR)/3rd-party/openSSL/lib",
-					"$(PROJECT_DIR)/Core",
 					"$(PROJECT_DIR)/videokit/3rd-party/ffmpeg/lib",
 					"$(PROJECT_DIR)/videokit/3rd-party/openSSL/lib",
 					"$(PROJECT_DIR)/videokit/Core",
@@ -4877,9 +4874,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/3rd-party/ffmpeg/lib",
-					"$(PROJECT_DIR)/3rd-party/openSSL/lib",
-					"$(PROJECT_DIR)/Core",
 					"$(PROJECT_DIR)/videokit/3rd-party/ffmpeg/lib",
 					"$(PROJECT_DIR)/videokit/3rd-party/openSSL/lib",
 					"$(PROJECT_DIR)/videokit/Core",

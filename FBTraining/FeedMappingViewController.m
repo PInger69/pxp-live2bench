@@ -43,8 +43,6 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor lightGrayColor]];
     
-    
-    NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
     NSString        * mode      = [UserCenter getInstance].l2bMode;
     if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 500, 100)];
