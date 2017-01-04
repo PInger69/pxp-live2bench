@@ -16,10 +16,6 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl     * liveBuffer;
 @property (nonatomic,weak) IBOutlet UISwitch    * lockStart;
 
-
-
-@property (weak, nonatomic) IBOutlet UISegmentedControl     * modeSegment;
-
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
 
 

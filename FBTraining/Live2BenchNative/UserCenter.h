@@ -28,7 +28,6 @@
 
 @property (atomic,strong) NSMutableArray           * tagNames;
 @property (atomic,strong,readonly) NSMutableArray  * defaultTagNames;
-//@property (atomic,strong) NSString               * userPick;// team pic
 @property (atomic,strong) LeagueTeam               * taggingTeam;
 
 @property (atomic,strong) NSMutableDictionary    * currentEventThumbnails;
@@ -58,7 +57,9 @@
 @property (nonatomic,strong) NSSet                  * rolePermissions;
 @property (nonatomic,strong) NSPredicate            * teamPredicate;
 
-@property (nonatomic,strong) NSString               * l2bMode;
+// This property represented the "Video Mode" preference set in the Settings -> Preferences view
+// As of AVOCA-19, this setting is always "L2B_MODE_STREAM_OPTIMIZE".
+@property (nonatomic,readonly) NSString               * l2bMode;
 
 @property (nonatomic,assign) double preRoll;
 @property (nonatomic,assign) double postRoll;
@@ -68,7 +69,6 @@
 +(instancetype)getInstance;
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
-//-(void)enableObservers:(BOOL)isObserve;
 -(void)writeAccountInfoToPlist;
 -(void)logoutOfCloud;
 -(void)updateTagInfoFromCloud;

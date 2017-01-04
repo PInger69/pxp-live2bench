@@ -531,14 +531,8 @@ static Feed * _bottomPick;
     self.playerControls.delegate              = self.playerViewController;
 
     // Getting user preferences
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString * mode =  [defaults objectForKey:@"mode"];
-    
-    
-
-    /////
-    
-     if ([mode isEqualToString:@"streamOp"]) {
+    NSString * mode =  [UserCenter getInstance].l2bMode;
+    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
    
          if ([[RicoPlayerPool instance].pooledPlayers count]) {
              
@@ -955,7 +949,7 @@ static Feed * _bottomPick;
     
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString * mode =  [defaults objectForKey:@"mode"];
+    NSString * mode =  [UserCenter getInstance].l2bMode;
     
 
     
@@ -968,10 +962,10 @@ static Feed * _bottomPick;
         }
     }
     
-    if (!aplayer && ![mode isEqualToString:@"streamOp"]) return;
+    if (!aplayer && ![mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) return;
     
         if (feedSelectionController == self.topViewFeedSelectionController) {
-            if ([mode isEqualToString:@"streamOp"]) {
+            if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
                 
                 if ([[RicoPlayerPool instance].pooledPlayers count] == 0) return;
                 
@@ -1001,7 +995,7 @@ static Feed * _bottomPick;
         
         } else if (feedSelectionController == self.bottomViewFeedSelectionController) {
            
-            if ([mode isEqualToString:@"streamOp"]) {
+            if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
               
                 if ([[RicoPlayerPool instance].pooledPlayers count] == 0) return;
                 

@@ -620,18 +620,9 @@ static UserCenter * instance;
     return [_checkLoginPlistAction reset];
 }
 
-//-(id<ActionListItem>)logoutAction
-//{
-//    logoutAction.isFinished = NO;
-//    logoutAction.isSuccess  = NO;
-//    return logoutAction;
-//}
-
 -(NSString*)l2bMode
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString * mode =  [defaults objectForKey:@"mode"];
-    return mode;
+    return L2B_MODE_STREAM_OPTIMIZE;
 }
 
 -(NSString*)deviceTypeHash

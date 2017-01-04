@@ -45,8 +45,8 @@
     
     
     NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
-    NSString        * mode      = [defaults objectForKey:@"mode"];
-    if ([mode isEqualToString:@"dual"]) {
+    NSString        * mode      = [UserCenter getInstance].l2bMode;
+    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 500, 100)];
         [label setText:@"Feed map is disabled in 'dual mode'"];
         [self.view addSubview:label];
@@ -381,9 +381,8 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
     [super viewDidAppear:animated];
     
-    NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
-    NSString        * mode      = [defaults objectForKey:@"mode"];
-    if ([mode isEqualToString:@"dual"]) {
+    NSString        * mode      = [UserCenter getInstance].l2bMode;
+    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         
         return;
     }

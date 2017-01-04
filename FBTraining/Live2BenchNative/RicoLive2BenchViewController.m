@@ -410,31 +410,16 @@ static void * eventContext      = &eventContext;
 {
     
     NSArray         * feeds     = [self.currentEvent.feeds allValues];
-    NSUserDefaults  * defaults  = [NSUserDefaults standardUserDefaults];
-    NSString        * mode      = [defaults objectForKey:@"mode"];
-    
-    
-    
-//    self.ricoPlayerViewController.pl
-    
+    NSString        * mode      = [UserCenter getInstance].l2bMode;
     // just make one player
-    if ([mode isEqualToString:@"streamOp"]) {
-////        RicoPlayer * justPlayer = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-//        Feed * afeed            = feeds[0];
-//        afeed.quality           = 1;
-//        [justPlayer loadFeed:afeed];
-//        [self.ricoZoomGroup addSubview:justPlayer];
-//        [self.ricoPlayerViewController addPlayers:justPlayer];
-//        [[RicoPlayerPool instance].pooledPlayers addObject:justPlayer];
+    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         
-    } else if ([mode isEqualToString:@"dual"]) {
+    } else if ([mode isEqualToString:L2B_MODE_DUAL]) {
         
         RicoPlayer * justPlayer1 = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
         Feed * afeed1 = feeds[0];
         
         afeed1.quality = 1;
-        
-        //        self.ricoPlayer = justPlayer;
         
         [justPlayer1 loadFeed:afeed1];
         
@@ -531,7 +516,7 @@ static void * eventContext      = &eventContext;
     
     
     // just make one player
-    if ([[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"]) {
+    if ([[[UserCenter getInstance] l2bMode] isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         
         RicoPlayer * aplayer = [[self.ricoPlayerViewController.players allValues]firstObject];;
         
@@ -566,7 +551,7 @@ static void * eventContext      = &eventContext;
         CameraResource * camResource = enc.cameraResource;
         NSString* pick;
         
-        if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"dual"]){
+        if (![[[UserCenter getInstance]l2bMode] isEqualToString:L2B_MODE_DUAL]){
             switch (picker.selectedTag) {
                 case 0:
                     pick = ((Feed *) [camResource getFeedByLocation:kQuad1of4 event:self.currentEvent]).sourceName;
@@ -623,8 +608,7 @@ static void * eventContext      = &eventContext;
 {
         [self.ricoZoomContainer setZoomScale:1];
     // Getting user preferences
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString * mode =  [defaults objectForKey:@"mode"];
+    NSString * mode =  [UserCenter getInstance].l2bMode;
     
     
     self.telestrationViewController.showsControls = YES;
@@ -671,7 +655,7 @@ static void * eventContext      = &eventContext;
     
     
     // just make one player
-    if ([mode isEqualToString:@"streamOp"]) {
+    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         
         RicoPlayer * aplayer = [[self.ricoPlayerViewController.players allValues]firstObject];;
         
@@ -756,7 +740,7 @@ static void * eventContext      = &eventContext;
     
     
     // just make one player
-    if ( [[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"] ) {
+    if ( [[[UserCenter getInstance]l2bMode] isEqualToString:L2B_MODE_STREAM_OPTIMIZE] ) {
         
         RicoPlayer * aplayer = [[self.ricoPlayerViewController.players allValues]firstObject];;
         
@@ -1300,11 +1284,11 @@ static void * eventContext      = &eventContext;
 
     // Getting user preferences
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString * mode =  [defaults objectForKey:@"mode"];
+    NSString * mode =  [UserCenter getInstance].l2bMode;
 
     
     // just make one player
-    if ([mode isEqualToString:@"streamOp"]) {
+    if ([mode isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         RicoPlayer * justPlayer = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
         Feed * afeed = feeds[0];
 
@@ -1475,7 +1459,7 @@ static void * eventContext      = &eventContext;
         }
         
         
-    } else if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"]) {
+    } else if (![[[UserCenter getInstance]l2bMode] isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         NSArray * list = @[kQuad1of4,kQuad2of4,kQuad3of4,kQuad4of4];
          [_sourceNames removeAllObjects];
         for (NSInteger i=0;i< [list count]; i++) {
@@ -1524,7 +1508,7 @@ static void * eventContext      = &eventContext;
     
     
     // just make one player and does not
-    if (![[[UserCenter getInstance]l2bMode] isEqualToString:@"streamOp"]) {
+    if (![[[UserCenter getInstance]l2bMode] isEqualToString:L2B_MODE_STREAM_OPTIMIZE]) {
         if (self.multiCamButton) {
             [self.multiCamButton removeFromSuperview];
         }
