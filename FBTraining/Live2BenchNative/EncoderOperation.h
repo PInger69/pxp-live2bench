@@ -89,7 +89,7 @@
 @property (nonatomic,weak) Tag * tag;
 @property (nonatomic,strong) NSDictionary* tagData;
 - (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder tag:(Tag*)tag;
-- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag;
+//- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag;
 @end
 
 
