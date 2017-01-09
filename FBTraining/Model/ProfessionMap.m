@@ -417,8 +417,3 @@ static NSDictionary * _professionMapData;
 }
 
 @end
-
-
-@implementation Profession
-
-@end

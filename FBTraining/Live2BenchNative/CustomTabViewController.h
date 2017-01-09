@@ -13,14 +13,12 @@
 @interface CustomTabViewController : UIViewController
 {
     AppDelegate * _appDel;
-//    id <UIApplicationDelegate > mainAppDelegate;
 }
 
 @property (strong,nonatomic) TabBarButton   * sectionTab;
 @property (strong,nonatomic) NSString       * name;
 
 -(id)initWithAppDelegate:(AppDelegate *) appDel;
-//-(id)initWithAppDelegate:(id<UIApplicationDelegate >) mainappDelegate;
 -(void)setMainSectionTab:(NSString*)name imageName:(NSString*)imgName;
 -(void)onAppTerminate:(NSNotification *)note;
 

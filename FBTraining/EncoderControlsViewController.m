@@ -21,7 +21,7 @@
 #import "DeviceVideoDataSource.h"
 #import "ListPopoverController.h"
 
-@interface EncoderControlsViewController ()
+@interface EncoderControlsViewController ()<MakeEventViewControllerDelegate>
 
 @property (nonatomic,strong) DeviceVideoDataSource * deviceVideoDataSource;
 

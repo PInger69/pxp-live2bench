@@ -28,6 +28,8 @@
 
 -(void)buildButtonsWithString:(NSArray*)arrayOfString
 {
+    NSLog(@"RicoSourcePicker button strings: %@", arrayOfString);
+    
     self.stringArray = [arrayOfString sortedArrayUsingSelector:@selector(compare:)];
     
     // clear any old buttons

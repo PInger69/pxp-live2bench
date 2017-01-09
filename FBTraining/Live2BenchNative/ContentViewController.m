@@ -58,8 +58,8 @@
 ////        globals = [Globals instance];
 ////    }
 //    
-//    self = [super init];
-//    if (self) {
+    self = [super init];
+    if (self) {
 //        
 //        NSMutableArray* linef1 = [[NSMutableArray alloc]init];
 //        NSMutableArray* linef2 = [[NSMutableArray alloc]init];
@@ -151,7 +151,7 @@
 //        self.currentLine = [[NSMutableArray alloc]initWithArray:[[[[self.gameItems objectForKey:whichSide] objectAtIndex:i] allValues] objectAtIndex:0]];
 //        self.playerMap = [[NSMutableDictionary alloc]init];
 //        return self;// Custom initialization
-//    }
+    }
     return self;
 }
 

@@ -19,6 +19,9 @@
 #import "AVAsset+Image.h"
 #import "CustomAlertControllerQueue.h"
 
+#import "ListViewCell.h"
+#import "thumbnailCell.h"
+
 #define CELLS_ON_SCREEN         12
 #define TOTAL_WIDTH             1024
 #define TOTAL_HEIGHT            600
@@ -133,7 +136,7 @@ static void * encoderTagContext = &encoderTagContext;
         self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
 
         
-        [_pxpFilter filterTags:self.allTagsArray];
+        [self.pxpFilter filterTags:self.allTagsArray];
         [_tagsToDisplay removeAllObjects];
         [_tagsToDisplay addObjectsFromArray:self.pxpFilter.filteredTags];
         
@@ -168,12 +171,12 @@ static void * encoderTagContext = &encoderTagContext;
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:true];
    
-    _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
-    _pxpFilter.delegate = self;
-    [_pxpFilter removeAllPredicates];
+    self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
+    self.pxpFilter.delegate = self;
+    [self.pxpFilter removeAllPredicates];
     
     
-    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
+    Profession* profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
    if (_currentEvent) {
     if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
         [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
@@ -986,9 +989,9 @@ static void * encoderTagContext = &encoderTagContext;
     
     [self presentViewController:self.popupTabBar animated:YES completion:nil];
     
-    [_pxpFilter filterTags:self.allTagsArray];
+    [self.pxpFilter filterTags:self.allTagsArray];
     
-    if (!self.popupTabBar.pxpFilter)          self.popupTabBar.pxpFilter = _pxpFilter;
+    if (!self.popupTabBar.pxpFilter)          self.popupTabBar.pxpFilter = self.pxpFilter;
     
     Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
     [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
@@ -1029,7 +1032,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
-    [_pxpFilter filterTags:self.allTagsArray];
+    [self.pxpFilter filterTags:self.allTagsArray];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     

@@ -83,8 +83,6 @@
 		AEA25F9D1B790A65006C83C3 /* PxpPlayer+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F9C1B790A65006C83C3 /* PxpPlayer+Tag.m */; };
 		AEA25FA01B790C6E006C83C3 /* PxpPlayerContext+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */; };
 		AEA25FA31B790FF1006C83C3 /* PxpPlayer+Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */; };
-		AEA7D7511B8DFBE2007C2580 /* ortrileft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */; };
-		AEA7D7521B8DFBE2007C2580 /* ortriright@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA7D7501B8DFBE2007C2580 /* ortriright@2x.png */; };
 		AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */; };
@@ -477,8 +475,6 @@
 		D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7E17F5ED0B0081C5E9 /* myplayXplay_phonecall.png */; };
 		D79F9B8117F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7F17F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png */; };
 		D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */; };
-		D7A0223B1B6A7A6000959EBE /* ortrileft.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A022391B6A7A6000959EBE /* ortrileft.png */; };
-		D7A0223C1B6A7A6000959EBE /* ortriright.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A0223A1B6A7A6000959EBE /* ortriright.png */; };
 		D7A067EF16AF0475002A2892 /* live.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A067EE16AF0474002A2892 /* live.png */; };
 		D7A0681C16B041F0002A2892 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A0681B16B041F0002A2892 /* QuartzCore.framework */; };
 		D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A0682416B079FE002A2892 /* OverlayViewController.m */; };
@@ -671,6 +667,7 @@
 		D81D5FF21E1C2BA6008F4046 /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FEE1E1C2BA6008F4046 /* PreferencesViewController.m */; };
 		D81D5FF31E1C2BA6008F4046 /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */; };
 		D81D5FF71E1D4F8F008F4046 /* PxpTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D81D5FF61E1D4F8F008F4046 /* PxpTheme.m */; };
+		D83E7D721E240B48000FC23F /* Profession.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7D711E240B48000FC23F /* Profession.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -806,8 +803,6 @@
 		AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayerContext+Tag.m"; sourceTree = "<group>"; };
 		AEA25FA11B790FF1006C83C3 /* PxpPlayer+Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpPlayer+Feed.h"; sourceTree = "<group>"; };
 		AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayer+Feed.m"; sourceTree = "<group>"; };
-		AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ortrileft@2x.png"; sourceTree = "<group>"; };
-		AEA7D7501B8DFBE2007C2580 /* ortriright@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ortriright@2x.png"; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewClipTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewClipTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewTabViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1476,8 +1471,6 @@
 		D79F9B7F17F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myplayXplay_phonecall@2x.png"; sourceTree = "<group>"; };
 		D79FB0481A5C8AB7003F0CFA /* TablePopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TablePopoverController.h; path = Live2BenchNative/Live2BenchTab/TablePopoverController.h; sourceTree = "<group>"; };
 		D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TablePopoverController.m; path = Live2BenchNative/Live2BenchTab/TablePopoverController.m; sourceTree = "<group>"; };
-		D7A022391B6A7A6000959EBE /* ortrileft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ortrileft.png; sourceTree = "<group>"; };
-		D7A0223A1B6A7A6000959EBE /* ortriright.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ortriright.png; sourceTree = "<group>"; };
 		D7A067EE16AF0474002A2892 /* live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = live.png; sourceTree = "<group>"; };
 		D7A0681B16B041F0002A2892 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D7A0682316B079FE002A2892 /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OverlayViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1801,6 +1794,8 @@
 		D81D5FF01E1C2BA6008F4046 /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
 		D81D5FF51E1D4F8F008F4046 /* PxpTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTheme.h; sourceTree = "<group>"; };
 		D81D5FF61E1D4F8F008F4046 /* PxpTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTheme.m; sourceTree = "<group>"; };
+		D83E7D701E240B48000FC23F /* Profession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profession.h; sourceTree = "<group>"; };
+		D83E7D711E240B48000FC23F /* Profession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profession.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2812,6 +2807,8 @@
 				D7DEF27D1BA883E40037D848 /* ProfessionMap.m */,
 				D81D5FE01E1C13D8008F4046 /* TeamPlayer.h */,
 				D81D5FE11E1C13D8008F4046 /* TeamPlayer.m */,
+				D83E7D701E240B48000FC23F /* Profession.h */,
+				D83E7D711E240B48000FC23F /* Profession.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3249,10 +3246,6 @@
 				D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */,
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */,
-				D7A022391B6A7A6000959EBE /* ortrileft.png */,
-				AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */,
-				D7A0223A1B6A7A6000959EBE /* ortriright.png */,
-				AEA7D7501B8DFBE2007C2580 /* ortriright@2x.png */,
 				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
 				D72CC2891AFA858100E26B60 /* RatingOutput.m */,
 				D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */,
@@ -4069,7 +4062,6 @@
 				D7525D9D1CBC29630074F590 /* NameCameraCellView.xib in Resources */,
 				D78F68C718073DC70096C793 /* GreenSettingsButton.png in Resources */,
 				D773A36C16D87DE5007A0BA9 /* coach@2x.png in Resources */,
-				D7A0223B1B6A7A6000959EBE /* ortrileft.png in Resources */,
 				D786C1EC17EB9BF90042DD96 /* myClipTabSelect@2x.png in Resources */,
 				D779390C1822F8F90037CF82 /* signalStrength.png in Resources */,
 				D773A36D16D87DE5007A0BA9 /* coachPicked.png in Resources */,
@@ -4094,7 +4086,6 @@
 				D7F2BFB21B39970B00EA8BF0 /* CreditsView.xib in Resources */,
 				D79F9B7D17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png in Resources */,
 				D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */,
-				AEA7D7521B8DFBE2007C2580 /* ortriright@2x.png in Resources */,
 				BDD2D2FA17ECDD11004D5D9A /* clip-back-just@2x.png in Resources */,
 				D78F68D318073DC70096C793 /* OrangeSettingsButtonSelect.png in Resources */,
 				BD8C368317F330360094CBAD /* mailselected.png in Resources */,
@@ -4138,7 +4129,6 @@
 				D73CDD621CCA74A80006AE72 /* VKImages.bundle in Resources */,
 				BD8C368417F330360094CBAD /* mailselected@2x.png in Resources */,
 				BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */,
-				D7A0223C1B6A7A6000959EBE /* ortriright.png in Resources */,
 				D7CCE7FC1AC1EA3B00D85095 /* SoccerBottomViewController.plist in Resources */,
 				BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */,
 				D78F68D218073DC70096C793 /* OrangeSettingsButtonSelect@2x.png in Resources */,
@@ -4155,7 +4145,6 @@
 				BD9BC32417EB96B3001B67DE /* clip-back@2x.png in Resources */,
 				AE7AE3B71B74FAAA0021EC03 /* PxpPlayerViewController.xib in Resources */,
 				BD8C367F17F32FB80094CBAD /* mail@2x.png in Resources */,
-				AEA7D7511B8DFBE2007C2580 /* ortrileft@2x.png in Resources */,
 				D786C24117F39CA10042DD96 /* youtube@2x.png in Resources */,
 				D7B79CD4182C398400F0876D /* saveToAlbumSelected.png in Resources */,
 				BDD2D30117ECF343004D5D9A /* chevrect.png in Resources */,
@@ -4406,6 +4395,7 @@
 				D7541D3C1C6959A60069233F /* RicoFullScreenControlBar.m in Sources */,
 				D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */,
 				D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */,
+				D83E7D721E240B48000FC23F /* Profession.m in Sources */,
 				D7C113DC1D0F50D1008F8B54 /* TagProxy.m in Sources */,
 				D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */,
 				D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */,

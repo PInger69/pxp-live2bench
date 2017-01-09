@@ -82,18 +82,6 @@ NS_OPTIONS(NSInteger, style){
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
         
         // Initialize Custom View Controllers
-        EncoderControlsViewController *encoderControlsViewController                   = [[EncoderControlsViewController alloc] initWithAppDelegate:appDel];
-        LogoViewController *welcomeViewController                               = [[LogoViewController alloc] initWithAppDelegate:appDel];
-        BitRateViewController *bitRateViewController                            = [[BitRateViewController alloc] initWithAppDelegate:appDel];
-        PreferencesViewController * preferencesViewController                   = [[PreferencesViewController alloc]initWithAppDelegate:appDel];
-        ToastObserverSettingViewController *toastObserverSettingViewController  = [[ToastObserverSettingViewController alloc] initWithAppDelegate:appDel];
-        AlertsSettingViewController *alertsSettingViewController                = [[AlertsSettingViewController alloc] initWithAppDelegate:appDel];
-        InfoSettingViewController *informationSettingViewController             = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
-        TabsSettingViewController *tabsSettingViewController                    = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
-        SideTagSettingsViewController * tagSetSettingViewController                = [[SideTagSettingsViewController alloc] initWithAppDelegate:appDel name:@"Tag Set" identifier:@"Tag Set"];
-        DropboxSettingsViewController *dropboxViewController                            = [[DropboxSettingsViewController alloc] initWithAppDelegate:appDel];
-        CreditsViewController *creditsViewController                            = [[CreditsViewController alloc] initWithAppDelegate:appDel];
-        FeedMappingViewController *feedMappingViewController                            = [[FeedMappingViewController alloc] initWithAppDelegate:appDel name:@"Feed Map" identifier:@"Feed Map"];
         
 //        VideoRecieptTableViewController * videoRecieptTableViewController       = [[VideoRecieptTableViewController alloc]init];
         
@@ -109,85 +97,126 @@ NS_OPTIONS(NSInteger, style){
         // just to cut down some typing
         NSDictionary * setPref = [[PxpPreference dictionary] objectForKey:@"SettingsItems"];
 
-        
-    
-        if ([setPref[@"EncoderControls"] boolValue]) [tempDefinitions addObject:@{
-                                           @"Name": NSLocalizedString(@"Encoder Controls", nil),
-                                           @"ViewController": encoderControlsViewController
-                                           }];
-        if ([setPref[@"Welcome"] boolValue]) [tempDefinitions addObject:@{
+        if ([setPref[@"EncoderControls"] boolValue]) {
+            EncoderControlsViewController *encoderControlsViewController = [[EncoderControlsViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
+                           @"Name": NSLocalizedString(@"Encoder Controls", nil),
+                           @"ViewController": encoderControlsViewController
+                           }];
+        }
+        if ([setPref[@"Welcome"] boolValue]) {
+            LogoViewController *welcomeViewController = [[LogoViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
                                            @"Name": NSLocalizedString(@"Welcome", nil),
                                            @"ViewController": welcomeViewController
                                            }];
-        if ([setPref[@"Preference"] boolValue]) [tempDefinitions addObject:@{
+        }
+        if ([setPref[@"Preference"] boolValue]) {
+            PreferencesViewController * preferencesViewController = [[PreferencesViewController alloc]initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
                                            @"Name": NSLocalizedString(@"Preferences", nil),
                                            @"ViewController": preferencesViewController
                                            }];
-        if ([setPref[@"BitRate"] boolValue]) [tempDefinitions addObject:@{
+        }
+        if ([setPref[@"BitRate"] boolValue]) {
+            BitRateViewController *bitRateViewController = [[BitRateViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
                                            @"Name": NSLocalizedString(@"Bit Rate", nil),
                                            @"ViewController": bitRateViewController
                                            }];
+        }
         if ([setPref[@"ScreenMirroring"] boolValue]) [tempDefinitions addObject:@{
                                            @"Name": NSLocalizedString(@"Screen Mirroring", nil),
                                            @"Identifier": @"ScreenMirroring"
                                            }];
-        if ([setPref[@"ToastObserver"] boolValue]) [tempDefinitions addObject:@{
-                                           @"Name": toastObserverSettingViewController.name,
-                                           @"ViewController": toastObserverSettingViewController,
-                                           @"Identifier": toastObserverSettingViewController.identifier
-                                           }];
-        if ([setPref[@"Alerts"] boolValue]) [tempDefinitions addObject:@{
-                                           @"Name": alertsSettingViewController.name,
-                                           @"ViewController": alertsSettingViewController,
-                                           @"Identifier": alertsSettingViewController.identifier
-                                           }];
-        if ([setPref[@"Information"] boolValue]) [tempDefinitions addObject:@{
+        if ([setPref[@"ToastObserver"] boolValue]) {
+            ToastObserverSettingViewController *toastObserverSettingViewController = [[ToastObserverSettingViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
+                                       @"Name": toastObserverSettingViewController.name,
+                                       @"ViewController": toastObserverSettingViewController,
+                                       @"Identifier": toastObserverSettingViewController.identifier
+                                       }];
+        }
+        if ([setPref[@"Alerts"] boolValue]) {
+            AlertsSettingViewController *alertsSettingViewController = [[AlertsSettingViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
+                                       @"Name": alertsSettingViewController.name,
+                                       @"ViewController": alertsSettingViewController,
+                                       @"Identifier": alertsSettingViewController.identifier
+                                       }];
+        }
+        if ([setPref[@"Information"] boolValue]) {
+            InfoSettingViewController *informationSettingViewController = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
                                            @"Name": informationSettingViewController.name,
                                            @"ViewController": informationSettingViewController,
                                            @"Identifier": informationSettingViewController.identifier
                                            }];
-        if ([setPref[@"MainTabs"] boolValue]) [tempDefinitions addObject:@{
+        }
+        if ([setPref[@"MainTabs"] boolValue]) {
+            TabsSettingViewController *tabsSettingViewController = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
+            
+            [tempDefinitions addObject:@{
                                            @"Name": tabsSettingViewController.name,
                                            @"ViewController": tabsSettingViewController,
                                            @"Identifier": tabsSettingViewController.identifier
                                            }];
-        if ([setPref[@"TagSets"] boolValue]) [tempDefinitions addObject:@{
+        }
+        if ([setPref[@"TagSets"] boolValue]) {
+            SideTagSettingsViewController * tagSetSettingViewController = [[SideTagSettingsViewController alloc] initWithAppDelegate:appDel name:@"Tag Set" identifier:@"Tag Set"];
+            [tempDefinitions addObject:@{
                                            @"Name": tagSetSettingViewController.name,
                                            @"ViewController": tagSetSettingViewController,
                                            @"Identifier": tagSetSettingViewController.identifier
                                            }];
+        }
 
-                if ([setPref[@"FeedMap"] boolValue]) [tempDefinitions addObject:@{
-                                           @"Name": feedMappingViewController.name,
-                                           @"ViewController": feedMappingViewController,
-                                           @"Identifier": feedMappingViewController.identifier
-                                           }];
+        if ([setPref[@"FeedMap"] boolValue]) {
+            FeedMappingViewController *feedMappingViewController = [[FeedMappingViewController alloc] initWithAppDelegate:appDel name:@"Feed Map" identifier:@"Feed Map"];
+            [tempDefinitions addObject:@{
+                                       @"Name": feedMappingViewController.name,
+                                       @"ViewController": feedMappingViewController,
+                                       @"Identifier": feedMappingViewController.identifier
+                                       }];
+        }
         
         
-        if ([setPref[@"Dropbox"] boolValue]) [tempDefinitions addObject:@{
-                                                                          @"Name": dropboxViewController.name,
-                                                                          @"ViewController": dropboxViewController,
-                                                                          @"Identifier": dropboxViewController.identifier
-                                                                          }];
+        if ([setPref[@"Dropbox"] boolValue]) {
+            DropboxSettingsViewController *dropboxViewController = [[DropboxSettingsViewController alloc] initWithAppDelegate:appDel];
+            
+            [tempDefinitions addObject:@{
+                              @"Name": dropboxViewController.name,
+                              @"ViewController": dropboxViewController,
+                              @"Identifier": dropboxViewController.identifier
+                              }];
+        }
         
-        if ([setPref[@"VideoReciept"] boolValue]) [tempDefinitions addObject:@{
-                                                                          @"Name": @"Video Reciept",
-                                                                          @"ViewController": [[VideoRecieptTableViewController alloc]init]
+        if ([setPref[@"VideoReciept"] boolValue]) {
+            [tempDefinitions addObject:@{
+                                          @"Name": @"Video Reciept",
+                                          @"ViewController": [[VideoRecieptTableViewController alloc]init]
 //                                                                 
-                                                                          }];
+                                          }];
+        }
         
-        if ([setPref[@"Credits"] boolValue]) [tempDefinitions addObject:@{
-                                                                          @"Name": creditsViewController.name,
-                                                                          @"ViewController": creditsViewController,
-                                                                          @"Identifier": creditsViewController.identifier
-                                                                          }];
+        if ([setPref[@"Credits"] boolValue]) {
+            CreditsViewController *creditsViewController = [[CreditsViewController alloc] initWithAppDelegate:appDel];
+            [tempDefinitions addObject:@{
+                                          @"Name": creditsViewController.name,
+                                          @"ViewController": creditsViewController,
+                                          @"Identifier": creditsViewController.identifier
+                                          }];
+        }
 
         
 
-        if ([setPref[@"Log"] boolValue]) [tempDefinitions addObject:@{
-                                                                      @"Name": NSLocalizedString(@"Log", nil),
-                                                                      @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
-                                                                      }];
+        if ([setPref[@"Log"] boolValue]) {
+            
+            [tempDefinitions addObject:@{
+                                          @"Name": NSLocalizedString(@"Log", nil),
+                                          @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
+                                          }];
+        }
         if ([setPref[@"Logout"] boolValue]) {
             [tempDefinitions addObject:@{
                                          @"Name": @"Logout",

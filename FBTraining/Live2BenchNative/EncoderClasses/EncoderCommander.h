@@ -25,7 +25,7 @@
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
+@property (nonatomic,strong)    NSMutableDictionary     * allEvents;    // all events on the encoder keyed by HID
 @property (nonatomic,strong)    NSMutableDictionary     * openDurationTags; // should be in events???
 
 @property (nonatomic,strong)    NSString        * ipAddress;
