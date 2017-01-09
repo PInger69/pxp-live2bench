@@ -329,38 +329,6 @@
     [_telestrationButton setBackgroundImage:[[UIImage imageNamed:@"telestrationIconOff"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
     [_telestrationButton setBackgroundImage:[[UIImage imageNamed:@"telestrationIconOn"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
-  
-
-    //    PxpFilter.rawTags; //NSMutableSet
-    /*NSArray * rawTags;
-     NSMutableSet * tempSet = [[NSMutableSet alloc]init];
-     
-     for (Tag * tag in rawTags) {
-     [tempSet addObject:tag.name];
-     }*/
-    
-    
-    /*[_rightScrollView buildButtonsWith:[tempSet allObjects]];
-    [_rightScrollView buildButtonsWith:@[@"ABC",@"CBA"]];
-    _rightScrollView.sortByPropertyKey = @"name";
-    [_middleScrollView buildButtonsWith:@[@"1",@"2",@"3",@"OT",@"PS"]];
-    _middleScrollView.sortByPropertyKey = @"period";
-    [_leftScrollView buildButtonsWith:@[@"line_f_1",@"line_f_2",@"line_f_3",@"line_f_4",@"line_d_1",@"line_d_2",@"line_d_3",@"line_d_4"]];
-    _leftScrollView.sortByPropertyKey = @"name";
-    
-    self.modules = [[NSMutableArray alloc]initWithObjects:
-                    _rightScrollView,_middleScrollView,_leftScrollView, nil]; // removed the slider
-    
-     _sliderView.sortByPropertyKey = @"time";
-    
-    
-    
-    [_sliderView setEndTime:(2000)];*/
-    
-    //Test RangeSlider
-    
-    // Do any additional setup after loading the view from its nib
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -454,8 +422,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    
-    // Dispose of any resources that can be recreated.
 }
 
 @end

@@ -22,12 +22,10 @@
 @synthesize activityInd=_activityInd;
 @synthesize thumbPeriod = _thumbPeriod;
 @synthesize thumbDeleteButton=_thumbDeleteButton;
-@synthesize iPath=_iPath;
 @synthesize imageLoaded;
 @synthesize backgroundView=_backgroundView;
 @synthesize translucentEditingView;
 @synthesize checkmarkOverlay;
-@synthesize data = _data;
 @synthesize ratingscale;
 
 - (id)init
@@ -165,33 +163,9 @@
 
 
 
--(void)setData:(Tag *)data
-{
-    _data = data;
-}
-
--(Tag *)data
-{
-
-    return _data;
-}
-
 -(void)prepareForReuse
 {
-    _data = nil;
-//    self.imageView.image = [UIImage imageNamed:@"live.png"];
-//    self.thumbPeriod.text = @"";
-//    self.thumbName.text = @"";
-//    self.thumbTime.text = @"";
-//    self.thumbDur.text = @"";
-//    self.thumbColour.backgroundColor = nil;
-//    self.backgroundView = nil;
-//    self.data = nil;
-//    self.ratingscale.rating = 0;
-//
-//    
-//    self.checkmarkOverlay.hidden = YES;
-//    self.translucentEditingView.hidden = YES;
+    self.data = nil;
     [super prepareForReuse];
 
 }

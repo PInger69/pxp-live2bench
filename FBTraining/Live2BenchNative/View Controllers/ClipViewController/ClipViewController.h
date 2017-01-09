@@ -17,17 +17,10 @@
 #import "TabView.h"
 
 
-
-@class Live2BenchViewController;
-@class CustomTabBar;
-@class thumbnailCell;
-
 @interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, PxpFilterDelegate>
 {
-    NSMutableArray      * _tagsToDisplay;       // array of tags which will display in clip view
     UILabel             * filterBreadCrumbs;
     BOOL                isEditingClips;
-    NSMutableArray      * arrayToBeDeleted;     // is this even being used
     NSMutableArray      * downloadedTagIds;     // array of downloaded Tags'id
 }
 

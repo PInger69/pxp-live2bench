@@ -43,52 +43,6 @@
 #import "PxpTelestration.h"
 #import "TagProtocol.h"
 
-//typedef NS_ENUM (NSInteger,TagType){
-//    TagTypeNormal                  = 0,
-//    //TagTypeLine                    = 2,
-//    TagTypeDeleted                 = 3,
-//    TagTypeTele                    = 4,
-//    //TagTypeStrength                = 10,
-////    TagTypeOpenDuration            = 99,
-//    TagTypeCloseDurationOLD           = 100,
-//    
-//    TagTypeHockeyStartOLine        = 1,
-//    TagTypeHockeyStopOLine         = 2,
-//    TagTypeHockeyStartDLine        = 5,
-//    TagTypeHockeyStopDLine         = 6,
-//    TagTypeHockeyPeriodStart       = 7,
-//    TagTypeHockeyPeriodStop        = 8,
-//    TagTypeHockeyOppOLineStart     = 9,
-//    TagTypeHockeyOppOLineStop      = 10,
-//    TagTypeHockeyOppDLineStart     = 11,
-//    TagTypeHockeyOppDLineStop      = 12,
-//    TagTypeHockeyStrengthStart     = 13,
-//    TagTypeHockeyStrengthStop      = 14,
-//    
-//    /*TagTypeSoccerHalfStart         = 15,
-//    TagTypeSoccerHalfStop          = 16,
-//    TagTypeSoccerZoneStart         = 17,
-//    TagTypeSoccerZoneStop          = 18,*/
-//    
-//    TagTypeSoccerHalfStart         = 17,
-//    TagTypeSoccerHalfStop          = 18,
-//    TagTypeSoccerZoneStart         = 15,
-//    TagTypeSoccerZoneStop          = 16,
-//    
-//    TagTypeFootballDownStart       = 19,
-//    TagTypeFootballDownStop        = 20,
-//    TagTypeFootballQuarterStart    = 21,
-//    TagTypeFootballQuarterStop     = 22,
-//    
-//    TagTypeFootballDownTags        = 1002,
-//    TagTypeOpenDuration            = 1004,
-//    TagTypeCloseDuration           = 1006,
-
-//    TagTypeStartGame               = 1010,
-//    TagTypeEndGame                 = 1012,
-//    
-//};
-
 @interface Tag : NSObject<FilterItemProtocol,TagProtocol>
 {
 

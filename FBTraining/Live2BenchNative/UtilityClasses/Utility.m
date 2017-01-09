@@ -92,7 +92,8 @@ static InternetMonitor* internetMonitor;
     NSString *jsonString;
     if (jsonData) {
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        jsonString = [jsonString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     } else {
         NSLog(@"JSON Error in Encoder");
     }
@@ -109,7 +110,8 @@ static InternetMonitor* internetMonitor;
     NSString *jsonString;
     if (jsonData) {
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        jsonString = [jsonString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     } else {
         NSLog(@"JSON Error: converting Dict to JSON");
         *aError = [NSError errorWithDomain:@"Json Error" code:-0 userInfo:@{}];

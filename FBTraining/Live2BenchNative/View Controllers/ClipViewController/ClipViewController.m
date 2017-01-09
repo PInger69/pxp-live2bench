@@ -52,14 +52,10 @@
     ListPopoverControllerWithImages * sourceSelectPopover;
     NSString                        * eventType;
     EncoderManager                  * _encoderManager;
-    id                              clipViewTagObserver;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
     
 }
-
-@synthesize tagsToDisplay=_tagsToDisplay;
-
 
 static void * encoderTagContext = &encoderTagContext;
 
@@ -135,21 +131,14 @@ static void * encoderTagContext = &encoderTagContext;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
 
-        
         [self.pxpFilter filterTags:self.allTagsArray];
-        [_tagsToDisplay removeAllObjects];
-        [_tagsToDisplay addObjectsFromArray:self.pxpFilter.filteredTags];
-        
-        NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-        _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
-
-        [self.collectionView reloadData];
+        [self sortAndDisplayUniqueTags:self.pxpFilter.filteredTags];
     });
 }
 
 
 -(void)clear{
-    [self.tagsToDisplay removeAllObjects];
+    self.tagsToDisplay = nil;
     [self.allTagsArray removeAllObjects];
     [self.collectionView reloadData];
 }
@@ -177,19 +166,19 @@ static void * encoderTagContext = &encoderTagContext;
     
     
     Profession* profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
-   if (_currentEvent) {
-    if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
-        [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
-    }
+    if (_currentEvent) {
+        if (![self.pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
+            [self.pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
+        }
     
     
     
     
     
-       NSMutableArray * filters = [NSMutableArray new];
+        NSMutableArray * filters = [NSMutableArray new];
        
     
-       [filters addObjectsFromArray:@[
+        [filters addObjectsFromArray:@[
                                      [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
@@ -198,17 +187,12 @@ static void * encoderTagContext = &encoderTagContext;
                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
                                      ]];
 
-       if (profession && profession.filterPredicate )[filters addObject:profession.filterPredicate];
+        if (profession && profession.filterPredicate )[filters addObject:profession.filterPredicate];
     
        
         NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:filters];
         
-        [_pxpFilter addPredicates:@[allowThese]];
- 
-        
-
-        
-        
+        [self.pxpFilter addPredicates:@[allowThese]];
 
     }
     [self.collectionView reloadData];
@@ -420,29 +404,6 @@ static void * encoderTagContext = &encoderTagContext;
     [self.collectionView reloadData];
     [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
 }
-
-
-
--(void):(BOOL)isEditing
-{
-    if (isEditing)
-    {
-        isEditingClips = TRUE;
-        
-    }
-    else
-    {
-        isEditingClips=FALSE;
-        if ([arrayToBeDeleted count])
-        {//uncheck all the check box and clear the selectedCellRows array
-            [arrayToBeDeleted removeAllObjects];
-            [self.collectionView reloadData];
-        }
-        
-    }
-}
-
-
 
 //how many thumbnails?
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section
@@ -676,63 +637,6 @@ static void * encoderTagContext = &encoderTagContext;
     }
 }
 
-//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
-//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-//        BOOL needCanNotDeleteTagAlertView = false;
-//         
-//        for (NSIndexPath *cellIndexPath in [self.setOfSelectedCells copy]) {
-//            Tag *tag = self.tagsToDisplay[cellIndexPath.row];
-//            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-//                [arrayOfTagsToRemove addObject:tag];
-//                [indexPathsArray addObject:cellIndexPath];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-//            }else{
-//                needCanNotDeleteTagAlertView = true;
-//            }
-//        }
-//         
-//         for (Tag *tag in arrayOfTagsToRemove) {
-//             [self.tagsToDisplay removeObject:tag];
-//             [self.allTagsArray removeObject: tag];
-//         }
-//         [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
-//         [self.setOfSelectedCells removeAllObjects];
-//         
-//        if (needCanNotDeleteTagAlertView) {
-//             CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//             [alert showView];
-//         }
-//         [self deselectAllCell];
-//
-//
-//    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
-//
-//        Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-//        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]) {
-////        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-//            [self.tagsToDisplay removeObject:tag];
-//            if (self.editingIndexPath) {
-//                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
-//            }
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-//            [self removeIndexPathFromDeletion];
-//        }else{
-//            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//            [alert showView];
-//        }
-//        [self deselectAllCell];
-//
-//        
-//    }
-//
-//    [alertView viewFinished];
-//    [CustomAlertView removeAlert:alertView];
-//    [self checkDeleteAllButton];
-//}
-
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
     if (self.editingIndexPath) {
@@ -943,20 +847,7 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
-    //if (_currentEvent.live) {
-         //_currentEvent = nil;
-        [self clear];
-    //}
-}
-
-- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
-    NSMutableArray *tags = [NSMutableArray array];
-    for (Tag *tag in tagsToDisplay) {
-//        if (tag.type == TagTypeNormal) {
-            [tags addObject:tag];
-//        }
-    }
-    _tagsToDisplay = tags;
+    [self clear];
 }
 
 -(void)deselectAllCell{
@@ -995,7 +886,6 @@ static void * encoderTagContext = &encoderTagContext;
     
     Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
     [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
-//    [[TabView sharedDefaultFilterTab].telestrationLabel setNeedsDisplay];
 }
 
 
@@ -1003,47 +893,26 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)onFilterComplete:(PxpFilter*)filter
 {
     if (!filter || !filter.filteredTags ) {
-        
         return ;
     }
-    
-    [_tagsToDisplay removeAllObjects];
-    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-    
-//    for (Tag*t in  _tagsToDisplay) {
-//        NSLog(@"%@",t.ID);
-//    }
-    
-    // quick unique check
-    NSMutableSet * uniqueList = [NSMutableSet new];
-    [uniqueList addObjectsFromArray:_tagsToDisplay];
-    NSArray * uTags = [uniqueList allObjects];
-    
-    
-    _tagsToDisplay = [NSMutableArray arrayWithArray:[uTags sortedArrayUsingDescriptors:@[sorter]]];
-    
-//    for (Tag*tt in  _tagsToDisplay) {
-//                NSLog(@"%@",tt.ID);
-//    }
-    
-    [self.collectionView reloadData];
+    [self sortAndDisplayUniqueTags:filter.filteredTags];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
     [self.pxpFilter filterTags:self.allTagsArray];
-    [_tagsToDisplay removeAllObjects];
-    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-    
-        // quick unique check
+    [self sortAndDisplayUniqueTags:filter.filteredTags];
+}
+
+// Sort tags by time index. Ensure that tags are unique
+-(void) sortAndDisplayUniqueTags:(NSArray*) tags {
     NSMutableSet * uniqueList = [NSMutableSet new];
-    [uniqueList addObjectsFromArray:_tagsToDisplay];
-    NSArray * uTags = [uniqueList allObjects];
+    [uniqueList addObjectsFromArray:tags];
     
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-    _tagsToDisplay = [NSMutableArray arrayWithArray:[uTags sortedArrayUsingDescriptors:@[sorter]]];
+    self.tagsToDisplay = [NSMutableArray arrayWithArray:[[uniqueList allObjects] sortedArrayUsingDescriptors:@[sorter]]];
     [self.collectionView reloadData];
 }
+
 
 @end
