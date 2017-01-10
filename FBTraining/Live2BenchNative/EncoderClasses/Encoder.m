@@ -1132,6 +1132,8 @@
     NSData * finishedData       = connection.cumulatedData;
     NSDictionary * extra        = connection.extra;
 
+    NSLog(@"JSON: %@", [[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
+    
     if ([connectionType isEqualToString: AUTHENTICATE]){
         [self authenticateResponse: finishedData];
     } else if ([connectionType isEqualToString: VERSION]){
@@ -1145,6 +1147,7 @@
     } else if ([connectionType isEqualToString: START_EVENT]) {
         NSError         * error;
         NSDictionary    * results;
+        
         results         = [Utility JSONDatatoDict:finishedData];
         results         = [Utility JSONDatatoDict:finishedData error:&error];
         

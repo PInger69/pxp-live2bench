@@ -143,7 +143,9 @@
     
     if (error || !receivedImage) {
         self.error = error;
-        NSLog(@"Error %@",error);
+        if (error) {
+            NSLog(@"Error %@",error);
+        }
         self.success = NO;
     } else {
         [self.imageAssetManager.arrayOfClipImages setObject:receivedImage forKey:self.url];

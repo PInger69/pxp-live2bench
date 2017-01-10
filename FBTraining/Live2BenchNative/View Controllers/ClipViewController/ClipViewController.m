@@ -102,6 +102,7 @@ static void * encoderTagContext = &encoderTagContext;
     }else{
         _observedEncoder = (id <EncoderProtocol>) note.object;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+        NSLog(@"Now observing encoder of type %@", [_observedEncoder class]);
     }
 }
 

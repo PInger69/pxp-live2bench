@@ -14,16 +14,8 @@
 @class Tag;
 
 @interface thumbnailCell : UICollectionViewCell
-{
-    UIImageView *imageView;
-    ClipCornerView *_thumbColour;
-    UIActivityIndicatorView *_activityInd;
-    CustomButton *_thumbDeleteButton;
-    UIView *translucentEditingView;
-    UIImageView *checkmarkOverlay;
-}
 
-@property (nonatomic,strong) UIImageView *backgroundView;
+@property (nonatomic,strong) UIImageView *backgroundPlaneView;
 @property(nonatomic,strong)  CustomButton *thumbDeleteButton;
 @property (nonatomic,strong) UIActivityIndicatorView *activityInd;
 @property (nonatomic,strong) ClipCornerView *thumbColour;

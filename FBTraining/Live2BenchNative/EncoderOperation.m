@@ -320,13 +320,11 @@
     NSString *unencoded = [NSString stringWithFormat:@"%@://%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",
                            self.encoder.urlProtocol,
                            self.encoder.ipAddress,
-                           homeTeam,
-                           awayTeam,
-                           league,
-                           [NSString stringWithFormat:@"%@",self.timeStamp],
-                           @"high"];
-    
-    unencoded = [unencoded stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                           [homeTeam stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+                           [awayTeam stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+                           [league stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+                           [[NSString stringWithFormat:@"%@",self.timeStamp]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+                           [@"high"stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
     
     NSURL * checkURL                        = [NSURL URLWithString:unencoded  ];
     

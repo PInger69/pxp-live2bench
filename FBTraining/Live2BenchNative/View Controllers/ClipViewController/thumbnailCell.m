@@ -14,20 +14,6 @@
 
 @implementation thumbnailCell
 
-@synthesize imageView;
-@synthesize thumbName=_thumbName;
-@synthesize thumbTime=_thumbTime;
-@synthesize thumbDur=_thumbDur;
-@synthesize thumbColour=_thumbColour;
-@synthesize activityInd=_activityInd;
-@synthesize thumbPeriod = _thumbPeriod;
-@synthesize thumbDeleteButton=_thumbDeleteButton;
-@synthesize imageLoaded;
-@synthesize backgroundView=_backgroundView;
-@synthesize translucentEditingView;
-@synthesize checkmarkOverlay;
-@synthesize ratingscale;
-
 - (id)init
 {
     self = [super init];
@@ -70,16 +56,16 @@
 - (void)setupView
 {
     
-    self.backgroundView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
-    [self.backgroundView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
-    [self addSubview:self.backgroundView];
-    self.backgroundView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
-    self.backgroundView.layer.borderWidth = 3;
+    self.backgroundPlaneView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+    [self.backgroundPlaneView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
+    [self addSubview:self.backgroundPlaneView];
+    self.backgroundPlaneView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    self.backgroundPlaneView.layer.borderWidth = 3;
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
 
-    [self.imageView setFrame:CGRectMake(2, 2, self.backgroundView.bounds.size.width - 5, 131.0f)];
+    [self.imageView setFrame:CGRectMake(2, 2, self.backgroundPlaneView.bounds.size.width - 5, 131.0f)];
 
-    [self.backgroundView addSubview:self.imageView];
+    [self.backgroundPlaneView addSubview:self.imageView];
     
     self.thumbColour = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width-30, 0.0f, 30, 30)];
     [self.thumbColour setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
@@ -128,30 +114,30 @@
     [self addSubview:self.thumbGameTime];
     
 
-    ratingscale = [[RatingOutput alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width -300, self.imageView.frame.size.height -18.0f, 16.0f, 16.0f)];
-    [self.imageView addSubview:ratingscale];
+    self.ratingscale = [[RatingOutput alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width -300, self.imageView.frame.size.height -18.0f, 16.0f, 16.0f)];
+    [self.imageView addSubview:self.ratingscale];
     
-    imageLoaded = FALSE;
+    self.imageLoaded = FALSE;
     
     self.activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [self.activityInd setFrame:CGRectMake((self.thumbColour.frame.size.width - self.activityInd.frame.size.width)/2, CGRectGetMaxY(self.thumbColour.frame) + 62.0f, 37.0f, 37.0f)];
     [self addSubview:self.activityInd];
     
-    translucentEditingView = [[UIView alloc] initWithFrame:self.bounds];
-    [translucentEditingView setBackgroundColor:PRIMARY_APP_COLOR];
-    [translucentEditingView setAlpha:0.3];
+    self.translucentEditingView = [[UIView alloc] initWithFrame:self.bounds];
+    [self.translucentEditingView setBackgroundColor:PRIMARY_APP_COLOR];
+    [self.translucentEditingView setAlpha:0.3];
     //[translucentEditingView setUserInteractionEnabled:FALSE];
-    [translucentEditingView setTag:998];
-    translucentEditingView.hidden = YES;
-    [self addSubview:translucentEditingView];
+    [self.translucentEditingView setTag:998];
+    self.translucentEditingView.hidden = YES;
+    [self addSubview:self.translucentEditingView];
     
     
-    checkmarkOverlay = [[UIImageView alloc] initWithFrame:self.bounds];
-    [checkmarkOverlay setImage:[[UIImage imageNamed:@"checkmarkOverlay"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-    [checkmarkOverlay setTag:999];
-    [checkmarkOverlay setUserInteractionEnabled:TRUE];
-    [checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [self addSubview:checkmarkOverlay];
+    self.checkmarkOverlay = [[UIImageView alloc] initWithFrame:self.bounds];
+    [self.checkmarkOverlay setImage:[[UIImage imageNamed:@"checkmarkOverlay"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    [self.checkmarkOverlay setTag:999];
+    [self.checkmarkOverlay setUserInteractionEnabled:TRUE];
+    [self.checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    [self addSubview:self.checkmarkOverlay];
     
     self.thumbDeleteButton = [[CustomButton alloc] initWithFrame: CGRectMake(-22, -17, 45, 45)];
     [self.thumbDeleteButton setImage: [self deleteImage] forState:UIControlStateNormal];
@@ -248,12 +234,6 @@
     if (!self.thumbDeleteButton.hidden && CGRectContainsPoint(self.thumbDeleteButton.frame, point)) {
         return self.thumbDeleteButton;
     }
-//    //for (UIView *subview in self.subviews) {
-//        if (CGRectContainsPoint(self.frame, point)) {
-//            return self;
-//        }
-//    //}
-    
     // use this to pass the 'touch' onward in case no subviews trigger the touch
     return [super hitTest:point withEvent:event];
 }

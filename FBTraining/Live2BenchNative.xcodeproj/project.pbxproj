@@ -307,7 +307,6 @@
 		D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EFB196461EC0029C5DD /* BottomViewController.m */; };
 		D7581F2A196461ED0029C5DD /* DragContext.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F03196461EC0029C5DD /* DragContext.m */; };
 		D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F05196461EC0029C5DD /* DragDropManager.m */; };
-		D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F07196461EC0029C5DD /* drawXYZ.m */; };
 		D7581F2D196461ED0029C5DD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7581F09196461EC0029C5DD /* InfoPlist.strings */; };
 		D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F18196461ED0029C5DD /* ExternalShareUtils.m */; };
 		D7581F3E196461ED0029C5DD /* HeaderBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F1D196461ED0029C5DD /* HeaderBar.m */; };
@@ -1213,8 +1212,6 @@
 		D7581F03196461EC0029C5DD /* DragContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragContext.m; sourceTree = "<group>"; };
 		D7581F04196461EC0029C5DD /* DragDropManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragDropManager.h; sourceTree = "<group>"; };
 		D7581F05196461EC0029C5DD /* DragDropManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragDropManager.m; sourceTree = "<group>"; };
-		D7581F06196461EC0029C5DD /* drawXYZ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = drawXYZ.h; sourceTree = "<group>"; };
-		D7581F07196461EC0029C5DD /* drawXYZ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawXYZ.m; sourceTree = "<group>"; };
 		D7581F0A196461EC0029C5DD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D7581F17196461ED0029C5DD /* ExternalShareUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalShareUtils.h; sourceTree = "<group>"; };
 		D7581F18196461ED0029C5DD /* ExternalShareUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExternalShareUtils.m; sourceTree = "<group>"; };
@@ -2979,8 +2976,6 @@
 				D7581F03196461EC0029C5DD /* DragContext.m */,
 				D7581F04196461EC0029C5DD /* DragDropManager.h */,
 				D7581F05196461EC0029C5DD /* DragDropManager.m */,
-				D7581F06196461EC0029C5DD /* drawXYZ.h */,
-				D7581F07196461EC0029C5DD /* drawXYZ.m */,
 				D7581F08196461EC0029C5DD /* en.lproj */,
 				D7581F17196461ED0029C5DD /* ExternalShareUtils.h */,
 				D7581F18196461ED0029C5DD /* ExternalShareUtils.m */,
@@ -4299,7 +4294,6 @@
 				AA0FED2C19589951001D25EB /* ClipSharePopoverViewController.m in Sources */,
 				D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */,
 				D723F54C1D661C41003C9149 /* VideoUploadRecieptActivity.m in Sources */,
-				D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */,
 				D73CDC4A1CC7E3570006AE72 /* CameraResource.m in Sources */,
 				D7A391721A6959DF00BFD353 /* ActionList.m in Sources */,
 				D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */,
