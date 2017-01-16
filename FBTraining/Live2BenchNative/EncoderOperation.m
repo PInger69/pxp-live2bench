@@ -273,7 +273,7 @@
 
 -(void)parseDataToEncoder:(NSData*)data
 {
-    
+    NSLog(@"JSON Tags: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     [self.encoder.parseModule parse:data mode:ParseModeGetEventTags for:self.encoder];
     [super parseDataToEncoder:data];
 }

@@ -205,7 +205,7 @@ static void * encoderTagContext = &encoderTagContext;
     [super viewDidLoad];
     sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
     sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
-    downloadedTagIds = [[NSMutableArray alloc] init];
+//    downloadedTagIds = [[NSMutableArray alloc] init];
     [self setupView];
     
     
@@ -249,7 +249,6 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)setupView
 {
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    isEditingClips=FALSE;
     UICollectionViewFlowLayout *thumbLayout = [[UICollectionViewFlowLayout alloc] init];
     [thumbLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     [thumbLayout setMinimumInteritemSpacing:5];

@@ -2,7 +2,7 @@
 //  Profession.h
 //  Live2BenchNative
 //
-//  Created by BC Holmes on 2017-01-09.
+//  Moved from the ProfessionMap file by BC Holmes on 2017-01-09.
 //  Copyright © 2017 DEV. All rights reserved.
 //
 

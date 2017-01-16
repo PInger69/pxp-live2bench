@@ -201,6 +201,7 @@
             [_pxpFilter addTags:@[tag]];
         }
         
+        // BCH: TODO: This line has crashed the app a coupl'a times. Possibly the tag is nil?
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
             [_pxpFilter addTags:@[tag]];
@@ -415,6 +416,8 @@
 
     
     Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
+    
+    NSLog(@"Current profession type %@", _currentEvent.eventType);
     if (_currentEvent) {
     if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
         [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];

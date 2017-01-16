@@ -40,7 +40,9 @@ static InternetMonitor* internetMonitor;
     NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
     NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
     NSString *displayTime;
-    if (time < 0) {
+    if (dHours == 0 && dMinutes == 0 && dSeconds == 0) {
+        displayTime = @"0:00:00";
+    } else if (time < 0) {
 //        if (dHours > 0) {
             displayTime = [NSString stringWithFormat:@"-%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
 //        }
