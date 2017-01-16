@@ -130,13 +130,6 @@
     _currentTagLabel.hidden             = YES;
     _currentTagLabel.text               = @"";
     _selectedTag                        = nil;
-//    PXPLog(@"Pressed Live Button in full screen");
-//
-//    [self.playerViewController.playerView.player goToLive];
-//    
-//    
-//    [[EncoderManager getInstance] declareCurrentEvent:[EncoderManager getInstance].liveEvent];
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:[EncoderManager getInstance].liveEvent];
 }
 
 - (void)extendStartAction:(UIButton *)button {

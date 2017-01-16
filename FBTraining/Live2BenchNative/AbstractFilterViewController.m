@@ -88,8 +88,6 @@
     [super viewDidLoad];
     [self setupView];
     [self componentSetup];
-  //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh) name:NOTIF_TAG_RECEIVED object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh) name:@"NOTIF_DELETE_SYNCED_TAG"object:nil];
 }
 
 /**

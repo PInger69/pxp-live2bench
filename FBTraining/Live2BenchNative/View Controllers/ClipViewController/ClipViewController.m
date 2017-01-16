@@ -44,28 +44,25 @@
 
 @property (strong, nonatomic) TabView *popupTabBar;
 
+@property (nonatomic, strong) BreadCrumbsViewController* breadCrumbVC;
+@property (nonatomic, strong) id <EncoderProtocol> observedEncoder;
+
+
 @end
 
 @implementation ClipViewController
 {
-    BreadCrumbsViewController       * breadCrumbVC;
     ListPopoverControllerWithImages * sourceSelectPopover;
-    NSString                        * eventType;
-    EncoderManager                  * _encoderManager;
     Event                           * _currentEvent;
-    id <EncoderProtocol>                _observedEncoder;
     
 }
 
-static void * encoderTagContext = &encoderTagContext;
-
-- (id)init //controller:(Live2BenchViewController *)lbv
+- (id)init
 {
     self = [super init];
     
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
-        _encoderManager = _appDel.encoderManager;
     }
     return self;
 }
@@ -76,7 +73,6 @@ static void * encoderTagContext = &encoderTagContext;
     self = [super initWithAppDelegate:appDel];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
-        _encoderManager = _appDel.encoderManager;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
 
@@ -93,24 +89,26 @@ static void * encoderTagContext = &encoderTagContext;
 // encoderOberver
 -(void)addEventObserver:(NSNotification *)note
 {
-    if (_observedEncoder != nil) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    if (self.observedEncoder != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:self.observedEncoder];
     }
     
     if (note.object == nil) {
-        _observedEncoder = nil;
-    }else{
-        _observedEncoder = (id <EncoderProtocol>) note.object;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-        NSLog(@"Now observing encoder of type %@", [_observedEncoder class]);
+        self.observedEncoder = nil;
+    } else {
+        self.observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:self.observedEncoder];
+        NSLog(@"Now observing encoder of type %@", [self.observedEncoder class]);
     }
 }
 
 -(void)eventChanged:(NSNotification *)note
 {
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
+        NSLog(@"ClipViewController.eventChanged called by no actual change");
         return;
     }
+    NSLog(@"ClipViewController.eventChanged...");
     
     if (_currentEvent != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
@@ -128,6 +126,7 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 -(void)onTagChanged:(NSNotification *)note{
+    NSLog(@"ClipViewController.onTagChanged...");
 
     dispatch_async(dispatch_get_main_queue(), ^{
         self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
@@ -160,6 +159,9 @@ static void * encoderTagContext = &encoderTagContext;
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:true];
+#ifdef DEBUG
+    NSLog(@"ClipViewController viewDidAppear");
+#endif
    
     self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     self.pxpFilter.delegate = self;
@@ -214,8 +216,8 @@ static void * encoderTagContext = &encoderTagContext;
     //set the collectionview's properties
     [self.collectionView setAllowsSelection:TRUE];
     [self.collectionView setAllowsMultipleSelection:TRUE];
-     breadCrumbVC = [[BreadCrumbsViewController alloc]initWithPoint:CGPointMake(25, 64)];
-    [self.view addSubview:breadCrumbVC.view];
+    self.breadCrumbVC = [[BreadCrumbsViewController alloc]initWithPoint:CGPointMake(25, 64)];
+    [self.view addSubview:self.breadCrumbVC.view];
     
     
     self.longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
@@ -402,7 +404,7 @@ static void * encoderTagContext = &encoderTagContext;
     NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
     self.tagsToDisplay = [filteredArray mutableCopy];
     [self.collectionView reloadData];
-    [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
+    [self.breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
 }
 
 //how many thumbnails?
@@ -463,19 +465,15 @@ static void * encoderTagContext = &encoderTagContext;
     [cell.thumbName setText:[[thumbNameStr stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"%" withString:@""]];
     [cell.thumbName setFont:[UIFont boldSystemFontOfSize:18.0f]];
     
-    
-    
-    NSString * theDisplayTime = [Utility translateTimeFormat:tagSelect.time];
-    [cell.thumbTime setText: theDisplayTime];
+    cell.thumbTime.text = [Utility translateTimeFormat:tagSelect.time];
     
     
     if (_currentEvent.gameStartTag){
     
         float startTime = tagSelect.time - ([_currentEvent.gameStartTag time]);
-        [cell.thumbGameTime setText: [NSString stringWithFormat:@"%@",[Utility translateTimeFormat:startTime]]];
+        cell.thumbGameTime.text = [Utility translateTimeFormat:startTime];
     }
     
-    [cell.thumbTime setText: theDisplayTime];
     
     
 //    [Utility translateTimeFormat:tagSelect.time]
@@ -532,7 +530,6 @@ static void * encoderTagContext = &encoderTagContext;
         if (tagSelect.type != TagTypeTele){
             if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
                 weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-                //            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
             } else {
                 [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
             }

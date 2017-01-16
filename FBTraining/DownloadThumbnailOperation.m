@@ -148,6 +148,8 @@
         }
         self.success = NO;
     } else {
+        NSLog(@"received image size %@: %.1fx%.1f", self.request.URL.path,
+              receivedImage.size.width, receivedImage.size.height);
         [self.imageAssetManager.arrayOfClipImages setObject:receivedImage forKey:self.url];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.imageView.image = receivedImage;

@@ -1132,7 +1132,7 @@
     NSData * finishedData       = connection.cumulatedData;
     NSDictionary * extra        = connection.extra;
 
-    NSLog(@"JSON: %@", [[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
+    NSLog(@"JSON response for %@: %@", connectionType, [[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
     
     if ([connectionType isEqualToString: AUTHENTICATE]){
         [self authenticateResponse: finishedData];
@@ -2172,64 +2172,6 @@
     
 }
 
-
-/*-(void)makeTagResponce:(NSData *)data
-{
-    NSDictionary    * results =[Utility JSONDatatoDict:data];
-    PXPLog(@"Tag Response has been received");
-    PXPLog(@"The tag response is %@", results);
-    if([results isKindOfClass:[NSDictionary class]])
-    {
-        if ([results objectForKey:@"id"]) {
-            NSString * tagId = [[results objectForKey:@"id"]stringValue];
-            Tag *newTag = [[Tag alloc] initWithData: results];
-            newTag.feeds = self.encoderManager.feeds;
-            [_event.tags setObject:newTag forKey:tagId];
-                if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
-                }
-        }
-    }
-}*/
-
-/*-(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict
-{
-    NSDictionary    * results =[Utility JSONDatatoDict:data];
-    Event * tempEvent;
-    
-//    if ([dict objectForKey:@"event"]){
-//        tempEvent = (Event *)[dict objectForKey:@"event"];
-//    } else {
-        tempEvent = _event;
-//    }
-
-    
-    if (results){
-        NSDictionary    * tags = [results objectForKey:@"tags"];
-        NSMutableDictionary *tagsDictionary = [NSMutableDictionary dictionary];
-        if (tags) {
-            for (NSString *idKey in [tags allKeys]) {
-                if ([tags[idKey] objectForKey:@"id"]) {
-                    Tag *newTag = [[Tag alloc] initWithData: tags[idKey]];
-                    newTag.feeds = self.encoderManager.feeds;
-                    [tagsDictionary addEntriesFromDictionary:@{idKey:newTag}];
-                    if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
-                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:tags[idKey]];
-                    }
-                }
-                
-            }
-            
-            tempEvent.tags = [[NSMutableArray alloc]initWithArray:[tagsDictionary allValues]];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
-        } else  if (![[results objectForKey:@"success"]boolValue]) {
-            PXPLog(@"Encoder Error!");
-            PXPLog(@"  ajax: %@",@"gametags");
-            PXPLog(@"  reason: %@",results[@"msg"]);
-        }
-    }
-    
-}*/
 
 -(void)deleteEventResponse: (NSData *) data{
     NSDictionary    * results =[Utility JSONDatatoDict:data];

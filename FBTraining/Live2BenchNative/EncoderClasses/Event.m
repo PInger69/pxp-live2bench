@@ -136,11 +136,6 @@
         _open = NO;
         
         NSMutableDictionary * tagToRaw = [NSMutableDictionary new];
-        // convert tags to rawdata
-//        for (Tag* t in _tags) {
-//            tagToRaw[t.ID] = [t makeTagData];
-//        }
-        
         for (id <TagProtocol> t in _tags) {
             tagToRaw[ [t ID] ] = [t rawData];
         }
@@ -189,26 +184,12 @@
     _rawData[@"tags"]   = [allTagData copy];
     
      self.isBuilt = YES;
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
-//                                                        object:self
-//                                                      userInfo:@{
-//                                                                 @"tags": tagsReceived
-//                                                                 }];
-    
 }
 
 
 
 -(void)addTag:(id<TagProtocol>)newtag extraData:(BOOL)notifPost
 {
-//    if ((newtag.type == TagTypeDeleted ) &&
-//        newtag.type != TagTypeHockeyStrengthStop &&
-//        newtag.type != TagTypeHockeyStopOLine &&
-//        newtag.type != TagTypeHockeyStopDLine &&
-//        newtag.type != TagTypeSoccerZoneStop) {
-//        return;
-//    }
-//    
     
     if (newtag.type == TagTypeDeleted ){
         return;

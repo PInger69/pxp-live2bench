@@ -159,20 +159,24 @@
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-//    NSLog(@"Connection finished");
-    
-
     if (error) {
         self.error = error;
          NSLog(@"Error %@",error);
         self.success = NO;
+    } else {
+#ifdef DEBUG
+        NSHTTPURLResponse* response = (NSHTTPURLResponse*) task.response;
+        NSString* contentType = response.MIMEType;
+        if (([contentType rangeOfString:@"application/json"].location != NSNotFound || [contentType rangeOfString:@"text"].location != NSNotFound)   && self.cumulatedData != nil) {
+            NSLog(@"JSON from encoder operation %@: (Mime type %@) %@", NSStringFromClass([self class]), contentType, [[NSString alloc] initWithData:self.cumulatedData encoding:NSUTF8StringEncoding]);
+        } else {
+            NSLog(@"Response mime type: %@", contentType);
+        }
+#endif
     }
-    
     [self parseDataToEncoder:self.cumulatedData];
 
     
-    
-//    [self.session finishTasksAndInvalidate];
     [self setExecuting:NO];
     [self setFinished:YES];
 }
@@ -786,7 +790,7 @@
     
     
     self.tagData = dict;// new
-    if ([dict count])PXPLog(@"MAKE TAG %@  StartTime:%@ Time:%@ duration:%@",dict[@"starttime"],dict[@"time"],dict[@"duration"]);
+//    if ([dict count])PXPLog(@"MAKE TAG %@  StartTime:%@ Time:%@ duration:%@",dict[@"starttime"],dict[@"time"],dict[@"duration"]);
     for ( id <TagProtocol> aTag in tags) {
         if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
             // check if aTag matches the data from the dict

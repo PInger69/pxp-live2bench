@@ -39,7 +39,6 @@
 static ImageAssetManager * instance;
 @implementation ImageAssetManager
 
-@synthesize arrayOfClipImages = _arrayOfClipImages;
 
 +(instancetype)getInstance
 {
@@ -51,7 +50,7 @@ static ImageAssetManager * instance;
     if(self){
         self.timeOutInterval = (NSTimeInterval)10.0;
         instance = self;
-        _arrayOfClipImages      = [[NSMutableDictionary alloc]init];
+        self.arrayOfClipImages      = [[NSMutableDictionary alloc]init];
         _thumbnailActionList    = [[ActionList alloc]init];
     }
     return self;
@@ -70,12 +69,9 @@ static ImageAssetManager * instance;
 {
     for (NSString * itemUrl in list) {
        
-        
-//        NSString *filePath = [self.pathForFolderContainingImages stringByAppendingString: imageURL];
-        
         UIImage *returningImage = [UIImage imageWithContentsOfFile:itemUrl];
         if (!returningImage) return;
-        [_arrayOfClipImages setObject:returningImage forKey:[itemUrl lastPathComponent]];
+        [self.arrayOfClipImages setObject:returningImage forKey:[itemUrl lastPathComponent]];
     }
     
 }
@@ -85,20 +81,20 @@ static ImageAssetManager * instance;
 -(void)thumbnailsUnload:(NSArray*)list
 {
     for (NSString * itemUrl in list) {
-//        [_arrayOfClipImages delete:itemUrl];
-        [_arrayOfClipImages removeObjectForKey:itemUrl];
+        [self.arrayOfClipImages removeObjectForKey:itemUrl];
     }
 }
 
 
 -(void)thumbnailsUnloadAll
 {
-    [_arrayOfClipImages removeAllObjects];
+    [self.arrayOfClipImages removeAllObjects];
 }
 
 // Download from server
 -(void)thumbnailsLoadedToView:(UIImageView*)imageView imageURL:(NSString*)aImageUrl
 {
+    NSLog(@"ImageAssetManager thumbnailsLoadedToView:imageURL:");
     DownloadThumbnailOperation * downloadThumb = [[DownloadThumbnailOperation alloc]initImageAssetManager:self url:aImageUrl imageView:imageView];
     [[NSOperationQueue mainQueue] addOperation:downloadThumb];
 }
@@ -120,7 +116,7 @@ static ImageAssetManager * instance;
         
         theImage = [self checkImageCacheForImageURL:imageURLString];
     }
-    //UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
+
     if(theImage){
         
         if (telestration && (telestration)) {
@@ -145,13 +141,11 @@ static ImageAssetManager * instance;
         NSURLRequest *theRequest = [[NSURLRequest alloc] initWithURL:imageURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(NSTimeInterval)self.timeOutInterval];
 
         NSURLImageConnection *imageConnection = [[NSURLImageConnection alloc] initWithRequest: theRequest delegate:self  startImmediately:NO];
-               // NSURLImageConnection *imageConnection = [[NSURLImageConnection alloc]initWithRequest: theRequest delegate:self];
         
         imageConnection.imageData = [[NSMutableData alloc]init];
         imageConnection.imageViewReference = viewReference;
         imageConnection.telestration = telestration;
         [self.queueOfConnections addObject: imageConnection ];
-       // [imageConnection start];
         
         [imageConnection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
       
@@ -165,9 +159,9 @@ static ImageAssetManager * instance;
 
 -(UIImage *) checkImageCacheForImageURL: (NSString *) imageURL{
     
-    UIImage *returningImage = _arrayOfClipImages[imageURL];
+    UIImage *returningImage = self.arrayOfClipImages[imageURL];
     if (!returningImage) {
-        returningImage = _arrayOfClipImages[[imageURL lastPathComponent]];
+        returningImage = self.arrayOfClipImages[[imageURL lastPathComponent]];
     }
     return returningImage;
 }
@@ -180,7 +174,8 @@ static ImageAssetManager * instance;
 
 - (void)connectionDidFinishLoading:(NSURLImageConnection *)connection {
     UIImage *receivedImage = [UIImage imageWithData:connection.imageData];
-    //[connection.imageViewReference stopAnimating];
+    
+    NSLog(@"received image size: %.1fx%.1f", receivedImage.size.width, receivedImage.size.height);
 
     if (connection.telestration) {
         CGFloat ratio = receivedImage.size.width / receivedImage.size.height;
@@ -198,7 +193,7 @@ static ImageAssetManager * instance;
     }
     
     if (receivedImage) {
-        [_arrayOfClipImages setObject:receivedImage forKey:[connection.originalRequest.URL absoluteString]];
+        [self.arrayOfClipImages setObject:receivedImage forKey:[connection.originalRequest.URL absoluteString]];
 
         
 
@@ -213,12 +208,7 @@ static ImageAssetManager * instance;
 }
 
 - (void)connection:(NSURLImageConnection *)connection didFailWithError:(NSError *)error{
-    //NSLog(@"the error is received");
-    //NSLog(@"%@",error.userInfo);
-    //[connection.imageViewReference stopAnimating];
-
-        connection.imageViewReference.image = [UIImage imageNamed:@"imageNotAvailable.png"];
-
+    connection.imageViewReference.image = [UIImage imageNamed:@"imageNotAvailable.png"];
     [self.queueOfConnections removeObject:connection];
 }
 

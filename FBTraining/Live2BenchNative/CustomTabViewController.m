@@ -21,18 +21,6 @@
 @synthesize sectionTab  = _sectionTab;
 @synthesize name        = _name;
 
-//-(id)initWithAppDelegate:(id<UIApplicationDelegate >) mainappDelegate
-//{
-//    
-//    mainAppDelegate = mainappDelegate;
-//    self = [super init];
-//    if (self) {
-//       //        [self.view setBackgroundColor:[UIColor grayColor]];
-//    }
-//    return self;
-//}
-
-
 -(id)initWithAppDelegate:(AppDelegate *) appDel
 {
     self = [super init];
