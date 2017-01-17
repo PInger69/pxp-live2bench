@@ -63,4 +63,6 @@
 /// Returns the actions in the action stack that take place before the given time.
 - (nonnull NSArray *)actionStackForTime:(NSTimeInterval)time;
 
+-(nullable UIImage*) renderOverImage:(UIImage*) theImage view:(UIImageView*) viewReference;
+
 @end

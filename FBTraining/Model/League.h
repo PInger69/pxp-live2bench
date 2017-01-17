@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
+@property (readonly, nonatomic) NSString* _Nullable nameOfPeriod;
+
 // this adds a team and makes the team know the league it belongs too
 -(void)addTeam:(nonnull LeagueTeam *)team;
 -(nonnull NSDictionary *)asDictionary;

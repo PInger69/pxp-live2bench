@@ -499,18 +499,27 @@
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
     
     if (tagSelect.type == TagTypeTele) {
-        NSLog(@"");//selectedCell.data.telestration.sourceName
-        
-        
         PxpTelestration *tele = cell.data.telestration;
         [cell.data.thumbnails objectForKey:tele.sourceName];
         
         NSString * checkName = (!tele.sourceName)?[cell.data.thumbnails allKeys][0]:tele.sourceName;
-        
+        NSLog(@"Telestration check name: %@", checkName);
         
         NSString * imageURL = ([cell.data.thumbnails objectForKey:checkName])?[cell.data.thumbnails objectForKey:checkName]:[NSString stringWithFormat:@"%@.png",[[NSUUID UUID]UUIDString]];
         
+
+        __weak UIImageView* weakImageView = cell.imageView;
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+
+            if (image) {
+                UIImage* imageWithTelestration = [tele renderOverImage:image view:cell.imageView];
+                weakImageView.image = imageWithTelestration;
+            }
+
+        }];
         
+        
+        /*
         if (![Utility hasWiFi] && ![[ImageAssetManager getInstance].arrayOfClipImages objectForKey:imageURL]) {
             UIImage * img = [tagSelect thumbnailForSource:checkName];
            if (img) [[ImageAssetManager getInstance].arrayOfClipImages setObject:img forKey:imageURL];
@@ -519,7 +528,7 @@
         [[ImageAssetManager getInstance] imageForURL: imageURL
                                          atImageView:cell.imageView withTelestration:tele];
         
-         
+        */
         
         
         

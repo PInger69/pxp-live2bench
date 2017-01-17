@@ -248,11 +248,6 @@ static NSOperationQueue * queue;
         }
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         
-//        if (needCanNotDeleteTagAlertView) {
-//            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//            [alert showView];
-//        }
-
         [self.setOfDeletingCells removeAllObjects];
         [self.tableView reloadData];
         [self checkDeleteAllButton];
@@ -301,20 +296,9 @@ static NSOperationQueue * queue;
         collapsableCell.downloadButton.downloadItem = nil;
         
         // This is checking if tag is downloaded to the device already
-        NSString * tagKey;
-//        tagKey  = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
-        tagKey = key;//[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+        NSString * tagKey = key;
         
-        
-
-        
-        // TODO: build new downloader
-        
-        
-        
-//        NSString *src1 = [NSString stringWithFormat:@"%@hq", key];
         NSString *src2 = [NSString stringWithFormat:@"%@", key];
-
         NSString *tagGlobalID  = [NSString stringWithFormat:@"%@_%@_%@", tag.event, tag.ID,src2];
         
 //         If you have an operation link it to progress
@@ -433,7 +417,6 @@ static NSOperationQueue * queue;
         
     }
     
-    //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     NSString *src = tag.thumbnails.allKeys.firstObject;
     
     if (tag.telestration) {
@@ -501,19 +484,13 @@ static NSOperationQueue * queue;
     
     
     LeagueTeam *team = [[tag.eventInstance.teams allValues]firstObject];
-    if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString? periodString:@""]];
+    NSString* periodName = team.league.nameOfPeriod;
+    
+    if (periodName) {
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,periodName,periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
-    }else if ([team.league.sport isEqualToString:@"Hockey"]){
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString? periodString:@""]];
-        [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
-        [cell.playersNumberLabel setText:players];
-    }else if ([team.league.sport isEqualToString:@"Football"]){
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Quarter", nil),periodString? periodString:@""]];
-        [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
-        [cell.playersNumberLabel setText:players];
-    }else{
+    } else {
         [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
     }
     

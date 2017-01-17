@@ -28,7 +28,7 @@
 -(void)viewDidLoad
 {
     
-    
+/*
     UIButton *(^makeButton)(NSString*,CGRect,SEL) = ^UIButton*(NSString*title,CGRect rect,SEL selector) {
         UIButton * btn = [[UIButton alloc]initWithFrame:rect];
         [btn setTitle:title forState:UIControlStateNormal];
@@ -37,7 +37,7 @@
         btn.layer.borderWidth = 1;
         return btn;
     };
-    
+*/
     
     self.button = [[UIButton alloc]initWithFrame:CGRectMake(400, 50+40, 100, 30)];
     
@@ -48,16 +48,6 @@
     [self.view addSubview:self.button];
     
     
-    
-    UIButton * button1 = [[UIButton alloc]initWithFrame:CGRectMake(300, 100, 100, 100)];
-//    
-//    [button1 setTitle:@"make folder" forState:UIControlStateNormal];
-//    [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [button1 addTarget:self action:@selector(onMakeFolder) forControlEvents:UIControlEventTouchUpInside];
-//    button1.layer.borderWidth = 1;
-//    [self.view addSubview:button1];
-//    
-
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     

@@ -58,5 +58,4 @@
     return [[_players allValues] count];
 }
 
-
 @end

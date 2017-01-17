@@ -227,4 +227,22 @@
     return stack;
 }
 
+-(nullable UIImage*) renderOverImage:(UIImage*) theImage view:(UIImageView*) viewReference {
+    CGFloat ratio = theImage.size.width / theImage.size.height;
+    CGSize bounds = viewReference.bounds.size;
+    CGSize size = bounds.width > bounds.height ? CGSizeMake(bounds.width, bounds.width / ratio) : CGSizeMake(bounds.height * ratio, bounds.height);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+    
+    [theImage drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+    [self.thumbnail drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+    
+    theImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+
+    return theImage;
+}
+
+
 @end

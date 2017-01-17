@@ -47,6 +47,17 @@
     return dict;
 }
 
-
+-(NSString*) nameOfPeriod {
+    if ([self.sport isEqualToString:@"Rugby"] || [self.sport isEqualToString:@"Soccer"]) {
+        return NSLocalizedString(@"Half", nil);
+    } else if ([self.sport isEqualToString:@"Hockey"]) {
+        return NSLocalizedString(@"Period", nil);
+    } else if ([self.sport isEqualToString:@"Football"]) {
+        return NSLocalizedString(@"Quarter", nil);
+    }else{
+        return nil;
+    }
+    
+}
 
 @end
