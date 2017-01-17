@@ -485,13 +485,6 @@
 		D83E83E31E2D90A5000FC23F /* VideoBarListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81EE1E2D90A4000FC23F /* VideoBarListViewController.m */; };
 		D83E83E41E2D90A5000FC23F /* VideoBarMyClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81F01E2D90A4000FC23F /* VideoBarMyClipViewController.m */; };
 		D83E83E51E2D90A5000FC23F /* VideoControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81F21E2D90A4000FC23F /* VideoControlBar.m */; };
-		D83E83E61E2D90A5000FC23F /* ClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81F81E2D90A5000FC23F /* ClipViewController.m */; };
-		D83E83E71E2D90A5000FC23F /* thumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81FA1E2D90A5000FC23F /* thumbnailCell.m */; };
-		D83E83E81E2D90A5000FC23F /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E81FC1E2D90A5000FC23F /* PreferencesView.xib */; };
-		D83E83E91E2D90A5000FC23F /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81FE1E2D90A5000FC23F /* PreferencesViewController.m */; };
-		D83E83EA1E2D90A5000FC23F /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E82001E2D90A5000FC23F /* SettingsPageViewController.m */; };
-		D83E83EB1E2D90A5000FC23F /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E82021E2D90A5000FC23F /* SettingsTableViewController.m */; };
-		D83E83EC1E2D90A5000FC23F /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E82041E2D90A5000FC23F /* TabsSettingViewController.m */; };
 		D83E83ED1E2D90A5000FC23F /* youtube.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E82051E2D90A5000FC23F /* youtube.png */; };
 		D83E83EE1E2D90A5000FC23F /* youtube@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E82061E2D90A5000FC23F /* youtube@2x.png */; };
 		D83E83EF1E2D90A5000FC23F /* youtubeSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E82071E2D90A5000FC23F /* youtubeSelect.png */; };
@@ -726,6 +719,13 @@
 		D83E8B9C1E2E86FD000FC23F /* ListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8B9A1E2E86FD000FC23F /* ListViewCell.m */; };
 		D83E8B9F1E2E878F000FC23F /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8B9D1E2E878F000FC23F /* ListViewController.m */; };
 		D83E8BA21E2E882D000FC23F /* ListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BA11E2E882D000FC23F /* ListTableViewController.m */; };
+		D83E8BAE1E2E9C84000FC23F /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E8BA51E2E9C84000FC23F /* PreferencesView.xib */; };
+		D83E8BAF1E2E9C84000FC23F /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BA71E2E9C84000FC23F /* PreferencesViewController.m */; };
+		D83E8BB01E2E9C84000FC23F /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BA91E2E9C84000FC23F /* SettingsPageViewController.m */; };
+		D83E8BB11E2E9C84000FC23F /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BAB1E2E9C84000FC23F /* SettingsTableViewController.m */; };
+		D83E8BB21E2E9C84000FC23F /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BAD1E2E9C84000FC23F /* TabsSettingViewController.m */; };
+		D83E8BB71E2E9C9B000FC23F /* ClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB41E2E9C9B000FC23F /* ClipViewController.m */; };
+		D83E8BB81E2E9C9B000FC23F /* thumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1655,19 +1655,6 @@
 		D83E81F11E2D90A4000FC23F /* VideoControlBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoControlBar.h; sourceTree = "<group>"; };
 		D83E81F21E2D90A4000FC23F /* VideoControlBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoControlBar.m; sourceTree = "<group>"; };
 		D83E81F41E2D90A5000FC23F /* PxpVideoPlayerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpVideoPlayerProtocol.h; sourceTree = "<group>"; };
-		D83E81F71E2D90A5000FC23F /* ClipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipViewController.h; sourceTree = "<group>"; };
-		D83E81F81E2D90A5000FC23F /* ClipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipViewController.m; sourceTree = "<group>"; };
-		D83E81F91E2D90A5000FC23F /* thumbnailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thumbnailCell.h; sourceTree = "<group>"; };
-		D83E81FA1E2D90A5000FC23F /* thumbnailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thumbnailCell.m; sourceTree = "<group>"; };
-		D83E81FC1E2D90A5000FC23F /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
-		D83E81FD1E2D90A5000FC23F /* PreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesViewController.h; sourceTree = "<group>"; };
-		D83E81FE1E2D90A5000FC23F /* PreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesViewController.m; sourceTree = "<group>"; };
-		D83E81FF1E2D90A5000FC23F /* SettingsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPageViewController.h; sourceTree = "<group>"; };
-		D83E82001E2D90A5000FC23F /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
-		D83E82011E2D90A5000FC23F /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
-		D83E82021E2D90A5000FC23F /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
-		D83E82031E2D90A5000FC23F /* TabsSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabsSettingViewController.h; sourceTree = "<group>"; };
-		D83E82041E2D90A5000FC23F /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
 		D83E82051E2D90A5000FC23F /* youtube.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = youtube.png; sourceTree = "<group>"; };
 		D83E82061E2D90A5000FC23F /* youtube@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "youtube@2x.png"; sourceTree = "<group>"; };
 		D83E82071E2D90A5000FC23F /* youtubeSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = youtubeSelect.png; sourceTree = "<group>"; };
@@ -2103,6 +2090,19 @@
 		D83E8B9E1E2E878F000FC23F /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
 		D83E8BA01E2E882D000FC23F /* ListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListTableViewController.h; sourceTree = "<group>"; };
 		D83E8BA11E2E882D000FC23F /* ListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListTableViewController.m; sourceTree = "<group>"; };
+		D83E8BA51E2E9C84000FC23F /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
+		D83E8BA61E2E9C84000FC23F /* PreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesViewController.h; sourceTree = "<group>"; };
+		D83E8BA71E2E9C84000FC23F /* PreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesViewController.m; sourceTree = "<group>"; };
+		D83E8BA81E2E9C84000FC23F /* SettingsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPageViewController.h; sourceTree = "<group>"; };
+		D83E8BA91E2E9C84000FC23F /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
+		D83E8BAA1E2E9C84000FC23F /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		D83E8BAB1E2E9C84000FC23F /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
+		D83E8BAC1E2E9C84000FC23F /* TabsSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabsSettingViewController.h; sourceTree = "<group>"; };
+		D83E8BAD1E2E9C84000FC23F /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
+		D83E8BB31E2E9C9B000FC23F /* ClipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipViewController.h; sourceTree = "<group>"; };
+		D83E8BB41E2E9C9B000FC23F /* ClipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipViewController.m; sourceTree = "<group>"; };
+		D83E8BB51E2E9C9B000FC23F /* thumbnailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thumbnailCell.h; sourceTree = "<group>"; };
+		D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thumbnailCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3851,37 +3851,8 @@
 		D83E81F51E2D90A5000FC23F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D83E81F61E2D90A5000FC23F /* ClipViewController */,
-				D83E81FB1E2D90A5000FC23F /* Settings */,
 			);
 			path = "View Controllers";
-			sourceTree = "<group>";
-		};
-		D83E81F61E2D90A5000FC23F /* ClipViewController */ = {
-			isa = PBXGroup;
-			children = (
-				D83E81F71E2D90A5000FC23F /* ClipViewController.h */,
-				D83E81F81E2D90A5000FC23F /* ClipViewController.m */,
-				D83E81F91E2D90A5000FC23F /* thumbnailCell.h */,
-				D83E81FA1E2D90A5000FC23F /* thumbnailCell.m */,
-			);
-			path = ClipViewController;
-			sourceTree = "<group>";
-		};
-		D83E81FB1E2D90A5000FC23F /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				D83E81FC1E2D90A5000FC23F /* PreferencesView.xib */,
-				D83E81FD1E2D90A5000FC23F /* PreferencesViewController.h */,
-				D83E81FE1E2D90A5000FC23F /* PreferencesViewController.m */,
-				D83E81FF1E2D90A5000FC23F /* SettingsPageViewController.h */,
-				D83E82001E2D90A5000FC23F /* SettingsPageViewController.m */,
-				D83E82011E2D90A5000FC23F /* SettingsTableViewController.h */,
-				D83E82021E2D90A5000FC23F /* SettingsTableViewController.m */,
-				D83E82031E2D90A5000FC23F /* TabsSettingViewController.h */,
-				D83E82041E2D90A5000FC23F /* TabsSettingViewController.m */,
-			);
-			path = Settings;
 			sourceTree = "<group>";
 		};
 		D83E872F1E2D9147000FC23F /* Old App Images */ = {
@@ -3904,7 +3875,9 @@
 		D83E8B981E2E8680000FC23F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
+				D83E8BA41E2E9C5B000FC23F /* Settings */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -3920,6 +3893,33 @@
 				D83E8B9D1E2E878F000FC23F /* ListViewController.m */,
 			);
 			path = ListView;
+			sourceTree = "<group>";
+		};
+		D83E8BA31E2E9C31000FC23F /* ClipViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D83E8BB31E2E9C9B000FC23F /* ClipViewController.h */,
+				D83E8BB41E2E9C9B000FC23F /* ClipViewController.m */,
+				D83E8BB51E2E9C9B000FC23F /* thumbnailCell.h */,
+				D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */,
+			);
+			path = ClipViewController;
+			sourceTree = "<group>";
+		};
+		D83E8BA41E2E9C5B000FC23F /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D83E8BA51E2E9C84000FC23F /* PreferencesView.xib */,
+				D83E8BA61E2E9C84000FC23F /* PreferencesViewController.h */,
+				D83E8BA71E2E9C84000FC23F /* PreferencesViewController.m */,
+				D83E8BA81E2E9C84000FC23F /* SettingsPageViewController.h */,
+				D83E8BA91E2E9C84000FC23F /* SettingsPageViewController.m */,
+				D83E8BAA1E2E9C84000FC23F /* SettingsTableViewController.h */,
+				D83E8BAB1E2E9C84000FC23F /* SettingsTableViewController.m */,
+				D83E8BAC1E2E9C84000FC23F /* TabsSettingViewController.h */,
+				D83E8BAD1E2E9C84000FC23F /* TabsSettingViewController.m */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -4122,6 +4122,7 @@
 				D83E82C21E2D90A5000FC23F /* landingMyplayXplaylogo.png in Resources */,
 				D83E829D1E2D90A5000FC23F /* gotolive.png in Resources */,
 				D83E821C1E2D90A5000FC23F /* bookmarkedit@2x.png in Resources */,
+				D83E8BAE1E2E9C84000FC23F /* PreferencesView.xib in Resources */,
 				D83E832A1E2D90A5000FC23F /* plusfivesec@2x.png in Resources */,
 				D83E831B1E2D90A5000FC23F /* period_half_focus.png in Resources */,
 				D83E825E1E2D90A5000FC23F /* dropboxicoSel.png in Resources */,
@@ -4137,7 +4138,6 @@
 				D83E7EE81E2D87FE000FC23F /* license-management.pdf in Resources */,
 				D83E82361E2D90A5000FC23F /* clip-back-old@2x.png in Resources */,
 				D83E82121E2D90A5000FC23F /* arrowButtonSelect.png in Resources */,
-				D83E83E81E2D90A5000FC23F /* PreferencesView.xib in Resources */,
 				D83E825C1E2D90A5000FC23F /* dropboxico.png in Resources */,
 				D83E83541E2D90A5000FC23F /* PxpPlayerViewController.xib in Resources */,
 				D83E829E1E2D90A5000FC23F /* gotolive@2x.png in Resources */,
@@ -4339,6 +4339,7 @@
 				D83E8B4B1E2D9153000FC23F /* AbstractBottomViewController.m in Sources */,
 				D83E8B121E2D9153000FC23F /* RicoPlayerViewControllerSO.m in Sources */,
 				D83E82EF1E2D90A5000FC23F /* MemoryBar.m in Sources */,
+				D83E8BB11E2E9C84000FC23F /* SettingsTableViewController.m in Sources */,
 				D83E821F1E2D90A5000FC23F /* BookmarkViewController.m in Sources */,
 				D83E83661E2D90A5000FC23F /* PxpVideoBar.m in Sources */,
 				D83E8B631E2D9153000FC23F /* CalendarBar.m in Sources */,
@@ -4352,6 +4353,7 @@
 				D83E8BA21E2E882D000FC23F /* ListTableViewController.m in Sources */,
 				D83E83491E2D90A5000FC23F /* PxpPlayerControlToolbar.m in Sources */,
 				D83E82DC1E2D90A5000FC23F /* Live2BenchViewController.m in Sources */,
+				D83E8BB71E2E9C9B000FC23F /* ClipViewController.m in Sources */,
 				D83E839A1E2D90A5000FC23F /* SpinnerView.m in Sources */,
 				D83E8AE31E2D9153000FC23F /* PxpFilterButtonView.m in Sources */,
 				D83E8B131E2D9153000FC23F /* RicoVideoBar.m in Sources */,
@@ -4495,7 +4497,6 @@
 				D83E8B2C1E2D9153000FC23F /* TagProxy.m in Sources */,
 				D83E83921E2D90A5000FC23F /* Slomo.m in Sources */,
 				D83E829C1E2D90A5000FC23F /* ListPopoverController.m in Sources */,
-				D83E83EA1E2D90A5000FC23F /* SettingsPageViewController.m in Sources */,
 				D83E82641E2D90A5000FC23F /* DualViewPeriodTableViewController.m in Sources */,
 				D83E82A91E2D90A5000FC23F /* HeaderBar.m in Sources */,
 				D83E832D1E2D90A5000FC23F /* ProtoTypeEncoderTask.m in Sources */,
@@ -4514,7 +4515,6 @@
 				D83E827C1E2D90A5000FC23F /* LocalEncoder.m in Sources */,
 				D83E8B1E1E2D9153000FC23F /* SetSummaryOperation.m in Sources */,
 				D83E8AE01E2D9153000FC23F /* PxpFilterButton.m in Sources */,
-				D83E83E61E2D90A5000FC23F /* ClipViewController.m in Sources */,
 				D83E8B701E2D9153000FC23F /* DebugOutput.m in Sources */,
 				D83E821D1E2D90A5000FC23F /* BookmarkFilterViewController.m in Sources */,
 				D83E8B461E2D9153000FC23F /* VideoZoomManager.m in Sources */,
@@ -4540,6 +4540,8 @@
 				D83E8AEB1E2D9153000FC23F /* PxpFilterMyClipTabViewController.m in Sources */,
 				D83E7EE31E2D87FE000FC23F /* VKReachability.m in Sources */,
 				D83E833A1E2D90A5000FC23F /* PxpFullscreenGestureRecognizer.m in Sources */,
+				D83E8BB81E2E9C9B000FC23F /* thumbnailCell.m in Sources */,
+				D83E8BB01E2E9C84000FC23F /* SettingsPageViewController.m in Sources */,
 				D83E8AA41E2D9152000FC23F /* RicoFullScreenViewController.m in Sources */,
 				D83E8B351E2D9153000FC23F /* Ticker.m in Sources */,
 				D83E8B0E1E2D9153000FC23F /* RicoPlayerControlBar.m in Sources */,
@@ -4565,7 +4567,6 @@
 				D83E825A1E2D90A5000FC23F /* DragContext.m in Sources */,
 				D83E82721E2D90A5000FC23F /* Encoder.m in Sources */,
 				D83E827F1E2D90A5000FC23F /* EulaModalViewController.m in Sources */,
-				D83E83EC1E2D90A5000FC23F /* TabsSettingViewController.m in Sources */,
 				D83E835F1E2D90A5000FC23F /* PXPTIFByteBlock.c in Sources */,
 				D83E8B0F1E2D9153000FC23F /* RicoPlayerMonitor.m in Sources */,
 				D83E8AA71E2D9152000FC23F /* VideoRecieptDataProvider.m in Sources */,
@@ -4596,7 +4597,6 @@
 				D83E8ABE1E2D9152000FC23F /* LocalVideoCell.m in Sources */,
 				D83E8B5B1E2D9153000FC23F /* AVAsset+Image.m in Sources */,
 				D83E83321E2D90A5000FC23F /* PxpBorderButton.m in Sources */,
-				D83E83E91E2D90A5000FC23F /* PreferencesViewController.m in Sources */,
 				D83E8B221E2D9153000FC23F /* SideTagEditButtonDisplayView.m in Sources */,
 				D83E83C91E2D90A5000FC23F /* UIColor+Highlight.m in Sources */,
 				D83E82141E2D90A5000FC23F /* AutoScrollLabel.m in Sources */,
@@ -4623,7 +4623,6 @@
 				D83E83D21E2D90A5000FC23F /* UserCenter.m in Sources */,
 				D83E82391E2D90A5000FC23F /* ClipCornerView.m in Sources */,
 				D83E83B01E2D90A5000FC23F /* TabBarButton.m in Sources */,
-				D83E83EB1E2D90A5000FC23F /* SettingsTableViewController.m in Sources */,
 				D83E82AF1E2D90A5000FC23F /* IconButton.m in Sources */,
 				D83E82981E2D90A5000FC23F /* FootballTrainingBottomViewController.m in Sources */,
 				D83E8B7D1E2D9153000FC23F /* DropboxUploadOperation.m in Sources */,
@@ -4636,7 +4635,6 @@
 				D83E8B3D1E2D9153000FC23F /* VideoControlBarSlider.m in Sources */,
 				D83E8B1B1E2D9153000FC23F /* ScrollViewTest.m in Sources */,
 				D83E8B891E2D9153000FC23F /* FeedSelectCell.m in Sources */,
-				D83E83E71E2D90A5000FC23F /* thumbnailCell.m in Sources */,
 				D83E83631E2D90A5000FC23F /* PXPTIFTelestration.c in Sources */,
 				D83E8AFB1E2D9153000FC23F /* PxpFilterUserInputScrollView.m in Sources */,
 				D83E82601E2D90A5000FC23F /* DropdownButton.m in Sources */,
@@ -4656,6 +4654,7 @@
 				D83E839D1E2D90A5000FC23F /* FBDialog.m in Sources */,
 				D83E83D91E2D90A5000FC23F /* DownloadEventItem.m in Sources */,
 				D83E8AC31E2D9152000FC23F /* MedicalViewController.m in Sources */,
+				D83E8BAF1E2E9C84000FC23F /* PreferencesViewController.m in Sources */,
 				D83E8B2F1E2D9153000FC23F /* TeleSelectTableViewController.m in Sources */,
 				D83E8B511E2D9153000FC23F /* AppDelegateActionPack.m in Sources */,
 				D83E8B1D1E2D9153000FC23F /* SegmentedView.m in Sources */,
@@ -4676,6 +4675,7 @@
 				D83E82511E2D90A5000FC23F /* DebuggingTabViewController.m in Sources */,
 				D83E8AEF1E2D9153000FC23F /* PxpFilterRatingView.m in Sources */,
 				D83E826B1E2D90A5000FC23F /* CheckEncoderShutdown.m in Sources */,
+				D83E8BB21E2E9C84000FC23F /* TabsSettingViewController.m in Sources */,
 				D83E8B2B1E2D9153000FC23F /* TagNameSelectTableViewController.m in Sources */,
 				D83E83E41E2D90A5000FC23F /* VideoBarMyClipViewController.m in Sources */,
 				D83E8AE81E2D9153000FC23F /* PxpFilterFootballTabViewController.m in Sources */,
