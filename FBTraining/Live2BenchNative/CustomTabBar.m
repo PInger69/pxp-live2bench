@@ -26,7 +26,6 @@
 #import "CustomTabViewController.h"
 #import "DebuggingTabViewController.h"
 #import "SettingsPageViewController.h"
-#import "InjuryViewController.h"
 
 #import "TabsSettingViewController.h"
 

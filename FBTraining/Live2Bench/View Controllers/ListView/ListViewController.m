@@ -269,25 +269,8 @@
 
     _tableViewController.tableData = self.tagsToDisplay;
     
-//    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
-    
-//    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
-    
-//    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-//    self.telestrationViewController.timeProvider = self.videoPlayer;
-//    self.telestrationViewController.showsControls = NO;
-    //_videoBar.player = _videoPlayer.avPlayer;
-    
-//    _videoBar.playerViewController = _playerViewController;
-
-//    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
-//    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
-    
     [self.view addSubview:_videoBar];
-//    [self.view addSubview:_fullscreenViewController.view];
-    
-//    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
+
     
     // Rico Classes build
     

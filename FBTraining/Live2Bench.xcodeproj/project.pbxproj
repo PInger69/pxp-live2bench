@@ -193,21 +193,11 @@
 		D83E82A81E2D90A5000FC23F /* HardwareString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D83E80001E2D90A2000FC23F /* HardwareString.txt */; };
 		D83E82A91E2D90A5000FC23F /* HeaderBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80021E2D90A2000FC23F /* HeaderBar.m */; };
 		D83E82AA1E2D90A5000FC23F /* HockeyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80041E2D90A2000FC23F /* HockeyBottomViewController.m */; };
-		D83E82AB1E2D90A5000FC23F /* homeBackground-flip.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80051E2D90A2000FC23F /* homeBackground-flip.png */; };
-		D83E82AC1E2D90A5000FC23F /* homeBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80061E2D90A2000FC23F /* homeBackground.png */; };
-		D83E82AD1E2D90A5000FC23F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80071E2D90A2000FC23F /* Icon.png */; };
-		D83E82AE1E2D90A5000FC23F /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80081E2D90A2000FC23F /* Icon@2x.png */; };
 		D83E82AF1E2D90A5000FC23F /* IconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E800A1E2D90A2000FC23F /* IconButton.m */; };
 		D83E82B01E2D90A5000FC23F /* imageNotAvailable.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E800B1E2D90A2000FC23F /* imageNotAvailable.png */; };
-		D83E82C01E2D90A5000FC23F /* landingCalender.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E802B1E2D90A2000FC23F /* landingCalender.png */; };
 		D83E82C11E2D90A5000FC23F /* landingElement.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E802C1E2D90A2000FC23F /* landingElement.png */; };
 		D83E82C21E2D90A5000FC23F /* landingMyplayXplaylogo.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E802D1E2D90A2000FC23F /* landingMyplayXplaylogo.png */; };
 		D83E82C31E2D90A5000FC23F /* like.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D83E802E1E2D90A2000FC23F /* like.jpeg */; };
-		D83E82C41E2D90A5000FC23F /* line-button-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E802F1E2D90A2000FC23F /* line-button-grey.png */; };
-		D83E82C51E2D90A5000FC23F /* line_focus.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80301E2D90A2000FC23F /* line_focus.png */; };
-		D83E82C61E2D90A5000FC23F /* line_focus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80311E2D90A2000FC23F /* line_focus@2x.png */; };
-		D83E82C71E2D90A5000FC23F /* line_unfocus.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80321E2D90A2000FC23F /* line_unfocus.png */; };
-		D83E82C81E2D90A5000FC23F /* line_unfocus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80331E2D90A2000FC23F /* line_unfocus@2x.png */; };
 		D83E82C91E2D90A5000FC23F /* lineButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80341E2D90A2000FC23F /* lineButton.png */; };
 		D83E82CA1E2D90A5000FC23F /* lineButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80351E2D90A2000FC23F /* lineButton@2x.png */; };
 		D83E82CB1E2D90A5000FC23F /* lineButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80361E2D90A2000FC23F /* lineButtonSelect.png */; };
@@ -236,7 +226,6 @@
 		D83E82E61E2D90A5000FC23F /* logo_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80611E2D90A2000FC23F /* logo_unselected@2x.png */; };
 		D83E82E71E2D90A5000FC23F /* logoTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80621E2D90A2000FC23F /* logoTab@2x.png */; };
 		D83E82E81E2D90A5000FC23F /* logoTabSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80631E2D90A2000FC23F /* logoTabSelect@2x.png */; };
-		D83E82E91E2D90A5000FC23F /* LogoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80651E2D90A2000FC23F /* LogoViewController.m */; };
 		D83E82EA1E2D90A5000FC23F /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80661E2D90A2000FC23F /* mail.png */; };
 		D83E82EB1E2D90A5000FC23F /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80671E2D90A2000FC23F /* mail@2x.png */; };
 		D83E82EC1E2D90A5000FC23F /* mailselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80681E2D90A2000FC23F /* mailselected.png */; };
@@ -628,7 +617,6 @@
 		D83E8B311E2D9153000FC23F /* TempPxpFilterTabUI.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87ED1E2D914B000FC23F /* TempPxpFilterTabUI.m */; };
 		D83E8B321E2D9153000FC23F /* TestFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87EF1E2D914C000FC23F /* TestFilterViewController.m */; };
 		D83E8B331E2D9153000FC23F /* TestGroupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F11E2D914C000FC23F /* TestGroupOperation.m */; };
-		D83E8B341E2D9153000FC23F /* ThumbnailDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F31E2D914C000FC23F /* ThumbnailDownloader.m */; };
 		D83E8B351E2D9153000FC23F /* Ticker.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F51E2D914C000FC23F /* Ticker.m */; };
 		D83E8B361E2D9153000FC23F /* ToastObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F71E2D914C000FC23F /* ToastObserver.m */; };
 		D83E8B371E2D9153000FC23F /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F91E2D914C000FC23F /* ToastObserverSettingViewController.m */; };
@@ -726,6 +714,7 @@
 		D83E8BB21E2E9C84000FC23F /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BAD1E2E9C84000FC23F /* TabsSettingViewController.m */; };
 		D83E8BB71E2E9C9B000FC23F /* ClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB41E2E9C9B000FC23F /* ClipViewController.m */; };
 		D83E8BB81E2E9C9B000FC23F /* thumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */; };
+		D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1211,22 +1200,12 @@
 		D83E80021E2D90A2000FC23F /* HeaderBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBar.m; sourceTree = "<group>"; };
 		D83E80031E2D90A2000FC23F /* HockeyBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HockeyBottomViewController.h; sourceTree = "<group>"; };
 		D83E80041E2D90A2000FC23F /* HockeyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HockeyBottomViewController.m; sourceTree = "<group>"; };
-		D83E80051E2D90A2000FC23F /* homeBackground-flip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homeBackground-flip.png"; sourceTree = "<group>"; };
-		D83E80061E2D90A2000FC23F /* homeBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homeBackground.png; sourceTree = "<group>"; };
-		D83E80071E2D90A2000FC23F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		D83E80081E2D90A2000FC23F /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		D83E80091E2D90A2000FC23F /* IconButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconButton.h; sourceTree = "<group>"; };
 		D83E800A1E2D90A2000FC23F /* IconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconButton.m; sourceTree = "<group>"; };
 		D83E800B1E2D90A2000FC23F /* imageNotAvailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imageNotAvailable.png; sourceTree = "<group>"; };
-		D83E802B1E2D90A2000FC23F /* landingCalender.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = landingCalender.png; sourceTree = "<group>"; };
 		D83E802C1E2D90A2000FC23F /* landingElement.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = landingElement.png; sourceTree = "<group>"; };
 		D83E802D1E2D90A2000FC23F /* landingMyplayXplaylogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = landingMyplayXplaylogo.png; sourceTree = "<group>"; };
 		D83E802E1E2D90A2000FC23F /* like.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = like.jpeg; sourceTree = "<group>"; };
-		D83E802F1E2D90A2000FC23F /* line-button-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey.png"; sourceTree = "<group>"; };
-		D83E80301E2D90A2000FC23F /* line_focus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line_focus.png; sourceTree = "<group>"; };
-		D83E80311E2D90A2000FC23F /* line_focus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line_focus@2x.png"; sourceTree = "<group>"; };
-		D83E80321E2D90A2000FC23F /* line_unfocus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line_unfocus.png; sourceTree = "<group>"; };
-		D83E80331E2D90A2000FC23F /* line_unfocus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line_unfocus@2x.png"; sourceTree = "<group>"; };
 		D83E80341E2D90A2000FC23F /* lineButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineButton.png; sourceTree = "<group>"; };
 		D83E80351E2D90A2000FC23F /* lineButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lineButton@2x.png"; sourceTree = "<group>"; };
 		D83E80361E2D90A2000FC23F /* lineButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineButtonSelect.png; sourceTree = "<group>"; };
@@ -1267,8 +1246,6 @@
 		D83E80611E2D90A2000FC23F /* logo_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_unselected@2x.png"; sourceTree = "<group>"; };
 		D83E80621E2D90A2000FC23F /* logoTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoTab@2x.png"; sourceTree = "<group>"; };
 		D83E80631E2D90A2000FC23F /* logoTabSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoTabSelect@2x.png"; sourceTree = "<group>"; };
-		D83E80641E2D90A2000FC23F /* LogoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogoViewController.h; sourceTree = "<group>"; };
-		D83E80651E2D90A2000FC23F /* LogoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogoViewController.m; sourceTree = "<group>"; };
 		D83E80661E2D90A2000FC23F /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
 		D83E80671E2D90A2000FC23F /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
 		D83E80681E2D90A2000FC23F /* mailselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mailselected.png; sourceTree = "<group>"; };
@@ -1903,8 +1880,6 @@
 		D83E87EF1E2D914C000FC23F /* TestFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestFilterViewController.m; sourceTree = "<group>"; };
 		D83E87F01E2D914C000FC23F /* TestGroupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGroupOperation.h; sourceTree = "<group>"; };
 		D83E87F11E2D914C000FC23F /* TestGroupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGroupOperation.m; sourceTree = "<group>"; };
-		D83E87F21E2D914C000FC23F /* ThumbnailDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailDownloader.h; sourceTree = "<group>"; };
-		D83E87F31E2D914C000FC23F /* ThumbnailDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailDownloader.m; sourceTree = "<group>"; };
 		D83E87F41E2D914C000FC23F /* Ticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ticker.h; sourceTree = "<group>"; };
 		D83E87F51E2D914C000FC23F /* Ticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ticker.m; sourceTree = "<group>"; };
 		D83E87F61E2D914C000FC23F /* ToastObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastObserver.h; sourceTree = "<group>"; };
@@ -2103,6 +2078,8 @@
 		D83E8BB41E2E9C9B000FC23F /* ClipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipViewController.m; sourceTree = "<group>"; };
 		D83E8BB51E2E9C9B000FC23F /* thumbnailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thumbnailCell.h; sourceTree = "<group>"; };
 		D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thumbnailCell.m; sourceTree = "<group>"; };
+		D83E8BBA1E2EAAE6000FC23F /* LogoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogoViewController.h; sourceTree = "<group>"; };
+		D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2869,8 +2846,6 @@
 				D83E87EF1E2D914C000FC23F /* TestFilterViewController.m */,
 				D83E87F01E2D914C000FC23F /* TestGroupOperation.h */,
 				D83E87F11E2D914C000FC23F /* TestGroupOperation.m */,
-				D83E87F21E2D914C000FC23F /* ThumbnailDownloader.h */,
-				D83E87F31E2D914C000FC23F /* ThumbnailDownloader.m */,
 				D83E87F41E2D914C000FC23F /* Ticker.h */,
 				D83E87F51E2D914C000FC23F /* Ticker.m */,
 				D83E87F61E2D914C000FC23F /* ToastObserver.h */,
@@ -3268,22 +3243,12 @@
 				D83E80021E2D90A2000FC23F /* HeaderBar.m */,
 				D83E80031E2D90A2000FC23F /* HockeyBottomViewController.h */,
 				D83E80041E2D90A2000FC23F /* HockeyBottomViewController.m */,
-				D83E80051E2D90A2000FC23F /* homeBackground-flip.png */,
-				D83E80061E2D90A2000FC23F /* homeBackground.png */,
-				D83E80071E2D90A2000FC23F /* Icon.png */,
-				D83E80081E2D90A2000FC23F /* Icon@2x.png */,
 				D83E80091E2D90A2000FC23F /* IconButton.h */,
 				D83E800A1E2D90A2000FC23F /* IconButton.m */,
 				D83E800B1E2D90A2000FC23F /* imageNotAvailable.png */,
-				D83E802B1E2D90A2000FC23F /* landingCalender.png */,
 				D83E802C1E2D90A2000FC23F /* landingElement.png */,
 				D83E802D1E2D90A2000FC23F /* landingMyplayXplaylogo.png */,
 				D83E802E1E2D90A2000FC23F /* like.jpeg */,
-				D83E802F1E2D90A2000FC23F /* line-button-grey.png */,
-				D83E80301E2D90A2000FC23F /* line_focus.png */,
-				D83E80311E2D90A2000FC23F /* line_focus@2x.png */,
-				D83E80321E2D90A2000FC23F /* line_unfocus.png */,
-				D83E80331E2D90A2000FC23F /* line_unfocus@2x.png */,
 				D83E80341E2D90A2000FC23F /* lineButton.png */,
 				D83E80351E2D90A2000FC23F /* lineButton@2x.png */,
 				D83E80361E2D90A2000FC23F /* lineButtonSelect.png */,
@@ -3311,8 +3276,6 @@
 				D83E80611E2D90A2000FC23F /* logo_unselected@2x.png */,
 				D83E80621E2D90A2000FC23F /* logoTab@2x.png */,
 				D83E80631E2D90A2000FC23F /* logoTabSelect@2x.png */,
-				D83E80641E2D90A2000FC23F /* LogoViewController.h */,
-				D83E80651E2D90A2000FC23F /* LogoViewController.m */,
 				D83E80661E2D90A2000FC23F /* mail.png */,
 				D83E80671E2D90A2000FC23F /* mail@2x.png */,
 				D83E80681E2D90A2000FC23F /* mailselected.png */,
@@ -3650,7 +3613,6 @@
 				D83E81F11E2D90A4000FC23F /* VideoControlBar.h */,
 				D83E81F21E2D90A4000FC23F /* VideoControlBar.m */,
 				D83E81F31E2D90A5000FC23F /* VideoPlayerClasses */,
-				D83E81F51E2D90A5000FC23F /* View Controllers */,
 				D83E82051E2D90A5000FC23F /* youtube.png */,
 				D83E82061E2D90A5000FC23F /* youtube@2x.png */,
 				D83E82071E2D90A5000FC23F /* youtubeSelect.png */,
@@ -3848,13 +3810,6 @@
 			path = VideoPlayerClasses;
 			sourceTree = "<group>";
 		};
-		D83E81F51E2D90A5000FC23F /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "View Controllers";
-			sourceTree = "<group>";
-		};
 		D83E872F1E2D9147000FC23F /* Old App Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -3876,6 +3831,7 @@
 			isa = PBXGroup;
 			children = (
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
+				D83E8BB91E2EAAD1000FC23F /* LogoViewController */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
 				D83E8BA41E2E9C5B000FC23F /* Settings */,
 			);
@@ -3920,6 +3876,15 @@
 				D83E8BAD1E2E9C84000FC23F /* TabsSettingViewController.m */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		D83E8BB91E2EAAD1000FC23F /* LogoViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D83E8BBA1E2EAAE6000FC23F /* LogoViewController.h */,
+				D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */,
+			);
+			path = LogoViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3996,7 +3961,6 @@
 				D83E83B11E2D90A5000FC23F /* TaggingString.txt in Resources */,
 				D83E82111E2D90A5000FC23F /* arrowButton@2x.png in Resources */,
 				D83E7EEE1E2D87FE000FC23F /* license-form.plist in Resources */,
-				D83E82C71E2D90A5000FC23F /* line_unfocus.png in Resources */,
 				D83E82A51E2D90A5000FC23F /* GreenSettingsButton@2x.png in Resources */,
 				D83E83C51E2D90A5000FC23F /* trash@2x.png in Resources */,
 				D83E8AE51E2D9153000FC23F /* PxpFilterCFLTabController.xib in Resources */,
@@ -4078,7 +4042,6 @@
 				D83E83851E2D90A5000FC23F /* share@2x.png in Resources */,
 				D83E831F1E2D90A5000FC23F /* playbackRateButtonBack.png in Resources */,
 				D83E83F01E2D90A5000FC23F /* youtubeSelect@2x.png in Resources */,
-				D83E82C51E2D90A5000FC23F /* line_focus.png in Resources */,
 				D83E7EEB1E2D87FE000FC23F /* gas-preprocessor.pl in Resources */,
 				D83E83241E2D90A5000FC23F /* playbackRateButtonForward@2x.png in Resources */,
 				D83E8AC91E2D9152000FC23F /* filter-icon.png in Resources */,
@@ -4099,13 +4062,11 @@
 				D83E82FD1E2D90A5000FC23F /* myplayXplay_phonecall.png in Resources */,
 				D83E83141E2D90A5000FC23F /* OrangeSettingsButtonSelect@2x.png in Resources */,
 				D83E831D1E2D90A5000FC23F /* period_half_unfocus.png in Resources */,
-				D83E82AE1E2D90A5000FC23F /* Icon@2x.png in Resources */,
 				D83E8ACD1E2D9152000FC23F /* reorderSelected.png in Resources */,
 				D83E7EED1E2D87FE000FC23F /* mlpdsp.patch in Resources */,
 				D83E83821E2D90A5000FC23F /* settingsButtonSelect.png in Resources */,
 				D83E83201E2D90A5000FC23F /* playbackRateButtonBack@2x.png in Resources */,
 				D83E822B1E2D90A5000FC23F /* checkmarkOverlay.png in Resources */,
-				D83E82AD1E2D90A5000FC23F /* Icon.png in Resources */,
 				D83E82E71E2D90A5000FC23F /* logoTab@2x.png in Resources */,
 				D83E82381E2D90A5000FC23F /* clip-back@2x.png in Resources */,
 				D83E836B1E2D90A5000FC23F /* RedSettingsButtonSelect.png in Resources */,
@@ -4116,7 +4077,6 @@
 				D83E82861E2D90A5000FC23F /* extendstartsec@2x.png in Resources */,
 				D83E82F61E2D90A5000FC23F /* myclipfilterorange.png in Resources */,
 				D83E7EF21E2D87FE000FC23F /* VKImages.bundle in Resources */,
-				D83E82AC1E2D90A5000FC23F /* homeBackground.png in Resources */,
 				D83E838E1E2D90A5000FC23F /* sline.png in Resources */,
 				D83E82401E2D90A5000FC23F /* coachPicked@2x.png in Resources */,
 				D83E82C21E2D90A5000FC23F /* landingMyplayXplaylogo.png in Resources */,
@@ -4145,7 +4105,6 @@
 				D83E822D1E2D90A5000FC23F /* chevbothpoints.png in Resources */,
 				D83E7EFB1E2D908A000FC23F /* Media.xcassets in Resources */,
 				D83E82DB1E2D90A5000FC23F /* live2BenchTabSelect@2x.png in Resources */,
-				D83E82C81E2D90A5000FC23F /* line_unfocus@2x.png in Resources */,
 				D83E83111E2D90A5000FC23F /* OrangeSettingsButton.png in Resources */,
 				D83E829F1E2D90A5000FC23F /* gotoliveSelect.png in Resources */,
 				D83E828F1E2D90A5000FC23F /* filter@2x.png in Resources */,
@@ -4195,7 +4154,6 @@
 				D83E8AE91E2D9153000FC23F /* PxpFilterFootballTabViewController.xib in Resources */,
 				D83E83AF1E2D90A5000FC23F /* tab-bar@2x.png in Resources */,
 				D83E8B481E2D9153000FC23F /* ViewController.xib in Resources */,
-				D83E82C01E2D90A5000FC23F /* landingCalender.png in Resources */,
 				D83E82F91E2D90A5000FC23F /* myClipTab.png in Resources */,
 				D83E82191E2D90A5000FC23F /* BlueSettingsButtonSelect.png in Resources */,
 				D83E82441E2D90A5000FC23F /* ContactString.txt in Resources */,
@@ -4230,9 +4188,7 @@
 				D83E83E11E2D90A5000FC23F /* vertical_myplayXplay_case@2x.png in Resources */,
 				D83E82471E2D90A5000FC23F /* continue_unselected@2x.png in Resources */,
 				D83E8AE71E2D9153000FC23F /* PxpFilterDefaultTabViewController.xib in Resources */,
-				D83E82AB1E2D90A5000FC23F /* homeBackground-flip.png in Resources */,
 				D83E83B71E2D90A5000FC23F /* teleButtonSelect.png in Resources */,
-				D83E82C41E2D90A5000FC23F /* line-button-grey.png in Resources */,
 				D83E82561E2D90A5000FC23F /* download_unselected@2x.png in Resources */,
 				D83E8B831E2D9153000FC23F /* FBUserSettingsViewResources.bundle in Resources */,
 				D83E8ACE1E2D9152000FC23F /* reorderSelected@2x.png in Resources */,
@@ -4260,7 +4216,6 @@
 				D83E82A61E2D90A5000FC23F /* GreenSettingsButtonSelect.png in Resources */,
 				D83E830F1E2D90A5000FC23F /* orangeSelect.png in Resources */,
 				D83E82EA1E2D90A5000FC23F /* mail.png in Resources */,
-				D83E82C61E2D90A5000FC23F /* line_focus@2x.png in Resources */,
 				D83E83901E2D90A5000FC23F /* slineoff.png in Resources */,
 				D83E82611E2D90A5000FC23F /* dropdownSelect.png in Resources */,
 				D83E8B881E2D9153000FC23F /* FeedMappingView.xib in Resources */,
@@ -4586,12 +4541,12 @@
 				D83E83C21E2D90A5000FC23F /* ToggleButton.m in Sources */,
 				D83E83571E2D90A5000FC23F /* PxpTelestrationAction.m in Sources */,
 				D83E833D1E2D90A5000FC23F /* PxpL2BFullscreenViewController.m in Sources */,
+				D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */,
 				D83E83BD1E2D90A5000FC23F /* TeleView.m in Sources */,
 				D83E83551E2D90A5000FC23F /* PxpPlayPauseButton.m in Sources */,
 				D83E8B8E1E2D9153000FC23F /* HeaderBarForListView.m in Sources */,
 				D83E8ADC1E2D9153000FC23F /* PopUpTagSetButtonEditViewController.m in Sources */,
 				D83E83391E2D90A5000FC23F /* PxpFullscreenButton.m in Sources */,
-				D83E8B341E2D9153000FC23F /* ThumbnailDownloader.m in Sources */,
 				D83E83951E2D90A5000FC23F /* SnapshotView.m in Sources */,
 				D83E83381E2D90A5000FC23F /* PxpEventContext.m in Sources */,
 				D83E8ABE1E2D9152000FC23F /* LocalVideoCell.m in Sources */,
@@ -4644,7 +4599,6 @@
 				D83E8A9E1E2D9152000FC23F /* RicoDualViewTabViewController.m in Sources */,
 				D83E8B6B1E2D9153000FC23F /* CoachFilterProcessor.m in Sources */,
 				D83E8B7C1E2D9153000FC23F /* DropboxSettingsViewController.m in Sources */,
-				D83E82E91E2D90A5000FC23F /* LogoViewController.m in Sources */,
 				D83E834D1E2D90A5000FC23F /* PxpPlayerPipCompanionView.m in Sources */,
 				D83E83CB1E2D90A5000FC23F /* UIImage+animatedGIF.m in Sources */,
 				D83E8AFA1E2D9153000FC23F /* PxpFilterUserButtons.m in Sources */,

@@ -9,7 +9,6 @@
 #import "TabsSettingViewController.h"
 
 #import "CalendarViewController.h"
-#import "InjuryViewController.h"
 #import "Live2BenchViewController.h"
 #import "ClipViewController.h"
 #import "ListViewController.h"
@@ -102,10 +101,6 @@
 //    [toggles addObject:@{@"Name": @"RicoL2B",      @"Identifier": @"RicoL2B" }];
 //    [tabClassForIdentifierTemp setObject:[RicoLive2BenchViewController class] forKey:@"RicoL2B"];
     
-//    if (TAB_VISIBLE(@""))   {
-//        [toggles addObject:@{@"Name": NSLocalizedString(@"Injury", nil),     @"Identifier": TAB_INJURY }];
-//         [tabClassForIdentifierTemp setObject:[InjuryViewController class] TAB_INJURY];
-//    }
     self = [super initWithAppDelegate:appDel
                                  name:NSLocalizedString(@"Main Tabs", nil)
                            identifier:@"Main Tabs"
@@ -133,7 +128,6 @@
 //        self.tabClassForIdentifier = @{
 //                                       TAB_CALENDAR: [CalendarViewController class],
 //                                       TAB_MEDICAL: [MedicalViewController class],
-//                                       TAB_INJURY: [InjuryViewController class],
 //                                       TAB_LIVE2BENCH: [Live2BenchViewController class],
 //                                       TAB_CLIPVIEW: [ClipViewController class],
 //                                       TAB_LISTVIEW: [ListViewController class],
