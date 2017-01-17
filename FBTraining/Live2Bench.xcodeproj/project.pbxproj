@@ -556,8 +556,6 @@
 		D83E8AF41E2D9153000FC23F /* PxpFilterTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87761E2D9149000FC23F /* PxpFilterTabController.m */; };
 		D83E8AF51E2D9153000FC23F /* PxpFilterTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87781E2D9149000FC23F /* PxpFilterTabViewController.m */; };
 		D83E8AF61E2D9153000FC23F /* PxpFilterTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E87791E2D9149000FC23F /* PxpFilterTabViewController.xib */; };
-		D83E8AF71E2D9153000FC23F /* PxpFilterTabViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E877B1E2D9149000FC23F /* PxpFilterTabViewController2.m */; };
-		D83E8AF81E2D9153000FC23F /* PxpFilterTabViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E877C1E2D9149000FC23F /* PxpFilterTabViewController2.xib */; };
 		D83E8AF91E2D9153000FC23F /* PxpFilterToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E877E1E2D9149000FC23F /* PxpFilterToggleButton.m */; };
 		D83E8AFA1E2D9153000FC23F /* PxpFilterUserButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87801E2D9149000FC23F /* PxpFilterUserButtons.m */; };
 		D83E8AFB1E2D9153000FC23F /* PxpFilterUserInputScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87821E2D9149000FC23F /* PxpFilterUserInputScrollView.m */; };
@@ -715,6 +713,7 @@
 		D83E8BB71E2E9C9B000FC23F /* ClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB41E2E9C9B000FC23F /* ClipViewController.m */; };
 		D83E8BB81E2E9C9B000FC23F /* thumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */; };
 		D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */; };
+		D83E8BBF1E2EBB98000FC23F /* TagListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1760,9 +1759,6 @@
 		D83E87771E2D9149000FC23F /* PxpFilterTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterTabViewController.h; sourceTree = "<group>"; };
 		D83E87781E2D9149000FC23F /* PxpFilterTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterTabViewController.m; sourceTree = "<group>"; };
 		D83E87791E2D9149000FC23F /* PxpFilterTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterTabViewController.xib; sourceTree = "<group>"; };
-		D83E877A1E2D9149000FC23F /* PxpFilterTabViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterTabViewController2.h; sourceTree = "<group>"; };
-		D83E877B1E2D9149000FC23F /* PxpFilterTabViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterTabViewController2.m; sourceTree = "<group>"; };
-		D83E877C1E2D9149000FC23F /* PxpFilterTabViewController2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterTabViewController2.xib; sourceTree = "<group>"; };
 		D83E877D1E2D9149000FC23F /* PxpFilterToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterToggleButton.h; sourceTree = "<group>"; };
 		D83E877E1E2D9149000FC23F /* PxpFilterToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterToggleButton.m; sourceTree = "<group>"; };
 		D83E877F1E2D9149000FC23F /* PxpFilterUserButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterUserButtons.h; sourceTree = "<group>"; };
@@ -2080,6 +2076,8 @@
 		D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thumbnailCell.m; sourceTree = "<group>"; };
 		D83E8BBA1E2EAAE6000FC23F /* LogoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogoViewController.h; sourceTree = "<group>"; };
 		D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogoViewController.m; sourceTree = "<group>"; };
+		D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListViewController.h; sourceTree = "<group>"; };
+		D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagListViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2726,9 +2724,6 @@
 				D83E87771E2D9149000FC23F /* PxpFilterTabViewController.h */,
 				D83E87781E2D9149000FC23F /* PxpFilterTabViewController.m */,
 				D83E87791E2D9149000FC23F /* PxpFilterTabViewController.xib */,
-				D83E877A1E2D9149000FC23F /* PxpFilterTabViewController2.h */,
-				D83E877B1E2D9149000FC23F /* PxpFilterTabViewController2.m */,
-				D83E877C1E2D9149000FC23F /* PxpFilterTabViewController2.xib */,
 				D83E877D1E2D9149000FC23F /* PxpFilterToggleButton.h */,
 				D83E877E1E2D9149000FC23F /* PxpFilterToggleButton.m */,
 				D83E877F1E2D9149000FC23F /* PxpFilterUserButtons.h */,
@@ -3830,9 +3825,11 @@
 		D83E8B981E2E8680000FC23F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
+				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
-				D83E8BB91E2EAAD1000FC23F /* LogoViewController */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
+				D83E8BB91E2EAAD1000FC23F /* LogoViewController */,
 				D83E8BA41E2E9C5B000FC23F /* Settings */,
 			);
 			path = "View Controllers";
@@ -4054,7 +4051,6 @@
 				D83E82DD1E2D90A5000FC23F /* live@2x.png in Resources */,
 				D83E82F21E2D90A5000FC23F /* minusfivesec@2x.png in Resources */,
 				D83E82E41E2D90A5000FC23F /* logo_selected@2x.png in Resources */,
-				D83E8AF81E2D9153000FC23F /* PxpFilterTabViewController2.xib in Resources */,
 				D83E828A1E2D90A5000FC23F /* facebookselected.png in Resources */,
 				D83E83931E2D90A5000FC23F /* slowmo.png in Resources */,
 				D83E8AF31E2D9153000FC23F /* PxpFilterSoccerTabViewController.xib in Resources */,
@@ -4458,6 +4454,7 @@
 				D83E8ABF1E2D9152000FC23F /* LoginOperation.m in Sources */,
 				D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */,
 				D83E8AED1E2D9153000FC23F /* PxpFilterRangeSlider.m in Sources */,
+				D83E8BBF1E2EBB98000FC23F /* TagListViewController.m in Sources */,
 				D83E83331E2D90A5000FC23F /* PxpBorderLabel.m in Sources */,
 				D83E8B271E2D9153000FC23F /* SwipeableTableViewCell.m in Sources */,
 				D83E8B4C1E2D9153000FC23F /* AccountsViewController.m in Sources */,
@@ -4644,7 +4641,6 @@
 				D83E83A51E2D90A5000FC23F /* SBJsonWriter.m in Sources */,
 				D83E834A1E2D90A5000FC23F /* PxpPlayerGridView.m in Sources */,
 				D83E8B4D1E2D9153000FC23F /* AdvancedFeed.m in Sources */,
-				D83E8AF71E2D9153000FC23F /* PxpFilterTabViewController2.m in Sources */,
 				D83E83471E2D90A5000FC23F /* PxpPlayerControlBar.m in Sources */,
 				D83E88B41E2D9151000FC23F /* ImageAssetManager.m in Sources */,
 				D83E82991E2D90A5000FC23F /* FootballTrainingCollectionViewController.m in Sources */,

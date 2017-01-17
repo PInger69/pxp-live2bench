@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CustomTabViewController.h"
+#import "TagListViewController.h"
 #import "ListViewCell.h"
 #import "ListTableViewController.h"
 #import "PxpVideoPlayerProtocol.h"
@@ -20,7 +20,7 @@
 
 @class TeleViewController;
 
-@interface ListViewController : CustomTabViewController<UITextViewDelegate,UIGestureRecognizerDelegate,PxpFilterDelegate>{
+@interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate,PxpFilterDelegate>{
 
     Tag                         *selectedTag;                        //the tag currently selected playing
     ListTableViewController     *_tableViewController;
@@ -28,14 +28,10 @@
 }
 
 
-@property (nonatomic,strong) NSMutableArray              * tagsToDisplay; //array of tags which used for create table view's cells
 @property (nonatomic,strong) NSMutableArray              * allTags;
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic,strong) NSDictionary                * feeds;
 @property (nonatomic,strong) NSMutableDictionary         * selectedCellRows; //dictionary of all the information of the cells which have been viewed
-
-@property (nonatomic,strong) PxpFilter                  * pxpFilter;
-
 
 
 // this method will be called in the ListTableViewController

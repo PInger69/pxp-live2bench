@@ -167,39 +167,8 @@
    
     self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     self.pxpFilter.delegate = self;
-    [self.pxpFilter removeAllPredicates];
     
-    
-    Profession* profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
-    if (_currentEvent) {
-        if (![self.pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
-            [self.pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
-        }
-    
-    
-    
-    
-    
-        NSMutableArray * filters = [NSMutableArray new];
-       
-    
-        [filters addObjectsFromArray:@[
-                                     [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
-                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
-                                     ]];
-
-        if (profession && profession.filterPredicate )[filters addObject:profession.filterPredicate];
-    
-       
-        NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:filters];
-        
-        [self.pxpFilter addPredicates:@[allowThese]];
-
-    }
+    [self configurePxpFilter:_currentEvent];
     [self.collectionView reloadData];
 
 }
@@ -503,7 +472,6 @@
         [cell.data.thumbnails objectForKey:tele.sourceName];
         
         NSString * checkName = (!tele.sourceName)?[cell.data.thumbnails allKeys][0]:tele.sourceName;
-        NSLog(@"Telestration check name: %@", checkName);
         
         NSString * imageURL = ([cell.data.thumbnails objectForKey:checkName])?[cell.data.thumbnails objectForKey:checkName]:[NSString stringWithFormat:@"%@.png",[[NSUUID UUID]UUIDString]];
         
@@ -519,53 +487,11 @@
         }];
         
         
-        /*
-        if (![Utility hasWiFi] && ![[ImageAssetManager getInstance].arrayOfClipImages objectForKey:imageURL]) {
-            UIImage * img = [tagSelect thumbnailForSource:checkName];
-           if (img) [[ImageAssetManager getInstance].arrayOfClipImages setObject:img forKey:imageURL];
-        }
-        
-        [[ImageAssetManager getInstance] imageForURL: imageURL
-                                         atImageView:cell.imageView withTelestration:tele];
-        
-        */
-        
-        
-        
-//    } else if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-//        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
         NSLog(@"loading image: %@", url);
         [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
-//        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
     }
 
-    /*
-     __block UIImage * weakThumb;
-    
-    //
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //Background Thread
-        if (tagSelect.type != TagTypeTele){
-            if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-                weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-            } else {
-                [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-            }
-            
-            if (!weakThumb && [tagSelect respondsToSelector:@selector(thumbnailForSource:)]) {
-                
-                weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
-            }
-       
-            dispatch_async(dispatch_get_main_queue(), ^(void){
-                cell.imageView.image = weakThumb;
-                if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
-            });
-         }
-    });
-    */
-    
     [cell setDeletingMode: self.isEditing];
     
     if ([self.setOfSelectedCells containsObject: indexPath]) {
@@ -923,11 +849,7 @@
 
 // Sort tags by time index. Ensure that tags are unique
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
-    NSMutableSet * uniqueList = [NSMutableSet new];
-    [uniqueList addObjectsFromArray:tags];
-    
-    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-    self.tagsToDisplay = [NSMutableArray arrayWithArray:[[uniqueList allObjects] sortedArrayUsingDescriptors:@[sorter]]];
+    [super sortAndDisplayUniqueTags:tags];
     [self.collectionView reloadData];
 }
 

@@ -377,50 +377,13 @@
     
     [super viewDidAppear:animated];
     NSLog(@"ListViewController viewDidAppear");
-//    [_playerViewController viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
-//    [self.view bringSubviewToFront:_fullscreenViewController.view];
     
     // Set up filter for this Tab
     self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     self.pxpFilter.delegate = self;
-    [self.pxpFilter removeAllPredicates];
-    
-
-    
-    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
-    
-    NSLog(@"Current profession type %@", _currentEvent.eventType);
-    if (_currentEvent) {
-    if (![self.pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
-        [self.pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
-    }
-    
-        NSMutableArray * filters = [NSMutableArray new];
-        
-        
-        [filters addObjectsFromArray:@[
-                                       [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
-                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
-                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                       ]];
-        
-        if (profession && profession.filterPredicate )[filters addObject:profession.filterPredicate];
-        
-        
-        NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:filters];
-        
-        
-
-        
-        [self.pxpFilter addPredicates:@[allowThese]];
-    }
+    [self configurePxpFilter:_currentEvent];
     [_tableViewController reloadData];
-    
-    
     
     [self.view bringSubviewToFront:self.ricoFullscreenViewController.view];
     
@@ -1041,45 +1004,28 @@
     [_videoBar clear]; // this removes the tag data and controlls to extend from the light grey bar
 }
 
-
-// Pxp
 -(void)onFilterComplete:(PxpFilter*)filter
 {
-    [_tagsToDisplay removeAllObjects];
-    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-
-    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
-    [_tableViewController reloadData];
+    if (!filter || !filter.filteredTags ) {
+        return ;
+    }
+    [self sortAndDisplayUniqueTags:filter.filteredTags];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
-    [filter filterTags:self.allTags];
-    [_tagsToDisplay removeAllObjects];
-    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-    
+    [self.pxpFilter filterTags:self.allTags];
+    [self sortAndDisplayUniqueTags:filter.filteredTags];
+}
+
+
+// Sort tags by time index. Ensure that tags are unique
+-(void) sortAndDisplayUniqueTags:(NSArray*) tags {
+    [super sortAndDisplayUniqueTags:tags];
     _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
     [_tableViewController reloadData];
 }
 
-- (Tag *)tagAfterTag:(nullable Tag *)tag {
-    if (tag && _tagsToDisplay.count) {
-        NSUInteger i = [_tagsToDisplay indexOfObject:tag] + 1;
-        return _tagsToDisplay[i < _tagsToDisplay.count ? i : 0];
-    } else {
-        return nil;
-    }
-    
-}
-
-- (Tag *)tagBeforeTag:(nullable Tag *)tag {
-    if (tag && _tagsToDisplay.count) {
-        NSUInteger i = [_tagsToDisplay indexOfObject:tag] - 1;
-        return _tagsToDisplay[i < _tagsToDisplay.count ? i : _tagsToDisplay.count];
-    } else {
-        return nil;
-    }
-}
 
 
 -(void)clipCancelNotification:(NSNotification *)note {
@@ -1089,8 +1035,6 @@
     self.ricoPlayerControlBar.range = kCMTimeRangeInvalid;
     
 }
-
-
 
 - (void)extendStartAction:(UIButton *)button {
     if (selectedTag) {
@@ -1181,11 +1125,6 @@
         
         [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
     }
-    
-    
-    
 }
-
-
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CustomTabViewController.h"
+#import "TagListViewController.h"
 #import "thumbnailCell.h"
 #import "CustomTabBar.h"
 #import "CustomButton.h"
@@ -16,10 +16,8 @@
 #import "TabView.h"
 
 
-@interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, PxpFilterDelegate>
+@interface ClipViewController : TagListViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, PxpFilterDelegate>
 
-@property (nonatomic,strong) NSMutableArray *tagsToDisplay; // THIS IS WHAT YOU ADD TO THE SHOW UP ON SCREEN
 @property (nonatomic,strong) UICollectionView *collectionView;
-@property (nonatomic,weak)  PxpFilter           * pxpFilter;
 
 @end

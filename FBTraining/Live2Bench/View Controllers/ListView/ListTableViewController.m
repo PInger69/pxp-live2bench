@@ -433,7 +433,7 @@ static NSOperationQueue * queue;
         [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             
             if (image) {
-                UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:cell.imageView];
+                UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:weakImageView];
                 weakImageView.image = imageWithTelestration;
             }
             
@@ -594,14 +594,6 @@ static NSOperationQueue * queue;
          [tableView endUpdates];
         return;
     }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
-       // FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-//                                                                                                                                                                                                                                                                                                @"feed":cell.feedName.text,
-//                                                                                                                                                                                                                                                                                                @"time": [NSString stringWithFormat:@"%f",tag.startTime],
-//                                                                                                                                                                                                                                                                                                @"duration": [NSString stringWithFormat:@"%d",tag.duration],
-//                                                                                                                                                                                                                                                                                                @"comment": tag.comment,
-//                                                                                                                                                                                                                                                                                   @"forWhole":tag
-//                                                                                                                                        }}];
          [tableView endUpdates];
         return;
     }
