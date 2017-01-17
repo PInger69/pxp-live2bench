@@ -7,6 +7,9 @@
 //
 
 #import "ListTableViewController.h"
+
+#import <SDWebImage/UIImageView+WebCache.h>
+
 #import "ListViewCell.h"
 #import "ImageAssetManager.h"
 #import "ListPopoverControllerWithImages.h"
@@ -38,10 +41,6 @@
 static NSOperationQueue * queue;
 
 @implementation ListTableViewController
-{
-    dispatch_queue_t imageLoadQueue;
-
-}
 
 
 -(instancetype)init{
@@ -426,44 +425,25 @@ static NSOperationQueue * queue;
                 break;
             }
         }
-    }
+        
+        NSString* imageURL = tag.thumbnails[src];
+        
 
-    NSString *url = tag.thumbnails[src];
-    
-    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-        cell.tagImage.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-    } else {
-        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
-    }
-    __block UIImage * weakThumb;
-    
-    
-//
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //Background Thread
-        
-        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-            //            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-        } else {
-            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
-        }
-        
-        if (!weakThumb && [tag respondsToSelector:@selector(thumbnailForSource:)]) {
-            weakThumb = [tag thumbnailForSource:@"onlySource"];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
+        __weak UIImageView* weakImageView = cell.tagImage;
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             
-            cell.tagImage.image = weakThumb;
-            if (!cell.tagImage.image) cell.tagImage.image = [UIImage imageNamed:@"live.png"];
-        });
-    });
-//
+            if (image) {
+                UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:cell.imageView];
+                weakImageView.image = imageWithTelestration;
+            }
+            
+        }];
 
-    
-    
-    
+    } else {
+        NSString* url = tag.thumbnails[src];
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
+    }
+
     
     [cell.tagname setText:[tag.name stringByRemovingPercentEncoding]];
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
