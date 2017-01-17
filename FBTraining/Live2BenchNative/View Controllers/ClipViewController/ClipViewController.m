@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
 #import "ClipViewController.h"
 #import "AbstractFilterViewController.h"
 #import "FBTFilterViewController.h"
@@ -456,7 +458,7 @@
     
     
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
-    cell.backgroundView = nil;
+    cell.backgroundPlaneView = nil;
     cell.data           = tagSelect;
     [cell.thumbColour changeColor:[Utility colorWithHexString: tagSelect.colour] withRect:cell.thumbColour.frame];
     
@@ -503,23 +505,25 @@
         
         NSString * imageURL = ([cell.data.thumbnails objectForKey:checkName])?[cell.data.thumbnails objectForKey:checkName]:[NSString stringWithFormat:@"%@.png",[[NSUUID UUID]UUIDString]];
         
+        
         if (![Utility hasWiFi] && ![[ImageAssetManager getInstance].arrayOfClipImages objectForKey:imageURL]) {
             UIImage * img = [tagSelect thumbnailForSource:checkName];
            if (img) [[ImageAssetManager getInstance].arrayOfClipImages setObject:img forKey:imageURL];
         }
         
-        
         [[ImageAssetManager getInstance] imageForURL: imageURL
                                          atImageView:cell.imageView withTelestration:tele];
         
-
+         
         
         
         
-    } else if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+//    } else if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+//        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
-        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
+        NSLog(@"loading image: %@", url);
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
+//        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
     }
     
      __block UIImage * weakThumb;

@@ -24,3 +24,5 @@ DerivedData
 
 #CocoaPods
 #Pods
+Pods/
+Podfile.lock

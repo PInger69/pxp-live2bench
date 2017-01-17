@@ -16,7 +16,7 @@
 
 @implementation CustomButton
 
-UIView *border;
+//UIView *border;
 
 - (id)initWithFrame:(CGRect)frame
 {
