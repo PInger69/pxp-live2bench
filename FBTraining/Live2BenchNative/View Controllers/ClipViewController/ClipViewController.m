@@ -74,7 +74,7 @@
 {
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"tabClipView"];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
 
@@ -425,7 +425,7 @@
 ///NOTE: when filterbox.view is all the way up, customer goes to another screen and comes back, filterbox.view cannot be interacted with
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     [self.dismissFilterButton removeFromSuperview];
     
@@ -442,8 +442,13 @@
         }
         
     }
-    
+}
 
+-(void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+#ifdef DEBUG
+    NSLog(@"ClipViewController viewDidDisappear");
+#endif
 }
 
 
@@ -525,7 +530,8 @@
         [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
 //        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
     }
-    
+
+    /*
      __block UIImage * weakThumb;
     
     //
@@ -549,6 +555,7 @@
             });
          }
     });
+    */
     
     [cell setDeletingMode: self.isEditing];
     

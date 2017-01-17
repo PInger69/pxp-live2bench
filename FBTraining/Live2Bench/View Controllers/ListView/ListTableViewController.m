@@ -31,11 +31,7 @@
 
 @interface ListTableViewController ()
 
-//@property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) ListPopoverControllerWithImages *sourceSelectPopover;
-//@property (strong, nonatomic) NSMutableSet *setOfDeletingCells;
-//@property (strong, assign) UIButton *deleteButton;
-
 
 @end
 
@@ -125,34 +121,7 @@ static NSOperationQueue * queue;
 
 #pragma mark - Multiple Cell Deletion Methods
 
-/*-(void) addDeletionCell: (NSNotification *) aNotification{
-    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:aNotification.object];
-    [self.setOfDeletingCells addObject: cellIndexPath];
-    if (self.setOfDeletingCells.count >= 2){
-        [self.tableView addSubview: self.deleteButton];
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.5];
-        self.deleteButton.frame = CGRectMake(568, 708, 370, 60);
-    [self.deleteButton setBackgroundColor:[UIColor redColor]];
-        [UIView commitAnimations];
-    }
-}
-
--(void)removeDeletionCell: (NSNotification *) aNotification{
-     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:aNotification.object];
-    [self.setOfDeletingCells removeObject: cellIndexPath];
-    if (self.setOfDeletingCells.count < 2){
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.5];
-        self.deleteButton.frame = CGRectMake(568, 768, 370, 0);
-        [UIView commitAnimations];
-    }
-
-}*/
-
 -(void)deleteAllButtonTarget{
-    
-
     
     // This builds the alert
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
@@ -383,138 +352,6 @@ static NSOperationQueue * queue;
             };
         }
         
-//        collapsableCell.downloadButtonBlock = ^(){
-//            
-//            
-//            
-//            
-//            DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src2]];
-//            
-//            [downloadClip setOnFail:^(NSError *e) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@ %@",tag.name,src2];
-//                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
-//                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
-//                                                                                    message:errorMessage
-//                                                                             preferredStyle:UIAlertControllerStyleAlert];
-//                    // build NO button
-//                    UIAlertAction* cancelButtons = [UIAlertAction
-//                                                    actionWithTitle:@"OK"
-//                                                    style:UIAlertActionStyleCancel
-//                                                    handler:^(UIAlertAction * action)
-//                                                    {
-//                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-//                                                    }];
-//                    [alert addAction:cancelButtons];
-//
-//                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
-//                });
-//            }];
-//            
-//            
-//            [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
-//              
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-//                });
-//                
-//            }];
-//            
-//            [downloadClip setCompletionBlock:^{
-//                NSLog(@"%s",__FUNCTION__);
-//
-//            }];
-//            
-//            [queue addOperation:downloadClip];
-//
-//        };
-
-        
-        
-         // !!!:
-        
-        
-//        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] != nil &&   [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] isKindOfClass:[NSString class]]) {
-//            // This means the place holder is found to set the button to look like its downloaded
-//            collapsableCell.downloadButton.isPressed    = YES;
-//            collapsableCell.downloadButton.progress     = 0;
-//        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey]) {
-//            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
-//            __block FeedSelectCell *weakerCell = weakCell;
-//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-//                weakerCell.downloadButton.progress = progress;
-//                [weakerCell.downloadButton setNeedsDisplay];
-//            }];
-//            //[key isEqualToString:@"onlySource"]
-//        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(tagKey)?tagKey:nil]){
-//            collapsableCell.downloadButton.downloadComplete = YES;
-//            collapsableCell.downloadButton.progress         = 1;
-//        }
-//
-//        NSString * otherKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
-//        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] && [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:otherKey] isKindOfClass:[DownloadItem class]]) {
-//            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
-//            __block FeedSelectCell *weakerCell = weakCell;
-//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-//                weakerCell.downloadButton.progress = progress;
-//                [weakerCell.downloadButton setNeedsDisplay];
-//            }];
-//        }
-//        
-//        
-//        // When the download button is pressed
-//        collapsableCell.downloadButtonBlock = ^(){
-//
-//            // this will at a place holder for the downloader so the clock will show up r 3ems anight away
-//            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
-//            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
-//            
-//            // this takes the download item and attaches it to the cell
-//            void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
-//                //videoItem = downloadItem;
-//                 weakCell.downloadButton.downloadItem = downloadItem;
-//                 __block FeedSelectCell *weakerCell = weakCell;
-//                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-//                    dispatch_async(dispatch_get_main_queue(), ^(){
-//                        weakerCell.downloadButton.progress = progress;
-//                        if (progress >= 1.0) {
-//                            weakerCell.downloadButton.downloadComplete = 1.0;
-//                        }
-//                        
-//                        [weakerCell.downloadButton setNeedsDisplay];
-//                    });
-//                }];
-//            };
-//            
-//            NSString *src = [NSString stringWithFormat:@"%@hq", key];
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
-//                                                                                                                   @"block": blockName,
-//                                                                                                                   @"tag": tag,
-//                                                                                                                   @"src":src,
-//                                                                                                                   @"key":key}];
-//            
-//            
-//        };
-//        
-//        
-//        
-//        
-        
-           // !!!:
-
-        
-        
-        
-        /*if (firstDownloadCellPath.row < indexPath.row) {
-            tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
-        }else{
-            tag = self.tableData[indexPath.row];
-        }*/
-
-        // Get the feed
-        //NSDictionary *feeds = tag.event.feeds;
-        //Feed *feed = feeds[key] ? feeds[key] :feeds.allValues.firstObject;
-        
         collapsableCell.sendUserInfo = ^(){
             Feed *feed = [tag.eventInstance.feeds objectForKey:key];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{//@"context":STRING_LISTVIEW_CONTEXT,
@@ -610,17 +447,6 @@ static NSOperationQueue * queue;
 
     NSString *url = tag.thumbnails[src];
     
-//    cell.tagImage.image = [tag thumbnailForSource:@"onlySource"];
-//    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-//        cell.tagImage.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-//    } else {
-//        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
-//    }
-//    
-//    if (!cell.tagImage.image)    cell.tagImage.image = [UIImage imageNamed:@"live.png"];
-//    
-
-    
     if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
         cell.tagImage.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
@@ -703,10 +529,6 @@ static NSOperationQueue * queue;
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
     
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];
-    
-    // This is used for customizing the cell based off the sport
-//    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
-//    profession.onListViewCellStyle(cell,tag);
     
     return cell;
 }

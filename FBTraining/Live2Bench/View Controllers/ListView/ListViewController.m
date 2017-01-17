@@ -16,19 +16,12 @@
 #import "Feed.h"
 
 #import "FullScreenViewController.h"
-//#import "ListViewFullScreenViewController.h"
 #import "PxpEventContext.h"
 #import "LocalMediaManager.h"
 #import "PxpTelestrationViewController.h"
 #import "PxpListViewFullscreenViewController.h"
 #import "PxpVideoBar.h"
 #import "PxpPlayer+Tag.h"
-
-// Debug
-
-#import "SamplePxpFilterModule.h"
-#import "PxpFilterButtonScrollView.h"
-//End debug
 
 //test
 #import "PxpFilterDefaultTabViewController.h"
@@ -79,10 +72,6 @@
     
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
-
-    // for debug
-    SamplePxpFilterModule       * sample;
-    PxpFilterButtonScrollView * test;
 }
 
 @synthesize selectedCellRows;
@@ -91,7 +80,7 @@
 -(instancetype)initWithAppDelegate:(AppDelegate *)appDel{
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
+        [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"tabListView"];
         
         _videoBar                           = [[RicoVideoBar alloc] init];
         _fullscreenViewController           = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
@@ -117,7 +106,7 @@
                 commentingField.ratingScale.rating  = selectedTag.rating;
             }
         }];
-        _pxpFilter = appDel.sharedFilter;
+        self.pxpFilter = appDel.sharedFilter;
     }
     return self;
     
@@ -191,20 +180,20 @@
         if (![self.allTags containsObject:tag]) {
             if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
-                [_pxpFilter addTags:@[tag]];
+                [self.pxpFilter addTags:@[tag]];
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
             [self.allTags insertObject:tag atIndex:0];
         }
         if(tag.modified && [self.allTags containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
             [self.tagsToDisplay insertObject:tag atIndex:0];
-            [_pxpFilter addTags:@[tag]];
+            [self.pxpFilter addTags:@[tag]];
         }
         
         // BCH: TODO: This line has crashed the app a coupl'a times. Possibly the tag is nil?
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
-            [_pxpFilter addTags:@[tag]];
+            [self.pxpFilter addTags:@[tag]];
             [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
         }
 
@@ -215,7 +204,7 @@
             [self.allTags removeObject:tag];
             [self.tagsToDisplay removeObject:tag];
             [_tableViewController collaspOpenCell];
-            [_pxpFilter removeTags:@[tag]];
+            [self.pxpFilter removeTags:@[tag]];
         }
     }
     
@@ -410,9 +399,9 @@
 //    [self.view bringSubviewToFront:_fullscreenViewController.view];
     
     // Set up filter for this Tab
-    _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
-    _pxpFilter.delegate = self;
-    [_pxpFilter removeAllPredicates];
+    self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
+    self.pxpFilter.delegate = self;
+    [self.pxpFilter removeAllPredicates];
     
 
     
@@ -420,8 +409,8 @@
     
     NSLog(@"Current profession type %@", _currentEvent.eventType);
     if (_currentEvent) {
-    if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
-        [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
+    if (![self.pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
+        [self.pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
     }
     
         NSMutableArray * filters = [NSMutableArray new];
@@ -444,7 +433,7 @@
         
 
         
-        [_pxpFilter addPredicates:@[allowThese]];
+        [self.pxpFilter addPredicates:@[allowThese]];
     }
     [_tableViewController reloadData];
     
@@ -558,33 +547,12 @@
 
     [self.ricoPlayerViewController playTag:selectedTag];
     [self.ricoPlayerViewController play];
-//    [self.mainPlayer seekToTime:CMTimeMakeWithSeconds([userInfo[@"time"]floatValue], 1) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:nil];
-//    [self.mainPlayer play];
-//    self.mainPlayer.range = CMTimeRangeMake(CMTimeMakeWithSeconds([userInfo[@"time"]floatValue], 1), CMTimeMakeWithSeconds([userInfo[@"duration"]floatValue], 1));
-    //[self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
-    
-    // only show the telestration on the correct source.
-//    self.telestrationViewController.telestration = selectedTag.telestration.sourceName == feed.sourceName || [selectedTag.telestration.sourceName isEqualToString:feed.sourceName] ? selectedTag.telestration : nil;;
     
     [commentingField clear];
     commentingField.enabled             = YES;
     commentingField.text                = selectedTag.comment;
     commentingField.ratingScale.rating  = selectedTag.rating;
     
-    // find the first player with the source name we are looking for
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
-//    PxpPlayer *player = [_playerViewController.playerView.context.players filteredArrayUsingPredicate:predicate].firstObject;
-    
-    // put the player in focus.
-//    if (player) {
-//        self.playerViewController.playerView.player = player;
-//    }
-    
-    // update the loop range.
-//    _playerViewController.playerView.player.tag = selectedTag;
-    
-//    _videoBar.selectedTag = selectedTag;
-//    _fullscreenViewController.selectedTag = selectedTag;
     self.ricoFullScreenControlBar.controlBar.range = self.ricoPlayerControlBar.range;
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeList;
     self.ricoFullScreenControlBar.currentTagLabel.text =selectedTag.name;
@@ -758,19 +726,6 @@
 
             // this takes the download item and attaches it to the cell
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
-                //videoItem = downloadItem;
-    //            weakCell.downloadButton.downloadItem = downloadItem;
-    //            __block FeedSelectCell *weakerCell = weakCell;
-    //            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-    //                dispatch_async(dispatch_get_main_queue(), ^(){
-    //                    weakerCell.downloadButton.progress = progress;
-    //                    if (progress >= 1.0) {
-    //                        weakerCell.downloadButton.downloadComplete = 1.0;
-    //                    }
-    //
-    //                    [weakerCell.downloadButton setNeedsDisplay];
-    //                });
-    //            }];
                     [downloadItem setOnComplete:^{
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [_tableViewController reloadData];
@@ -1065,7 +1020,7 @@
 {
     [_tableViewController collaspOpenCell];
     
-//    [_pxpFilter filterTags:[self.allTags copy]];
+//    [self.pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTabBar];
     Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
     [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
@@ -1073,7 +1028,7 @@
     
     // setFilter to this view. This is the default filtering for ListView
     // what ever is added to these predicates will be ignored in the filters raw tags
-    _pxpFilter.delegate = self;
+    self.pxpFilter.delegate = self;
     
     if (popupTabBar.isViewLoaded)
     {
@@ -1092,7 +1047,7 @@
     [self presentViewController:popupTabBar animated:YES completion:nil];
  
     
-    [_pxpFilter filterTags:[self.allTags copy]];
+    [self.pxpFilter filterTags:[self.allTags copy]];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
 

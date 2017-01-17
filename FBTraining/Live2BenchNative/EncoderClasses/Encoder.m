@@ -802,8 +802,6 @@
 
 -(void)makeTeleTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    //UIImage *img = [UIImage imageNamed:@"painting.png"];
-    
     // Create a transparent Image to send to server (duct tape to work with legacy code)
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(1.0, 1.0), NO, 1.0);
     UIImage *ductTape = UIGraphicsGetImageFromCurrentImageContext();

@@ -8,10 +8,6 @@
 
 #import "ListViewCell.h"
 #import "RatingOutput.h"
-#import "ListTableViewController.h"
-
-
-
 
 //static CGFloat const kBounceValue = 10.0f;
 
@@ -92,13 +88,6 @@
     
     self.tagcolor = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.tagImage.frame.size.width - 30, 0.0f, 30, 30)];
     [self.tagcolor setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
-    /*
-    self.tagcolor.layer.masksToBounds = NO;
-    self.tagcolor.layer.cornerRadius = 1; // if you like rounded corners
-    self.tagcolor.layer.shadowOffset = CGSizeMake(-1, 0);
-    self.tagcolor.layer.shadowRadius = 2;
-    self.tagcolor.layer.shadowOpacity = 0.8;
-     */
     [self.tagImage addSubview:self.tagcolor];
     
     tagname = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.origin.x + tagImage.frame.size.width + 44, tagImage.frame.origin.y +13, 150.0f, 18.0f)];
