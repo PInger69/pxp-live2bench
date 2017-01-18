@@ -468,8 +468,6 @@
 		D83E83DC1E2D90A5000FC23F /* PxpLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81E21E2D90A4000FC23F /* PxpLog.m */; };
 		D83E83DD1E2D90A5000FC23F /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81E41E2D90A4000FC23F /* Utility.m */; };
 		D83E83DE1E2D90A5000FC23F /* ValueBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81E61E2D90A4000FC23F /* ValueBuffer.m */; };
-		D83E83E01E2D90A5000FC23F /* vertical_myplayXplay_case.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81E91E2D90A4000FC23F /* vertical_myplayXplay_case.png */; };
-		D83E83E11E2D90A5000FC23F /* vertical_myplayXplay_case@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81EA1E2D90A4000FC23F /* vertical_myplayXplay_case@2x.png */; };
 		D83E83E21E2D90A5000FC23F /* VideoBarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81EC1E2D90A4000FC23F /* VideoBarContainerView.m */; };
 		D83E83E31E2D90A5000FC23F /* VideoBarListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81EE1E2D90A4000FC23F /* VideoBarListViewController.m */; };
 		D83E83E41E2D90A5000FC23F /* VideoBarMyClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81F01E2D90A4000FC23F /* VideoBarMyClipViewController.m */; };
@@ -482,7 +480,6 @@
 		D83E88B41E2D9151000FC23F /* ImageAssetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E83F21E2D9143000FC23F /* ImageAssetManager.m */; };
 		D83E8A9D1E2D9152000FC23F /* PxpFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F01E2D9146000FC23F /* PxpFilter.m */; };
 		D83E8A9E1E2D9152000FC23F /* RicoDualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F11E2D9146000FC23F /* RicoDualViewTabViewController.m */; };
-		D83E8A9F1E2D9152000FC23F /* PxpPreference.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E86F21E2D9146000FC23F /* PxpPreference.plist */; };
 		D83E8AA01E2D9152000FC23F /* EncoderStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E86F31E2D9146000FC23F /* EncoderStatusView.xib */; };
 		D83E8AA11E2D9152000FC23F /* PxpFilterHockeyTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F51E2D9146000FC23F /* PxpFilterHockeyTabViewController.m */; };
 		D83E8AA21E2D9152000FC23F /* RicoSourcePickerButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F61E2D9146000FC23F /* RicoSourcePickerButtons.m */; };
@@ -561,7 +558,6 @@
 		D83E8AFB1E2D9153000FC23F /* PxpFilterUserInputScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87821E2D9149000FC23F /* PxpFilterUserInputScrollView.m */; };
 		D83E8AFC1E2D9153000FC23F /* PxpFilterUserInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87841E2D9149000FC23F /* PxpFilterUserInputView.m */; };
 		D83E8AFD1E2D9153000FC23F /* PxpMailClipActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87871E2D9149000FC23F /* PxpMailClipActivity.m */; };
-		D83E8AFE1E2D9153000FC23F /* PxpPreference.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87891E2D9149000FC23F /* PxpPreference.m */; };
 		D83E8AFF1E2D9153000FC23F /* PxpRangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E878B1E2D9149000FC23F /* PxpRangeModifierButton.m */; };
 		D83E8B001E2D9153000FC23F /* PxpReadyPlayerItemOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E878D1E2D9149000FC23F /* PxpReadyPlayerItemOperation.m */; };
 		D83E8B011E2D9153000FC23F /* PxpTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E878F1E2D9149000FC23F /* PxpTag.m */; };
@@ -714,6 +710,8 @@
 		D83E8BB81E2E9C9B000FC23F /* thumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */; };
 		D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */; };
 		D83E8BBF1E2EBB98000FC23F /* TagListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */; };
+		D8AE261D1E2FDDD300BD2EB2 /* PxpPreference.m in Sources */ = {isa = PBXBuildFile; fileRef = D8AE261B1E2FDDD300BD2EB2 /* PxpPreference.m */; };
+		D8AE261E1E2FDDD300BD2EB2 /* PxpPreference.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8AE261C1E2FDDD300BD2EB2 /* PxpPreference.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1620,8 +1618,6 @@
 		D83E81E41E2D90A4000FC23F /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
 		D83E81E51E2D90A4000FC23F /* ValueBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValueBuffer.h; sourceTree = "<group>"; };
 		D83E81E61E2D90A4000FC23F /* ValueBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValueBuffer.m; sourceTree = "<group>"; };
-		D83E81E91E2D90A4000FC23F /* vertical_myplayXplay_case.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vertical_myplayXplay_case.png; sourceTree = "<group>"; };
-		D83E81EA1E2D90A4000FC23F /* vertical_myplayXplay_case@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vertical_myplayXplay_case@2x.png"; sourceTree = "<group>"; };
 		D83E81EB1E2D90A4000FC23F /* VideoBarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBarContainerView.h; sourceTree = "<group>"; };
 		D83E81EC1E2D90A4000FC23F /* VideoBarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoBarContainerView.m; sourceTree = "<group>"; };
 		D83E81ED1E2D90A4000FC23F /* VideoBarListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBarListViewController.h; sourceTree = "<group>"; };
@@ -1639,7 +1635,6 @@
 		D83E83F21E2D9143000FC23F /* ImageAssetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAssetManager.m; sourceTree = "<group>"; };
 		D83E86F01E2D9146000FC23F /* PxpFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilter.m; sourceTree = "<group>"; };
 		D83E86F11E2D9146000FC23F /* RicoDualViewTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoDualViewTabViewController.m; sourceTree = "<group>"; };
-		D83E86F21E2D9146000FC23F /* PxpPreference.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PxpPreference.plist; sourceTree = "<group>"; };
 		D83E86F31E2D9146000FC23F /* EncoderStatusView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EncoderStatusView.xib; sourceTree = "<group>"; };
 		D83E86F41E2D9146000FC23F /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		D83E86F51E2D9146000FC23F /* PxpFilterHockeyTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterHockeyTabViewController.m; sourceTree = "<group>"; };
@@ -1770,8 +1765,6 @@
 		D83E87851E2D9149000FC23F /* PxpLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpLogViewController.h; sourceTree = "<group>"; };
 		D83E87861E2D9149000FC23F /* PxpMailClipActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpMailClipActivity.h; sourceTree = "<group>"; };
 		D83E87871E2D9149000FC23F /* PxpMailClipActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpMailClipActivity.m; sourceTree = "<group>"; };
-		D83E87881E2D9149000FC23F /* PxpPreference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPreference.h; sourceTree = "<group>"; };
-		D83E87891E2D9149000FC23F /* PxpPreference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPreference.m; sourceTree = "<group>"; };
 		D83E878A1E2D9149000FC23F /* PxpRangeModifierButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpRangeModifierButton.h; sourceTree = "<group>"; };
 		D83E878B1E2D9149000FC23F /* PxpRangeModifierButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpRangeModifierButton.m; sourceTree = "<group>"; };
 		D83E878C1E2D9149000FC23F /* PxpReadyPlayerItemOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpReadyPlayerItemOperation.h; sourceTree = "<group>"; };
@@ -2078,6 +2071,9 @@
 		D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogoViewController.m; sourceTree = "<group>"; };
 		D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListViewController.h; sourceTree = "<group>"; };
 		D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagListViewController.m; sourceTree = "<group>"; };
+		D8AE261A1E2FDDD300BD2EB2 /* PxpPreference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPreference.h; sourceTree = "<group>"; };
+		D8AE261B1E2FDDD300BD2EB2 /* PxpPreference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPreference.m; sourceTree = "<group>"; };
+		D8AE261C1E2FDDD300BD2EB2 /* PxpPreference.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PxpPreference.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2613,7 +2609,6 @@
 				D83E83F21E2D9143000FC23F /* ImageAssetManager.m */,
 				D83E86F01E2D9146000FC23F /* PxpFilter.m */,
 				D83E86F11E2D9146000FC23F /* RicoDualViewTabViewController.m */,
-				D83E86F21E2D9146000FC23F /* PxpPreference.plist */,
 				D83E86F31E2D9146000FC23F /* EncoderStatusView.xib */,
 				D83E86F41E2D9146000FC23F /* Tag.h */,
 				D83E86F51E2D9146000FC23F /* PxpFilterHockeyTabViewController.m */,
@@ -2735,8 +2730,6 @@
 				D83E87851E2D9149000FC23F /* PxpLogViewController.h */,
 				D83E87861E2D9149000FC23F /* PxpMailClipActivity.h */,
 				D83E87871E2D9149000FC23F /* PxpMailClipActivity.m */,
-				D83E87881E2D9149000FC23F /* PxpPreference.h */,
-				D83E87891E2D9149000FC23F /* PxpPreference.m */,
 				D83E878A1E2D9149000FC23F /* PxpRangeModifierButton.h */,
 				D83E878B1E2D9149000FC23F /* PxpRangeModifierButton.m */,
 				D83E878C1E2D9149000FC23F /* PxpReadyPlayerItemOperation.h */,
@@ -3597,8 +3590,6 @@
 				D83E81D21E2D90A4000FC23F /* UserSettings.h */,
 				D83E81D31E2D90A4000FC23F /* UserSettings.m */,
 				D83E81D41E2D90A4000FC23F /* UtilityClasses */,
-				D83E81E91E2D90A4000FC23F /* vertical_myplayXplay_case.png */,
-				D83E81EA1E2D90A4000FC23F /* vertical_myplayXplay_case@2x.png */,
 				D83E81EB1E2D90A4000FC23F /* VideoBarContainerView.h */,
 				D83E81EC1E2D90A4000FC23F /* VideoBarContainerView.m */,
 				D83E81ED1E2D90A4000FC23F /* VideoBarListViewController.h */,
@@ -3825,6 +3816,7 @@
 		D83E8B981E2E8680000FC23F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
@@ -3882,6 +3874,16 @@
 				D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */,
 			);
 			path = LogoViewController;
+			sourceTree = "<group>";
+		};
+		D8AE26191E2FDBC700BD2EB2 /* UI Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				D8AE261A1E2FDDD300BD2EB2 /* PxpPreference.h */,
+				D8AE261B1E2FDDD300BD2EB2 /* PxpPreference.m */,
+				D8AE261C1E2FDDD300BD2EB2 /* PxpPreference.plist */,
+			);
+			path = "UI Preferences";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3987,7 +3989,6 @@
 				D83E83A71E2D90A5000FC23F /* submitButton.png in Resources */,
 				D83E83171E2D90A5000FC23F /* pausevideo.png in Resources */,
 				D83E838C1E2D90A5000FC23F /* signalStrength@2x.gif in Resources */,
-				D83E83E01E2D90A5000FC23F /* vertical_myplayXplay_case.png in Resources */,
 				D83E7EE91E2D87FE000FC23F /* VideoKitforIOSv2.4.pdf in Resources */,
 				D83E83B81E2D90A5000FC23F /* teleButtonSelect@2x.png in Resources */,
 				D83E82A41E2D90A5000FC23F /* GreenSettingsButton.png in Resources */,
@@ -4172,6 +4173,7 @@
 				D83E8AD01E2D9152000FC23F /* share@2x.png in Resources */,
 				D83E83EF1E2D90A5000FC23F /* youtubeSelect.png in Resources */,
 				D83E831A1E2D90A5000FC23F /* pausevideobutton@2x.png in Resources */,
+				D8AE261E1E2FDDD300BD2EB2 /* PxpPreference.plist in Resources */,
 				D83E82CB1E2D90A5000FC23F /* lineButtonSelect.png in Resources */,
 				D83E82CA1E2D90A5000FC23F /* lineButton@2x.png in Resources */,
 				D83E83BF1E2D90A5000FC23F /* testPic.jpg in Resources */,
@@ -4181,7 +4183,6 @@
 				D83E82E31E2D90A5000FC23F /* logo_selected.png in Resources */,
 				D83E82C11E2D90A5000FC23F /* landingElement.png in Resources */,
 				D83E82831E2D90A5000FC23F /* extendendsec.png in Resources */,
-				D83E83E11E2D90A5000FC23F /* vertical_myplayXplay_case@2x.png in Resources */,
 				D83E82471E2D90A5000FC23F /* continue_unselected@2x.png in Resources */,
 				D83E8AE71E2D9153000FC23F /* PxpFilterDefaultTabViewController.xib in Resources */,
 				D83E83B71E2D90A5000FC23F /* teleButtonSelect.png in Resources */,
@@ -4208,7 +4209,6 @@
 				D83E82161E2D90A5000FC23F /* BG.png in Resources */,
 				D83E828B1E2D90A5000FC23F /* facebookselected@2x.png in Resources */,
 				D83E83831E2D90A5000FC23F /* settingsButtonSelect@2x.png in Resources */,
-				D83E8A9F1E2D9152000FC23F /* PxpPreference.plist in Resources */,
 				D83E82A61E2D90A5000FC23F /* GreenSettingsButtonSelect.png in Resources */,
 				D83E830F1E2D90A5000FC23F /* orangeSelect.png in Resources */,
 				D83E82EA1E2D90A5000FC23F /* mail.png in Resources */,
@@ -4360,6 +4360,7 @@
 				D83E83501E2D90A5000FC23F /* PxpPlayerSingleView.m in Sources */,
 				D83E8AFC1E2D9153000FC23F /* PxpFilterUserInputView.m in Sources */,
 				D83E83041E2D90A5000FC23F /* NCPlayerView.m in Sources */,
+				D8AE261D1E2FDDD300BD2EB2 /* PxpPreference.m in Sources */,
 				D83E83401E2D90A5000FC23F /* PxpLoadAction.m in Sources */,
 				D83E82731E2D90A5000FC23F /* EncoderCommander.m in Sources */,
 				D83E8B261E2D9153000FC23F /* StreamViewVideoKit.m in Sources */,
@@ -4656,7 +4657,6 @@
 				D83E820A1E2D90A5000FC23F /* AMBlurView.m in Sources */,
 				D83E7DC61E2D86CB000FC23F /* main.m in Sources */,
 				D83E83521E2D90A5000FC23F /* PxpPlayerView.m in Sources */,
-				D83E8AFE1E2D9153000FC23F /* PxpPreference.m in Sources */,
 				D83E8B671E2D9153000FC23F /* CKCalendarView.m in Sources */,
 				D83E833C1E2D90A5000FC23F /* PxpGlowButton.m in Sources */,
 				D83E83161E2D90A5000FC23F /* OverlayViewController.m in Sources */,

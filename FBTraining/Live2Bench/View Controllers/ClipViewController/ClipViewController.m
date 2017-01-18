@@ -49,6 +49,8 @@
 @property (nonatomic, strong) BreadCrumbsViewController* breadCrumbVC;
 @property (nonatomic, strong) id <EncoderProtocol> observedEncoder;
 
+@property (nonatomic, strong) NSTimer* refreshTimer;
+
 
 @end
 
@@ -850,8 +852,16 @@
 // Sort tags by time index. Ensure that tags are unique
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
     [super sortAndDisplayUniqueTags:tags];
-    [self.collectionView reloadData];
+    
+    if (self.refreshTimer.isValid) {
+        [self.refreshTimer invalidate];
+        self.refreshTimer = nil;
+    }
+    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(reloadCollectionView) userInfo:nil repeats:NO];
 }
 
+-(void) reloadCollectionView {
+    [self.collectionView reloadData];
+}
 
 @end
