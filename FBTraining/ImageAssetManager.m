@@ -107,7 +107,7 @@ static ImageAssetManager * instance;
 
 -(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference withTelestration:(nullable PxpTelestration *)telestration {
     NSURL *imageURL =[NSURL URLWithString:imageURLString];
-    viewReference.image = [UIImage imageNamed:@"live.png"];
+    viewReference.image = [UIImage imageNamed:@"defaultTagView"];
 
     UIImage *theImage;
     

@@ -23,7 +23,7 @@
 
 @property (nonatomic,weak) AVPlayerItem * observedItem;
 @property (nonatomic,weak) id <RicoPlayerItemOperationDelegate> delegate;
-@property (nonatomic,assign) BOOL * success;
+@property (nonatomic,assign) BOOL success;
 
 - (instancetype)initWithPlayerItem:(AVPlayerItem *)playerItem;
 

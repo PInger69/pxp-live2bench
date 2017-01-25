@@ -8,6 +8,8 @@
 
 #import "TagListViewController.h"
 
+#import <TSMessages/TSMessage.h>
+
 @implementation TagListViewController
 
 
@@ -57,6 +59,13 @@
     [self.tagsToDisplay addObjectsFromArray:
         [NSMutableArray arrayWithArray:[[uniqueList allObjects] sortedArrayUsingDescriptors:@[sorter]]]];
 }
+
+-(void) showDeletePermissionError {
+    [TSMessage showNotificationWithTitle:@"myplayXplay"
+                                subtitle:@"You can't delete someone else's tag"
+                                    type:TSMessageNotificationTypeError];
+}
+
 
 
 

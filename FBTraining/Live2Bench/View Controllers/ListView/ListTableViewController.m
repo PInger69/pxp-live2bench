@@ -422,7 +422,7 @@ static NSOperationQueue * queue;
         
 
         __weak UIImageView* weakImageView = cell.tagImage;
-        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             
             if (image) {
                 UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:weakImageView];
@@ -433,7 +433,7 @@ static NSOperationQueue * queue;
 
     } else {
         NSString* url = tag.thumbnails[src];
-        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"]];
     }
 
     
@@ -482,8 +482,8 @@ static NSOperationQueue * queue;
     return cell;
 }
 
--(void)downloadExternal:(Tag *)tag source:(NSString*)src tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+-(void)downloadExternal:(Tag *)tag source:(NSString*)src tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src]];
     
     [downloadClip setOnFail:^(NSError *e) {

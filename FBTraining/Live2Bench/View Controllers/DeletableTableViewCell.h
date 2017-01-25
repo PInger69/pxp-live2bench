@@ -41,5 +41,6 @@ typedef NS_OPTIONS(NSInteger, cellState) {
 -(void)setCellAccordingToState:(cellState)state;
 -(void) setupView;
 
+- (void)panThisCell:(UISwipeGestureRecognizer *)recognizer;
 
 @end

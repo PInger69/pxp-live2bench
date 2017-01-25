@@ -61,7 +61,7 @@
     [self addSubview:self.backgroundPlaneView];
     self.backgroundPlaneView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     self.backgroundPlaneView.layer.borderWidth = 3;
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defaultTagView"]];
 
     [self.imageView setFrame:CGRectMake(2, 2, self.backgroundPlaneView.bounds.size.width - 5, 131.0f)];
 

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A76B350F88EF9958344C1A38 /* libPods-Live2Bench.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E736934C43C2EE28A639060 /* libPods-Live2Bench.a */; };
+		D815525E1E3934E3003010D4 /* DeletableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */; };
+		D815525F1E3934E3003010D4 /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525D1E3934E3003010D4 /* DeletableTableViewController.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -91,10 +93,6 @@
 		D83E82381E2D90A5000FC23F /* clip-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F4C1E2D90A2000FC23F /* clip-back@2x.png */; };
 		D83E82391E2D90A5000FC23F /* ClipCornerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F4E1E2D90A2000FC23F /* ClipCornerView.m */; };
 		D83E823A1E2D90A5000FC23F /* ClipDataContentDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F501E2D90A2000FC23F /* ClipDataContentDisplay.m */; };
-		D83E823D1E2D90A5000FC23F /* coach.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F531E2D90A2000FC23F /* coach.png */; };
-		D83E823E1E2D90A5000FC23F /* coach@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F541E2D90A2000FC23F /* coach@2x.png */; };
-		D83E823F1E2D90A5000FC23F /* coachPicked.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F551E2D90A2000FC23F /* coachPicked.png */; };
-		D83E82401E2D90A5000FC23F /* coachPicked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F561E2D90A2000FC23F /* coachPicked@2x.png */; };
 		D83E82411E2D90A5000FC23F /* CommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F581E2D90A2000FC23F /* CommentingField.m */; };
 		D83E82421E2D90A5000FC23F /* CommentingRatingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F5A1E2D90A2000FC23F /* CommentingRatingField.m */; };
 		D83E82431E2D90A5000FC23F /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F5C1E2D90A2000FC23F /* ContactLabelString.txt */; };
@@ -202,7 +200,6 @@
 		D83E82CA1E2D90A5000FC23F /* lineButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80351E2D90A2000FC23F /* lineButton@2x.png */; };
 		D83E82CB1E2D90A5000FC23F /* lineButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80361E2D90A2000FC23F /* lineButtonSelect.png */; };
 		D83E82CC1E2D90A5000FC23F /* lineButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80371E2D90A2000FC23F /* lineButtonSelect@2x.png */; };
-		D83E82D11E2D90A5000FC23F /* live.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E803E1E2D90A2000FC23F /* live.png */; };
 		D83E82D21E2D90A5000FC23F /* Live2BenchNative-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E803F1E2D90A2000FC23F /* Live2BenchNative-Info.plist */; };
 		D83E82D31E2D90A5000FC23F /* BottomViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80451E2D90A2000FC23F /* BottomViewControllerBase.m */; };
 		D83E82D41E2D90A5000FC23F /* L2BFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80471E2D90A2000FC23F /* L2BFullScreenViewController.m */; };
@@ -214,7 +211,6 @@
 		D83E82DA1E2D90A5000FC23F /* live2BenchTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80521E2D90A2000FC23F /* live2BenchTab@2x.png */; };
 		D83E82DB1E2D90A5000FC23F /* live2BenchTabSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80531E2D90A2000FC23F /* live2BenchTabSelect@2x.png */; };
 		D83E82DC1E2D90A5000FC23F /* Live2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */; };
-		D83E82DD1E2D90A5000FC23F /* live@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80561E2D90A2000FC23F /* live@2x.png */; };
 		D83E82DE1E2D90A5000FC23F /* LoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80581E2D90A2000FC23F /* LoginTextField.m */; };
 		D83E82DF1E2D90A5000FC23F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E805A1E2D90A2000FC23F /* LoginViewController.m */; };
 		D83E82E01E2D90A5000FC23F /* logo _unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E805B1E2D90A2000FC23F /* logo _unselected@2x.png */; };
@@ -485,7 +481,6 @@
 		D83E8AA21E2D9152000FC23F /* RicoSourcePickerButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F61E2D9146000FC23F /* RicoSourcePickerButtons.m */; };
 		D83E8AA31E2D9152000FC23F /* EncoderControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F71E2D9146000FC23F /* EncoderControlsViewController.m */; };
 		D83E8AA41E2D9152000FC23F /* RicoFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F91E2D9147000FC23F /* RicoFullScreenViewController.m */; };
-		D83E8AA51E2D9152000FC23F /* DeletableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FA1E2D9147000FC23F /* DeletableTableViewCell.m */; };
 		D83E8AA61E2D9152000FC23F /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FB1E2D9147000FC23F /* ARCalendarTableViewCell.m */; };
 		D83E8AA71E2D9152000FC23F /* VideoRecieptDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FC1E2D9147000FC23F /* VideoRecieptDataProvider.m */; };
 		D83E8AA81E2D9152000FC23F /* FeedMappingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FE1E2D9147000FC23F /* FeedMappingViewController.m */; };
@@ -663,7 +658,6 @@
 		D83E8B6F1E2D9153000FC23F /* CustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885F1E2D914E000FC23F /* CustomAlertView.m */; };
 		D83E8B701E2D9153000FC23F /* DebugOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88611E2D914E000FC23F /* DebugOutput.m */; };
 		D83E8B711E2D9153000FC23F /* DelayOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88631E2D914F000FC23F /* DelayOperation.m */; };
-		D83E8B721E2D9153000FC23F /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88661E2D914F000FC23F /* DeletableTableViewController.m */; };
 		D83E8B741E2D9153000FC23F /* DeviceAssetLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88691E2D914F000FC23F /* DeviceAssetLibrary.m */; };
 		D83E8B751E2D9153000FC23F /* DeviceLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E886C1E2D914F000FC23F /* DeviceLog.m */; };
 		D83E8B761E2D9153000FC23F /* DeviceVideoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E886E1E2D914F000FC23F /* DeviceVideoCollectionViewController.m */; };
@@ -718,6 +712,10 @@
 		3D2D3E0A12BF51BAA4741C1E /* Pods-Live2Bench.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Live2Bench.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Live2Bench/Pods-Live2Bench.debug.xcconfig"; sourceTree = "<group>"; };
 		5E736934C43C2EE28A639060 /* libPods-Live2Bench.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Live2Bench.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F74F983CD3A53DCCF7EC927 /* Pods-Live2Bench.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Live2Bench.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Live2Bench/Pods-Live2Bench.release.xcconfig"; sourceTree = "<group>"; };
+		D815525A1E3934E3003010D4 /* DeletableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewCell.h; sourceTree = "<group>"; };
+		D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewCell.m; sourceTree = "<group>"; };
+		D815525C1E3934E3003010D4 /* DeletableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewController.h; sourceTree = "<group>"; };
+		D815525D1E3934E3003010D4 /* DeletableTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewController.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1032,10 +1030,6 @@
 		D83E7F4E1E2D90A2000FC23F /* ClipCornerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipCornerView.m; sourceTree = "<group>"; };
 		D83E7F4F1E2D90A2000FC23F /* ClipDataContentDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipDataContentDisplay.h; sourceTree = "<group>"; };
 		D83E7F501E2D90A2000FC23F /* ClipDataContentDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipDataContentDisplay.m; sourceTree = "<group>"; };
-		D83E7F531E2D90A2000FC23F /* coach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coach.png; sourceTree = "<group>"; };
-		D83E7F541E2D90A2000FC23F /* coach@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coach@2x.png"; sourceTree = "<group>"; };
-		D83E7F551E2D90A2000FC23F /* coachPicked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coachPicked.png; sourceTree = "<group>"; };
-		D83E7F561E2D90A2000FC23F /* coachPicked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coachPicked@2x.png"; sourceTree = "<group>"; };
 		D83E7F571E2D90A2000FC23F /* CommentingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentingField.h; sourceTree = "<group>"; };
 		D83E7F581E2D90A2000FC23F /* CommentingField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentingField.m; sourceTree = "<group>"; };
 		D83E7F591E2D90A2000FC23F /* CommentingRatingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentingRatingField.h; sourceTree = "<group>"; };
@@ -1207,7 +1201,6 @@
 		D83E80351E2D90A2000FC23F /* lineButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lineButton@2x.png"; sourceTree = "<group>"; };
 		D83E80361E2D90A2000FC23F /* lineButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineButtonSelect.png; sourceTree = "<group>"; };
 		D83E80371E2D90A2000FC23F /* lineButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lineButtonSelect@2x.png"; sourceTree = "<group>"; };
-		D83E803E1E2D90A2000FC23F /* live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = live.png; sourceTree = "<group>"; };
 		D83E803F1E2D90A2000FC23F /* Live2BenchNative-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Live2BenchNative-Info.plist"; sourceTree = "<group>"; };
 		D83E80401E2D90A2000FC23F /* Live2BenchNative-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Live2BenchNative-Prefix.pch"; sourceTree = "<group>"; };
 		D83E80411E2D90A2000FC23F /* Live2BenchNative.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Live2BenchNative.entitlements; sourceTree = "<group>"; };
@@ -1229,7 +1222,6 @@
 		D83E80531E2D90A2000FC23F /* live2BenchTabSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live2BenchTabSelect@2x.png"; sourceTree = "<group>"; };
 		D83E80541E2D90A2000FC23F /* Live2BenchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Live2BenchViewController.h; sourceTree = "<group>"; };
 		D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Live2BenchViewController.m; sourceTree = "<group>"; };
-		D83E80561E2D90A2000FC23F /* live@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live@2x.png"; sourceTree = "<group>"; };
 		D83E80571E2D90A2000FC23F /* LoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginTextField.h; sourceTree = "<group>"; };
 		D83E80581E2D90A2000FC23F /* LoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginTextField.m; sourceTree = "<group>"; };
 		D83E80591E2D90A2000FC23F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -1642,7 +1634,6 @@
 		D83E86F71E2D9146000FC23F /* EncoderControlsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderControlsViewController.m; sourceTree = "<group>"; };
 		D83E86F81E2D9146000FC23F /* RicoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoPlayer.h; sourceTree = "<group>"; };
 		D83E86F91E2D9147000FC23F /* RicoFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoFullScreenViewController.m; sourceTree = "<group>"; };
-		D83E86FA1E2D9147000FC23F /* DeletableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewCell.m; sourceTree = "<group>"; };
 		D83E86FB1E2D9147000FC23F /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
 		D83E86FC1E2D9147000FC23F /* VideoRecieptDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRecieptDataProvider.m; sourceTree = "<group>"; };
 		D83E86FD1E2D9147000FC23F /* TagProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagProxy.h; sourceTree = "<group>"; };
@@ -1971,9 +1962,6 @@
 		D83E88611E2D914E000FC23F /* DebugOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugOutput.m; sourceTree = "<group>"; };
 		D83E88621E2D914F000FC23F /* DelayOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelayOperation.h; sourceTree = "<group>"; };
 		D83E88631E2D914F000FC23F /* DelayOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DelayOperation.m; sourceTree = "<group>"; };
-		D83E88641E2D914F000FC23F /* DeletableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewCell.h; sourceTree = "<group>"; };
-		D83E88651E2D914F000FC23F /* DeletableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewController.h; sourceTree = "<group>"; };
-		D83E88661E2D914F000FC23F /* DeletableTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewController.m; sourceTree = "<group>"; };
 		D83E88681E2D914F000FC23F /* DeviceAssetLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceAssetLibrary.h; sourceTree = "<group>"; };
 		D83E88691E2D914F000FC23F /* DeviceAssetLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceAssetLibrary.m; sourceTree = "<group>"; };
 		D83E886A1E2D914F000FC23F /* DeviceEncoderSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceEncoderSource.h; sourceTree = "<group>"; };
@@ -2616,7 +2604,6 @@
 				D83E86F71E2D9146000FC23F /* EncoderControlsViewController.m */,
 				D83E86F81E2D9146000FC23F /* RicoPlayer.h */,
 				D83E86F91E2D9147000FC23F /* RicoFullScreenViewController.m */,
-				D83E86FA1E2D9147000FC23F /* DeletableTableViewCell.m */,
 				D83E86FB1E2D9147000FC23F /* ARCalendarTableViewCell.m */,
 				D83E86FC1E2D9147000FC23F /* VideoRecieptDataProvider.m */,
 				D83E86FD1E2D9147000FC23F /* TagProxy.h */,
@@ -2936,9 +2923,6 @@
 				D83E88611E2D914E000FC23F /* DebugOutput.m */,
 				D83E88621E2D914F000FC23F /* DelayOperation.h */,
 				D83E88631E2D914F000FC23F /* DelayOperation.m */,
-				D83E88641E2D914F000FC23F /* DeletableTableViewCell.h */,
-				D83E88651E2D914F000FC23F /* DeletableTableViewController.h */,
-				D83E88661E2D914F000FC23F /* DeletableTableViewController.m */,
 				D83E88681E2D914F000FC23F /* DeviceAssetLibrary.h */,
 				D83E88691E2D914F000FC23F /* DeviceAssetLibrary.m */,
 				D83E886A1E2D914F000FC23F /* DeviceEncoderSource.h */,
@@ -3107,10 +3091,6 @@
 				D83E7F4E1E2D90A2000FC23F /* ClipCornerView.m */,
 				D83E7F4F1E2D90A2000FC23F /* ClipDataContentDisplay.h */,
 				D83E7F501E2D90A2000FC23F /* ClipDataContentDisplay.m */,
-				D83E7F531E2D90A2000FC23F /* coach.png */,
-				D83E7F541E2D90A2000FC23F /* coach@2x.png */,
-				D83E7F551E2D90A2000FC23F /* coachPicked.png */,
-				D83E7F561E2D90A2000FC23F /* coachPicked@2x.png */,
 				D83E7F571E2D90A2000FC23F /* CommentingField.h */,
 				D83E7F581E2D90A2000FC23F /* CommentingField.m */,
 				D83E7F591E2D90A2000FC23F /* CommentingRatingField.h */,
@@ -3241,7 +3221,6 @@
 				D83E80351E2D90A2000FC23F /* lineButton@2x.png */,
 				D83E80361E2D90A2000FC23F /* lineButtonSelect.png */,
 				D83E80371E2D90A2000FC23F /* lineButtonSelect@2x.png */,
-				D83E803E1E2D90A2000FC23F /* live.png */,
 				D83E803F1E2D90A2000FC23F /* Live2BenchNative-Info.plist */,
 				D83E80401E2D90A2000FC23F /* Live2BenchNative-Prefix.pch */,
 				D83E80411E2D90A2000FC23F /* Live2BenchNative.entitlements */,
@@ -3250,7 +3229,6 @@
 				D83E80531E2D90A2000FC23F /* live2BenchTabSelect@2x.png */,
 				D83E80541E2D90A2000FC23F /* Live2BenchViewController.h */,
 				D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */,
-				D83E80561E2D90A2000FC23F /* live@2x.png */,
 				D83E80571E2D90A2000FC23F /* LoginTextField.h */,
 				D83E80581E2D90A2000FC23F /* LoginTextField.m */,
 				D83E80591E2D90A2000FC23F /* LoginViewController.h */,
@@ -3816,6 +3794,10 @@
 		D83E8B981E2E8680000FC23F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D815525A1E3934E3003010D4 /* DeletableTableViewCell.h */,
+				D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */,
+				D815525C1E3934E3003010D4 /* DeletableTableViewController.h */,
+				D815525D1E3934E3003010D4 /* DeletableTableViewController.m */,
 				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
@@ -3970,7 +3952,6 @@
 				D83E83C31E2D90A5000FC23F /* ToolBarValues.plist in Resources */,
 				D83E838A1E2D90A5000FC23F /* signalStrength.gif in Resources */,
 				D83E83231E2D90A5000FC23F /* playbackRateButtonForward.png in Resources */,
-				D83E823F1E2D90A5000FC23F /* coachPicked.png in Resources */,
 				D83E83761E2D90A5000FC23F /* saveToAlbum@2x.png in Resources */,
 				D83E821B1E2D90A5000FC23F /* bookmarkedit.png in Resources */,
 				D83E83151E2D90A5000FC23F /* ortri.png in Resources */,
@@ -3980,10 +3961,8 @@
 				D83E83001E2D90A5000FC23F /* myplayXplay_tagging@2x.png in Resources */,
 				D83E82281E2D90A5000FC23F /* camera.png in Resources */,
 				D83E82FE1E2D90A5000FC23F /* myplayXplay_phonecall@2x.png in Resources */,
-				D83E823D1E2D90A5000FC23F /* coach.png in Resources */,
 				D83E82F41E2D90A5000FC23F /* minusfiveseclarge@2x.png in Resources */,
 				D83E828E1E2D90A5000FC23F /* filter.png in Resources */,
-				D83E823E1E2D90A5000FC23F /* coach@2x.png in Resources */,
 				D83E82E21E2D90A5000FC23F /* logo@2x.png in Resources */,
 				D83E82261E2D90A5000FC23F /* calendarTabSelect@2x.png in Resources */,
 				D83E7EEA1E2D87FE000FC23F /* build-libssl-ios.sh in Resources */,
@@ -4050,7 +4029,6 @@
 				D83E82131E2D90A5000FC23F /* arrowButtonSelect@2x.png in Resources */,
 				D83E82C31E2D90A5000FC23F /* like.jpeg in Resources */,
 				D83E836C1E2D90A5000FC23F /* RedSettingsButtonSelect@2x.png in Resources */,
-				D83E82DD1E2D90A5000FC23F /* live@2x.png in Resources */,
 				D83E82F21E2D90A5000FC23F /* minusfivesec@2x.png in Resources */,
 				D83E82E41E2D90A5000FC23F /* logo_selected@2x.png in Resources */,
 				D83E828A1E2D90A5000FC23F /* facebookselected.png in Resources */,
@@ -4076,7 +4054,6 @@
 				D83E82F61E2D90A5000FC23F /* myclipfilterorange.png in Resources */,
 				D83E7EF21E2D87FE000FC23F /* VKImages.bundle in Resources */,
 				D83E838E1E2D90A5000FC23F /* sline.png in Resources */,
-				D83E82401E2D90A5000FC23F /* coachPicked@2x.png in Resources */,
 				D83E82C21E2D90A5000FC23F /* landingMyplayXplaylogo.png in Resources */,
 				D83E829D1E2D90A5000FC23F /* gotolive.png in Resources */,
 				D83E821C1E2D90A5000FC23F /* bookmarkedit@2x.png in Resources */,
@@ -4138,7 +4115,6 @@
 				D83E8AC71E2D9152000FC23F /* NameCameraCellView.xib in Resources */,
 				D83E82431E2D90A5000FC23F /* ContactLabelString.txt in Resources */,
 				D83E82101E2D90A5000FC23F /* arrowButton.png in Resources */,
-				D83E82D11E2D90A5000FC23F /* live.png in Resources */,
 				D83E820E1E2D90A5000FC23F /* arrow.png in Resources */,
 				D83E83081E2D90A5000FC23F /* normalsp@2x.png in Resources */,
 				D83E82521E2D90A5000FC23F /* Default-568.png in Resources */,
@@ -4307,6 +4283,7 @@
 				D83E8BB11E2E9C84000FC23F /* SettingsTableViewController.m in Sources */,
 				D83E821F1E2D90A5000FC23F /* BookmarkViewController.m in Sources */,
 				D83E83661E2D90A5000FC23F /* PxpVideoBar.m in Sources */,
+				D815525E1E3934E3003010D4 /* DeletableTableViewCell.m in Sources */,
 				D83E8B631E2D9153000FC23F /* CalendarBar.m in Sources */,
 				D83E832B1E2D90A5000FC23F /* PopoverButton.m in Sources */,
 				D83E8B031E2D9153000FC23F /* PxpURLProtocol.m in Sources */,
@@ -4377,6 +4354,7 @@
 				D8AE261D1E2FDDD300BD2EB2 /* PxpPreference.m in Sources */,
 				D83E83401E2D90A5000FC23F /* PxpLoadAction.m in Sources */,
 				D83E82731E2D90A5000FC23F /* EncoderCommander.m in Sources */,
+				D815525F1E3934E3003010D4 /* DeletableTableViewController.m in Sources */,
 				D83E8B261E2D9153000FC23F /* StreamViewVideoKit.m in Sources */,
 				D83E83E51E2D90A5000FC23F /* VideoControlBar.m in Sources */,
 				D83E83CA1E2D90A5000FC23F /* UIFont+Default.m in Sources */,
@@ -4458,7 +4436,6 @@
 				D83E8B111E2D9153000FC23F /* RicoPlayerViewController.m in Sources */,
 				D83E8AA31E2D9152000FC23F /* EncoderControlsViewController.m in Sources */,
 				D83E8B451E2D9153000FC23F /* VideoUploadRecieptActivity.m in Sources */,
-				D83E8B721E2D9153000FC23F /* DeletableTableViewController.m in Sources */,
 				D83E82961E2D90A5000FC23F /* FilterTabViewController.m in Sources */,
 				D83E8B2C1E2D9153000FC23F /* TagProxy.m in Sources */,
 				D83E83921E2D90A5000FC23F /* Slomo.m in Sources */,
@@ -4572,7 +4549,6 @@
 				D83E83D61E2D90A5000FC23F /* UserSettings.m in Sources */,
 				D83E83531E2D90A5000FC23F /* PxpPlayerViewController.m in Sources */,
 				D83E7EE51E2D87FE000FC23F /* VKPlayerControllerBase.m in Sources */,
-				D83E8AA51E2D9152000FC23F /* DeletableTableViewCell.m in Sources */,
 				D83E8AA91E2D9152000FC23F /* DownloadClipFromTag.m in Sources */,
 				D83E8AB91E2D9152000FC23F /* PxpLogViewController.m in Sources */,
 				D83E8B6E1E2D9153000FC23F /* CustomAlertControllerQueue.m in Sources */,

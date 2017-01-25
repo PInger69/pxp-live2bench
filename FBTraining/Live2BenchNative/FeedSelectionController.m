@@ -15,7 +15,7 @@
 @property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
 
 @property (strong, nonatomic, nonnull) UITableView *tableView;
-@property (assign, nonatomic) BOOL *isPresented;
+@property (assign, nonatomic) BOOL isPresented;
 
 @end
 

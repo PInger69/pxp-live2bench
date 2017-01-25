@@ -20,4 +20,6 @@
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags;
 -(void) configurePxpFilter:(Event*) currentEvent;
 
+-(void) showDeletePermissionError;
+
 @end

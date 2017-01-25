@@ -1251,7 +1251,7 @@
         
         
         __weak UIImageView* weakImageView = cell.tagImage;
-        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             
             if (image) {
                 UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:weakImageView];
@@ -1262,7 +1262,7 @@
         
     } else {
         NSString* url = tag.thumbnails[src];
-        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"]];
     }
     
     

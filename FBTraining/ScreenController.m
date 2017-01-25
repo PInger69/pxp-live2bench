@@ -439,7 +439,7 @@
  *  This will see if there is a main tab change so the external screen can be packed up
  *  The reason for this is that other code will break the positioning if the Screen is not packed up
  *
- *  @param notification
+ *  @param notification - the notification that originated the method call
  */
 -(void)onTabChange:(NSNotification *)notification {
     [self returnVideoToPreviousViewFromExternal];

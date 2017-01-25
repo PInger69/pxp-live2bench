@@ -98,7 +98,7 @@ static AlertType    allowedTypes;
 
 +(BOOL)alertMessageExists:(NSString*)alertMsg
 {
-    BOOL *alertExists = NO;
+    BOOL alertExists = NO;
     for (UIAlertView *alert in alertPool){
         if ([alert.message isEqualToString:alertMsg]){
             alertExists = YES;

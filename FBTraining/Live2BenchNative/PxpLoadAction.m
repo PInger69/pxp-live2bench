@@ -34,7 +34,7 @@
     self = [super init];
     if (self) {
         _complete = NO;
-        _success = nil;
+        _success = NO;
         _block = block;
     }
     return self;

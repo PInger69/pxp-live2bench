@@ -159,7 +159,7 @@ static NSInteger _proxyTempID;
 -(BOOL)own
 {
     if (self.tag) {
-        return self.tag;
+        return self.tag.own;
     } else {
         return [self.tagData[@"own"]boolValue];
     }

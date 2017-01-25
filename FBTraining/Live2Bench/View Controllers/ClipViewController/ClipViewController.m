@@ -481,7 +481,7 @@
         
 
         __weak UIImageView* weakImageView = cell.imageView;
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
 
             if (image) {
                 UIImage* imageWithTelestration = [tele renderOverImage:image view:cell.imageView];
@@ -493,7 +493,7 @@
         
     } else {
         NSLog(@"loading image: %@", url);
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"]];
     }
 
     [cell setDeletingMode: self.isEditing];
@@ -505,13 +505,6 @@
 
     return cell;
 }
-
--(void) showDeletePermissionError {
-    [TSMessage showNotificationWithTitle:@"myplayXplay"
-                                subtitle:@"You can't delete someone else's tag"
-                                    type:TSMessageNotificationTypeError];
-}
-
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
     thumbnailCell *cell = (thumbnailCell *)sender.superview;

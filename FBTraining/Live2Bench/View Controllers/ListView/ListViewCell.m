@@ -37,7 +37,7 @@
 - (void) prepareForReuse
 {
     
-    self.tagImage.image             = [UIImage imageNamed:@"live.png"];
+    self.tagImage.image             = [UIImage imageNamed:@"defaultTagView"];
     self.tagname.text               = @"";
     self.tagtime.text               = @"";
     self.tagInfoText.text           = @"";
@@ -73,7 +73,7 @@
     
     [self.contentView addSubview:anExtraView];
 
-    self.tagImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
+    self.tagImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defaultTagView"]];
     self.tagImage.layer.borderColor = [[UIColor colorWithWhite:0.7f alpha:1.0f] CGColor];
     self.tagImage.layer.borderWidth = 1.0f;
     [self.tagImage setFrame:CGRectMake(0.0f, 0.0f, 230.0f, 155.0f)];

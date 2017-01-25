@@ -521,7 +521,7 @@ static LocalEncoder * instance;
     event.delegate = nil;
     
     NSMutableSet *eventToBeBuilt = [[NSMutableSet alloc]init];
-    BOOL *allBuilt = true;
+    BOOL allBuilt = YES;
     
     for (Tag *tag in self.localTags) {
         [eventToBeBuilt addObject:tag.event];

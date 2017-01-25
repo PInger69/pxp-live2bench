@@ -42,7 +42,7 @@
 }
 @property (nonatomic,strong) AVPlayerItem * observedItem;
 //@property (nonatomic,weak) id <RicoPlayerItemOperationDelegate> delegate;
-@property (nonatomic,assign) BOOL * success;
+@property (nonatomic,assign) BOOL success;
 @property (nonatomic,strong) NSError * error;
 
 - (instancetype)initWithPlayerItem:(AVPlayerItem *)playerItem;
@@ -61,7 +61,7 @@
 @property (nonatomic,assign) CMTime  toleranceBefore;
 @property (nonatomic,assign) CMTime  toleranceAfter;
 
-@property (nonatomic,assign) BOOL * success;
+@property (nonatomic,assign) BOOL success;
 @property (copy, nonatomic) void(^completionHandler)(BOOL);
 - (instancetype)initWithAVPlayer:(AVPlayer*)aPlayer seekToTime:(CMTime)seekTo toleranceBefore:(CMTime)tBefore toleranceAfter:(CMTime)tAfter;
 
@@ -74,7 +74,7 @@
     BOOL        executing;
     BOOL        finished;
 }
-@property (nonatomic,assign) BOOL * success;
+@property (nonatomic,assign) BOOL success;
 @property (nonatomic,weak)  RicoPlayer * player;
 
 - (instancetype)initWithRicoPlayer:(RicoPlayer*)player;

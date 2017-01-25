@@ -27,7 +27,7 @@
     void * _playerRateObserverContext;
     void * _telestrationObserverContext;
     
-    BOOL * _stillFlag;
+    BOOL _stillFlag;
 }
 
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
