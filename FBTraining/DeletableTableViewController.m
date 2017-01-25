@@ -13,7 +13,7 @@
 
 @interface DeletableTableViewController ()
 
-@property (strong, nonatomic) UIPopoverController *sharePop;
+//@property (strong, nonatomic) UIPopoverController *sharePop;
 //@property (strong, nonatomic) id previousOne;
 
 @end
@@ -164,20 +164,8 @@
     }
 }
 
--(void)shareOptionChosen:(NSString *)optionChosen{
-    [self.sharePop dismissPopoverAnimated:YES];
-}
-
 -(void)deleteAllButtonTarget{
-//    CustomAlertView *alert = [[CustomAlertView alloc] init];
-//    [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
-//    alert.type = AlertImportant;
-//    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these", nil), [self.contextString lowercaseString]]];
-//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from both server and ipad", nil)];
-//    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from ipad", nil)];
-//    [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-//    [alert showView];
+
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -249,90 +237,10 @@
         }
         
         
-//        
-//        CustomAlertView *alert = [[CustomAlertView alloc] init];
-//        alert.type = AlertImportant;
-//        [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
-//        [alert setMessage:[NSString stringWithFormat:@"%@ %@?", NSLocalizedString(@"Are you sure you want to delete this", nil), [self.contextString lowercaseString]]];
-//        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//        [alert addButtonWithTitle: NSLocalizedString(@"Yes", nil)];
-//        [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-//        [alert showView];
-//        
-        
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         //Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
-
-//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    
-//    if ([alertView.message isEqualToString:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]] && buttonIndex == 0) {
-//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-//        
-//        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-//            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
-//            [indexPathsArray addObject: cellIndexPath];
-//        }
-//        
-//        for (NSIndexPath *path in self.setOfDeletingCells) {
-//            if ([path isEqual:self.selectedPath]) {
-//                //NSDictionary *tag = self.tableData[self.selectedPath.row];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
-//                self.selectedPath = nil;
-//            }
-//        }
-//        
-//        for (NSDictionary *tag in arrayOfTagsToRemove) {
-//            [self.tableData removeObject:tag];
-//            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
-//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
-//        }
-//        
-//        [self.setOfDeletingCells removeAllObjects];
-//        if (_delegate && [_delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
-//        
-//            [_delegate tableView:self indexesToBeDeleted:indexPathsArray];
-//        }
-//        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-//        [self.tableView reloadData];
-//        
-//        /*
-//        for (NSDictionary *tag in arrayOfTagsToRemove) {
-//            //[self.tableData removeObject:tag];
-//            //[[NSNotificationCenter defaultCenter] post]
-//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
-//        }
-//         */
-//        
-//    }else{
-//        if (buttonIndex == 0)
-//        {
-//            NSDictionary *tagToRemove = self.tableData[self.editingIndexPath.row];
-//            [self.tableData removeObject:tagToRemove];
-//            
-//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tagToRemove];
-//            
-//            [self removeIndexPathFromDeletion];
-//            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            [self.tableView reloadData];
-//            
-//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:tagToRemove userInfo:tagToRemove];
-//        }
-//        else if (buttonIndex == 1)
-//        {
-//            // No, cancel the action to delete tags
-//        }
-//        
-//    }
-//    [alertView viewFinished];
-//    [CustomAlertView removeAlert:alertView];
-//    
-//    [self checkDeleteAllButton];
-//    //[self.tableView reloadData];
-//}
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
@@ -370,12 +278,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -394,62 +296,6 @@
 -(void) reloadData{
     [self.tableView reloadData];
 }
-
-#pragma mark - Table view data source
-
-/*
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
- UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
- 
- // Configure the cell...
- 
- return cell;
- }
- */
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end
 

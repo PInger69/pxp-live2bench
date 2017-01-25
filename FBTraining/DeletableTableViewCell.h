@@ -26,10 +26,6 @@ typedef NS_OPTIONS(NSInteger, cellState) {
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIButton *shareButton;
 
-//@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerForDeleting;
-//@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerForSharing;
-//
-//@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizer;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerLeft;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerRight;
 
@@ -45,8 +41,6 @@ typedef NS_OPTIONS(NSInteger, cellState) {
 
 @property (nonatomic, assign) BOOL sharingEnabled;
 
-//-(void) setCellAsDeleting;
-//-(void) setCellAsSharing;
 -(void)setCellAccordingToState:(cellState)state;
 -(void) setupView;
 

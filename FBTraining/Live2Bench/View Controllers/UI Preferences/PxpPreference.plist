@@ -9,7 +9,7 @@
 		<key>EncoderControls</key>
 		<true/>
 		<key>Welcome</key>
-		<true/>
+		<false/>
 		<key>Preference</key>
 		<true/>
 		<key>BitRate</key>

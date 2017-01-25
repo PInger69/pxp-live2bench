@@ -68,11 +68,12 @@ static NSDictionary * _professionMapData;
 {
 
     Profession * hockey = [Profession new];
-    hockey.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartOLine]
+    hockey.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:
+                                @[ //[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartOLine]
 //                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartDLine]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartDLine]
 //                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStart]
+                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStart]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyOppOLineStart]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyOppOLineStop]

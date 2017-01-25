@@ -6,9 +6,11 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
-#import <SDWebImage/UIImageView+WebCache.h>
-
 #import "ClipViewController.h"
+
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <TSMessages/TSMessage.h>
+
 #import "AbstractFilterViewController.h"
 #import "FBTFilterViewController.h"
 #import "BreadCrumbsViewController.h"
@@ -504,6 +506,29 @@
     return cell;
 }
 
+-(void) showDeletePermissionError {
+    [TSMessage showNotificationWithTitle:@"myplayXplay"
+                                subtitle:@"You can't delete someone else's tag"
+                                    type:TSMessageNotificationTypeError];
+    
+
+    /*
+    UIAlertController * cantAlert = [UIAlertController alertControllerWithTitle:@"myplayXplay"
+                                                                        message:@"You can't delete someone else's tag"
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* cancelButtons = [UIAlertAction
+                                    actionWithTitle:@"Ok"
+                                    style:UIAlertActionStyleCancel
+                                    handler:^(UIAlertAction * action)
+                                    {
+                                        [[CustomAlertControllerQueue getInstance] dismissViewController:cantAlert animated:YES completion:nil];
+                                    }];
+    
+    [cantAlert addAction:cancelButtons];
+    [[CustomAlertControllerQueue getInstance]presentViewController:cantAlert inController:self animated:YES style:AlertImportant completion:nil];
+    */
+}
+
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
     thumbnailCell *cell = (thumbnailCell *)sender.superview;
@@ -512,73 +537,56 @@
     
     Tag *tag        = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
     BOOL isYourTag  = [tag.user isEqualToString:[UserCenter getInstance].userHID];
-
     if (!isYourTag) {
-        UIAlertController * cantAlert = [UIAlertController alertControllerWithTitle:@"myplayXplay"
-                                                                            message:@"You can't delete someone else's tag"
-                                                                     preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* cancelButtons = [UIAlertAction
-                                        actionWithTitle:@"Ok"
-                                        style:UIAlertActionStyleCancel
-                                        handler:^(UIAlertAction * action)
-                                        {
-                                            [[CustomAlertControllerQueue getInstance] dismissViewController:cantAlert animated:YES completion:nil];
-                                        }];
-
-        [cantAlert addAction:cancelButtons];
-        [[CustomAlertControllerQueue getInstance]presentViewController:cantAlert inController:self animated:YES style:AlertImportant completion:nil];
-        return;
-    }
-
-    
-    
-    
-    // Build Alert
-    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
-                                                                    message:@"Are you sure you want to delete this tag?"
-                                                             preferredStyle:UIAlertControllerStyleAlert];
-    
-    
-    UIAlertAction * deleteButtons = [UIAlertAction actionWithTitle:@"Yes"
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction * action)
-                                     {
-                                         Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-                                         
-                                         [self.tagsToDisplay removeObject:tag];
-                                         if (self.editingIndexPath) {
-                                             [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
-                                         }
-                                         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-                                         [self removeIndexPathFromDeletion];
-                                         [self deselectAllCell];
-                                         [self checkDeleteAllButton];
-                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                     }];
-    
-    
-    
-    UIAlertAction * cancelButtons = [UIAlertAction actionWithTitle:@"No"
-                                                             style:UIAlertActionStyleCancel
-                                                           handler:^(UIAlertAction * action)
-                                     {
-                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                     }];
-    
-    [alert addAction:deleteButtons];
-    [alert addAction:cancelButtons];
-    
-    
-    
-    
-    
-    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
-    
-    if (!isIndecisive) {
+        [self showDeletePermissionError];
+    } else {
+        // Build Alert
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                        message:@"Are you sure you want to delete this tag?"
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        
+        
+        UIAlertAction * deleteButtons = [UIAlertAction actionWithTitle:@"Yes"
+                                                                 style:UIAlertActionStyleDestructive
+                                                               handler:^(UIAlertAction * action)
+                                         {
+                                             Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+                                             
+                                             [self.tagsToDisplay removeObject:tag];
+                                             if (self.editingIndexPath) {
+                                                 [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+                                             }
+                                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+                                             [self removeIndexPathFromDeletion];
+                                             [self deselectAllCell];
+                                             [self checkDeleteAllButton];
+                                             [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                         }];
         
         
         
-        [self checkDeleteAllButton];
+        UIAlertAction * cancelButtons = [UIAlertAction actionWithTitle:@"No"
+                                                                 style:UIAlertActionStyleCancel
+                                                               handler:^(UIAlertAction * action)
+                                         {
+                                             [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                         }];
+        
+        [alert addAction:deleteButtons];
+        [alert addAction:cancelButtons];
+        
+        
+        
+        
+        
+        BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+        
+        if (!isIndecisive) {
+            
+            
+            
+            [self checkDeleteAllButton];
+        }
     }
 }
 

@@ -672,12 +672,13 @@ static NSOperationQueue * queue;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return NO;
-    
+    /*
         if (self.isEditable){
             return YES;
         } else {
             return YES;
         }
+     */
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -773,107 +774,12 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
         }
         
 
-//        CustomAlertView *alert = [[CustomAlertView alloc] init];
-//        [alert setTitle:@"myplayXplay"];
-//        [alert setMessage:@"Are you sure you want to delete this tag?"];
-//        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//        [alert addButtonWithTitle:@"Yes"];
-//        [alert addButtonWithTitle:@"No"];
-//        [alert showView];
-
-
-
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
 
-
-//Depricated
-//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//
-//    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
-//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-//        BOOL needCanNotDeleteTagAlertView = false;
-//        
-//        for (NSIndexPath *cellIndexPath in [self.setOfDeletingCells copy]) {
-//            Tag *tag = self.tableData[cellIndexPath.row];
-//            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-//                [arrayOfTagsToRemove addObject:tag];
-//                [indexPathsArray addObject:cellIndexPath];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-//            }else{
-//                needCanNotDeleteTagAlertView = true;
-//            }
-//        }
-//        
-//        for (Tag *tag in arrayOfTagsToRemove) {
-//            [self.tableData removeObject:tag];
-//        }
-//        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-//        
-//        if (needCanNotDeleteTagAlertView) {
-//            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//            [alert showView];
-//        }
-//        
-//    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
-//        
-//        Tag *tag = [self.tableData objectAtIndex:self.editingIndexPath.row];
-//        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]) {
-////        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-//            [self.tableData removeObject:tag];
-//            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-//            [self removeIndexPathFromDeletion];
-//        }else{
-//            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//            [alert showView];
-//        }
-//    }
-//    [CustomAlertView removeAlert:alertView];
-//
-//    [self.setOfDeletingCells removeAllObjects];
-//    
-//    /*if (self.setOfDeletingCells.count < 2){
-//        [UIView beginAnimations:nil context:nil];
-//        [UIView setAnimationDuration:0.5];
-//        self.deleteButton.frame = CGRectMake(568, 768, 370, 0);
-//        [UIView commitAnimations];
-//
-//   }*/
-//    [alertView viewFinished];
-//    [self.tableView reloadData];
-//    [self checkDeleteAllButton];
-//
-//}
-
 /*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 - (BOOL)playNext{
     NSIndexPath *path = self.selectedPath;
     NSInteger row = path.row;
@@ -895,10 +801,7 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
     [self setSelectedPath:newPath];
     return YES;
 }
-
--(void)reloadData
-{
-    [super reloadData];
-}
+*/
+ 
 @end
 

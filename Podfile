@@ -8,5 +8,6 @@ target 'Live2Bench' do
 pod 'SDWebImage', '~>3.8'
 pod 'Fabric'
 pod 'Crashlytics'
+pod "TSMessages"
 
 end
