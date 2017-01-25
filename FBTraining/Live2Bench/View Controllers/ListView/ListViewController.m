@@ -69,6 +69,7 @@
 @property (strong, nonatomic, nonnull) CommentingRatingField* commentingField;
 
 @property (strong, nonatomic, nonnull) UITableView* listTable;
+@property (strong, nonatomic, nonnull) UIButton* deleteAllButton;
 
 @end
 
@@ -95,6 +96,7 @@
 
         if (NEW_TABLE_HANDLING) {
             [self configureListView];
+            [self configureDeleteAllButton];
         } else {
             _tableViewController                = [[ListTableViewController alloc]init];
             _tableViewController.contextString  = @"TAG";
@@ -122,6 +124,22 @@
     return self;
     
 }
+
+-(void) configureDeleteAllButton {
+    self.deleteAllButton = [[UIButton alloc] init];
+    self.deleteAllButton.backgroundColor = [UIColor redColor];
+    [self.deleteAllButton addTarget:self action:@selector(deleteAllSelectedTags) forControlEvents:UIControlEventTouchUpInside];
+    [self.deleteAllButton setTitle: @"Delete Selected" forState: UIControlStateNormal];
+    [self.deleteAllButton.titleLabel setTextColor:[UIColor whiteColor]];
+    [self.deleteAllButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    [self.deleteAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.deleteAllButton setFrame:CGRectMake(568, 768, 370, 0)];
+}
+
+-(void) deleteAllSelectedTags {
+    
+}
+
 
 -(void) configureListView {
     self.listTable = [[UITableView alloc] initWithFrame:CGRectMake(1024 - 460, 95, 460, 620) style:UITableViewStylePlain];
@@ -1158,6 +1176,10 @@
     return NO;
 }
 
+-(void) deleteTag:(Tag*) tag {
+    NSLog(@"delete tag");
+}
+
 -(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
     return self.tagsToDisplay[indexPath.row];
 }
@@ -1191,7 +1213,9 @@
 //    cell.swipeRecognizerRight.enabled = self.swipeableMode;
     
     cell.deleteBlock = ^(UITableViewCell *theCell) {
-//        NSIndexPath *aIndexPath = [self.tableView indexPathForCell:theCell];
+        NSIndexPath* aIndexPath = [self.listTable indexPathForCell:theCell];
+        [self promptUserToDeleteTag:[self tagForIndexPath:indexPath]];
+        
 //        [self tableView:self.listTable commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
 //        [self checkDeleteAllButton];
         

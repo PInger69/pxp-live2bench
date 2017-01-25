@@ -506,63 +506,25 @@
     return cell;
 }
 
+-(void) deleteTag:(Tag*) tag {
+    [self.tagsToDisplay removeObject:tag];
+    if (self.editingIndexPath) {
+        [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+    }
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    [self removeIndexPathFromDeletion];
+    [self deselectAllCell];
+    [self checkDeleteAllButton];
+}
+
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
     thumbnailCell *cell = (thumbnailCell *)sender.superview;
     NSIndexPath *pathToDelete = [self.collectionView indexPathForCell: cell];
     self.editingIndexPath = pathToDelete;
     
     Tag *tag        = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-    BOOL isYourTag  = [tag.user isEqualToString:[UserCenter getInstance].userHID];
-    if (!isYourTag) {
-        [self showDeletePermissionError];
-    } else {
-        // Build Alert
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
-                                                                        message:@"Are you sure you want to delete this tag?"
-                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        
-        
-        UIAlertAction * deleteButtons = [UIAlertAction actionWithTitle:@"Yes"
-                                                                 style:UIAlertActionStyleDestructive
-                                                               handler:^(UIAlertAction * action)
-                                         {
-                                             Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-                                             
-                                             [self.tagsToDisplay removeObject:tag];
-                                             if (self.editingIndexPath) {
-                                                 [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
-                                             }
-                                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-                                             [self removeIndexPathFromDeletion];
-                                             [self deselectAllCell];
-                                             [self checkDeleteAllButton];
-                                             [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                         }];
-        
-        
-        
-        UIAlertAction * cancelButtons = [UIAlertAction actionWithTitle:@"No"
-                                                                 style:UIAlertActionStyleCancel
-                                                               handler:^(UIAlertAction * action)
-                                         {
-                                             [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                         }];
-        
-        [alert addAction:deleteButtons];
-        [alert addAction:cancelButtons];
-        
-        
-        
-        
-        
-        BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
-        
-        if (!isIndecisive) {
-            
-            
-            
-            [self checkDeleteAllButton];
-        }
+    if (![self promptUserToDeleteTag:tag]) {
+        [self checkDeleteAllButton];
     }
 }
 

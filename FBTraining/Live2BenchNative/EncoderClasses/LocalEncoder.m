@@ -696,9 +696,6 @@ static LocalEncoder * instance;
 
 /**
  *  This class is what buils the rest of the data from the encoder
- *
- *
- *  @param data
  */
 -(void)getAllEventsResponse:(NSData *)data
 {

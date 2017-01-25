@@ -119,10 +119,6 @@
 /**
  *  This is meant to be overriden by the MyClipFilterViewController
  *  The reason is that the data used in the bookmark area has an extra layer of dicts based off event names
- *
- *  @param unformatedTags
- *
- *  @return
  */
 -(NSMutableArray *)formatTagsForDisplay:(NSMutableArray *)unformatedTags
 {

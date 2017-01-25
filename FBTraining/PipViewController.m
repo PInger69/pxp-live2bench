@@ -55,11 +55,6 @@ static void * vpFrameContext   = &vpFrameContext;
 
 /**
  *  In future the pip maybe be a part of the video player class
- *
- *  @param aVideoPlayer
- *  @param f
- *
- *  @return
  */
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager
 {

@@ -21,5 +21,7 @@
 -(void) configurePxpFilter:(Event*) currentEvent;
 
 -(void) showDeletePermissionError;
+-(BOOL) promptUserToDeleteTag:(Tag*) tag;
+-(void) deleteTag:(Tag*) tag;
 
 @end

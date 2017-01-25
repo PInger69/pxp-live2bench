@@ -309,7 +309,6 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 /**
  *  This Looks for a notification to move to a different tab
  *
- *  @param note
  */
 -(void)notificationSelectTab:(NSNotification*)note
 {

@@ -83,6 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) NSDictionary   *extraDic;
 @property (assign,nonatomic) NSInteger      role;
 @property (strong,nonatomic) NSString       * userTeam;
+@property (assign, nonatomic) BOOL          deleted;
 
 /// The telestration accociated with the tag.
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;

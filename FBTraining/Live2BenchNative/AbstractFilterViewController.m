@@ -229,8 +229,6 @@
  *  this will make sure that all the tabs will be populated with and act separatly from each other
  *  if needed it will also send the selector for update to each tab and tab componenent.
  *  One update is done on first view
- *
- *  @param animated
  */
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -244,10 +242,6 @@
 /**
  *  This is meant to be overriden by the MyClipFilterViewController
  *  The reason is that the data used in the bookmark area has an extra layer of dicts based off event names
- *
- *  @param unformatedTags
- *
- *  @return
  */
 -(NSMutableArray *)formatTagsForDisplay:(NSMutableArray *)unformatedTags
 {
