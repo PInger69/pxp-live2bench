@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-//@protocol DeletableTableViewController <NSObject>
-//
-//@end
 
 typedef NS_OPTIONS(NSInteger, cellState) {
     cellStateDeleting = 1<<1,

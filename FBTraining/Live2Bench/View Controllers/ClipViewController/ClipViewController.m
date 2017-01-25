@@ -510,23 +510,6 @@
     [TSMessage showNotificationWithTitle:@"myplayXplay"
                                 subtitle:@"You can't delete someone else's tag"
                                     type:TSMessageNotificationTypeError];
-    
-
-    /*
-    UIAlertController * cantAlert = [UIAlertController alertControllerWithTitle:@"myplayXplay"
-                                                                        message:@"You can't delete someone else's tag"
-                                                                 preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* cancelButtons = [UIAlertAction
-                                    actionWithTitle:@"Ok"
-                                    style:UIAlertActionStyleCancel
-                                    handler:^(UIAlertAction * action)
-                                    {
-                                        [[CustomAlertControllerQueue getInstance] dismissViewController:cantAlert animated:YES completion:nil];
-                                    }];
-    
-    [cantAlert addAction:cancelButtons];
-    [[CustomAlertControllerQueue getInstance]presentViewController:cantAlert inController:self animated:YES style:AlertImportant completion:nil];
-    */
 }
 
 

@@ -9,6 +9,8 @@
 
 #import "ListViewController.h"
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
 #import "CommentingRatingField.h"
 #import "HeaderBarForListView.h"
 #import "VideoBarListViewController.h"
@@ -46,7 +48,9 @@
 #import "DownloadClipFromTag.h"
 
 
-@interface ListViewController () <RicoBaseFullScreenDelegate>
+#define NEW_TABLE_HANDLING YES
+
+@interface ListViewController () <RicoBaseFullScreenDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic)          UIPinchGestureRecognizer *pinchGesture;
@@ -62,13 +66,15 @@
 @property (strong, nonatomic, nonnull) RicoFullScreenControlBar         * ricoFullScreenControlBar;
 @property (strong, nonatomic, nonnull) UIButton                         * downloadAllButton;
 
+@property (strong, nonatomic, nonnull) CommentingRatingField* commentingField;
+
+@property (strong, nonatomic, nonnull) UITableView* listTable;
 
 @end
 
 @implementation ListViewController{
     
     HeaderBarForListView            * headerBar;
-    CommentingRatingField           * commentingField;
     
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
@@ -82,15 +88,20 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"tabListView"];
         
-        _videoBar                           = [[RicoVideoBar alloc] init];
-        _fullscreenViewController           = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        self.videoBar                           = [[RicoVideoBar alloc] init];
+        self.fullscreenViewController           = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
         self.allTags                        = [[NSMutableArray alloc]init];
         self.tagsToDisplay                  = [[NSMutableArray alloc]init];
-        _tableViewController                = [[ListTableViewController alloc]init];
-        _tableViewController.contextString  = @"TAG";
-        _tableViewController.tableData      = self.tagsToDisplay;
-        
-        [self addChildViewController:_tableViewController];
+
+        if (NEW_TABLE_HANDLING) {
+            [self configureListView];
+        } else {
+            _tableViewController                = [[ListTableViewController alloc]init];
+            _tableViewController.contextString  = @"TAG";
+            _tableViewController.tableData      = self.tagsToDisplay;
+            [self addChildViewController:_tableViewController];
+        }
+
         [_videoBar.forwardSeekButton    addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_videoBar.backwardSeekButton   addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_videoBar.slomoButton          addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -100,10 +111,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (!selectedTag) {
-                [commentingField clear];
-                commentingField.enabled             = YES;
-                commentingField.text                = selectedTag.comment;
-                commentingField.ratingScale.rating  = selectedTag.rating;
+                [self.commentingField clear];
+                self.commentingField.enabled             = YES;
+                self.commentingField.text                = selectedTag.comment;
+                self.commentingField.ratingScale.rating  = selectedTag.rating;
             }
         }];
         self.pxpFilter = appDel.sharedFilter;
@@ -111,6 +122,15 @@
     return self;
     
 }
+
+-(void) configureListView {
+    self.listTable = [[UITableView alloc] initWithFrame:CGRectMake(1024 - 460, 95, 460, 620) style:UITableViewStylePlain];
+    self.listTable.delegate = self;
+    self.listTable.dataSource = self;
+    [self.listTable registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
+    [self.view addSubview:self.listTable];
+}
+
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
@@ -151,10 +171,10 @@
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
         selectedTag = nil;
-        _videoBar.selectedTag = nil;
+        self.videoBar.selectedTag = nil;
         
-        [commentingField clear];
-        commentingField.enabled             = NO;
+        [self.commentingField clear];
+        self.commentingField.enabled             = NO;
         
         _fullscreenViewController.selectedTag = nil;
         _fullscreenViewController.fullscreen = NO;
@@ -212,7 +232,7 @@
     // but it should not be updated because it needs to see the button that called it so updating will clear it out
     
     if (![note.name isEqualToString:NOTIF_TAG_MODIFIED]){
-        [_tableViewController reloadData];
+        [self reloadTableData];
     }
     
 }
@@ -226,9 +246,9 @@
             
             
             if (self.pinchGesture.scale >1) {
-                //[_fullscreenViewController setHidden:NO animated:YES];
+
             }else if (self.pinchGesture.scale < 1){
-                //[_fullscreenViewController setHidden:YES animated:YES];
+
             }
         }
     }
@@ -251,16 +271,9 @@
     [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
     [self.view addSubview:headerBar];
 
-//    _playerViewController.telestrationViewController.showsControls = NO;
-
-
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
 
-//    self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
-    
-//    [self.view addSubview:self.videoPlayer.view];
-   
     [_fullscreenViewController.nextTagButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.previousTagButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
    
@@ -365,9 +378,9 @@
                                                                                                                                    }}];
     
     
-    [commentingField clear];
-    commentingField.text                    = selectedTag.comment;
-    commentingField.ratingScale.rating      = selectedTag.rating;
+    [self.commentingField clear];
+    self.commentingField.text                    = selectedTag.comment;
+    self.commentingField.ratingScale.rating      = selectedTag.rating;
     
     _videoBar.selectedTag                   = selectedTag;
     _fullscreenViewController.selectedTag   = selectedTag;
@@ -383,7 +396,7 @@
     self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     self.pxpFilter.delegate = self;
     [self configurePxpFilter:_currentEvent];
-    [_tableViewController reloadData];
+    [self reloadTableData];
     
     [self.view bringSubviewToFront:self.ricoFullscreenViewController.view];
     
@@ -396,6 +409,14 @@
     [super viewDidDisappear:animated];
     self.ricoFullscreenViewController.fullscreen = NO;
     self.mainPlayer.feed=nil;
+}
+
+-(void) reloadTableData {
+    if (NEW_TABLE_HANDLING) {
+        [self.listTable reloadData];
+    } else {
+        [_tableViewController reloadData];
+    }
 }
 
 -(void)getPrevTag
@@ -420,9 +441,9 @@
                                                                                                                                     }}];
 
     
-    [commentingField clear];
-    commentingField.text                = selectedTag.comment;
-    commentingField.ratingScale.rating  = selectedTag.rating;
+    [self.commentingField clear];
+    self.commentingField.text                = selectedTag.comment;
+    self.commentingField.ratingScale.rating  = selectedTag.rating;
     
     _videoBar.selectedTag = selectedTag;
     _fullscreenViewController.selectedTag = selectedTag;
@@ -447,7 +468,7 @@
         if(eventTags.count > 0 && !self.tagsToDisplay){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
-            [_tableViewController reloadData];
+            [self reloadTableData];
         }
 
 
@@ -459,9 +480,9 @@
     _tableViewController.isEditable = FALSE;
 
     // Richard
-    [commentingField clear];
-    commentingField.ratingScale.rating = 0;
-    commentingField.enabled = NO;
+    [self.commentingField clear];
+    self.commentingField.ratingScale.rating = 0;
+    self.commentingField.enabled = NO;
 
     
     self.videoPlayer.mute = NO;
@@ -494,10 +515,10 @@
     [self.ricoPlayerViewController playTag:selectedTag];
     [self.ricoPlayerViewController play];
     
-    [commentingField clear];
-    commentingField.enabled             = YES;
-    commentingField.text                = selectedTag.comment;
-    commentingField.ratingScale.rating  = selectedTag.rating;
+    [self.commentingField clear];
+    self.commentingField.enabled             = YES;
+    self.commentingField.text                = selectedTag.comment;
+    self.commentingField.ratingScale.rating  = selectedTag.rating;
     
     self.ricoFullScreenControlBar.controlBar.range = self.ricoPlayerControlBar.range;
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeList;
@@ -567,16 +588,18 @@
 #pragma mark - ListTableViewController coupled method
 -(void)onTagHasBeenHighlighted:(NSNotification*)note;
 {
-    
     Tag* theTag = note.object;
-    if (selectedTag == theTag) return;
+    [self selectTag:theTag];
+}
+
+-(void) selectTag:(Tag*) tag {
+    if (selectedTag == tag) return;
     
-    [commentingField clear];
-    selectedTag                         = theTag;
-    commentingField.enabled             = YES;
-    commentingField.text                = selectedTag.comment;
-    commentingField.ratingScale.rating  = selectedTag.rating;
-    
+    [self.commentingField clear];
+    selectedTag                         = tag;
+    self.commentingField.enabled             = YES;
+    self.commentingField.text                = selectedTag.comment;
+    self.commentingField.ratingScale.rating  = selectedTag.rating;
 }
 
 #pragma mark - Video Bar Methods
@@ -674,7 +697,7 @@
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
                     [downloadItem setOnComplete:^{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [_tableViewController reloadData];
+                            [self reloadTableData];
                         });
                     }];
                 
@@ -704,12 +727,12 @@
 {
     
     // Richard
-    commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(10,485 -50, 530, 210+60 +50) title:NSLocalizedString(@"Comment",nil)];
-    commentingField.enabled = NO;
-    [commentingField onPressRatePerformSelector:@selector(sendRating:) addTarget:self];
-    [commentingField onPressSavePerformSelector:@selector(sendComment) addTarget:self];
-    [commentingField onPressClearPerformSelector:@selector(sendComment) addTarget:self];
-    [self.view addSubview:commentingField];
+    self.commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(10,485 -50, 530, 210+60 +50) title:NSLocalizedString(@"Comment",nil)];
+    self.commentingField.enabled = NO;
+    [self.commentingField onPressRatePerformSelector:@selector(sendRating:) addTarget:self];
+    [self.commentingField onPressSavePerformSelector:@selector(sendComment) addTarget:self];
+    [self.commentingField onPressClearPerformSelector:@selector(sendComment) addTarget:self];
+    [self.view addSubview:self.commentingField];
 
     [self.view addSubview: _tableViewController.tableView];
     
@@ -731,7 +754,7 @@
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc] initWithObjects:tag,indexPath, nil] forKeys:[[NSArray alloc]initWithObjects:@"tag",@"indexpath", nil]];
         [selectedCellRows setObject:dict forKey:[NSString stringWithFormat:@"%d",row]];
     }
-    [_tableViewController reloadData];
+    [self reloadTableData];
 }
 
 
@@ -744,7 +767,7 @@
     }else{ // if not check box is selected, press cancel button will go back to normal mode
         _tableViewController.isEditable = FALSE;
     }
-    [_tableViewController reloadData];
+    [self reloadTableData];
     
 }
 
@@ -763,15 +786,15 @@
 {
     RatingInput * cmtRateField = (RatingInput *) sender;
     selectedTag.rating = cmtRateField.rating;
-    [_tableViewController reloadData];
+    [self reloadTableData];
 }
 
 //save comment
 -(void)sendComment
 {
     NSString *comment;
-    [commentingField.textField resignFirstResponder];
-    comment = commentingField.textField.text;
+    [self.commentingField.textField resignFirstResponder];
+    comment = self.commentingField.textField.text;
     selectedTag.comment = comment;
 }
 
@@ -785,7 +808,7 @@
     if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
         Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
         [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
-        [_tableViewController reloadData];
+        [self reloadTableData];
     }
     
     if (!tagToBeModified|| tagToBeModified.type == TagTypeTele ){
@@ -835,7 +858,7 @@
     if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
         Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
         [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
-        [_tableViewController reloadData];
+        [self reloadTableData];
     }
     
     if (!selectedTag || selectedTag.type == TagTypeDeleted)
@@ -895,7 +918,7 @@
     [[TabView sharedFilterTabBar] dismissViewControllerAnimated:NO completion:nil];// close filter if filtering
     [self.allTags removeAllObjects];
     [self.tagsToDisplay removeAllObjects];
-    [_tableViewController reloadData];
+    [self reloadTableData];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
@@ -907,8 +930,8 @@
         
         _fullscreenViewController.fullscreen = NO;
         
-        [commentingField clear];
-        commentingField.enabled             = NO;
+        [self.commentingField clear];
+        self.commentingField.enabled             = NO;
 
     }
 }
@@ -921,7 +944,7 @@
 - (void)sortFromHeaderBar:(id)sender
 {
     _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
-    [_tableViewController reloadData];
+    [self reloadTableData];
 }
 
 -(NSMutableArray*)sortArrayFromHeaderBar:(NSMutableArray*)toSort headerBarState:(HBSortType) sortType
@@ -1023,7 +1046,7 @@
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
     [super sortAndDisplayUniqueTags:tags];
     _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
-    [_tableViewController reloadData];
+    [self reloadTableData];
 }
 
 
@@ -1038,7 +1061,7 @@
 
 - (void)extendStartAction:(UIButton *)button {
     if (selectedTag) {
-        [_tableViewController reloadData];
+        [self reloadTableData];
         if ([[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil]){
             Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil];
             [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
@@ -1069,7 +1092,7 @@
 
 - (void)extendEndAction:(UIButton *)button {
     if (selectedTag) {
-        [_tableViewController reloadData];
+        [self reloadTableData];
         if ([[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil]){
             Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil];
             [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
@@ -1124,6 +1147,183 @@
     } else {
         
         [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
+    }
+}
+
+-(BOOL) isExpandedCell:(NSIndexPath*) indexPath {
+    return NO;
+}
+
+-(BOOL) isTableExpanded {
+    return NO;
+}
+
+-(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
+    return self.tagsToDisplay[indexPath.row];
+}
+
+#pragma mark UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
+    return [self.tagsToDisplay count] + ([self isTableExpanded] ? 2 : 0);
+}
+
+-(UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {
+    return [self tableView:tableView standardListCellForRowAtIndexPath:indexPath];
+}
+
+
+-(UITableViewCell*) tableView:(UITableView*) tableView standardListCellForRowAtIndexPath:(NSIndexPath*) indexPath {
+    Tag* tag = [self tagForIndexPath:indexPath];
+    
+    ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
+    [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
+    cell.currentTag = tag;
+    
+    if (tag.eventInstance.gameStartTag){
+        float startTime = tag.time - ([tag.eventInstance.gameStartTag time]);
+        [cell.tagtimeFromGameStart setText: [NSString stringWithFormat:@"%@",[Utility translateTimeFormat:startTime]]];
+    } else {
+        cell.tagtimeFromGameStart.hidden = YES;
+    }
+    
+//    cell.swipeRecognizerLeft.enabled = self.swipeableMode;
+//    cell.swipeRecognizerRight.enabled = self.swipeableMode;
+    
+    cell.deleteBlock = ^(UITableViewCell *theCell) {
+//        NSIndexPath *aIndexPath = [self.tableView indexPathForCell:theCell];
+//        [self tableView:self.listTable commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
+//        [self checkDeleteAllButton];
+        
+    };
+    
+    //This condition opens up the cell if it is a deleting cell
+    /*
+    if ([self.setOfDeletingCells containsObject:indexPath]) {
+        [cell setCellAccordingToState:cellStateDeleting];
+    } else {
+        [cell setCellAccordingToState:cellStateNormal];
+    }
+    */
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //fixed: randomly highlight cells problem
+    cell.backgroundView = nil;
+    cell.selectedBackgroundView = [[UIView alloc]initWithFrame:CGRectZero];
+    cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
+    cell.backgroundColor = [UIColor redColor];
+    
+    UIView* backgroundView = [ [ UIView alloc ] initWithFrame:cell.frame ];
+    backgroundView.backgroundColor = [UIColor clearColor];
+    backgroundView.layer.borderColor = [PRIMARY_APP_COLOR CGColor];
+    cell.backgroundView = backgroundView;
+    
+    //This is the condition where a cell that is selected is reused
+    [cell.translucentEditingView removeFromSuperview];
+    cell.translucentEditingView = nil;
+    
+    // This condition is if the user is scrolling up and down and the
+    // cell is selected
+    /*
+    if ([self.previouslySelectedIndexPath isEqual:indexPath]) {
+        cell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
+        [cell.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+        [cell.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        [cell.translucentEditingView setAlpha:0.3];
+        [cell.translucentEditingView setUserInteractionEnabled:FALSE];
+        [cell insertSubview:cell.translucentEditingView belowSubview:cell.tagname];
+        //[cell.myContentView setBackgroundColor:[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:0.3f]];
+        
+    }
+    */
+    
+    NSString *src = tag.thumbnails.allKeys.firstObject;
+    
+    if (tag.telestration) {
+        for (NSString *k in tag.thumbnails.keyEnumerator) {
+            if ([tag.telestration.sourceName isEqualToString:k]) {
+                src = k;
+                break;
+            }
+        }
+        
+        NSString* imageURL = tag.thumbnails[src];
+        
+        
+        __weak UIImageView* weakImageView = cell.tagImage;
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"live.png"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+            
+            if (image) {
+                UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:weakImageView];
+                weakImageView.image = imageWithTelestration;
+            }
+            
+        }];
+        
+    } else {
+        NSString* url = tag.thumbnails[src];
+        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"live.png"]];
+    }
+    
+    
+    [cell.tagname setText:[tag.name stringByRemovingPercentEncoding]];
+    [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
+    
+    NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
+    NSString *periodString = tag.period;
+    
+    NSString *players;
+    for (NSString *jersey in tag.players) {
+        if (!players) {
+            players = [NSString stringWithFormat:@"%@",jersey];
+        }else{
+            players = [NSString stringWithFormat:@"%@, %@",players,jersey];
+        }
+        [cell.tagPlayersView setHidden:false];
+    }
+    [cell.tagPlayersView setContentSize:CGSizeMake(players.length*8, cell.tagPlayersView.frame.size.height)];
+    
+    
+    LeagueTeam *team = [[tag.eventInstance.teams allValues]firstObject];
+    NSString* periodName = team.league.nameOfPeriod;
+    
+    if (periodName) {
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,periodName,periodString? periodString:@""]];
+        [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
+        [cell.playersNumberLabel setText:players];
+    } else {
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
+    }
+    
+    NSString * theDisplayTime = [Utility translateTimeFormat:tag.time - [tag.eventInstance gameStartTime] ];
+    [cell.tagtime setText: theDisplayTime];
+    
+    
+    
+    cell.ratingscale.rating = tag.rating;
+    
+    
+    UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
+    [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
+    
+    [cell removeGestureRecognizer:cell.swipeRecognizerRight];
+    
+    return cell;
+    
+}
+
+#pragma mark UITableViewDelegate
+
+- (void) tableView: (UITableView*) tableView didSelectRowAtIndexPath: (NSIndexPath*) indexPath {
+    Tag* tag = [self tagForIndexPath:indexPath];
+    [self selectTag:tag];
+}
+
+- (CGFloat)tableView:(UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath*) indexPath {
+    if ([self isExpandedCell:indexPath]) {
+        return 44.0;
+    } else {
+        return CELL_HEIGHT;
     }
 }
 

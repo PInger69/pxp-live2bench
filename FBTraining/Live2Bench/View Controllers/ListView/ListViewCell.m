@@ -19,12 +19,6 @@
 
 @implementation ListViewCell
 
-@synthesize tagname,tagtime,tagImage,coachpickButton,tagInfoText,controlButton,tagPlayersView,playersNumberLabel;
-@synthesize translucentEditingView;
-//checkmarkOverlay;
-@synthesize playersLabel;
-@synthesize ratingscale;
-
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -90,59 +84,59 @@
     [self.tagcolor setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
     [self.tagImage addSubview:self.tagcolor];
     
-    tagname = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.origin.x + tagImage.frame.size.width + 44, tagImage.frame.origin.y +13, 150.0f, 18.0f)];
+    self.tagname = [[UILabel alloc] initWithFrame:CGRectMake(self.tagImage.frame.origin.x + self.tagImage.frame.size.width + 44, self.tagImage.frame.origin.y +13, 150.0f, 18.0f)];
     //[self.tagtime setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
-    [tagname setText:NSLocalizedString(@"Name", nil)];
-    [tagname setBackgroundColor:[UIColor clearColor]];
-    [tagname setFont:[UIFont defaultFontOfSize:17.0f]];
-    [self.myContentView addSubview:tagname];
+    [self.tagname setText:NSLocalizedString(@"Name", nil)];
+    [self.tagname setBackgroundColor:[UIColor clearColor]];
+    [self.tagname setFont:[UIFont defaultFontOfSize:17.0f]];
+    [self.myContentView addSubview:self.tagname];
     
     
-    tagInfoText = [[UITextView alloc]initWithFrame:CGRectMake(tagname.frame.origin.x - 4, tagname.frame.origin.y + tagname.frame.size.height -5.0f, self.frame.size.width, 50)];
+    self.tagInfoText = [[UITextView alloc]initWithFrame:CGRectMake(self.tagname.frame.origin.x - 4, self.tagname.frame.origin.y + self.tagname.frame.size.height -5.0f, self.frame.size.width, 50)];
     //[self.tagInfoText setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleRightMargin];
-    [tagInfoText setBackgroundColor:[UIColor clearColor]];
+    [self.tagInfoText setBackgroundColor:[UIColor clearColor]];
     //[tagInfoText setText: [NSString stringWithFormat:@"%@: \n%@: ", NSLocalizedString(@"Duration", nil), NSLocalizedString(@"Period", nil)]];
-    [tagInfoText setTextAlignment:NSTextAlignmentLeft];
-    [tagInfoText setFont:[UIFont defaultFontOfSize:17.0f]];
-    [tagInfoText setEditable:FALSE];
-    [tagInfoText setUserInteractionEnabled:FALSE];
-    [self.myContentView addSubview:tagInfoText];
+    [self.tagInfoText setTextAlignment:NSTextAlignmentLeft];
+    [self.tagInfoText setFont:[UIFont defaultFontOfSize:17.0f]];
+    [self.tagInfoText setEditable:FALSE];
+    [self.tagInfoText setUserInteractionEnabled:FALSE];
+    [self.myContentView addSubview:self.tagInfoText];
     
-    playersLabel = [[UILabel alloc]initWithFrame:CGRectMake(tagname.frame.origin.x+1, CGRectGetMaxY(tagInfoText.frame)-5.0f, 70, 25.0f)];
+    self.playersLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tagname.frame.origin.x+1, CGRectGetMaxY(self.tagInfoText.frame)-5.0f, 70, 25.0f)];
     //[playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
-    [playersLabel setTextAlignment:NSTextAlignmentLeft];
-    [playersLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-    [self.myContentView addSubview:playersLabel];
+    [self.playersLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.playersLabel setFont:[UIFont defaultFontOfSize:17.0f]];
+    [self.myContentView addSubview:self.playersLabel];
     
     //tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(playersLabel.frame), CGRectGetMaxY(tagInfoText.frame)-5.0f ,self.frame.size.width - tagImage.frame.size.width-playersLabel.frame.size.width-20, 25.0f)];
-    tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(tagname.frame.origin.x+68, CGRectGetMaxY(tagInfoText.frame)-5.0f ,100.0f, 25.0f)];
-    tagPlayersView.delegate = self;
-    tagPlayersView.scrollEnabled = TRUE;
-    tagPlayersView.showsHorizontalScrollIndicator = YES;
+    self.tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(self.tagname.frame.origin.x+68, CGRectGetMaxY(self.tagInfoText.frame)-5.0f ,100.0f, 25.0f)];
+    self.tagPlayersView.delegate = self;
+    self.tagPlayersView.scrollEnabled = TRUE;
+    self.tagPlayersView.showsHorizontalScrollIndicator = YES;
     //[tagPlayersView setBackgroundColor:[UIColor greenColor]];
     //[tagPlayersView setContentSize:CGSizeMake(1.5*tagPlayersView.frame.size.width, tagPlayersView.frame.size.height)];
-    tagPlayersView.bounces = TRUE;
-    [tagPlayersView setHidden:true];
-    [self.myContentView addSubview:tagPlayersView];
+    self.tagPlayersView.bounces = TRUE;
+    [self.tagPlayersView setHidden:true];
+    [self.myContentView addSubview:self.tagPlayersView];
     
-    playersNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 5000, tagPlayersView.frame.size.height)];
-    [playersNumberLabel setText:@""];
-    [playersNumberLabel setTextAlignment:NSTextAlignmentLeft];
-    [playersNumberLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-    [tagPlayersView addSubview:playersNumberLabel];
+    self.playersNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 5000, self.tagPlayersView.frame.size.height)];
+    [self.playersNumberLabel setText:@""];
+    [self.playersNumberLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.playersNumberLabel setFont:[UIFont defaultFontOfSize:17.0f]];
+    [self.tagPlayersView addSubview:self.playersNumberLabel];
     
-    tagtime = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.size.width -72, tagImage.frame.size.height - 18.0f, 70.0f, 17.0f)];
+    self.tagtime = [[UILabel alloc] initWithFrame:CGRectMake(self.tagImage.frame.size.width -72, self.tagImage.frame.size.height - 18.0f, 70.0f, 17.0f)];
     [self.tagtime setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
-    [tagtime setText:NSLocalizedString(@"Time", nil)];
-    [tagtime setTextAlignment:NSTextAlignmentCenter];
-    [tagtime setBackgroundColor:[UIColor blackColor]];
-    [tagtime setTextColor:[UIColor whiteColor]];
-    [tagtime setFont:[UIFont defaultFontOfSize:17.0f]];
-    [self.tagImage addSubview:tagtime];
+    [self.tagtime setText:NSLocalizedString(@"Time", nil)];
+    [self.tagtime setTextAlignment:NSTextAlignmentCenter];
+    [self.tagtime setBackgroundColor:[UIColor blackColor]];
+    [self.tagtime setTextColor:[UIColor whiteColor]];
+    [self.tagtime setFont:[UIFont defaultFontOfSize:17.0f]];
+    [self.tagImage addSubview:self.tagtime];
     
     
     
-    self.tagtimeFromGameStart = [[UILabel alloc] initWithFrame:CGRectMake(0, tagImage.frame.size.height - 18.0f, 78.0f, 17.0f)];
+    self.tagtimeFromGameStart = [[UILabel alloc] initWithFrame:CGRectMake(0, self.tagImage.frame.size.height - 18.0f, 78.0f, 17.0f)];
 //    [self.tagtimeFromGameStart setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
     [self.tagtimeFromGameStart setText:NSLocalizedString(@"Time", nil)];
     [self.tagtimeFromGameStart setTextAlignment:NSTextAlignmentCenter];
@@ -152,20 +146,20 @@
     [self.tagImage addSubview:self.tagtimeFromGameStart];
     
    
-    self.ratingscale = [ [RatingOutput alloc] initWithFrame:CGRectMake(tagImage.frame.size.width - 332, tagImage.frame.size.height - 26.0f, 70.0f, 17.0f)];
-    [self.tagImage addSubview:ratingscale];
+    self.ratingscale = [ [RatingOutput alloc] initWithFrame:CGRectMake(self.tagImage.frame.size.width - 332, self.tagImage.frame.size.height - 26.0f, 70.0f, 17.0f)];
+    [self.tagImage addSubview:self.ratingscale];
 
     
     //self.tagcolor.frame.size.width - 5*16.0f - 4*9.0f
     
     
-    coachpickButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coach.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    [coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coachPicked.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
-    [coachpickButton setFrame:CGRectMake(CGRectGetMaxX(tagImage.frame) + 44, CGRectGetMaxY(tagPlayersView.frame) + 5, 32.0f, 32.0f)];
-    [coachpickButton addTarget:self action:@selector(coachPickSelected) forControlEvents:UIControlEventTouchUpInside];
+    self.coachpickButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coach"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [self.coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coachPicked"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+    [self.coachpickButton setFrame:CGRectMake(CGRectGetMaxX(self.tagImage.frame) + 44, CGRectGetMaxY(self.tagPlayersView.frame) + 5, 32.0f, 32.0f)];
+    [self.coachpickButton addTarget:self action:@selector(coachPickSelected) forControlEvents:UIControlEventTouchUpInside];
     //[coachpickButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
-    [self.myContentView addSubview:coachpickButton];
+    [self.myContentView addSubview:self.coachpickButton];
     
 
     _tagActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -236,12 +230,12 @@
 }
 
 -(void)coachPickSelected{
-    if (!coachpickButton.selected) {
-        [coachpickButton setSelected:true];
+    if (!self.coachpickButton.selected) {
+        [self.coachpickButton setSelected:true];
         _currentTag.coachPick = true;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_currentTag];
-    }else if (coachpickButton.selected){
-        [coachpickButton setSelected:false];
+    }else if (self.coachpickButton.selected){
+        [self.coachpickButton setSelected:false];
         _currentTag.coachPick = false;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_currentTag];
     }
@@ -249,9 +243,9 @@
 
 -(void)setCurrentTag:(Tag *)currentTag{
     if (currentTag.coachPick) {
-        [coachpickButton setSelected:true];
+        [self.coachpickButton setSelected:true];
     }else{
-        [coachpickButton setSelected:false];
+        [self.coachpickButton setSelected:false];
     }
     _currentTag = currentTag;
 }

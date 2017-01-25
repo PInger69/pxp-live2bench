@@ -16,16 +16,6 @@
 @interface ListViewCell : DeletableTableViewCell<UIScrollViewDelegate>{
     
     
-    UILabel *tagname;
-    UILabel *tagtime;
-    UIButton *coachpickButton;
-    UIImageView *tagImage;
-    UITextView *tagInfoText;
-    UIScrollView *tagPlayersView;
-    UILabel *playersNumberLabel;
-    UILabel *playersLabel;
-    UIButton *controlButton;
-    UIView *translucentEditingView;
 }
 @property (nonatomic, strong) UILabel *tagname;
 @property (nonatomic, strong) UILabel *tagtime;

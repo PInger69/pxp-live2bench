@@ -24,7 +24,6 @@
 
 #import "AVAsset+Image.h"
 #import "LeagueTeam.h"
-//#import "ProfessionMap.h"
 #import "CustomAlertControllerQueue.h"
 
 #import "DownloaderQueue.h"
@@ -52,13 +51,8 @@ static NSOperationQueue * queue;
             self.downloadQueue = queue;
         }
         self.isEditable = YES;
-        //self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - (TABLE_WIDTH+1) - 85 , LABEL_HEIGHT + 60, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStyleGrouped];
         self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - TABLE_WIDTH, LABEL_HEIGHT + 55, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStylePlain];
         self.tableView.backgroundColor = [UIColor whiteColor];
-        //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
-        //self.tableView.layer.borderWidth = 1.0f;
-        //self.tableView.layer.borderColor = [[UIColor grayColor] CGColor];
         
         [self.tableView registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
         self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:NSLocalizedString(@"Select Sources:", nil)  buttonListNames:@[]];
@@ -77,8 +71,6 @@ static NSOperationQueue * queue;
         
     
                 self.setOfDeletingCells = [[NSMutableSet alloc] init];
-                //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:) name:@"AddDeletionCell" object:nil];
-                //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:) name:@"RemoveDeletionCell" object:nil];
         
         self.originalFrame = CGRectMake(568, 768, 370, 0);
         [self.deleteButton setFrame: self.originalFrame];
@@ -672,13 +664,6 @@ static NSOperationQueue * queue;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return NO;
-    /*
-        if (self.isEditable){
-            return YES;
-        } else {
-            return YES;
-        }
-     */
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -778,30 +763,5 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
-
-/*
-- (BOOL)playNext{
-    NSIndexPath *path = self.selectedPath;
-    NSInteger row = path.row;
-    row ++;
-    if(row >= self.tableData.count) row = 0;
-    NSIndexPath *newPath = [NSIndexPath indexPathForRow:row inSection:0];
-    [self tableView:self.tableView didSelectRowAtIndexPath:newPath];
-    [self setSelectedPath:newPath];
-    return YES;
-}
-
-- (BOOL)playPrevious{
-    NSIndexPath *path = self.selectedPath;
-    NSInteger row = path.row;
-    row --;
-    if(row < 0) row = self.tableData.count - 1;
-    NSIndexPath *newPath = [NSIndexPath indexPathForRow:row inSection:0];
-    [self tableView:self.tableView didSelectRowAtIndexPath:newPath];
-    [self setSelectedPath:newPath];
-    return YES;
-}
-*/
- 
 @end
 
