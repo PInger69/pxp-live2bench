@@ -72,12 +72,12 @@
 @property (strong, nonatomic, nonnull) UIButton* deleteAllButton;
 
 @property (strong, nonatomic, nullable) Tag* selectedTag;
+@property (strong, nonatomic, nonnull) HeaderBarForListView* headerBar;
 
 @end
 
 @implementation ListViewController{
     
-    HeaderBarForListView            * headerBar;
     
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
@@ -287,9 +287,9 @@
 
      _tableViewController.tableView.delaysContentTouches = NO;
     
-    headerBar = [[HeaderBarForListView alloc]initWithFrame:CGRectMake(540,55,1024, LABEL_HEIGHT) defaultSort:TIME_FIELD | DESCEND];
-    [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
-    [self.view addSubview:headerBar];
+    self.headerBar = [[HeaderBarForListView alloc]initWithFrame:CGRectMake(540,55,1024, LABEL_HEIGHT) defaultSort:TIME_FIELD | DESCEND];
+    [self.headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
+    [self.view addSubview:self.headerBar];
 
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
@@ -964,7 +964,11 @@
 
 - (void)sortFromHeaderBar:(id)sender
 {
-    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
+    if (NEW_TABLE_HANDLING) {
+        self.tagsToDisplay = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:self.headerBar.headerBarSortType];
+    } else {
+        _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:self.headerBar.headerBarSortType];
+    }
     [self reloadTableData];
 }
 
@@ -1066,7 +1070,11 @@
 // Sort tags by time index. Ensure that tags are unique
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
     [super sortAndDisplayUniqueTags:tags];
-    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
+    if (NEW_TABLE_HANDLING) {
+        self.tagsToDisplay = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:self.headerBar.headerBarSortType];
+    } else {
+        _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:self.headerBar.headerBarSortType];
+    }
     [self reloadTableData];
 }
 

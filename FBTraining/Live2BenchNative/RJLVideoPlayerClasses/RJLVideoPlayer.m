@@ -1433,7 +1433,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(float)seekClamp:(float)seekTime
 {
     return seekTime; // Nico - problem with function, returning zero after entering clip mode, so leave it be for now
-    
+/*
     AVPlayerItem    * currentItem       = self.avPlayer.currentItem;
     NSArray         * seekableRanges    = currentItem.seekableTimeRanges;
     
@@ -1462,7 +1462,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     return duration;
 
 
-
+*/
 }
 
 

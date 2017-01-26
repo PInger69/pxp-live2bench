@@ -476,6 +476,8 @@
     
     } else {
         Tag *tagToModify = note.object;
+        
+        //BCH: tagToModify.user is nil???
         dict = [NSMutableDictionary dictionaryWithDictionary:
                 @{
                   @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event, // LIVE_EVENT == @"live"

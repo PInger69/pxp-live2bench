@@ -13,6 +13,7 @@
 		D81552641E394F73003010D4 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552631E394F73003010D4 /* Tag.m */; };
 		D81552671E39626D003010D4 /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */; };
 		D815526A1E3A8301003010D4 /* CommentingRatingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552691E3A8301003010D4 /* CommentingRatingField.m */; };
+		D815526D1E3AA8EA003010D4 /* HeaderBarForListView.m in Sources */ = {isa = PBXBuildFile; fileRef = D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -668,7 +669,6 @@
 		D83E8B8B1E2D9153000FC23F /* GetUserTagsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E889D1E2D9150000FC23F /* GetUserTagsOperation.m */; };
 		D83E8B8C1E2D9153000FC23F /* GroupDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */; };
 		D83E8B8D1E2D9153000FC23F /* GroupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A11E2D9150000FC23F /* GroupOperation.m */; };
-		D83E8B8E1E2D9153000FC23F /* HeaderBarForListView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A31E2D9150000FC23F /* HeaderBarForListView.m */; };
 		D83E8B8F1E2D9153000FC23F /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A61E2D9150000FC23F /* InfoSettingViewController.m */; };
 		D83E8B901E2D9153000FC23F /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A81E2D9151000FC23F /* InjuryViewController.m */; };
 		D83E8B911E2D9153000FC23F /* InternetMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88AA1E2D9151000FC23F /* InternetMonitor.m */; };
@@ -705,6 +705,8 @@
 		D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopoverControllerWithImages.m; sourceTree = "<group>"; };
 		D81552681E3A8301003010D4 /* CommentingRatingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentingRatingField.h; sourceTree = "<group>"; };
 		D81552691E3A8301003010D4 /* CommentingRatingField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentingRatingField.m; sourceTree = "<group>"; };
+		D815526B1E3AA8EA003010D4 /* HeaderBarForListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderBarForListView.h; sourceTree = "<group>"; };
+		D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBarForListView.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1066,7 +1068,7 @@
 		D83E7F8A1E2D90A2000FC23F /* DualViewPeriodTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DualViewPeriodTableViewController.h; sourceTree = "<group>"; };
 		D83E7F8B1E2D90A2000FC23F /* DualViewPeriodTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DualViewPeriodTableViewController.m; sourceTree = "<group>"; };
 		D83E7F8C1E2D90A2000FC23F /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DualViewTabViewController.h; sourceTree = "<group>"; };
-		D83E7F8D1E2D90A2000FC23F /* DualViewTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DualViewTabViewController.m; sourceTree = "<group>"; };
+		D83E7F8D1E2D90A2000FC23F /* DualViewTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DualViewTabViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D83E7F8F1E2D90A2000FC23F /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = en.lproj/fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83E7F901E2D90A2000FC23F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83E7F921E2D90A2000FC23F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1208,7 +1210,7 @@
 		D83E80521E2D90A2000FC23F /* live2BenchTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live2BenchTab@2x.png"; sourceTree = "<group>"; };
 		D83E80531E2D90A2000FC23F /* live2BenchTabSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live2BenchTabSelect@2x.png"; sourceTree = "<group>"; };
 		D83E80541E2D90A2000FC23F /* Live2BenchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Live2BenchViewController.h; sourceTree = "<group>"; };
-		D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Live2BenchViewController.m; sourceTree = "<group>"; };
+		D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Live2BenchViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D83E80571E2D90A2000FC23F /* LoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginTextField.h; sourceTree = "<group>"; };
 		D83E80581E2D90A2000FC23F /* LoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginTextField.m; sourceTree = "<group>"; };
 		D83E80591E2D90A2000FC23F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -1976,8 +1978,6 @@
 		D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDropboxActivity.m; sourceTree = "<group>"; };
 		D83E88A01E2D9150000FC23F /* GroupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupOperation.h; sourceTree = "<group>"; };
 		D83E88A11E2D9150000FC23F /* GroupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupOperation.m; sourceTree = "<group>"; };
-		D83E88A21E2D9150000FC23F /* HeaderBarForListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderBarForListView.h; sourceTree = "<group>"; };
-		D83E88A31E2D9150000FC23F /* HeaderBarForListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBarForListView.m; sourceTree = "<group>"; };
 		D83E88A41E2D9150000FC23F /* ImageAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAssetManager.h; sourceTree = "<group>"; };
 		D83E88A51E2D9150000FC23F /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
 		D83E88A61E2D9150000FC23F /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
@@ -2949,8 +2949,6 @@
 				D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */,
 				D83E88A01E2D9150000FC23F /* GroupOperation.h */,
 				D83E88A11E2D9150000FC23F /* GroupOperation.m */,
-				D83E88A21E2D9150000FC23F /* HeaderBarForListView.h */,
-				D83E88A31E2D9150000FC23F /* HeaderBarForListView.m */,
 				D83E88A41E2D9150000FC23F /* ImageAssetManager.h */,
 				D83E88A51E2D9150000FC23F /* InfoSettingViewController.h */,
 				D83E88A61E2D9150000FC23F /* InfoSettingViewController.m */,
@@ -3737,6 +3735,8 @@
 			children = (
 				D81552681E3A8301003010D4 /* CommentingRatingField.h */,
 				D81552691E3A8301003010D4 /* CommentingRatingField.m */,
+				D815526B1E3AA8EA003010D4 /* HeaderBarForListView.h */,
+				D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */,
 				D83E8BA01E2E882D000FC23F /* ListTableViewController.h */,
 				D83E8BA11E2E882D000FC23F /* ListTableViewController.m */,
 				D83E8B9B1E2E86FD000FC23F /* ListViewCell.h */,
@@ -4161,7 +4161,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run 641798b3e14e69b71f69425feebd13f4d2699f67 c309c35c58b04aeb9eade11ad691ef1a5e2967ee75d4597ba5eb6eddaabc71b2";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 641798b3e14e69b71f69425feebd13f4d2699f67 c309c35c58b04aeb9eade11ad691ef1a5e2967ee75d4597ba5eb6eddaabc71b2";
 		};
 		FD14C8F6F9FDE300B6600FFF /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4341,6 +4341,7 @@
 				D83E8AC01E2D9152000FC23F /* LogoutOperation.m in Sources */,
 				D83E8B7E1E2D9153000FC23F /* DurationTagButtonView.m in Sources */,
 				D83E83431E2D90A5000FC23F /* PxpPlayer+Tag.m in Sources */,
+				D815526D1E3AA8EA003010D4 /* HeaderBarForListView.m in Sources */,
 				D83E8AAE1E2D9152000FC23F /* RicoPlayerGroupContainer.m in Sources */,
 				D83E83351E2D90A5000FC23F /* PxpCircleButton.m in Sources */,
 				D83E8B791E2D9153000FC23F /* DownloadOperation.m in Sources */,
@@ -4443,7 +4444,6 @@
 				D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */,
 				D83E83BD1E2D90A5000FC23F /* TeleView.m in Sources */,
 				D83E83551E2D90A5000FC23F /* PxpPlayPauseButton.m in Sources */,
-				D83E8B8E1E2D9153000FC23F /* HeaderBarForListView.m in Sources */,
 				D83E8ADC1E2D9153000FC23F /* PopUpTagSetButtonEditViewController.m in Sources */,
 				D83E83391E2D90A5000FC23F /* PxpFullscreenButton.m in Sources */,
 				D83E83951E2D90A5000FC23F /* SnapshotView.m in Sources */,
@@ -4720,6 +4720,7 @@
 			baseConfigurationReference = 3D2D3E0A12BF51BAA4741C1E /* Pods-Live2Bench.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 2X2KT7S5K3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

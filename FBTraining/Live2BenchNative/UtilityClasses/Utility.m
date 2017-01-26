@@ -490,7 +490,7 @@ static InternetMonitor* internetMonitor;
 +(BOOL)isDeviceSupportedMultiCam:(NSString *)platform{
     NSLog(@"multi cam limiter disabled <Utility Class>");
     return YES;
-    
+/*
     const char *s = platform.UTF8String;
     BOOL result = FALSE;
     
@@ -503,6 +503,7 @@ static InternetMonitor* internetMonitor;
         }
     }
     return result;
+*/
 }
 
 + (NSString *)myWifiName
