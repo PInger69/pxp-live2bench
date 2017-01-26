@@ -806,6 +806,7 @@
 {
     RatingInput * cmtRateField = (RatingInput *) sender;
     self.selectedTag.rating = cmtRateField.rating;
+    NSLog(@"ListViewController sendRating: %d", self.selectedTag.rating);
     [self reloadTableData];
 }
 
@@ -1182,6 +1183,17 @@
     NSLog(@"delete tag");
 }
 
+-(NSIndexPath*) pathForTag:(Tag*) tag {
+    NSInteger row = -1;
+    for (NSInteger i = 0; i < self.tagsToDisplay.count; i++) {
+        if ([tag.ID isEqualToString:((Tag*)self.tagsToDisplay[i]).ID]) {
+            row = i;
+            break;
+        }
+    }
+    return (row < 0 ? nil : [NSIndexPath indexPathForRow:row inSection:0]);
+}
+
 -(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
     return self.tagsToDisplay[indexPath.row];
 }
@@ -1247,17 +1259,7 @@
         
     };
     
-    //This condition opens up the cell if it is a deleting cell
-    /*
-    if ([self.setOfDeletingCells containsObject:indexPath]) {
-        [cell setCellAccordingToState:cellStateDeleting];
-    } else {
-        [cell setCellAccordingToState:cellStateNormal];
-    }
-    */
-    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //fixed: randomly highlight cells problem
     cell.backgroundView = nil;
     cell.selectedBackgroundView = [[UIView alloc]initWithFrame:CGRectZero];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
@@ -1267,25 +1269,6 @@
     backgroundView.backgroundColor = [UIColor clearColor];
     backgroundView.layer.borderColor = [PRIMARY_APP_COLOR CGColor];
     cell.backgroundView = backgroundView;
-    
-    //This is the condition where a cell that is selected is reused
-    [cell.translucentEditingView removeFromSuperview];
-    cell.translucentEditingView = nil;
-    
-    // This condition is if the user is scrolling up and down and the
-    // cell is selected
-    /*
-    if ([self.previouslySelectedIndexPath isEqual:indexPath]) {
-        cell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
-        [cell.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-        [cell.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
-        [cell.translucentEditingView setAlpha:0.3];
-        [cell.translucentEditingView setUserInteractionEnabled:FALSE];
-        [cell insertSubview:cell.translucentEditingView belowSubview:cell.tagname];
-        //[cell.myContentView setBackgroundColor:[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:0.3f]];
-        
-    }
-    */
     
     NSString *src = tag.thumbnails.allKeys.firstObject;
     
@@ -1364,8 +1347,28 @@
 
 #pragma mark UITableViewDelegate
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    Tag* tag = [self tagForIndexPath:indexPath];
+    if ([tag.ID isEqualToString:self.selectedTag.ID]) {
+        cell.selected = YES;
+    } else {
+        cell.selected = NO;
+    }
+}
+
 - (void) tableView: (UITableView*) tableView didSelectRowAtIndexPath: (NSIndexPath*) indexPath {
     Tag* tag = [self tagForIndexPath:indexPath];
+    if (self.selectedTag != nil) {
+        // unselect previous selection
+        NSIndexPath* previousPath = [self pathForTag:self.selectedTag];
+        if (previousPath != nil) {
+            UITableViewCell* cell = [tableView cellForRowAtIndexPath:previousPath];
+            cell.selected = NO;
+        }
+    }
+    
+    UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selected = YES;
     [self selectTag:tag];
 }
 

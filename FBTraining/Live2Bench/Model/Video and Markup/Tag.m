@@ -83,7 +83,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.isLive          = [tagData[@"islive"] boolValue];
         self.name            = tagData[@"name"];
         self.own             = [tagData[@"own"] boolValue];
-        _rating              = [tagData[@"rating"] intValue];
+        self.rating          = [tagData[@"rating"] intValue];
         self.requestURL      = tagData[@"requrl"];
         self.startTime       = [tagData[@"starttime"] doubleValue];
         self.time            = [tagData[@"time"] doubleValue];

@@ -12,6 +12,7 @@
 		D815525F1E3934E3003010D4 /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525D1E3934E3003010D4 /* DeletableTableViewController.m */; };
 		D81552641E394F73003010D4 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552631E394F73003010D4 /* Tag.m */; };
 		D81552671E39626D003010D4 /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */; };
+		D815526A1E3A8301003010D4 /* CommentingRatingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552691E3A8301003010D4 /* CommentingRatingField.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -96,7 +97,6 @@
 		D83E82391E2D90A5000FC23F /* ClipCornerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F4E1E2D90A2000FC23F /* ClipCornerView.m */; };
 		D83E823A1E2D90A5000FC23F /* ClipDataContentDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F501E2D90A2000FC23F /* ClipDataContentDisplay.m */; };
 		D83E82411E2D90A5000FC23F /* CommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F581E2D90A2000FC23F /* CommentingField.m */; };
-		D83E82421E2D90A5000FC23F /* CommentingRatingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F5A1E2D90A2000FC23F /* CommentingRatingField.m */; };
 		D83E82431E2D90A5000FC23F /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F5C1E2D90A2000FC23F /* ContactLabelString.txt */; };
 		D83E82441E2D90A5000FC23F /* ContactString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F5D1E2D90A2000FC23F /* ContactString.txt */; };
 		D83E82451E2D90A5000FC23F /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F5F1E2D90A2000FC23F /* ContentViewController.m */; };
@@ -703,6 +703,8 @@
 		D81552631E394F73003010D4 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 		D81552651E39626D003010D4 /* ListPopoverControllerWithImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListPopoverControllerWithImages.h; sourceTree = "<group>"; };
 		D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopoverControllerWithImages.m; sourceTree = "<group>"; };
+		D81552681E3A8301003010D4 /* CommentingRatingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentingRatingField.h; sourceTree = "<group>"; };
+		D81552691E3A8301003010D4 /* CommentingRatingField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentingRatingField.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1019,8 +1021,6 @@
 		D83E7F501E2D90A2000FC23F /* ClipDataContentDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipDataContentDisplay.m; sourceTree = "<group>"; };
 		D83E7F571E2D90A2000FC23F /* CommentingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentingField.h; sourceTree = "<group>"; };
 		D83E7F581E2D90A2000FC23F /* CommentingField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentingField.m; sourceTree = "<group>"; };
-		D83E7F591E2D90A2000FC23F /* CommentingRatingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentingRatingField.h; sourceTree = "<group>"; };
-		D83E7F5A1E2D90A2000FC23F /* CommentingRatingField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentingRatingField.m; sourceTree = "<group>"; };
 		D83E7F5B1E2D90A2000FC23F /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		D83E7F5C1E2D90A2000FC23F /* ContactLabelString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactLabelString.txt; sourceTree = "<group>"; };
 		D83E7F5D1E2D90A2000FC23F /* ContactString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactString.txt; sourceTree = "<group>"; };
@@ -3059,8 +3059,6 @@
 				D83E7F501E2D90A2000FC23F /* ClipDataContentDisplay.m */,
 				D83E7F571E2D90A2000FC23F /* CommentingField.h */,
 				D83E7F581E2D90A2000FC23F /* CommentingField.m */,
-				D83E7F591E2D90A2000FC23F /* CommentingRatingField.h */,
-				D83E7F5A1E2D90A2000FC23F /* CommentingRatingField.m */,
 				D83E7F5B1E2D90A2000FC23F /* Common.h */,
 				D83E7F5C1E2D90A2000FC23F /* ContactLabelString.txt */,
 				D83E7F5D1E2D90A2000FC23F /* ContactString.txt */,
@@ -3737,6 +3735,8 @@
 		D83E8B991E2E86EA000FC23F /* ListView */ = {
 			isa = PBXGroup;
 			children = (
+				D81552681E3A8301003010D4 /* CommentingRatingField.h */,
+				D81552691E3A8301003010D4 /* CommentingRatingField.m */,
 				D83E8BA01E2E882D000FC23F /* ListTableViewController.h */,
 				D83E8BA11E2E882D000FC23F /* ListTableViewController.m */,
 				D83E8B9B1E2E86FD000FC23F /* ListViewCell.h */,
@@ -4298,7 +4298,6 @@
 				D83E82761E2D90A5000FC23F /* EncoderStatusMonitor.m in Sources */,
 				D83E8B471E2D9153000FC23F /* ViewController.m in Sources */,
 				D83E8B821E2D9153000FC23F /* FakeEncoderBitrate.m in Sources */,
-				D83E82421E2D90A5000FC23F /* CommentingRatingField.m in Sources */,
 				D83E8B0D1E2D9153000FC23F /* RicoOperations.m in Sources */,
 				D83E826A1E2D90A5000FC23F /* BonjourModule.m in Sources */,
 				D83E8B8A1E2D9153000FC23F /* GetSummaryOperation.m in Sources */,
@@ -4546,6 +4545,7 @@
 				D83E8B951E2D9153000FC23F /* ListViewFullScreenViewController.m in Sources */,
 				D83E828D1E2D90A5000FC23F /* FeedSelectionController.m in Sources */,
 				D83E82151E2D90A5000FC23F /* AVPlayerRewindableItem.m in Sources */,
+				D815526A1E3A8301003010D4 /* CommentingRatingField.m in Sources */,
 				D83E82781E2D90A5000FC23F /* Event.m in Sources */,
 				D83E82271E2D90A5000FC23F /* CalendarViewController.m in Sources */,
 				D83E83A61E2D90A5000FC23F /* StarRating.m in Sources */,
