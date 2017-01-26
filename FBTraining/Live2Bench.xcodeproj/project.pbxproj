@@ -11,6 +11,7 @@
 		D815525E1E3934E3003010D4 /* DeletableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */; };
 		D815525F1E3934E3003010D4 /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525D1E3934E3003010D4 /* DeletableTableViewController.m */; };
 		D81552641E394F73003010D4 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552631E394F73003010D4 /* Tag.m */; };
+		D81552671E39626D003010D4 /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -672,7 +673,6 @@
 		D83E8B901E2D9153000FC23F /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A81E2D9151000FC23F /* InjuryViewController.m */; };
 		D83E8B911E2D9153000FC23F /* InternetMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88AA1E2D9151000FC23F /* InternetMonitor.m */; };
 		D83E8B921E2D9153000FC23F /* InternetOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88AC1E2D9151000FC23F /* InternetOperation.m */; };
-		D83E8B931E2D9153000FC23F /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88AE1E2D9151000FC23F /* ListPopoverControllerWithImages.m */; };
 		D83E8B951E2D9153000FC23F /* ListViewFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88B21E2D9151000FC23F /* ListViewFullScreenViewController.m */; };
 		D83E8B971E2D93EE000FC23F /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E8B961E2D93EE000FC23F /* DropboxSDK.framework */; };
 		D83E8B9C1E2E86FD000FC23F /* ListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8B9A1E2E86FD000FC23F /* ListViewCell.m */; };
@@ -701,6 +701,8 @@
 		D815525D1E3934E3003010D4 /* DeletableTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewController.m; sourceTree = "<group>"; };
 		D81552621E394F73003010D4 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		D81552631E394F73003010D4 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		D81552651E39626D003010D4 /* ListPopoverControllerWithImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListPopoverControllerWithImages.h; sourceTree = "<group>"; };
+		D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopoverControllerWithImages.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1985,8 +1987,6 @@
 		D83E88AA1E2D9151000FC23F /* InternetMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetMonitor.m; sourceTree = "<group>"; };
 		D83E88AB1E2D9151000FC23F /* InternetOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternetOperation.h; sourceTree = "<group>"; };
 		D83E88AC1E2D9151000FC23F /* InternetOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetOperation.m; sourceTree = "<group>"; };
-		D83E88AD1E2D9151000FC23F /* ListPopoverControllerWithImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListPopoverControllerWithImages.h; sourceTree = "<group>"; };
-		D83E88AE1E2D9151000FC23F /* ListPopoverControllerWithImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopoverControllerWithImages.m; sourceTree = "<group>"; };
 		D83E88B11E2D9151000FC23F /* ListViewFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewFullScreenViewController.h; sourceTree = "<group>"; };
 		D83E88B21E2D9151000FC23F /* ListViewFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewFullScreenViewController.m; sourceTree = "<group>"; };
 		D83E8B961E2D93EE000FC23F /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
@@ -2960,8 +2960,6 @@
 				D83E88AA1E2D9151000FC23F /* InternetMonitor.m */,
 				D83E88AB1E2D9151000FC23F /* InternetOperation.h */,
 				D83E88AC1E2D9151000FC23F /* InternetOperation.m */,
-				D83E88AD1E2D9151000FC23F /* ListPopoverControllerWithImages.h */,
-				D83E88AE1E2D9151000FC23F /* ListPopoverControllerWithImages.m */,
 				D83E88B11E2D9151000FC23F /* ListViewFullScreenViewController.h */,
 				D83E88B21E2D9151000FC23F /* ListViewFullScreenViewController.m */,
 				D83E7F0C1E2D90A2000FC23F /* Live2BenchNative */,
@@ -3723,9 +3721,11 @@
 				D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */,
 				D815525C1E3934E3003010D4 /* DeletableTableViewController.h */,
 				D815525D1E3934E3003010D4 /* DeletableTableViewController.m */,
-				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
+				D81552651E39626D003010D4 /* ListPopoverControllerWithImages.h */,
+				D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
+				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
 				D83E8BB91E2EAAD1000FC23F /* LogoViewController */,
@@ -4300,7 +4300,6 @@
 				D83E8B821E2D9153000FC23F /* FakeEncoderBitrate.m in Sources */,
 				D83E82421E2D90A5000FC23F /* CommentingRatingField.m in Sources */,
 				D83E8B0D1E2D9153000FC23F /* RicoOperations.m in Sources */,
-				D83E8B931E2D9153000FC23F /* ListPopoverControllerWithImages.m in Sources */,
 				D83E826A1E2D90A5000FC23F /* BonjourModule.m in Sources */,
 				D83E8B8A1E2D9153000FC23F /* GetSummaryOperation.m in Sources */,
 				D83E82941E2D90A5000FC23F /* FilterScrollView.m in Sources */,
@@ -4498,6 +4497,7 @@
 				D83E8A9E1E2D9152000FC23F /* RicoDualViewTabViewController.m in Sources */,
 				D83E8B6B1E2D9153000FC23F /* CoachFilterProcessor.m in Sources */,
 				D83E8B7C1E2D9153000FC23F /* DropboxSettingsViewController.m in Sources */,
+				D81552671E39626D003010D4 /* ListPopoverControllerWithImages.m in Sources */,
 				D83E834D1E2D90A5000FC23F /* PxpPlayerPipCompanionView.m in Sources */,
 				D83E83CB1E2D90A5000FC23F /* UIImage+animatedGIF.m in Sources */,
 				D83E8AFA1E2D9153000FC23F /* PxpFilterUserButtons.m in Sources */,

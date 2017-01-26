@@ -322,7 +322,7 @@ static FeedInspector * instance;
                     
                 default:
                     break;
-                    self.suspectFeed.mode = FeedModesCorrupt;
+//                    self.suspectFeed.mode = FeedModesCorrupt;
             }
         }
         

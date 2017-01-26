@@ -71,6 +71,8 @@
 @property (strong, nonatomic, nonnull) UITableView* listTable;
 @property (strong, nonatomic, nonnull) UIButton* deleteAllButton;
 
+@property (strong, nonatomic, nullable) Tag* selectedTag;
+
 @end
 
 @implementation ListViewController{
@@ -112,11 +114,11 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if (!selectedTag) {
+            if (!self.selectedTag) {
                 [self.commentingField clear];
                 self.commentingField.enabled             = YES;
-                self.commentingField.text                = selectedTag.comment;
-                self.commentingField.ratingScale.rating  = selectedTag.rating;
+                self.commentingField.text                = self.selectedTag.comment;
+                self.commentingField.ratingScale.rating  = self.selectedTag.rating;
             }
         }];
         self.pxpFilter = appDel.sharedFilter;
@@ -188,7 +190,7 @@
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-        selectedTag = nil;
+        self.selectedTag = nil;
         self.videoBar.selectedTag = nil;
         
         [self.commentingField clear];
@@ -375,7 +377,7 @@
 
 -(void)getNextTag
 {
-    NSUInteger index = [_tableViewController.tableData indexOfObject:selectedTag];
+    NSUInteger index = [_tableViewController.tableData indexOfObject:self.selectedTag];
     
     if (_tableViewController.tableData.count == 0 || index == _tableViewController.tableData.count - 1) {
         return;
@@ -385,23 +387,23 @@
 
     
     
-    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
+    self.selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                   @"feed":[[selectedTag.eventInstance.feeds allValues] firstObject],
-                                                                                                                                   @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
-                                                                                                                                   @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
-                                                                                                                                   @"comment": selectedTag.comment,
-                                                                                                                                   @"forWhole":selectedTag,
+                                                                                                                                   @"feed":[[self.selectedTag.eventInstance.feeds allValues] firstObject],
+                                                                                                                                   @"time": [NSString stringWithFormat:@"%f",self.selectedTag.startTime],
+                                                                                                                                   @"duration": [NSString stringWithFormat:@"%d",self.selectedTag.duration],
+                                                                                                                                   @"comment": self.selectedTag.comment,
+                                                                                                                                   @"forWhole":self.selectedTag,
                                                                                                                                    @"state":[NSNumber numberWithInteger:RJLPS_Play]
                                                                                                                                    }}];
     
     
     [self.commentingField clear];
-    self.commentingField.text                    = selectedTag.comment;
-    self.commentingField.ratingScale.rating      = selectedTag.rating;
+    self.commentingField.text                    = self.selectedTag.comment;
+    self.commentingField.ratingScale.rating      = self.selectedTag.rating;
     
-    _videoBar.selectedTag                   = selectedTag;
-    _fullscreenViewController.selectedTag   = selectedTag;
+    _videoBar.selectedTag                   = self.selectedTag;
+    _fullscreenViewController.selectedTag   = self.selectedTag;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -439,7 +441,7 @@
 
 -(void)getPrevTag
 {
-    NSUInteger index = [_tableViewController.tableData indexOfObject:selectedTag];
+    NSUInteger index = [_tableViewController.tableData indexOfObject:self.selectedTag];
     
     if (_tableViewController.tableData.count == 0 || index == 0) {
         return;
@@ -447,24 +449,24 @@
     
     NSUInteger newIndex = index - 1;
     
-    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
+    self.selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                    @"feed":[[selectedTag.eventInstance.feeds allValues] firstObject],
-                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
-                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
-                                                                                                                                    @"comment": selectedTag.comment,
-                                                                                                                                    @"forWhole":selectedTag,
+                                                                                                                                    @"feed":[[self.selectedTag.eventInstance.feeds allValues] firstObject],
+                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",self.selectedTag.startTime],
+                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",self.selectedTag.duration],
+                                                                                                                                    @"comment": self.selectedTag.comment,
+                                                                                                                                    @"forWhole":self.selectedTag,
                                                                                                                                     @"state":[NSNumber numberWithInteger:RJLPS_Play]
                                                                                                                                     }}];
 
     
     [self.commentingField clear];
-    self.commentingField.text                = selectedTag.comment;
-    self.commentingField.ratingScale.rating  = selectedTag.rating;
+    self.commentingField.text                = self.selectedTag.comment;
+    self.commentingField.ratingScale.rating  = self.selectedTag.rating;
     
-    _videoBar.selectedTag = selectedTag;
-    _fullscreenViewController.selectedTag = selectedTag;
+    _videoBar.selectedTag = self.selectedTag;
+    _fullscreenViewController.selectedTag = self.selectedTag;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -524,23 +526,23 @@
     
     Feed *feed = [userInfo objectForKey:@"feed"];
     
-    selectedTag = userInfo[@"forWhole"];
+    self.selectedTag = userInfo[@"forWhole"];
     if (self.mainPlayer.feed != feed){
         [self.mainPlayer loadFeed:feed];
         self.mainPlayer.name = feed.sourceName;
     }
 
-    [self.ricoPlayerViewController playTag:selectedTag];
+    [self.ricoPlayerViewController playTag:self.selectedTag];
     [self.ricoPlayerViewController play];
     
     [self.commentingField clear];
     self.commentingField.enabled             = YES;
-    self.commentingField.text                = selectedTag.comment;
-    self.commentingField.ratingScale.rating  = selectedTag.rating;
+    self.commentingField.text                = self.selectedTag.comment;
+    self.commentingField.ratingScale.rating  = self.selectedTag.rating;
     
     self.ricoFullScreenControlBar.controlBar.range = self.ricoPlayerControlBar.range;
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeList;
-    self.ricoFullScreenControlBar.currentTagLabel.text =selectedTag.name;
+    self.ricoFullScreenControlBar.currentTagLabel.text =self.selectedTag.name;
 }
 
 
@@ -611,13 +613,13 @@
 }
 
 -(void) selectTag:(Tag*) tag {
-    if (selectedTag == tag) return;
+    if (self.selectedTag == tag) return;
     
     [self.commentingField clear];
-    selectedTag                         = tag;
+    self.selectedTag                         = tag;
     self.commentingField.enabled             = YES;
-    self.commentingField.text                = selectedTag.comment;
-    self.commentingField.ratingScale.rating  = selectedTag.rating;
+    self.commentingField.text                = self.selectedTag.comment;
+    self.commentingField.ratingScale.rating  = self.selectedTag.rating;
 }
 
 #pragma mark - Video Bar Methods
@@ -648,18 +650,18 @@
 
 -(void)downloadWholeCurrentTag
 {
-    if (!selectedTag) return;
+    if (!self.selectedTag) return;
     
-    NSArray *keys = [selectedTag.eventInstance.feeds allKeys];
+    NSArray *keys = [self.selectedTag.eventInstance.feeds allKeys];
     if (!_currentEvent.local){
     
         __weak ListTableViewController * tbweak = _tableViewController;
-        DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:selectedTag encoder:selectedTag.eventInstance.parentEncoder sources:keys];
+        DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:self.selectedTag encoder:self.selectedTag.eventInstance.parentEncoder sources:keys];
         
         [downloadClip setOnFail:^(NSError *e) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",selectedTag.name];
+                NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",self.selectedTag.name];
                 NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
                 
                 UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
@@ -704,7 +706,7 @@
         for (NSString * key in keys) {
 
             // this will at a place holder for the downloader so the clock will show up r 3ems anight away
-            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",selectedTag.ID,key ];
+            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",self.selectedTag.ID,key ];
             NSString *src = [NSString stringWithFormat:@"%@hq", key];
 
 
@@ -725,7 +727,7 @@
 
 
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName,
-                                                                                                                   @"tag": selectedTag,
+                                                                                                                   @"tag": self.selectedTag,
                                                                                                                    @"src":src,
                                                                                                                    @"key":key}];
             
@@ -803,7 +805,7 @@
 -(void)sendRating:(id)sender
 {
     RatingInput * cmtRateField = (RatingInput *) sender;
-    selectedTag.rating = cmtRateField.rating;
+    self.selectedTag.rating = cmtRateField.rating;
     [self reloadTableData];
 }
 
@@ -813,14 +815,14 @@
     NSString *comment;
     [self.commentingField.textField resignFirstResponder];
     comment = self.commentingField.textField.text;
-    selectedTag.comment = comment;
+    self.selectedTag.comment = comment;
 }
 
 
 
 //extend the tag duration by adding five secs at the beginning of the tag
 -(void)startRangeBeenModified:(CustomButton*)button{
-    Tag *tagToBeModified = selectedTag;
+    Tag *tagToBeModified = self.selectedTag;
     
     
     if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
@@ -871,7 +873,7 @@
 
 //extend the tag duration by adding five secs at the end of the tag
 -(void)endRangeBeenModified:(CustomButton*)button{
-    Tag *tagToBeModified = selectedTag;
+    Tag *tagToBeModified = self.selectedTag;
 
     if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
         Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
@@ -879,7 +881,7 @@
         [self reloadTableData];
     }
     
-    if (!selectedTag || selectedTag.type == TagTypeDeleted)
+    if (!self.selectedTag || self.selectedTag.type == TagTypeDeleted)
     {
         return;
     }
@@ -944,7 +946,7 @@
     if(_currentEvent.live){
         _currentEvent = nil;
         [self clear];
-        selectedTag = nil;
+        self.selectedTag = nil;
         
         _fullscreenViewController.fullscreen = NO;
         
@@ -1078,19 +1080,19 @@
 }
 
 - (void)extendStartAction:(UIButton *)button {
-    if (selectedTag) {
+    if (self.selectedTag) {
         [self reloadTableData];
-        if ([[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil]){
-            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil];
+        if ([[LocalMediaManager getInstance]getClipByTag:self.selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:self.selectedTag scrKey:nil];
             [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
         }
         
         
         float newStartTime = 0;
-        float endTime = selectedTag.startTime + selectedTag.duration;
+        float endTime = self.selectedTag.startTime + self.selectedTag.duration;
         
         //extend the duration by decreasing the start time 5 seconds
-        newStartTime = selectedTag.startTime - 5;
+        newStartTime = self.selectedTag.startTime - 5;
         //if the new start time is smaller than 0, set it to 0
         if (newStartTime <0) {
             newStartTime = 0;
@@ -1099,26 +1101,26 @@
         //set the new duration to tag end time minus new start time
         int newDuration = endTime - newStartTime;
         
-        selectedTag.startTime = newStartTime;
+        self.selectedTag.startTime = newStartTime;
         
-        if (newDuration > selectedTag.duration) {
-            selectedTag.duration = newDuration;
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:selectedTag];
+        if (newDuration > self.selectedTag.duration) {
+            self.selectedTag.duration = newDuration;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:self.selectedTag];
         }
     }
 }
 
 - (void)extendEndAction:(UIButton *)button {
-    if (selectedTag) {
+    if (self.selectedTag) {
         [self reloadTableData];
-        if ([[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil]){
-            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil];
+        if ([[LocalMediaManager getInstance]getClipByTag:self.selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:self.selectedTag scrKey:nil];
             [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
         }
         
-        float startTime = selectedTag.startTime;
+        float startTime = self.selectedTag.startTime;
         
-        float endTime = startTime + selectedTag.duration;
+        float endTime = startTime + self.selectedTag.duration;
         
         //increase end time by 5 seconds
         endTime = endTime + 5;
@@ -1132,13 +1134,13 @@
         
         //get the new duration
         int newDuration = newDuration = endTime - startTime;
-        if (newDuration > selectedTag.duration) {
-            selectedTag.duration = newDuration;
+        if (newDuration > self.selectedTag.duration) {
+            self.selectedTag.duration = newDuration;
             id<EncoderProtocol> encoder;
-            EncoderOperation * tagMod = [[EncoderOperationModTag alloc]initEncoder:encoder data:@{} tag:selectedTag];
+            EncoderOperation * tagMod = [[EncoderOperationModTag alloc]initEncoder:encoder data:@{} tag:self.selectedTag];
             [encoder runOperation:tagMod];
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:selectedTag];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:self.selectedTag];
         }
         
     }
@@ -1184,6 +1186,32 @@
     return self.tagsToDisplay[indexPath.row];
 }
 
+-(void) hideDeleteAllButton {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    self.deleteAllButton.frame = CGRectMake(568, 768, 370, 0);
+    [UIView commitAnimations];
+    
+}
+
+-(void) showDeleteAllButton {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    self.deleteAllButton.frame = CGRectMake(568, 708, 370, 60);
+    [UIView commitAnimations];
+    
+}
+
+/*
+-(void) showOrHideDeleteAllButton {
+    if (self.setOfDeletingCells.count < 2){
+        [self hideDeleteAllButton];
+    } else {
+        [self showDeleteAllButton];
+    }
+}
+*/
+
 #pragma mark UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
@@ -1213,10 +1241,8 @@
 //    cell.swipeRecognizerRight.enabled = self.swipeableMode;
     
     cell.deleteBlock = ^(UITableViewCell *theCell) {
-        NSIndexPath* aIndexPath = [self.listTable indexPathForCell:theCell];
-        [self promptUserToDeleteTag:[self tagForIndexPath:indexPath]];
-        
-//        [self tableView:self.listTable commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
+        NSIndexPath* anIndexPath = [self.listTable indexPathForCell:theCell];
+        [self promptUserToDeleteTag:[self tagForIndexPath:anIndexPath]];
 //        [self checkDeleteAllButton];
         
     };

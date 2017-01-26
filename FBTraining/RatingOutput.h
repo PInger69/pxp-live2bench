@@ -11,9 +11,7 @@
 
 
 
-@interface RatingOutput : UIView
-{
-    NSMutableArray *starArray;
+@interface RatingOutput : UIView {
 }
 
 

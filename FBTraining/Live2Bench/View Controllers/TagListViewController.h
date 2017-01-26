@@ -24,4 +24,7 @@
 -(BOOL) promptUserToDeleteTag:(Tag*) tag;
 -(void) deleteTag:(Tag*) tag;
 
+-(void) showDeleteAllButton;
+-(void) hideDeleteAllButton;
+
 @end

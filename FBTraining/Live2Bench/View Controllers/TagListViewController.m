@@ -94,12 +94,20 @@
 }
 
 -(void) showDeletePermissionError {
-    [TSMessage showNotificationWithTitle:@"myplayXplay"
-                                subtitle:@"You can't delete someone else's tag"
-                                    type:TSMessageNotificationTypeError];
+    [TSMessage showNotificationInViewController: self.parentViewController
+                                          title:@"myplayXplay"
+                                       subtitle:@"You can't delete someone else's tag"
+                                           type:TSMessageNotificationTypeWarning
+                                       duration:3];
 }
 
+-(void) showDeleteAllButton {
+    
+}
 
+-(void) hideDeleteAllButton {
+    
+}
 
 
 @end

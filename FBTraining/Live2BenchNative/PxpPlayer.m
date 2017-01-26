@@ -371,10 +371,10 @@ static CMClockRef _pxpPlayerMasterClock;
     
     if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
         
-        AVPlayerItem * item = self.currentItem;
-        AVAsset * ass = item.asset;
-        NSInteger somethign1 = item.seekableTimeRanges.count;
-        NSInteger somethign2 = item.loadedTimeRanges.count;
+//        AVPlayerItem * item = self.currentItem;
+//        AVAsset * ass = item.asset;
+//        NSInteger somethign1 = item.seekableTimeRanges.count;
+//        NSInteger somethign2 = item.loadedTimeRanges.count;
     }
     
     if (self.currentItem.seekableTimeRanges.count > 0) {

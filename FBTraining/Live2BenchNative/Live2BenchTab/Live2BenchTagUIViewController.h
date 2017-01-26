@@ -31,7 +31,7 @@
 {
     //NSMutableArray          * tagButtonsLeft;
     //NSMutableArray          * tagButtonsRight;
-    NSInteger               * tagCount;
+    NSInteger               tagCount;
     NSMutableDictionary     * buttons;
 }
 

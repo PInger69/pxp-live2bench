@@ -8,73 +8,55 @@
 #import "RatingOutput.h"
 #define DISABLE_ALPHA 0.5f
 
+@interface RatingOutput()
+
+@property (nonatomic, strong, nonnull) NSArray* starArray;
+
+@end
 
 @implementation RatingOutput
-{
-    
-}
 
 static int STAR_SIZE = 13;
-static UIImage* rateSelected;
 @synthesize rating = _rating;
-
-
-
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         
-            UIImage *image = [self starImage:YES];
-            rateSelected = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-            starArray = [NSMutableArray arrayWithCapacity:5];
-        
-            for(int i = 0;i<5;i++) {
-                    
-                
-                UIImageView * star = [[ UIImageView alloc] initWithFrame:CGRectMake(110 + 25*i, 3, STAR_SIZE, STAR_SIZE)];
-                //[star setBackgroundColor:[UIColor blackColor]];
-                [star setImage: rateSelected];
-                [star setContentMode:UIViewContentModeScaleAspectFit];
-                [star setHidden:true];
-                [self addSubview:star];
-                [starArray addObject:star];
-
-                
-            }
-        
+        UIImage* image = [[self starImage:YES] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        NSMutableArray* temp = [NSMutableArray arrayWithCapacity:5];
+    
+        for (int i = 0; i<5; i++) {
+            UIImageView * star = [[ UIImageView alloc] initWithFrame:CGRectMake(110 + 25*i, 3, STAR_SIZE, STAR_SIZE)];
+            [star setImage: image];
+            [star setContentMode:UIViewContentModeScaleAspectFit];
+            [star setHidden:YES];
+            [self addSubview:star];
+            [temp addObject:star];
         }
+        self.starArray = [NSArray arrayWithArray:temp];
+    }
     
     return self;
 }
 
 
-- (void) setRating:(NSInteger)rate{
-    if( rate >= 0 && rate <=5)
-    {
-        _rating = rate;
+- (void) setRating:(NSInteger) rating {
+    if (rating >= 0 && rating <=5) {
+        _rating = rating;
+    } else if (rating > 0) {
+        _rating = 5;
     }
 
-    for (UIImageView *star in starArray) {
-        [star setHidden:true];
+    for( NSInteger i=0; i < 5; i++) {
+        ((UIImageView*) self.starArray[i]).hidden = (i >= _rating);
     }
-    
-    
-    for( NSInteger i=0; i < _rating; i++)
-    {
-        [starArray[i] setHidden:false];
-    }
-    
 }
-
-
 
 - (NSInteger) getRating{
     return _rating;
 }
-
-
 
 -(UIImage *) starImage: (BOOL) selected{
     CGSize imageSize = CGSizeMake(100 /2, 100/2);
@@ -104,24 +86,16 @@ static UIImage* rateSelected;
     
     if (selected) {
         [PRIMARY_APP_COLOR setFill];
-        //[PRIMARY_APP_COLOR setStroke];
-    }else{
+    } else {
         [[UIColor lightGrayColor] setFill];
-        //[[UIColor lightGrayColor] setStroke];
     }
     
-    
-    
-    //outLinePath.lineWidth = 5.0;
-    //[outLinePath stroke];
     [starPath fill];
     
     UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return starImage;
 }
-
-
 
 @end
 

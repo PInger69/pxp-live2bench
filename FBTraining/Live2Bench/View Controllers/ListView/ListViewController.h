@@ -22,7 +22,6 @@
 
 @interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate,PxpFilterDelegate>{
 
-    Tag                         *selectedTag;                        //the tag currently selected playing
     ListTableViewController     *_tableViewController;
 
 }

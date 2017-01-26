@@ -134,7 +134,7 @@ const NSString* kExportPlayerDirectoryName = @"PlayerExports";
     {
         NSURL* folderURL = [documentUrl URLByAppendingPathComponent:folderName];
         
-        BOOL fileExists = [manager fileExistsAtPath:[documentUrl absoluteString] isDirectory:YES];
+        BOOL fileExists = [manager fileExistsAtPath:[documentUrl absoluteString] isDirectory:nil];
         if(!fileExists)
         {
             [manager createDirectoryAtURL:folderURL withIntermediateDirectories:NO attributes:nil error:nil];
