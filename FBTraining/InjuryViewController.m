@@ -17,7 +17,7 @@
 //#import "L2BFullScreenViewController.h"
 #import "L2BVideoBarViewController.h"
 #import "BorderButton.h"
-
+#import "TeleViewController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -202,7 +202,6 @@ static void * eventContext      = &eventContext;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Injury", nil) imageName:@"live2BenchTab"];
-        //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     }
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];

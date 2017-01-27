@@ -13,9 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PxpVideoPlayerProtocol.h"
 #import "Slomo.h"
-#import "TeleViewController.h"
 #import "CustomButton.h"
-#import "TeleViewController.h"
 
 
 @interface InjuryViewController : CustomTabViewController

@@ -9,6 +9,7 @@
 #import "TagListViewController.h"
 
 #import <TSMessages/TSMessage.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #import "Tag.h"
 #import "CustomAlertControllerQueue.h"
@@ -108,6 +109,5 @@
 -(void) hideDeleteAllButton {
     
 }
-
 
 @end

@@ -11,7 +11,6 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #import "ListViewCell.h"
-#import "ImageAssetManager.h"
 #import "ListPopoverControllerWithImages.h"
 #import "FeedSelectCell.h"
 #import "Tag.h"
@@ -591,8 +590,6 @@ static NSOperationQueue * queue;
     }
     
 
-    //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-    
     ListViewCell *cell = (ListViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
     cell.currentTag = tag;
     

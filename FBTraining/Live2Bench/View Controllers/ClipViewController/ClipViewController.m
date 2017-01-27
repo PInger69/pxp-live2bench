@@ -132,8 +132,6 @@
 }
 
 -(void)onTagChanged:(NSNotification *)note{
-    NSLog(@"ClipViewController.onTagChanged...");
-
     dispatch_async(dispatch_get_main_queue(), ^{
         self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
 
@@ -492,7 +490,6 @@
         
         
     } else {
-        NSLog(@"loading image: %@", url);
         [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"]];
     }
 
@@ -728,6 +725,7 @@
 
 - (void)didReceiveMemoryWarning
 {
+    [super didReceiveMemoryWarning];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
     

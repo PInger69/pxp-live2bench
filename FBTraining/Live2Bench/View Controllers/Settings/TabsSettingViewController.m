@@ -119,24 +119,6 @@
         self.settingData[TAB_MEDICAL]       = @(TAB_ACTIVE(@"Medical"));
         self.settingData[TAB_ANALYZE]       = @(TAB_ACTIVE(@"Analyze"));
         
-//        self.settingData[@"RicoDualView"]       = @YES;
-//        self.settingData[@"RicoL2B"]        = @YES;
-        
-//        self.settingData[TAB_INJURY]        = @(TAB_ACTIVE(@"Calendar"));
-
-        
-//        self.tabClassForIdentifier = @{
-//                                       TAB_CALENDAR: [CalendarViewController class],
-//                                       TAB_MEDICAL: [MedicalViewController class],
-//                                       TAB_LIVE2BENCH: [Live2BenchViewController class],
-//                                       TAB_CLIPVIEW: [ClipViewController class],
-//                                       TAB_LISTVIEW: [ListViewController class],
-//                                       TAB_MYCLIP: [BookmarkViewController class],
-//                                       TAB_DEBUG: [DebuggingTabViewController class],
-//                                       TAB_DUALVIEW: [DualViewTabViewController class],
-//                                       TAB_ANALYZE: [AnalyzeTabViewController class],
-//                                       };
-        
         self.tabClassForIdentifier = [tabClassForIdentifierTemp copy];
         
         self.delegate = self;
@@ -201,15 +183,5 @@
     // tabsName is for comparing, tabs is for getting the actual tab
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TABS_SETTING_CHANGED object:nil userInfo:@{ @"Tabs": tabs, @"TabsName":tabsName }];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

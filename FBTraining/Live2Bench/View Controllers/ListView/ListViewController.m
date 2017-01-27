@@ -1001,13 +1001,6 @@
     return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter]]];
 }
 
--(void)didReceiveMemoryWarning{
-    [super didReceiveMemoryWarning];
-    
-    [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
-}
-
-
 #pragma mark - Filtering Methods
 
 - (void)pressFilterButton
@@ -1192,18 +1185,18 @@
 }
 
 -(NSIndexPath*) pathForTag:(Tag*) tag {
-    NSInteger row = -1;
+    NSInteger section = -1;
     for (NSInteger i = 0; i < self.tagsToDisplay.count; i++) {
         if ([tag.ID isEqualToString:((Tag*)self.tagsToDisplay[i]).ID]) {
-            row = i;
+            section = i;
             break;
         }
     }
-    return (row < 0 ? nil : [NSIndexPath indexPathForRow:row inSection:0]);
+    return (section < 0 ? nil : [NSIndexPath indexPathForRow:0 inSection:section]);
 }
 
 -(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
-    return self.tagsToDisplay[indexPath.row];
+    return self.tagsToDisplay[indexPath.section];
 }
 
 -(void) hideDeleteAllButton {
@@ -1234,8 +1227,12 @@
 
 #pragma mark UITableViewDataSource
 
+- (NSInteger) numberOfSectionsInTableView:(UITableView*) tableView {
+    return [self.tagsToDisplay count];
+}
+
 - (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
-    return [self.tagsToDisplay count] + ([self isTableExpanded] ? 2 : 0);
+    return 1; //[self.tagsToDisplay count] + ([self isTableExpanded] ? 2 : 0);
 }
 
 -(UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {

@@ -477,6 +477,14 @@
     } else {
         Tag *tagToModify = note.object;
         
+        
+        // FIXME: investigate why this isn't working
+        
+        if (tagToModify.user == nil) {
+            NSLog(@"tag.user is nil. Adding user: %@", [UserCenter getInstance].userHID);
+            tagToModify.user = [UserCenter getInstance].userHID;
+        }
+        
         //BCH: tagToModify.user is nil???
         dict = [NSMutableDictionary dictionaryWithDictionary:
                 @{

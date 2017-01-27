@@ -18,8 +18,6 @@
 #import "PxpFilter.h"
 #import "PxpFilterDelegate.h"
 
-@class TeleViewController;
-
 @interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate,PxpFilterDelegate>{
 
     ListTableViewController     *_tableViewController;
