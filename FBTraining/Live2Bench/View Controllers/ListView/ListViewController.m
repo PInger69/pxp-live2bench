@@ -88,15 +88,13 @@
         
         self.videoBar                           = [[RicoVideoBar alloc] init];
         self.fullscreenViewController           = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-        self.allTagsArray                        = [[NSMutableArray alloc]init];
-        self.tagsToDisplay                  = [[NSMutableArray alloc]init];
 
         [self configureListView];
         [self configureDeleteAllButton];
 
-        [_videoBar.forwardSeekButton    addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [_videoBar.backwardSeekButton   addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [_videoBar.slomoButton          addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.videoBar.forwardSeekButton    addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.videoBar.backwardSeekButton   addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.videoBar.slomoButton          addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
     
@@ -188,7 +186,8 @@
    
 }
 
--(void) loadTagsFromCurrentEvent {
+/*
+-(void) loadAndDisplayTags {
     for (Tag *tag in self.currentEvent.tags ) {
         if (![self.allTagsArray containsObject:tag]) {
             if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
@@ -220,11 +219,11 @@
     }
     
 }
-
+*/
 
 -(void)onTagChanged:(NSNotification *)note{
     
-    [self loadTagsFromCurrentEvent];
+    [self loadAndDisplayTags];
     
     // yes this is silly when tag mod is called list view refreshes but when downloading at clip it counts at a tag mod
     // but it should not be updated because it needs to see the button that called it so updating will clear it out
@@ -386,6 +385,11 @@
     
     [super viewDidAppear:animated];
     NSLog(@"ListViewController viewDidAppear");
+    [self configurePxpFilter:self.currentEvent];
+    [self loadAndDisplayTags];
+    NSLog(@"current event is %@ and the number of tags is %ld", self.currentEvent == nil ? @"nil" : @"not nil", self.tagsToDisplay.count);
+    [self.listTable reloadData];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
     
@@ -446,12 +450,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-
     [super viewWillAppear:animated];
-    NSLog(@"ListViewController viewWillAppear. Current event %@", self.currentEvent == nil ? @"is nil": @"is not nil");
-
-    [self loadTagsFromCurrentEvent];
-//    _fullscreenViewController.fullscreen = NO;
     [self.view bringSubviewToFront:_videoBar];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
@@ -474,9 +473,6 @@
     }}];
 
 
-
-//    self.listTable.isEditable = FALSE;
-
     // Richard
     [self.commentingField clear];
     self.commentingField.ratingScale.rating = 0;
@@ -484,7 +480,6 @@
 
     
     self.videoPlayer.mute = NO;
-
 }
 
 
@@ -964,43 +959,6 @@
 }
 
 #pragma mark - Filtering Methods
-
-- (void)pressFilterButton
-{
-//    [_tableViewController collaspOpenCell];
-    
-//    [self.pxpFilter filterTags:[self.allTags copy]];
-    TabView *popupTabBar = [TabView sharedFilterTabBar];
-    Profession * profession = [ProfessionMap getProfession:self.currentEvent.eventType];
-    [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
-    
-    
-    // setFilter to this view. This is the default filtering for ListView
-    // what ever is added to these predicates will be ignored in the filters raw tags
-    self.pxpFilter.delegate = self;
-    
-    if (popupTabBar.isViewLoaded)
-    {
-        popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
-    }
-  
-    popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
-    popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
-
-
-    UIPopoverPresentationController *presentationController = [popupTabBar popoverPresentationController];
-    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
-    presentationController.sourceView               = self.view;
-    presentationController.permittedArrowDirections = 0;
-
-    [self presentViewController:popupTabBar animated:YES completion:nil];
- 
-    
-    [self.pxpFilter filterTags:[self.allTagsArray copy]];
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
-
-}
 
 -(void)closeCurrentPlayingClip:(NSNotification*)note
 {

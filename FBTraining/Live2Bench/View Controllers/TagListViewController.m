@@ -31,13 +31,11 @@
     return self;
 }
 
--(void) viewDidLoad {
-    [super viewDidLoad];
-    self.pxpFilter = _appDel.sharedFilter;
-}
-
 -(void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    NSLog(@"TagListViewController viewWillAppear");
+    self.pxpFilter = _appDel.sharedFilter;
+    NSLog(@"pxpFilter is %@", self.pxpFilter == nil ? @"nil" : @"not nil");
     [self connectToEncoder];
 
     self.currentEvent = _appDel.encoderManager.primaryEncoder.event;
@@ -50,7 +48,7 @@
 
 -(void) loadAndDisplayTags {
     self.allTagsArray = [NSMutableArray arrayWithArray:[self.currentEvent.tags copy]];
-    NSLog(@"There are %ld tags", self.allTagsArray.count);
+    NSLog(@"There are %ld tags%@.", self.allTagsArray.count, self.pxpFilter == nil ? @" but the pxpFilter is nil" : @"");
     [self.pxpFilter filterTags:self.allTagsArray];
     [self sortAndDisplayUniqueTags:self.pxpFilter.filteredTags];
 }
@@ -191,6 +189,7 @@
     
     [self.pxpFilter filterTags:[self.allTagsArray copy]];
     
+    // BCH: what does this do?
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
     
 }

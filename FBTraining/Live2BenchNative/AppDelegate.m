@@ -45,10 +45,12 @@
 
     [Fabric with:@[[Crashlytics class]]];
 
-//    [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
+    self.sharedFilter       = [[PxpFilter alloc]init];
     
     //
     [DeviceAssetLibrary getInstance];
+    
+    
     
     // This is for the standalone build
     [NSURLProtocol registerClass:[PxpURLProtocol class]];
@@ -118,7 +120,6 @@
     
     self.toastObserver = [[ToastObserver alloc]init];
     self.toastObserver.parentView = self.window.rootViewController.view;
-    self.sharedFilter       = [[PxpFilter alloc]init];
     self.sharedFilterTab    = [TabView sharedFilterTabBar];
     [self.sharedFilterTab setPxpFilter:self.sharedFilter];
     
