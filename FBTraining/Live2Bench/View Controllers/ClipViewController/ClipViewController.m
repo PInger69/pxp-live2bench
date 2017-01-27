@@ -72,14 +72,12 @@
     self = [super initWithAppDelegate:appDel];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"tabClipView"];
-        
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
 
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
-        self.allTagsArray   = [NSMutableArray array];
-        self.tagsToDisplay  = [NSMutableArray array];
     }
     return self;
     
@@ -126,10 +124,7 @@
 
 -(void)onTagChanged:(NSNotification *)note{
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.allTagsArray = [NSMutableArray arrayWithArray:[self.currentEvent.tags copy]];
-
-        [self.pxpFilter filterTags:self.allTagsArray];
-        [self sortAndDisplayUniqueTags:self.pxpFilter.filteredTags];
+        [self loadAndDisplayTags];
     });
 }
 
@@ -153,42 +148,6 @@
 }
 
 
-
-- (void) viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:true];
-#ifdef DEBUG
-    NSLog(@"ClipViewController viewDidAppear");
-#endif
-   
-    [self configurePxpFilter:self.currentEvent];
-    [self.collectionView reloadData];
-
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
-    self.sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
-//    downloadedTagIds = [[NSMutableArray alloc] init];
-    [self setupView];
-    
-    
-    //instantiate uicollection cell
-    [self.collectionView registerClass:[thumbnailCell class] forCellWithReuseIdentifier:@"thumbnailCell"];
-    //set the collectionview's properties
-    [self.collectionView setAllowsSelection:TRUE];
-    [self.collectionView setAllowsMultipleSelection:TRUE];
-    self.breadCrumbVC = [[BreadCrumbsViewController alloc]initWithPoint:CGPointMake(25, 64)];
-    [self.view addSubview:self.breadCrumbVC.view];
-    
-    
-    self.longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
-    self.longPressRecognizer.minimumPressDuration = 0.7;
-    [self.view addGestureRecognizer: self.longPressRecognizer];
-    self.isEditing = NO;
-    
-}
 
 -(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
     
@@ -335,6 +294,29 @@
 }
 
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
+    self.sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
+    [self setupView];
+    
+    
+    //instantiate uicollection cell
+    [self.collectionView registerClass:[thumbnailCell class] forCellWithReuseIdentifier:@"thumbnailCell"];
+    //set the collectionview's properties
+    [self.collectionView setAllowsSelection:TRUE];
+    [self.collectionView setAllowsMultipleSelection:TRUE];
+    self.breadCrumbVC = [[BreadCrumbsViewController alloc]initWithPoint:CGPointMake(25, 64)];
+    [self.view addSubview:self.breadCrumbVC.view];
+    
+    
+    self.longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
+    self.longPressRecognizer.minimumPressDuration = 0.7;
+    [self.view addGestureRecognizer: self.longPressRecognizer];
+    self.isEditing = NO;
+    
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -358,6 +340,19 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT}];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
 }
+
+- (void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:true];
+#ifdef DEBUG
+    NSLog(@"ClipViewController viewDidAppear: current event is %@", self.currentEvent == nil ? @"nil" : @"not nil");
+#endif
+    
+    [self configurePxpFilter:self.currentEvent];
+    [self loadAndDisplayTags];
+    [self.collectionView reloadData];
+    
+}
+
 
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {

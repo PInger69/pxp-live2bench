@@ -18,11 +18,7 @@
 #import "PxpFilter.h"
 #import "PxpFilterDelegate.h"
 
-@interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate>{
-
-    ListTableViewController     *_tableViewController;
-
-}
+@interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate>
 
 
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;

@@ -11,18 +11,53 @@
 #import <TSMessages/TSMessage.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 
-#import "Tag.h"
 #import "CustomAlertControllerQueue.h"
+#import "EncoderManager.h"
+#import "EncoderProtocol.h"
+#import "Tag.h"
 
-@interface TagListViewController() <PxpFilterDelegate>
+@interface TagListViewController()
     
 @end
 
 @implementation TagListViewController
 
 
--(void) deleteTag:(Tag*) tag {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+-(instancetype) initWithAppDelegate:(AppDelegate *)appDel {
+    if (self = [super initWithAppDelegate:appDel]) {
+        self.allTagsArray   = [NSMutableArray array];
+        self.tagsToDisplay  = [NSMutableArray array];
+    }
+    return self;
+}
+
+-(void) viewDidLoad {
+    [super viewDidLoad];
+    self.pxpFilter = _appDel.sharedFilter;
+}
+
+-(void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self connectToEncoder];
+
+    self.currentEvent = _appDel.encoderManager.primaryEncoder.event;
+}
+
+-(void) connectToEncoder {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+
+}
+
+-(void) loadAndDisplayTags {
+    self.allTagsArray = [NSMutableArray arrayWithArray:[self.currentEvent.tags copy]];
+    NSLog(@"There are %ld tags", self.allTagsArray.count);
+    [self.pxpFilter filterTags:self.allTagsArray];
+    [self sortAndDisplayUniqueTags:self.pxpFilter.filteredTags];
+}
+
+
+-(void) addEventObserver:(NSNotification*) notification {
+    
 }
 
 -(BOOL) promptUserToDeleteTag:(Tag*) tag {
@@ -35,13 +70,13 @@
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
                                                                        message:@"Are you sure you want to delete this tag?"
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Yes"
+        [alert addAction:[UIAlertAction actionWithTitle:@"Delete"
                                                   style:UIAlertActionStyleDestructive
                                                 handler:^(UIAlertAction * action) {
                                                     [self deleteTag:tag];
                                                     [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
                                                  }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"No"
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                                   style:UIAlertActionStyleCancel
                                                 handler:^(UIAlertAction* action) {
                                                      [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
@@ -97,6 +132,13 @@
     [self.tagsToDisplay addObjectsFromArray:
         [NSMutableArray arrayWithArray:[[uniqueList allObjects] sortedArrayUsingDescriptors:@[sorter]]]];
 }
+
+#pragma mark - Delete tags
+
+-(void) deleteTag:(Tag*) tag {
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+}
+
 
 -(void) showDeletePermissionError {
     [TSMessage showNotificationInViewController: self.parentViewController

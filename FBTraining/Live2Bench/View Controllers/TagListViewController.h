@@ -12,7 +12,7 @@
 #import "PxpFilter.h"
 #import "Event.h"
 
-@interface TagListViewController : CustomTabViewController
+@interface TagListViewController : CustomTabViewController<PxpFilterDelegate>
 
 @property (nonatomic, strong) NSMutableArray* tagsToDisplay;
 @property (nonatomic, weak) PxpFilter* pxpFilter;
@@ -25,6 +25,9 @@
 -(void) showDeletePermissionError;
 -(BOOL) promptUserToDeleteTag:(Tag*) tag;
 -(void) deleteTag:(Tag*) tag;
+-(void) loadAndDisplayTags;
+
+-(void) pressFilterButton;
 
 -(void) showDeleteAllButton;
 -(void) hideDeleteAllButton;
