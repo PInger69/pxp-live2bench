@@ -14,7 +14,7 @@
 #import "EncoderProtocol.h"
 #import "EncoderManager.h"
 #import "RJLVideoPlayer.h"
-#import "PipViewController.h"
+#import "Slomo.h"
 #import "FeedSelectionController.h"
 #import "LiveButton.h"
 #import "SeekButton.h"

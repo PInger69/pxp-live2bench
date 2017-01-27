@@ -14,7 +14,7 @@
 #import "EncoderClasses/EncoderProtocol.h"
 #import "EncoderClasses/EncoderManager.h"
 #import "RJLVideoPlayer.h"
-#import "PipViewController.h"
+#import "Slomo.h"
 #import "FeedSelectionController.h"
 #import "LiveButton.h"
 #import "SeekButton.h"
@@ -329,12 +329,6 @@
     NSLog(@"%@", self.feeds);
     self.topViewFeedSelectionController.feeds = self.feeds;
     self.bottomViewFeedSelectionController.feeds = self.feeds;
-    
-    //[self.splitPlayer playFeed:self.feeds.count > 0 ? self.feeds[0] : nil];
-    //[self.pipView playWithFeed:self.feeds.count > 1 ? self.feeds[1] : self.splitPlayer.feed];
-    //[self.pipViewController syncToPlayer];
-    
-    //self.splitPlayer.mute = NO;
     
     Feed *feedA = self.feeds.count > 0 ? self.feeds[0] : nil;
     Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;

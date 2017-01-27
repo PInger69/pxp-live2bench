@@ -47,6 +47,13 @@
 #import "DownloadOperation.h"
 #import "DownloadClipFromTag.h"
 
+#define CELL_HEIGHT                  155//172
+#define LABEL_HEIGHT                 40
+#define LABEL_WIDTH                 100
+#define TABLE_WIDTH                 460
+#define TABLE_HEIGHT                620//575
+
+
 @interface ListViewController () <RicoBaseFullScreenDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
@@ -73,10 +80,7 @@
 
 @end
 
-@implementation ListViewController{
-    
-    id <EncoderProtocol>                _observedEncoder;
-}
+@implementation ListViewController
 
 @synthesize selectedCellRows;
 
@@ -125,21 +129,6 @@
 }
 
 
--(void)addEventObserver:(NSNotification *)note
-{
-    if (_observedEncoder != nil) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-    }
-
-    
-    if (note.object == nil) {
-        _observedEncoder = nil;
-    }else{
-        _observedEncoder = (id <EncoderProtocol>) note.object;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-    }
-}
-
 -(void) assignCurrentEvent:(Event*) event {
     
     if ([event.name isEqualToString:self.currentEvent.name]) {
@@ -185,41 +174,6 @@
     [self assignCurrentEvent:[note.object event]];
    
 }
-
-/*
--(void) loadAndDisplayTags {
-    for (Tag *tag in self.currentEvent.tags ) {
-        if (![self.allTagsArray containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
-                [self.tagsToDisplay insertObject:tag atIndex:0];
-                [self.pxpFilter addTags:@[tag]];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
-            }
-            [self.allTagsArray insertObject:tag atIndex:0];
-        }
-        if(tag.modified && [self.allTagsArray containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
-            [self.tagsToDisplay insertObject:tag atIndex:0];
-            [self.pxpFilter addTags:@[tag]];
-        }
-        
-        // BCH: TODO: This line has crashed the app a coupl'a times. Possibly the tag is nil?
-        if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
-            [self.tagsToDisplay insertObject:tag atIndex:0];
-            [self.pxpFilter addTags:@[tag]];
-            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
-        }
-    }
-
-    for (Tag *tag in [self.allTagsArray copy]) {
-        if (![self.currentEvent.tags containsObject:tag]) {
-            [self.allTagsArray removeObject:tag];
-            [self.tagsToDisplay removeObject:tag];
-            [self.pxpFilter removeTags:@[tag]];
-        }
-    }
-    
-}
-*/
 
 -(void)onTagChanged:(NSNotification *)note{
     
@@ -1074,11 +1028,7 @@
 }
 
 -(BOOL) isExpandedCell:(NSIndexPath*) indexPath {
-    return NO;
-}
-
--(BOOL) isTableExpanded {
-    return NO;
+    return [self isSelectedTag:[self tagForIndexPath:indexPath]];
 }
 
 -(void) deleteTag:(Tag*) tag {
@@ -1145,7 +1095,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
-    return 1; //[self.tagsToDisplay count] + ([self isTableExpanded] ? 2 : 0);
+    return 1;
 }
 
 -(UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {
@@ -1258,6 +1208,10 @@
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
     
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];
+    
+    if ([self isExpandedCell:indexPath]) {
+        [cell setCellAccordingToState:cellStateNormal];
+    }
     
     return cell;
     

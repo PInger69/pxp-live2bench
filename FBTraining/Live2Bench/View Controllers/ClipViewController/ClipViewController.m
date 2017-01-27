@@ -46,7 +46,6 @@
 @property (strong, nonatomic) UIButton *deSelectButton;
 
 @property (nonatomic, strong) BreadCrumbsViewController* breadCrumbVC;
-@property (nonatomic, strong) id <EncoderProtocol> observedEncoder;
 
 @property (nonatomic, strong) NSTimer* refreshTimer;
 @property (nonatomic, strong, nullable) ListPopoverControllerWithImages* sourceSelectPopover;
@@ -73,8 +72,6 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"tabClipView"];
 
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
@@ -83,25 +80,8 @@
     
 }
 
-// encoderOberver
--(void)addEventObserver:(NSNotification *)note
-{
-    if (self.observedEncoder != nil) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:self.observedEncoder];
-    }
-    
-    if (note.object == nil) {
-        self.observedEncoder = nil;
-    } else {
-        self.observedEncoder = (id <EncoderProtocol>) note.object;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:self.observedEncoder];
-        NSLog(@"Now observing encoder of type %@", [self.observedEncoder class]);
-    }
-}
-
--(void)eventChanged:(NSNotification *)note
-{
-    if ([[note.object event].name isEqualToString:self.currentEvent.name]) {
+-(void) assignCurrentEvent:(Event*) event {
+    if ([event.name isEqualToString:self.currentEvent.name]) {
         NSLog(@"ClipViewController.eventChanged called by no actual change");
         return;
     }
@@ -112,14 +92,20 @@
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:self.currentEvent];
         [self clear];
     }
-
+    
     if (self.currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         self.currentEvent = nil;
     }else{
-        self.currentEvent = [((id <EncoderProtocol>) note.object) event];
+        self.currentEvent = event;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:self.currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:self.currentEvent];
     }
+    
+}
+
+-(void)eventChanged:(NSNotification *)note
+{
+    [self assignCurrentEvent:[note.object event]];
 }
 
 -(void)onTagChanged:(NSNotification *)note{

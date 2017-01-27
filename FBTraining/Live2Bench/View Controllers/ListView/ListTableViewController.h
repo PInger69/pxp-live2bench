@@ -21,8 +21,6 @@
 #define TABLE_WIDTH                 460
 #define TABLE_HEIGHT                620//575
 
-#define NOTIF_CELL_SELECTED        @"cell selected"
-
 @interface ListTableViewController : DeletableTableViewController
 
 

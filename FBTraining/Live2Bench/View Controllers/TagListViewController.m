@@ -38,7 +38,11 @@
     NSLog(@"pxpFilter is %@", self.pxpFilter == nil ? @"nil" : @"not nil");
     [self connectToEncoder];
 
-    self.currentEvent = _appDel.encoderManager.primaryEncoder.event;
+    [self assignCurrentEvent:_appDel.encoderManager.primaryEncoder.event];
+}
+
+-(void) assignCurrentEvent:(Event*) event {
+    self.currentEvent = event;
 }
 
 -(void) connectToEncoder {
