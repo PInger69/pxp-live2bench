@@ -349,5 +349,8 @@
 
 }
 
++(AppDelegate*) instance {
+    return (AppDelegate*) [[UIApplication sharedApplication] delegate];
+}
 
 @end

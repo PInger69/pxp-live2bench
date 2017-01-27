@@ -14,11 +14,15 @@
 #import "Tag.h"
 #import "CustomAlertControllerQueue.h"
 
+@interface TagListViewController() <PxpFilterDelegate>
+    
+@end
+
 @implementation TagListViewController
 
 
 -(void) deleteTag:(Tag*) tag {
-    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
 }
 
 -(BOOL) promptUserToDeleteTag:(Tag*) tag {
@@ -102,12 +106,65 @@
                                        duration:3];
 }
 
+
 -(void) showDeleteAllButton {
     
 }
 
 -(void) hideDeleteAllButton {
     
+}
+
+#pragma mark - PxpFilter-related methods
+
+-(void) pressFilterButton {
+    //    [_tableViewController collaspOpenCell];
+    
+    //    [self.pxpFilter filterTags:[self.allTags copy]];
+    TabView *popupTabBar = [TabView sharedFilterTabBar];
+    Profession * profession = [ProfessionMap getProfession:self.currentEvent.eventType];
+    [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
+    
+    
+    // setFilter to this view. This is the default filtering for ListView
+    // what ever is added to these predicates will be ignored in the filters raw tags
+    self.pxpFilter.delegate = self;
+    
+    if (popupTabBar.isViewLoaded)
+    {
+        popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
+    }
+    
+    popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+    popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
+    
+    
+    UIPopoverPresentationController *presentationController = [popupTabBar popoverPresentationController];
+    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
+    presentationController.sourceView               = self.view;
+    presentationController.permittedArrowDirections = 0;
+    
+    [self presentViewController:popupTabBar animated:YES completion:nil];
+    
+    
+    [self.pxpFilter filterTags:[self.allTagsArray copy]];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
+    
+}
+
+-(void)onFilterComplete:(PxpFilter*)filter
+{
+    if (!filter || !filter.filteredTags ) {
+        return ;
+    }
+    [self sortAndDisplayUniqueTags:filter.filteredTags];
+}
+
+-(void)onFilterChange:(PxpFilter *)filter
+{
+    [self.pxpFilter filterTags:self.allTagsArray];
+    [self sortAndDisplayUniqueTags:filter.filteredTags];
 }
 
 @end

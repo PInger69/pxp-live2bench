@@ -78,8 +78,6 @@
 
 @implementation ListViewController{
     
-    
-    Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
 }
 
@@ -93,7 +91,7 @@
         
         self.videoBar                           = [[RicoVideoBar alloc] init];
         self.fullscreenViewController           = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-        self.allTags                        = [[NSMutableArray alloc]init];
+        self.allTagsArray                        = [[NSMutableArray alloc]init];
         self.tagsToDisplay                  = [[NSMutableArray alloc]init];
 
         if (NEW_TABLE_HANDLING) {
@@ -109,19 +107,6 @@
         [_videoBar.forwardSeekButton    addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_videoBar.backwardSeekButton   addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_videoBar.slomoButton          addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if (!self.selectedTag) {
-                [self.commentingField clear];
-                self.commentingField.enabled             = YES;
-                self.commentingField.text                = self.selectedTag.comment;
-                self.commentingField.ratingScale.rating  = self.selectedTag.rating;
-            }
-        }];
-        self.pxpFilter = appDel.sharedFilter;
     }
     return self;
     
@@ -152,13 +137,6 @@
 }
 
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PLAYER_BAR_CANCEL object:nil];
-}
-
 -(void)addEventObserver:(NSNotification *)note
 {
     if (_observedEncoder != nil) {
@@ -174,22 +152,21 @@
     }
 }
 
--(void)eventChanged:(NSNotification *)note
-{
+-(void) assignCurrentEvent:(Event*) event {
     
-    if ([[note.object event].name isEqualToString:_currentEvent.name]) {
+    if ([event.name isEqualToString:self.currentEvent.name]) {
         return;
     }
     
-    if (_currentEvent != nil) {
+    if (self.currentEvent != nil) {
         [[TabView sharedFilterTabBar] dismissViewControllerAnimated:NO completion:nil];// remove filter if up
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:self.currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:self.currentEvent];
     }
     [self clear];
     
-    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
-        _currentEvent = nil;
+    if (self.currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        self.currentEvent = nil;
         self.selectedTag = nil;
         self.videoBar.selectedTag = nil;
         
@@ -201,31 +178,37 @@
         
         [self.videoPlayer playFeed:nil];
     }else{
-        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        self.currentEvent = event;
         
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        if (self.currentEvent != nil) {
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:self.currentEvent];
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:self.currentEvent];
+        }
     }
     
     // update the context
     PxpPlayerContext *context = _appDel.encoderManager.primaryEncoder.eventContext;
     self.playerViewController.playerView.context = context;
     self.fullscreenViewController.playerViewController.playerView.context = context;
-    
 }
 
--(void)onTagChanged:(NSNotification *)note{
-    
-    for (Tag *tag in _currentEvent.tags ) {
-        if (![self.allTags containsObject:tag]) {
+-(void)eventChanged:(NSNotification *)note
+{
+    [self assignCurrentEvent:[note.object event]];
+   
+}
+
+-(void) loadTagsFromCurrentEvent {
+    for (Tag *tag in self.currentEvent.tags ) {
+        if (![self.allTagsArray containsObject:tag]) {
             if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
                 [self.pxpFilter addTags:@[tag]];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
-            [self.allTags insertObject:tag atIndex:0];
+            [self.allTagsArray insertObject:tag atIndex:0];
         }
-        if(tag.modified && [self.allTags containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
+        if(tag.modified && [self.allTagsArray containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
             [self.tagsToDisplay insertObject:tag atIndex:0];
             [self.pxpFilter addTags:@[tag]];
         }
@@ -234,19 +217,25 @@
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
             [self.pxpFilter addTags:@[tag]];
-            [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
+            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
         }
-
     }
-    
-    for (Tag *tag in [self.allTags copy]) {
-        if (![_currentEvent.tags containsObject:tag]) {
-            [self.allTags removeObject:tag];
+
+    for (Tag *tag in [self.allTagsArray copy]) {
+        if (![self.currentEvent.tags containsObject:tag]) {
+            [self.allTagsArray removeObject:tag];
             [self.tagsToDisplay removeObject:tag];
             [_tableViewController collaspOpenCell];
             [self.pxpFilter removeTags:@[tag]];
         }
     }
+    
+}
+
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    [self loadTagsFromCurrentEvent];
     
     // yes this is silly when tag mod is called list view refreshes but when downloading at clip it counts at a tag mod
     // but it should not be updated because it needs to see the button that called it so updating will clear it out
@@ -275,10 +264,11 @@
     
 }
 
-- (void)viewDidLoad
-{
-    
+- (void)viewDidLoad {
     [super viewDidLoad];
+    self.pxpFilter = _appDel.sharedFilter;
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeCurrentPlayingClip:) name:NOTIF_PLAYER_BAR_CANCEL object:nil];
@@ -410,12 +400,25 @@
     
     [super viewDidAppear:animated];
     NSLog(@"ListViewController viewDidAppear");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
+        if (!self.selectedTag) {
+            [self.commentingField clear];
+            self.commentingField.enabled             = YES;
+            self.commentingField.text                = self.selectedTag.comment;
+            self.commentingField.ratingScale.rating  = self.selectedTag.rating;
+        }
+    }];
+    
     [self.view bringSubviewToFront:_videoBar];
     
     // Set up filter for this Tab
     self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     self.pxpFilter.delegate = self;
-    [self configurePxpFilter:_currentEvent];
+    [self configurePxpFilter:self.currentEvent];
     [self reloadTableData];
     
     [self.view bringSubviewToFront:self.ricoFullscreenViewController.view];
@@ -427,6 +430,12 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    NSLog(@"ListViewController viewDidDisappear");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PLAYER_BAR_CANCEL object:nil];
+    
     self.ricoFullscreenViewController.fullscreen = NO;
     self.mainPlayer.feed=nil;
 }
@@ -472,7 +481,10 @@
 -(void)viewWillAppear:(BOOL)animated{
 
     [super viewWillAppear:animated];
-    
+    self.currentEvent = _appDel.encoderManager.primaryEncoder.event;
+    NSLog(@"ListViewController viewWillAppear. Current event %@", self.currentEvent == nil ? @"is nil": @"is not nil");
+
+    [self loadTagsFromCurrentEvent];
 //    _fullscreenViewController.fullscreen = NO;
     [self.view bringSubviewToFront:_videoBar];
     
@@ -487,7 +499,7 @@
         
         if(eventTags.count > 0 && !self.tagsToDisplay){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
-            self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
+            self.allTagsArray = [ NSMutableArray arrayWithArray:[eventTags copy]];
             [self reloadTableData];
         }
 
@@ -653,7 +665,7 @@
     if (!self.selectedTag) return;
     
     NSArray *keys = [self.selectedTag.eventInstance.feeds allKeys];
-    if (!_currentEvent.local){
+    if (!self.currentEvent.local){
     
         __weak ListTableViewController * tbweak = _tableViewController;
         DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:self.selectedTag encoder:self.selectedTag.eventInstance.parentEncoder sources:keys];
@@ -791,22 +803,11 @@
     
 }
 
-//next/previous clip
-
-//-(void)playNextClipButtonUp:(id)sender{
-//    [_tableViewController playNext];
-//}
-//
-//-(void)playPreviousClipButtonUp:(id)sender{
-//    [_tableViewController playPrevious];
-//}
-
 //save the rating info
 -(void)sendRating:(id)sender
 {
     RatingInput * cmtRateField = (RatingInput *) sender;
     self.selectedTag.rating = cmtRateField.rating;
-    NSLog(@"ListViewController sendRating: %d", self.selectedTag.rating);
     [self reloadTableData];
 }
 
@@ -937,15 +938,15 @@
 
 -(void)clear{
     [[TabView sharedFilterTabBar] dismissViewControllerAnimated:NO completion:nil];// close filter if filtering
-    [self.allTags removeAllObjects];
+    [self.allTagsArray removeAllObjects];
     [self.tagsToDisplay removeAllObjects];
     [self reloadTableData];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
 
-    if(_currentEvent.live){
-        _currentEvent = nil;
+    if(self.currentEvent.live){
+        self.currentEvent = nil;
         [self clear];
         self.selectedTag = nil;
         
@@ -1005,11 +1006,11 @@
 
 - (void)pressFilterButton
 {
-    [_tableViewController collaspOpenCell];
+//    [_tableViewController collaspOpenCell];
     
 //    [self.pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTabBar];
-    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
+    Profession * profession = [ProfessionMap getProfession:self.currentEvent.eventType];
     [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
     
     
@@ -1034,7 +1035,7 @@
     [self presentViewController:popupTabBar animated:YES completion:nil];
  
     
-    [self.pxpFilter filterTags:[self.allTags copy]];
+    [self.pxpFilter filterTags:[self.allTagsArray copy]];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
 
@@ -1044,21 +1045,6 @@
 {
     [_videoBar clear]; // this removes the tag data and controlls to extend from the light grey bar
 }
-
--(void)onFilterComplete:(PxpFilter*)filter
-{
-    if (!filter || !filter.filteredTags ) {
-        return ;
-    }
-    [self sortAndDisplayUniqueTags:filter.filteredTags];
-}
-
--(void)onFilterChange:(PxpFilter *)filter
-{
-    [self.pxpFilter filterTags:self.allTags];
-    [self sortAndDisplayUniqueTags:filter.filteredTags];
-}
-
 
 // Sort tags by time index. Ensure that tags are unique
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
@@ -1163,7 +1149,7 @@
     CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
     
     
-    if (_currentEvent.local) {
+    if (self.currentEvent.local) {
         [self.ricoPlayerViewController pause];
         [self.ricoPlayerViewController stepByCount:(speed>0)?1:-1];
     } else {
@@ -1225,6 +1211,10 @@
 }
 */
 
+-(BOOL) isSelectedTag:(Tag*) tag {
+    return [tag.ID isEqualToString:self.selectedTag.ID];
+}
+
 #pragma mark UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView*) tableView {
@@ -1254,8 +1244,8 @@
         cell.tagtimeFromGameStart.hidden = YES;
     }
     
-//    cell.swipeRecognizerLeft.enabled = self.swipeableMode;
-//    cell.swipeRecognizerRight.enabled = self.swipeableMode;
+    cell.swipeRecognizerLeft.enabled = ![self isSelectedTag:tag];
+    cell.swipeRecognizerRight.enabled = ![self isSelectedTag:tag];
     
     cell.deleteBlock = ^(UITableViewCell *theCell) {
         NSIndexPath* anIndexPath = [self.listTable indexPathForCell:theCell];
@@ -1354,7 +1344,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     Tag* tag = [self tagForIndexPath:indexPath];
-    if ([tag.ID isEqualToString:self.selectedTag.ID]) {
+    if ([self isSelectedTag:tag]) {
         cell.selected = YES;
     } else {
         cell.selected = NO;
@@ -1367,13 +1357,17 @@
         // unselect previous selection
         NSIndexPath* previousPath = [self pathForTag:self.selectedTag];
         if (previousPath != nil) {
-            UITableViewCell* cell = [tableView cellForRowAtIndexPath:previousPath];
+            ListViewCell* cell = [tableView cellForRowAtIndexPath:previousPath];
+            cell.swipeRecognizerLeft.enabled = YES;
+            cell.swipeRecognizerRight.enabled = YES;
             cell.selected = NO;
         }
     }
     
-    UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+    ListViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.selected = YES;
+    cell.swipeRecognizerLeft.enabled = NO;
+    cell.swipeRecognizerRight.enabled = NO;
     [self selectTag:tag];
 }
 

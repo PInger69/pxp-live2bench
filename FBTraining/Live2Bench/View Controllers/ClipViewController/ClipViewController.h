@@ -16,7 +16,7 @@
 #import "TabView.h"
 
 
-@interface ClipViewController : TagListViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, PxpFilterDelegate>
+@interface ClipViewController : TagListViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate>
 
 @property (nonatomic,strong) UICollectionView *collectionView;
 

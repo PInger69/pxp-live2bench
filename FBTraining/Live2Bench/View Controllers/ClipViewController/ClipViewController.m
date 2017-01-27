@@ -42,26 +42,19 @@
 @property (strong, nonatomic) UIButton *filterButton;
 @property (strong, nonatomic) UIButton *dismissFilterButton;
 @property (strong, nonatomic) NSIndexPath *editingIndexPath;
-@property (strong, nonatomic) NSMutableArray *allTagsArray;
 @property (strong, nonatomic) NSString *contextString;
 @property (strong, nonatomic) UIButton *deSelectButton;
-
-@property (strong, nonatomic) TabView *popupTabBar;
 
 @property (nonatomic, strong) BreadCrumbsViewController* breadCrumbVC;
 @property (nonatomic, strong) id <EncoderProtocol> observedEncoder;
 
 @property (nonatomic, strong) NSTimer* refreshTimer;
+@property (nonatomic, strong, nullable) ListPopoverControllerWithImages* sourceSelectPopover;
 
 
 @end
 
 @implementation ClipViewController
-{
-    ListPopoverControllerWithImages * sourceSelectPopover;
-    Event                           * _currentEvent;
-    
-}
 
 - (id)init
 {
@@ -110,30 +103,30 @@
 
 -(void)eventChanged:(NSNotification *)note
 {
-    if ([[note.object event].name isEqualToString:_currentEvent.name]) {
+    if ([[note.object event].name isEqualToString:self.currentEvent.name]) {
         NSLog(@"ClipViewController.eventChanged called by no actual change");
         return;
     }
     NSLog(@"ClipViewController.eventChanged...");
     
-    if (_currentEvent != nil) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    if (self.currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:self.currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:self.currentEvent];
         [self clear];
     }
 
-    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
-        _currentEvent = nil;
+    if (self.currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        self.currentEvent = nil;
     }else{
-        _currentEvent = [((id <EncoderProtocol>) note.object) event];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        self.currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:self.currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:self.currentEvent];
     }
 }
 
 -(void)onTagChanged:(NSNotification *)note{
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
+        self.allTagsArray = [NSMutableArray arrayWithArray:[self.currentEvent.tags copy]];
 
         [self.pxpFilter filterTags:self.allTagsArray];
         [self sortAndDisplayUniqueTags:self.pxpFilter.filteredTags];
@@ -167,10 +160,7 @@
     NSLog(@"ClipViewController viewDidAppear");
 #endif
    
-    self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
-    self.pxpFilter.delegate = self;
-    
-    [self configurePxpFilter:_currentEvent];
+    [self configurePxpFilter:self.currentEvent];
     [self.collectionView reloadData];
 
 }
@@ -178,8 +168,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
-    sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
+    self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
+    self.sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
 //    downloadedTagIds = [[NSMutableArray alloc] init];
     [self setupView];
     
@@ -198,8 +188,6 @@
     [self.view addGestureRecognizer: self.longPressRecognizer];
     self.isEditing = NO;
     
-    self.popupTabBar = [TabView sharedFilterTabBar];
-
 }
 
 -(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
@@ -446,9 +434,9 @@
     cell.thumbTime.text = [Utility translateTimeFormat:tagSelect.time];
     
     
-    if (_currentEvent.gameStartTag){
+    if (self.currentEvent.gameStartTag){
     
-        float startTime = tagSelect.time - ([_currentEvent.gameStartTag time]);
+        float startTime = tagSelect.time - ([self.currentEvent.gameStartTag time]);
         cell.thumbGameTime.text = [Utility translateTimeFormat:startTime];
     }
     
@@ -463,7 +451,7 @@
     
     // This is used for customizing the cell based off the sport
     
-    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
+    Profession * profession = [ProfessionMap getProfession:self.currentEvent.eventType];// should be the events sport //
     profession.onClipViewCellStyle(cell,tagSelect);
     
     
@@ -508,7 +496,7 @@
     if (self.editingIndexPath) {
         [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
     }
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    [super deleteTag:tag];
     [self removeIndexPathFromDeletion];
     [self deselectAllCell];
     [self checkDeleteAllButton];
@@ -595,12 +583,12 @@
     }
     
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    [sourceSelectPopover clear];
+    [self.sourceSelectPopover clear];
     
      if (selectedCell.data.eventInstance.feeds.count >=2 && !tagSelect.telestration) { // if is new
         NSArray * listOfScource = [[selectedCell.data.eventInstance.feeds allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
-        [sourceSelectPopover setListOfButtonNames:listOfScource];
+        [self.sourceSelectPopover setListOfButtonNames:listOfScource];
         
         //This is where the Thumbnail images are added to the popover
         NSDictionary *tagThumbnails = selectedCell.data.thumbnails ;
@@ -616,14 +604,14 @@
             
             [[ImageAssetManager getInstance] imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
             
-            [(UIButton *)sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
+            [(UIButton *)self.sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
             ++i;
         }
         
 
         
         //if ( [tagSelect count] >1 ){
-            [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
+            [self.sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
                 
                 // Get the feed
                 NSDictionary *feeds = selectedCell.data.eventInstance.feeds;
@@ -646,7 +634,7 @@
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
             }];
         
-            [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+            [self.sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
             
         
         
@@ -750,48 +738,6 @@
 
 #pragma mark - Filtering Methods
 
-- (void)pressFilterButton
-{
-    
-    
-    if (self.popupTabBar.isViewLoaded)
-    {
-       self. popupTabBar.view.frame =  CGRectMake(0, 0, self.popupTabBar.preferredContentSize.width,self.popupTabBar.preferredContentSize.height);
-    }
-    
-    self.popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
-    self.popupTabBar.preferredContentSize    = self.popupTabBar.view.bounds.size;
-    
-    UIPopoverPresentationController *presentationController = [self.popupTabBar popoverPresentationController];
-    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
-    presentationController.sourceView               = self.view;
-    presentationController.permittedArrowDirections = 0;
-    
-    [self presentViewController:self.popupTabBar animated:YES completion:nil];
-    
-    [self.pxpFilter filterTags:self.allTagsArray];
-    
-    if (!self.popupTabBar.pxpFilter)          self.popupTabBar.pxpFilter = self.pxpFilter;
-    
-    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];
-    [TabView sharedDefaultFilterTab].telestrationLabel.text = profession.telestrationTagName;
-}
-
-
-// Pxp
--(void)onFilterComplete:(PxpFilter*)filter
-{
-    if (!filter || !filter.filteredTags ) {
-        return ;
-    }
-    [self sortAndDisplayUniqueTags:filter.filteredTags];
-}
-
--(void)onFilterChange:(PxpFilter *)filter
-{
-    [self.pxpFilter filterTags:self.allTagsArray];
-    [self sortAndDisplayUniqueTags:filter.filteredTags];
-}
 
 // Sort tags by time index. Ensure that tags are unique
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {

@@ -44,4 +44,7 @@
 
 @property (strong, nonatomic) PxpTheme                  * theme;
 
++(AppDelegate*) instance;
+
+
 @end

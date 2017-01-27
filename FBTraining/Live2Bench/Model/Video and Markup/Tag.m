@@ -381,7 +381,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"time"        : [NSString stringWithFormat:@"%f", self.time],
              @"type"        : [NSString stringWithFormat:@"%li", (long)self.type],
              @"url"         : (self.thumbnails)?self.thumbnails:@{},
-             @"user"        : self.user,
+             @"user"        : self.user == nil ? @"" : self.user,
              @"visitTeam"   : (self.visitTeam)?self.visitTeam:@"",
              @"synced"      : [NSString stringWithFormat:@"%i", self.synced]
              //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),

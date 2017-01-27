@@ -3818,7 +3818,7 @@
 				TargetAttributes = {
 					D83E7DC01E2D86CB000FC23F = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 2X2KT7S5K3;
+						DevelopmentTeam = XFAUEUBKQC;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -4709,7 +4709,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 2X2KT7S5K3;
+				DEVELOPMENT_TEAM = XFAUEUBKQC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -4737,7 +4737,7 @@
 					"$(PROJECT_DIR)/videokit/3rd-party/openSSL/lib",
 					"$(PROJECT_DIR)/videokit/Core",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ca.intelliware.com.avocatec.mypXpLive2Bench;
+				PRODUCT_BUNDLE_IDENTIFIER = com.avocatec.mypXpLive2Bench;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -4747,7 +4747,7 @@
 			baseConfigurationReference = 8F74F983CD3A53DCCF7EC927 /* Pods-Live2Bench.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 2X2KT7S5K3;
+				DEVELOPMENT_TEAM = XFAUEUBKQC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -4775,7 +4775,7 @@
 					"$(PROJECT_DIR)/videokit/3rd-party/openSSL/lib",
 					"$(PROJECT_DIR)/videokit/Core",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ca.intelliware.com.avocatec.mypXpLive2Bench;
+				PRODUCT_BUNDLE_IDENTIFIER = com.avocatec.mypXpLive2Bench;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

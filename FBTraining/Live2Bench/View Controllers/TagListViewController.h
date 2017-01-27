@@ -14,8 +14,10 @@
 
 @interface TagListViewController : CustomTabViewController
 
-@property (nonatomic,strong) NSMutableArray* tagsToDisplay; 
-@property (nonatomic,weak)  PxpFilter* pxpFilter;
+@property (nonatomic, strong) NSMutableArray* tagsToDisplay;
+@property (nonatomic, weak) PxpFilter* pxpFilter;
+@property (nonatomic, strong) Event* currentEvent;
+@property (nonatomic,strong) NSMutableArray* allTagsArray;
 
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags;
 -(void) configurePxpFilter:(Event*) currentEvent;

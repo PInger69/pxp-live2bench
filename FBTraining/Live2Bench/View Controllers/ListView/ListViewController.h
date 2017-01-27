@@ -18,14 +18,13 @@
 #import "PxpFilter.h"
 #import "PxpFilterDelegate.h"
 
-@interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate,PxpFilterDelegate>{
+@interface ListViewController : TagListViewController<UITextViewDelegate,UIGestureRecognizerDelegate>{
 
     ListTableViewController     *_tableViewController;
 
 }
 
 
-@property (nonatomic,strong) NSMutableArray              * allTags;
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic,strong) NSDictionary                * feeds;
 @property (nonatomic,strong) NSMutableDictionary         * selectedCellRows; //dictionary of all the information of the cells which have been viewed
