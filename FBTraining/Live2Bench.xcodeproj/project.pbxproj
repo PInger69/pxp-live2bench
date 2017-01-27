@@ -487,7 +487,6 @@
 		D83E8ABB1E2D9152000FC23F /* LiveLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87161E2D9147000FC23F /* LiveLight.m */; };
 		D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87181E2D9147000FC23F /* LocalMediaManager.m */; };
 		D83E8ABD1E2D9152000FC23F /* LocalTagSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */; };
-		D83E8ABE1E2D9152000FC23F /* LocalVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E871C1E2D9147000FC23F /* LocalVideoCell.m */; };
 		D83E8ABF1E2D9152000FC23F /* LoginOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E871E1E2D9147000FC23F /* LoginOperation.m */; };
 		D83E8AC01E2D9152000FC23F /* LogoutOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87201E2D9147000FC23F /* LogoutOperation.m */; };
 		D83E8AC11E2D9152000FC23F /* MakeEventView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E87211E2D9147000FC23F /* MakeEventView.xib */; };
@@ -1617,8 +1616,6 @@
 		D83E87181E2D9147000FC23F /* LocalMediaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalMediaManager.m; sourceTree = "<group>"; };
 		D83E87191E2D9147000FC23F /* LocalTagSyncManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTagSyncManager.h; sourceTree = "<group>"; };
 		D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTagSyncManager.m; sourceTree = "<group>"; };
-		D83E871B1E2D9147000FC23F /* LocalVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalVideoCell.h; sourceTree = "<group>"; };
-		D83E871C1E2D9147000FC23F /* LocalVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalVideoCell.m; sourceTree = "<group>"; };
 		D83E871D1E2D9147000FC23F /* LoginOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginOperation.h; sourceTree = "<group>"; };
 		D83E871E1E2D9147000FC23F /* LoginOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginOperation.m; sourceTree = "<group>"; };
 		D83E871F1E2D9147000FC23F /* LogoutOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogoutOperation.h; sourceTree = "<group>"; };
@@ -2591,8 +2588,6 @@
 				D83E87181E2D9147000FC23F /* LocalMediaManager.m */,
 				D83E87191E2D9147000FC23F /* LocalTagSyncManager.h */,
 				D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */,
-				D83E871B1E2D9147000FC23F /* LocalVideoCell.h */,
-				D83E871C1E2D9147000FC23F /* LocalVideoCell.m */,
 				D83E871D1E2D9147000FC23F /* LoginOperation.h */,
 				D83E871E1E2D9147000FC23F /* LoginOperation.m */,
 				D83E871F1E2D9147000FC23F /* LogoutOperation.h */,
@@ -4437,7 +4432,6 @@
 				D83E83391E2D90A5000FC23F /* PxpFullscreenButton.m in Sources */,
 				D83E83951E2D90A5000FC23F /* SnapshotView.m in Sources */,
 				D83E83381E2D90A5000FC23F /* PxpEventContext.m in Sources */,
-				D83E8ABE1E2D9152000FC23F /* LocalVideoCell.m in Sources */,
 				D83E8B5B1E2D9153000FC23F /* AVAsset+Image.m in Sources */,
 				D83E83321E2D90A5000FC23F /* PxpBorderButton.m in Sources */,
 				D83E8B221E2D9153000FC23F /* SideTagEditButtonDisplayView.m in Sources */,

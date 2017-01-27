@@ -415,15 +415,10 @@
     
     [self.view bringSubviewToFront:_videoBar];
     
-    // Set up filter for this Tab
-    self.pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
-    self.pxpFilter.delegate = self;
     [self configurePxpFilter:self.currentEvent];
     [self reloadTableData];
     
     [self.view bringSubviewToFront:self.ricoFullscreenViewController.view];
-    
-
 }
 
 
@@ -1167,7 +1162,15 @@
 }
 
 -(void) deleteTag:(Tag*) tag {
-    NSLog(@"delete tag");
+
+    NSIndexPath* indexPath = [self pathForTag:tag];
+    [self.allTagsArray removeObject:tag];
+    [self.tagsToDisplay removeObject:tag];
+    if (indexPath != nil) {
+        [self.listTable deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section ] withRowAnimation:UITableViewRowAnimationFade];
+    }
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+//    [self checkDeleteAllButton];
 }
 
 -(NSIndexPath*) pathForTag:(Tag*) tag {

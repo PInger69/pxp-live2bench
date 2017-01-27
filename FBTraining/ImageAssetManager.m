@@ -175,7 +175,7 @@ static ImageAssetManager * instance;
 - (void)connectionDidFinishLoading:(NSURLImageConnection *)connection {
     UIImage *receivedImage = [UIImage imageWithData:connection.imageData];
     
-    NSLog(@"received image size: %.1fx%.1f", receivedImage.size.width, receivedImage.size.height);
+//    NSLog(@"received image size: %.1fx%.1f", receivedImage.size.width, receivedImage.size.height);
 
     if (connection.telestration) {
         CGFloat ratio = receivedImage.size.width / receivedImage.size.height;
