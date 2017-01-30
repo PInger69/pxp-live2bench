@@ -1114,8 +1114,8 @@
     }
 }
 
--(NSArray*) createFeedCellPathsForTag:(Tag*) tag atIndexPath:(NSIndexPath*) indexPath {
-    
+-(NSArray*) createFeedCellPathsForTag:(Tag*) tag {
+    NSIndexPath* indexPath = [self pathForTag:tag];
     NSMutableArray* paths = [NSMutableArray new];
     for (NSInteger i = 0; i < tag.eventInstance.feeds.count; i++) {
         [paths addObject:[NSIndexPath indexPathForRow:i+1 inSection:indexPath.section]];
@@ -1342,6 +1342,7 @@
 - (void) tableView: (UITableView*) tableView didSelectRowAtIndexPath: (NSIndexPath*) indexPath {
     Tag* tag = [self tagForIndexPath:indexPath];
     BOOL isAlreadySelected = [self isSelectedTag:tag];
+    [tableView beginUpdates];
     if (self.selectedTag != nil) {
         // unselect previous selection
         NSIndexPath* previousPath = [self pathForTag:self.selectedTag];
@@ -1351,20 +1352,21 @@
             cell.swipeRecognizerRight.enabled = YES;
             cell.selected = NO;
         }
+        [tableView deleteRowsAtIndexPaths:[self createFeedCellPathsForTag:self.selectedTag] withRowAnimation:UITableViewRowAnimationRight];
         self.selectedTag = nil;
     }
     
     if (isAlreadySelected) {
         [self selectTag:nil];
-        [self.listTable deleteRowsAtIndexPaths:[self createFeedCellPathsForTag:tag atIndexPath:indexPath] withRowAnimation:UITableViewRowAnimationRight];
     } else {
         ListViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
         cell.selected = YES;
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
+        [tableView insertRowsAtIndexPaths:[self createFeedCellPathsForTag:tag] withRowAnimation:UITableViewRowAnimationRight];
         [self selectTag:tag];
-        [self.listTable insertRowsAtIndexPaths:[self createFeedCellPathsForTag:tag atIndexPath:indexPath] withRowAnimation:UITableViewRowAnimationRight];
     }
+    [tableView endUpdates];
 }
 
 - (CGFloat)tableView:(UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath*) indexPath {

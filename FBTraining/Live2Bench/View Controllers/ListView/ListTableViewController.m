@@ -100,7 +100,6 @@ static NSOperationQueue * queue;
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    NSLog(@"The view will dissappear");
 }
 
 - (void)didReceiveMemoryWarning {
