@@ -438,6 +438,7 @@
     
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
     
+    __weak UIImageView* weakImageView = cell.imageView;
     if (tagSelect.type == TagTypeTele) {
         PxpTelestration *tele = cell.data.telestration;
         [cell.data.thumbnails objectForKey:tele.sourceName];
@@ -447,10 +448,12 @@
         NSString * imageURL = ([cell.data.thumbnails objectForKey:checkName])?[cell.data.thumbnails objectForKey:checkName]:[NSString stringWithFormat:@"%@.png",[[NSUUID UUID]UUIDString]];
         
 
-        __weak UIImageView* weakImageView = cell.imageView;
         [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
 
-            if (image) {
+            if (error) {
+                NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);
+                weakImageView.image = [UIImage imageNamed:@"imageNotAvailable"];
+            } else if (image) {
                 UIImage* imageWithTelestration = [tele renderOverImage:image view:cell.imageView];
                 weakImageView.image = imageWithTelestration;
             }
@@ -459,7 +462,12 @@
         
         
     } else {
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"]];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+            if (error) {
+                NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);
+                weakImageView.image = [UIImage imageNamed:@"imageNotAvailable"];
+            }
+        }];
     }
 
     [cell setDeletingMode: self.isEditing];

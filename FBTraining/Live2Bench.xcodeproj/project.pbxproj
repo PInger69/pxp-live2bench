@@ -14,6 +14,7 @@
 		D81552671E39626D003010D4 /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */; };
 		D815526A1E3A8301003010D4 /* CommentingRatingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552691E3A8301003010D4 /* CommentingRatingField.m */; };
 		D815526D1E3AA8EA003010D4 /* HeaderBarForListView.m in Sources */ = {isa = PBXBuildFile; fileRef = D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */; };
+		D81552711E3C1570003010D4 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552701E3C1570003010D4 /* LoginViewController.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -215,7 +216,6 @@
 		D83E82DB1E2D90A5000FC23F /* live2BenchTabSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80531E2D90A2000FC23F /* live2BenchTabSelect@2x.png */; };
 		D83E82DC1E2D90A5000FC23F /* Live2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */; };
 		D83E82DE1E2D90A5000FC23F /* LoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80581E2D90A2000FC23F /* LoginTextField.m */; };
-		D83E82DF1E2D90A5000FC23F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E805A1E2D90A2000FC23F /* LoginViewController.m */; };
 		D83E82E01E2D90A5000FC23F /* logo _unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E805B1E2D90A2000FC23F /* logo _unselected@2x.png */; };
 		D83E82E11E2D90A5000FC23F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E805C1E2D90A2000FC23F /* logo.png */; };
 		D83E82E21E2D90A5000FC23F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E805D1E2D90A2000FC23F /* logo@2x.png */; };
@@ -704,6 +704,8 @@
 		D81552691E3A8301003010D4 /* CommentingRatingField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentingRatingField.m; sourceTree = "<group>"; };
 		D815526B1E3AA8EA003010D4 /* HeaderBarForListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderBarForListView.h; sourceTree = "<group>"; };
 		D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBarForListView.m; sourceTree = "<group>"; };
+		D815526F1E3C1570003010D4 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		D81552701E3C1570003010D4 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1210,8 +1212,6 @@
 		D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Live2BenchViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D83E80571E2D90A2000FC23F /* LoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginTextField.h; sourceTree = "<group>"; };
 		D83E80581E2D90A2000FC23F /* LoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginTextField.m; sourceTree = "<group>"; };
-		D83E80591E2D90A2000FC23F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		D83E805A1E2D90A2000FC23F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		D83E805B1E2D90A2000FC23F /* logo _unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo _unselected@2x.png"; sourceTree = "<group>"; };
 		D83E805C1E2D90A2000FC23F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		D83E805D1E2D90A2000FC23F /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
@@ -2068,6 +2068,15 @@
 				D81552631E394F73003010D4 /* Tag.m */,
 			);
 			path = "Video and Markup";
+			sourceTree = "<group>";
+		};
+		D815526E1E3C155C003010D4 /* LoginViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D815526F1E3C1570003010D4 /* LoginViewController.h */,
+				D81552701E3C1570003010D4 /* LoginViewController.m */,
+			);
+			path = LoginViewController;
 			sourceTree = "<group>";
 		};
 		D83E7DB81E2D86CB000FC23F = {
@@ -3180,8 +3189,6 @@
 				D83E80551E2D90A2000FC23F /* Live2BenchViewController.m */,
 				D83E80571E2D90A2000FC23F /* LoginTextField.h */,
 				D83E80581E2D90A2000FC23F /* LoginTextField.m */,
-				D83E80591E2D90A2000FC23F /* LoginViewController.h */,
-				D83E805A1E2D90A2000FC23F /* LoginViewController.m */,
 				D83E805B1E2D90A2000FC23F /* logo _unselected@2x.png */,
 				D83E805C1E2D90A2000FC23F /* logo.png */,
 				D83E805D1E2D90A2000FC23F /* logo@2x.png */,
@@ -3709,6 +3716,7 @@
 				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
+				D815526E1E3C155C003010D4 /* LoginViewController */,
 				D83E8BB91E2EAAD1000FC23F /* LogoViewController */,
 				D83E8BA41E2E9C5B000FC23F /* Settings */,
 			);
@@ -4319,7 +4327,6 @@
 				D83E83451E2D90A5000FC23F /* PxpPlayerContext+Tag.m in Sources */,
 				D83E836D1E2D90A5000FC23F /* RicoL2BVideoBar.m in Sources */,
 				D83E83731E2D90A5000FC23F /* RJLVideoPlayerPlaybackView.m in Sources */,
-				D83E82DF1E2D90A5000FC23F /* LoginViewController.m in Sources */,
 				D83E82811E2D90A5000FC23F /* ExportPlayersPopoverController.m in Sources */,
 				D83E82D81E2D90A5000FC23F /* TablePopoverController.m in Sources */,
 				D83E82411E2D90A5000FC23F /* CommentingField.m in Sources */,
@@ -4395,6 +4402,7 @@
 				D83E82911E2D90A5000FC23F /* FilterComponentAbstract.m in Sources */,
 				D83E83091E2D90A5000FC23F /* NSArray+BinarySearch.m in Sources */,
 				D83E82A31E2D90A5000FC23F /* GraphView.m in Sources */,
+				D81552711E3C1570003010D4 /* LoginViewController.m in Sources */,
 				D83E8B6A1E2D9153000FC23F /* ClipSharePopoverViewController.m in Sources */,
 				D83E8B7A1E2D9153000FC23F /* DownloadOperationSuperOld.m in Sources */,
 				D83E83361E2D90A5000FC23F /* PxpClipContext.m in Sources */,

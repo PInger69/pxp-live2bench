@@ -46,6 +46,7 @@
 #import "DownloaderQueue.h"
 #import "DownloadOperation.h"
 #import "DownloadClipFromTag.h"
+#import "FeedSelectCell.h"
 
 #define CELL_HEIGHT                  155//172
 #define LABEL_HEIGHT                 40
@@ -125,6 +126,7 @@
     self.listTable.delegate = self;
     self.listTable.dataSource = self;
     [self.listTable registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
+    [self.listTable registerClass:[FeedSelectCell class] forCellReuseIdentifier:@"FeedSelectCell"];
     [self.view addSubview:self.listTable];
 }
 
@@ -407,6 +409,8 @@
     [super viewWillAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
     
+    self.selectedTag = nil;
+    /*
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
             self.feeds = feeds;
@@ -425,7 +429,7 @@
 
         
     }}];
-
+     */
 
     // Richard
     [self.commentingField clear];
@@ -540,13 +544,19 @@
 }
 
 -(void) selectTag:(Tag*) tag {
-    if (self.selectedTag == tag) return;
-    
-    [self.commentingField clear];
-    self.selectedTag                         = tag;
-    self.commentingField.enabled             = YES;
-    self.commentingField.text                = self.selectedTag.comment;
-    self.commentingField.ratingScale.rating  = self.selectedTag.rating;
+    if (tag == nil) {
+        [self.commentingField clear];
+        self.selectedTag = nil;
+        self.commentingField.enabled = NO;
+        self.commentingField.text = nil;
+        self.commentingField.ratingScale.rating = 0;
+    } else if (self.selectedTag != tag) {
+        [self.commentingField clear];
+        self.selectedTag                         = tag;
+        self.commentingField.enabled             = YES;
+        self.commentingField.text                = self.selectedTag.comment;
+        self.commentingField.ratingScale.rating  = self.selectedTag.rating;
+    }
 }
 
 #pragma mark - Video Bar Methods
@@ -1028,7 +1038,7 @@
 }
 
 -(BOOL) isExpandedCell:(NSIndexPath*) indexPath {
-    return [self isSelectedTag:[self tagForIndexPath:indexPath]];
+    return (indexPath.row != 0);
 }
 
 -(void) deleteTag:(Tag*) tag {
@@ -1088,6 +1098,25 @@
     return [tag.ID isEqualToString:self.selectedTag.ID];
 }
 
+-(NSString*) feedSourceKeyForTag:(Tag*) tag atIndexPath:(NSIndexPath*) indexPath {
+    if (indexPath.row > 0) {
+        NSArray *keys = [[NSMutableArray arrayWithArray:[tag.eventInstance.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        return indexPath.row <= keys.count ? keys[indexPath.row - 1] : nil;
+    } else {
+        return nil;
+    }
+}
+
+-(NSArray*) createFeedCellPathsForTag:(Tag*) tag atIndexPath:(NSIndexPath*) indexPath {
+    
+    NSMutableArray* paths = [NSMutableArray new];
+    for (NSInteger i = 0; i < tag.eventInstance.feeds.count; i++) {
+        [paths addObject:[NSIndexPath indexPathForRow:i+1 inSection:indexPath.section]];
+    }
+    return [NSArray arrayWithArray:paths];
+}
+
+
 #pragma mark UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView*) tableView {
@@ -1095,13 +1124,86 @@
 }
 
 - (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
-    return 1;
+    Tag* tag = [self tagForIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
+    return [self isSelectedTag:tag] ? (1 + tag.eventInstance.feeds.count) : 1;
 }
 
 -(UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {
-    return [self tableView:tableView standardListCellForRowAtIndexPath:indexPath];
+    if (indexPath.row == 0) {
+        return [self tableView:tableView standardListCellForRowAtIndexPath:indexPath];
+    } else {
+        return [self tableView:tableView feedCellForRowAtIndexPath:indexPath];
+    }
 }
 
+-(UITableViewCell*) tableView:(UITableView*) tableView feedCellForRowAtIndexPath:(NSIndexPath*) indexPath {
+    
+    Tag* tag = [self tagForIndexPath:indexPath];
+    NSString* key = [self feedSourceKeyForTag:tag atIndexPath:indexPath];
+    
+    // BCH: FIXME: this should dequeue a reusable cell...
+    FeedSelectCell* collapsableCell = [[FeedSelectCell alloc] initWithTag:tag source:key];
+    
+    __block FeedSelectCell *weakCell = collapsableCell;
+    collapsableCell.downloadButton.downloadItem = nil;
+    
+    NSString *tagGlobalID  = [NSString stringWithFormat:@"%@_%@_%@", tag.event, tag.ID, key];
+    
+    if ([DownloaderQueue getQueueItemByKey:tagGlobalID]) {
+        DownloadOperation * dOp = (DownloadOperation *)[DownloaderQueue getQueueItemByKey:tagGlobalID];
+        
+        collapsableCell.downloadButton.isPressed    = YES;
+        collapsableCell.downloadButton.progress     = (dOp.isFinished)?1:0;
+        if (dOp.isFinished) collapsableCell.downloadButton.downloadComplete = 1.0;
+        
+        [dOp setOnRequestProgress:^(DownloadOperation * op) {
+            CGFloat progress = (CGFloat)(((CGFloat)op.receivedBytes) / ((CGFloat)op.expectedBytes));
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                weakCell.downloadButton.progress = progress;
+                [weakCell.downloadButton setNeedsDisplay];
+                if (progress >= 1.0) {
+                    weakCell.downloadButton.downloadComplete = 1.0;
+                }
+            });
+        }];
+        
+    } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(key)?key:nil]){
+        collapsableCell.downloadButton.downloadComplete = YES;
+        collapsableCell.downloadButton.progress         = 1;
+    }
+    
+/*
+    if (!tag.eventInstance.local) {
+        collapsableCell.downloadButtonBlock = ^(){
+            [self downloadExternal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath];
+        };
+    } else { // local event
+        collapsableCell.downloadButtonBlock = ^(){
+            [self downloadLocal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath cell:weakCell];
+        };
+    }
+*/
+    collapsableCell.sendUserInfo = ^(){
+        /*
+        Feed *feed = [tag.eventInstance.feeds objectForKey:key];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{//@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                   //@"feed":tag.feeds[key],
+                                                                                                                                   //@"feed":tag.name,
+                                                                                                                                   
+                                                                                                                                   @"name": key,
+                                                                                                                                   @"feed":feed,
+                                                                                                                                   @"time": [NSString stringWithFormat:@"%f",tag.startTime],
+                                                                                                                                   @"duration": [NSString stringWithFormat:@"%d",tag.duration],
+                                                                                                                                   @"comment": tag.comment ? tag.comment : @"",
+                                                                                                                                   @"forWhole":tag,
+                                                                                                                                   @"state":[NSNumber numberWithInteger:RJLPS_Play]
+                                                                                                                                   }}];
+         */
+    };
+    return collapsableCell;
+
+
+}
 
 -(UITableViewCell*) tableView:(UITableView*) tableView standardListCellForRowAtIndexPath:(NSIndexPath*) indexPath {
     Tag* tag = [self tagForIndexPath:indexPath];
@@ -1209,7 +1311,7 @@
     
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];
     
-    if ([self isExpandedCell:indexPath]) {
+    if ([self isSelectedTag:tag]) {
         [cell setCellAccordingToState:cellStateNormal];
     }
     
@@ -1220,16 +1322,19 @@
 #pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    Tag* tag = [self tagForIndexPath:indexPath];
-    if ([self isSelectedTag:tag]) {
-        cell.selected = YES;
-    } else {
-        cell.selected = NO;
+    if (indexPath.row == 0) {
+        Tag* tag = [self tagForIndexPath:indexPath];
+        if ([self isSelectedTag:tag]) {
+            cell.selected = YES;
+        } else {
+            cell.selected = NO;
+        }
     }
 }
 
 - (void) tableView: (UITableView*) tableView didSelectRowAtIndexPath: (NSIndexPath*) indexPath {
     Tag* tag = [self tagForIndexPath:indexPath];
+    BOOL isAlreadySelected = [self isSelectedTag:tag];
     if (self.selectedTag != nil) {
         // unselect previous selection
         NSIndexPath* previousPath = [self pathForTag:self.selectedTag];
@@ -1239,13 +1344,20 @@
             cell.swipeRecognizerRight.enabled = YES;
             cell.selected = NO;
         }
+        self.selectedTag = nil;
     }
     
-    ListViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.selected = YES;
-    cell.swipeRecognizerLeft.enabled = NO;
-    cell.swipeRecognizerRight.enabled = NO;
-    [self selectTag:tag];
+    if (isAlreadySelected) {
+        [self selectTag:nil];
+        [self.listTable deleteRowsAtIndexPaths:[self createFeedCellPathsForTag:tag atIndexPath:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    } else {
+        ListViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+        cell.selected = YES;
+        cell.swipeRecognizerLeft.enabled = NO;
+        cell.swipeRecognizerRight.enabled = NO;
+        [self selectTag:tag];
+        [self.listTable insertRowsAtIndexPaths:[self createFeedCellPathsForTag:tag atIndexPath:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    }
 }
 
 - (CGFloat)tableView:(UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath*) indexPath {

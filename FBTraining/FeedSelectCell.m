@@ -56,7 +56,7 @@
         [self.contentView addSubview: self.downloadButton];
         [self.contentView addSubview:self.playButton];
         
-        [self setSelectionStyle:UITableViewCellEditingStyleNone];
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         
     }
     return self;
@@ -120,7 +120,7 @@
 
         [self.contentView addSubview:self.playButton];
         
-        [self setSelectionStyle:UITableViewCellEditingStyleNone];
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     return self;
 }
