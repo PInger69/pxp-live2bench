@@ -10,6 +10,7 @@
 #import "ListViewController.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <TSMessages/TSMessage.h>
 
 #import "CommentingRatingField.h"
 #import "HeaderBarForListView.h"
@@ -587,94 +588,100 @@
 
 -(void)downloadWholeCurrentTag
 {
-    if (!self.selectedTag) return;
-    
-    NSArray *keys = [self.selectedTag.eventInstance.feeds allKeys];
-    if (!self.currentEvent.local){
-    /*
-        __weak ListTableViewController * tbweak = _tableViewController;
-        DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:self.selectedTag encoder:self.selectedTag.eventInstance.parentEncoder sources:keys];
+    if (!self.selectedTag) {
+        [TSMessage showNotificationInViewController: self.parentViewController
+                                              title:@"myplayXplay"
+                                           subtitle:@"Please select a tag before downloading..."
+                                               type:TSMessageNotificationTypeWarning
+                                           duration:3];
         
-        [downloadClip setOnFail:^(NSError *e) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",self.selectedTag.name];
-                NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
-                
-                UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
-                                                                                message:errorMessage
-                                                                         preferredStyle:UIAlertControllerStyleAlert];
-                // build NO button
-                UIAlertAction* cancelButtons = [UIAlertAction
-                                                actionWithTitle:@"OK"
-                                                style:UIAlertActionStyleCancel
-                                                handler:^(UIAlertAction * action)
-                                                {
-                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                                }];
-                [alert addAction:cancelButtons];
-                
-                [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
-            });
-        }];
-
-        
-        
-        [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
-         
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [tbweak reloadData];
-            });
-            
-        }];
-        
-        //
-        [downloadClip setCompletionBlock:^{
-            NSLog(@"%s",__FUNCTION__);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [tbweak reloadData];
-            });
-        }];
-        
-        
-        [_tableViewController.downloadQueue addOperation:downloadClip];
-     */
     } else {
-
-        for (NSString * key in keys) {
-
-            // this will at a place holder for the downloader so the clock will show up r 3ems anight away
-            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",self.selectedTag.ID,key ];
-            NSString *src = [NSString stringWithFormat:@"%@hq", key];
-
-
-            NSLog(@"Added Placeholder key: %@",placeHolderKey);
-            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
-
-            // this takes the download item and attaches it to the cell
-            void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
-                    [downloadItem setOnComplete:^{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self reloadTableData];
-                        });
-                    }];
-                
-            };
-
-
-
-
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName,
-                                                                                                                   @"tag": self.selectedTag,
-                                                                                                                   @"src":src,
-                                                                                                                   @"key":key}];
-            
-     
-        }
-
-    }
     
+        NSArray *keys = [self.selectedTag.eventInstance.feeds allKeys];
+        if (!self.currentEvent.local){
+        /*
+            __weak ListTableViewController * tbweak = _tableViewController;
+            DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:self.selectedTag encoder:self.selectedTag.eventInstance.parentEncoder sources:keys];
+            
+            [downloadClip setOnFail:^(NSError *e) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",self.selectedTag.name];
+                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+                    
+                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                                    message:errorMessage
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                    // build NO button
+                    UIAlertAction* cancelButtons = [UIAlertAction
+                                                    actionWithTitle:@"OK"
+                                                    style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction * action)
+                                                    {
+                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                    }];
+                    [alert addAction:cancelButtons];
+                    
+                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+                });
+            }];
 
+            
+            
+            [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+             
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [tbweak reloadData];
+                });
+                
+            }];
+            
+            //
+            [downloadClip setCompletionBlock:^{
+                NSLog(@"%s",__FUNCTION__);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [tbweak reloadData];
+                });
+            }];
+            
+            
+            [_tableViewController.downloadQueue addOperation:downloadClip];
+         */
+        } else {
+
+            for (NSString * key in keys) {
+
+                // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+                NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",self.selectedTag.ID,key ];
+                NSString *src = [NSString stringWithFormat:@"%@hq", key];
+
+
+                NSLog(@"Added Placeholder key: %@",placeHolderKey);
+                [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+
+                // this takes the download item and attaches it to the cell
+                void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+                        [downloadItem setOnComplete:^{
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self reloadTableData];
+                            });
+                        }];
+                    
+                };
+
+
+
+
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName,
+                                                                                                                       @"tag": self.selectedTag,
+                                                                                                                       @"src":src,
+                                                                                                                       @"key":key}];
+                
+         
+            }
+
+        }
+    }
 }
 
 
