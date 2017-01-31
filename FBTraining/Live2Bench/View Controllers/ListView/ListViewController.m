@@ -80,6 +80,8 @@
 @property (strong, nonatomic, nullable) Tag* selectedTag;
 @property (strong, nonatomic, nonnull) HeaderBarForListView* headerBar;
 
+@property (strong, nonatomic) NSOperationQueue* downloadQueue;
+
 @end
 
 @implementation ListViewController
@@ -153,8 +155,8 @@
         [self.commentingField clear];
         self.commentingField.enabled             = NO;
         
-        _fullscreenViewController.selectedTag = nil;
-        _fullscreenViewController.fullscreen = NO;
+        self.fullscreenViewController.selectedTag = nil;
+        self.fullscreenViewController.fullscreen = NO;
         
         [self.videoPlayer playFeed:nil];
     }else{
@@ -212,6 +214,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // BCH: original code was holding a static instance for no good reason...
+    NSOperationQueue* queue = [NSOperationQueue new];
+    queue.maxConcurrentOperationCount = 1;
+    self.downloadQueue = queue;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -228,13 +234,13 @@
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
 
-    [_fullscreenViewController.nextTagButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenViewController.previousTagButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
+    [self.fullscreenViewController.nextTagButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
+    [self.fullscreenViewController.previousTagButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
    
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer: self.pinchGesture];
 
-    [self.view addSubview:_videoBar];
+    [self.view addSubview:self.videoBar];
 
     
     // Rico Classes build
@@ -258,13 +264,13 @@
     self.ricoPlayerControlBar.delegate = self.ricoPlayerViewController;
     self.ricoPlayerViewController.playerControlBar = self.ricoPlayerControlBar;
 
-    _videoBar.frame = CGRectMake(CGRectGetMinX(self.ricoZoomContainer.frame), CGRectGetMaxY(self.ricoZoomContainer.frame), playerWidth, 40.0);
-    [_videoBar clear]; // just to unify the view
+    self.videoBar.frame = CGRectMake(CGRectGetMinX(self.ricoZoomContainer.frame), CGRectGetMaxY(self.ricoZoomContainer.frame), playerWidth, 40.0);
+    [self.videoBar clear]; // just to unify the view
 
     
     self.ricoFullscreenViewController = [[RicoBaseFullScreenViewController alloc]initWithView:self.ricoZoomContainer];
     self.ricoFullscreenViewController.delegate = self;
-    [_videoBar.fullscreenButton addTarget:self.ricoFullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self.videoBar.fullscreenButton addTarget:self.ricoFullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self addChildViewController:self.ricoFullscreenViewController];
     [self.view addSubview:self.ricoFullscreenViewController.view];
     
@@ -334,8 +340,8 @@
     self.commentingField.text                    = self.selectedTag.comment;
     self.commentingField.ratingScale.rating      = self.selectedTag.rating;
     
-    _videoBar.selectedTag                   = self.selectedTag;
-    _fullscreenViewController.selectedTag   = self.selectedTag;
+    self.videoBar.selectedTag                   = self.selectedTag;
+    self.fullscreenViewController.selectedTag   = self.selectedTag;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -350,7 +356,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
     
-    [self.view bringSubviewToFront:_videoBar];
+    [self.view bringSubviewToFront:self.videoBar];
     
     [self configurePxpFilter:self.currentEvent];
     [self reloadTableData];
@@ -402,13 +408,13 @@
     self.commentingField.text                = self.selectedTag.comment;
     self.commentingField.ratingScale.rating  = self.selectedTag.rating;
     
-    _videoBar.selectedTag = self.selectedTag;
-    _fullscreenViewController.selectedTag = self.selectedTag;
+    self.videoBar.selectedTag = self.selectedTag;
+    self.fullscreenViewController.selectedTag = self.selectedTag;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.view bringSubviewToFront:_videoBar];
+    [self.view bringSubviewToFront:self.videoBar];
     
     self.selectedTag = nil;
     /*
@@ -586,6 +592,15 @@
 
 #pragma mark - Download All
 
+-(void) showErrorMessage:(NSString*) title error:(NSError*) e {
+    NSString* errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+    [TSMessage showNotificationInViewController: self.parentViewController
+                                          title:title
+                                       subtitle:errorMessage
+                                           type:TSMessageNotificationTypeError
+                                       duration:3];
+}
+
 -(void)downloadWholeCurrentTag
 {
     if (!self.selectedTag) {
@@ -596,59 +611,43 @@
                                            duration:3];
         
     } else {
-    
-        NSArray *keys = [self.selectedTag.eventInstance.feeds allKeys];
+        Tag* tag = self.selectedTag;
+        NSArray* keys = [self.selectedTag.eventInstance.feeds allKeys];
         if (!self.currentEvent.local){
-        /*
-            __weak ListTableViewController * tbweak = _tableViewController;
-            DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:self.selectedTag encoder:self.selectedTag.eventInstance.parentEncoder sources:keys];
+            DownloadClipFromTag* downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:self.selectedTag.eventInstance.parentEncoder sources:keys];
             
             [downloadClip setOnFail:^(NSError *e) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@",self.selectedTag.name];
-                    NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
-                    
-                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
-                                                                                    message:errorMessage
-                                                                             preferredStyle:UIAlertControllerStyleAlert];
-                    // build NO button
-                    UIAlertAction* cancelButtons = [UIAlertAction
-                                                    actionWithTitle:@"OK"
-                                                    style:UIAlertActionStyleCancel
-                                                    handler:^(UIAlertAction * action)
-                                                    {
-                                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                                    }];
-                    [alert addAction:cancelButtons];
-                    
-                    [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+                    [self showErrorMessage:[NSString stringWithFormat:@"Error downloading tag %@",self.selectedTag.name] error:e];
                 });
             }];
 
-            
-            
             [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
              
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [tbweak reloadData];
+                    NSIndexPath* path = [self pathForTag:tag];
+                    if (path != nil) {
+                        [self.listTable reloadSections:[NSIndexSet indexSetWithIndex:path.section] withRowAnimation:UITableViewRowAnimationNone];
+                    }
                 });
                 
             }];
             
-            //
             [downloadClip setCompletionBlock:^{
                 NSLog(@"%s",__FUNCTION__);
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [tbweak reloadData];
+                    NSIndexPath* path = [self pathForTag:tag];
+                    if (path != nil) {
+                        [self.listTable reloadSections:[NSIndexSet indexSetWithIndex:path.section] withRowAnimation:UITableViewRowAnimationNone];
+                    }
                 });
             }];
             
             
-            [_tableViewController.downloadQueue addOperation:downloadClip];
-         */
+            [self.downloadQueue addOperation:downloadClip];
         } else {
 
+            // what is this doing?
             for (NSString * key in keys) {
 
                 // this will at a place holder for the downloader so the clock will show up r 3ems anight away
@@ -685,7 +684,7 @@
 }
 
 
-#pragma mark -
+#pragma mark - set up view
 
 //initialize the controls for list view
 -(void)setupView
@@ -776,7 +775,7 @@
     if ([button.accessibilityValue isEqualToString:@"extend"]) {
         
         //extend the duration 5 seconds by decreasing the start time 5 seconds
-        newStartTime = tagToBeModified.startTime - [_videoBar getSeekSpeed:@"backward"];
+        newStartTime = tagToBeModified.startTime - [self.videoBar getSeekSpeed:@"backward"];
         //if the new start time is smaller than 0, set it to 0
         if (newStartTime <0) {
             newStartTime = 0;
@@ -784,7 +783,7 @@
         
     }else{
         //subtract the duration 5 seconds by increasing the start time 5 seconds
-        newStartTime = tagToBeModified.startTime + [_videoBar getSeekSpeed:@"backward"];
+        newStartTime = tagToBeModified.startTime + [self.videoBar getSeekSpeed:@"backward"];
         
         //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
         if (newStartTime > endTime) {
@@ -825,7 +824,7 @@
  
     if ([button.accessibilityValue isEqualToString:@"extend"]) {
            //increase end time by 5 seconds
-            endTime = endTime + [_videoBar getSeekSpeed:@"forward"];
+            endTime = endTime + [self.videoBar getSeekSpeed:@"forward"];
             //if new end time is greater the duration of video, set it to the video's duration
             if (endTime > [self.videoPlayer durationInSeconds]) {
                 endTime = [self.videoPlayer durationInSeconds];
@@ -833,7 +832,7 @@
     
         }else{
             //subtract end time by 5 seconds
-            endTime = endTime - [_videoBar getSeekSpeed:@"forward"];
+            endTime = endTime - [self.videoBar getSeekSpeed:@"forward"];
             //if the new end time is smaller than the start time,it will cause a problem for tag looping. So set it to start time plus one.
             if (endTime < startTime) {
                 endTime = startTime + 1;
@@ -881,7 +880,7 @@
         [self clear];
         self.selectedTag = nil;
         
-        _fullscreenViewController.fullscreen = NO;
+        self.fullscreenViewController.fullscreen = NO;
         
         [self.commentingField clear];
         self.commentingField.enabled             = NO;
@@ -933,7 +932,7 @@
 
 -(void)closeCurrentPlayingClip:(NSNotification*)note
 {
-    [_videoBar clear]; // this removes the tag data and controlls to extend from the light grey bar
+    [self.videoBar clear]; // this removes the tag data and controlls to extend from the light grey bar
 }
 
 // Sort tags by time index. Ensure that tags are unique
@@ -1123,6 +1122,50 @@
     return [NSArray arrayWithArray:paths];
 }
 
+#pragma mark - download methods
+
+-(void)downloadExternal:(Tag *)tag source:(NSString*)src tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    DownloadClipFromTag * downloadClip = [[DownloadClipFromTag alloc]initWithTag:tag encoder:tag.eventInstance.parentEncoder sources:@[src]];
+    
+    [downloadClip setOnFail:^(NSError *e) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString * errorTitle = [NSString stringWithFormat:@"Error downloading tag %@ %@",tag.name,src];
+            NSString * errorMessage = [NSString stringWithFormat:@"%@\n%@",e.localizedFailureReason,e.localizedRecoverySuggestion];
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                            message:errorMessage
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:@"OK"
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+        });
+    }];
+    
+    
+    [downloadClip setOnCutComplete:^(NSData *data, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        });
+        
+    }];
+    
+    [downloadClip setCompletionBlock:^{
+        NSLog(@"%s",__FUNCTION__);
+        
+    }];
+    
+    [self.downloadQueue addOperation:downloadClip];
+    
+}
 
 #pragma mark UITableViewDataSource
 
@@ -1179,18 +1222,19 @@
         collapsableCell.downloadButton.progress         = 1;
     }
     
-/*
+
     if (!tag.eventInstance.local) {
         collapsableCell.downloadButtonBlock = ^(){
-            [self downloadExternal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath];
+            [self downloadExternal:tag source:key tableView:tableView cellForRowAtIndexPath:indexPath];
         };
     } else { // local event
         collapsableCell.downloadButtonBlock = ^(){
-            [self downloadLocal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath cell:weakCell];
+//            [self downloadLocal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath cell:weakCell];
         };
     }
-*/
+
     collapsableCell.sendUserInfo = ^(){
+        NSLog(@"send user info...");
         /*
         Feed *feed = [tag.eventInstance.feeds objectForKey:key];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{//@"context":STRING_LISTVIEW_CONTEXT,
