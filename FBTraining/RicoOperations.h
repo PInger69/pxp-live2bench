@@ -62,7 +62,7 @@
 @property (nonatomic,assign) CMTime  toleranceAfter;
 
 @property (nonatomic,assign) BOOL success;
-@property (copy, nonatomic) void(^completionHandler)(BOOL);
+@property (copy, nonatomic) void(^completionHandler)(BOOL,NSError*);
 - (instancetype)initWithAVPlayer:(AVPlayer*)aPlayer seekToTime:(CMTime)seekTo toleranceBefore:(CMTime)tBefore toleranceAfter:(CMTime)tAfter;
 
 

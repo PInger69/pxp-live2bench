@@ -18,6 +18,7 @@
 @property (nonatomic, weak) PxpFilter* pxpFilter;
 @property (nonatomic, strong) Event* currentEvent;
 @property (nonatomic,strong) NSMutableArray* allTagsArray;
+@property (strong, nonatomic) NSMutableSet* deleteTagIds;
 
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags;
 -(void) configurePxpFilter:(Event*) currentEvent;

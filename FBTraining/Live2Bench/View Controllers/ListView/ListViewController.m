@@ -117,6 +117,7 @@
     [self.deleteAllButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [self.deleteAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.deleteAllButton setFrame:CGRectMake(568, 768, 370, 0)];
+    [self.view addSubview:self.deleteAllButton];
 }
 
 -(void) deleteAllSelectedTags {
@@ -224,6 +225,9 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeCurrentPlayingClip:) name:NOTIF_PLAYER_BAR_CANCEL object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipCancelNotification:)       name:NOTIF_PLAYER_BAR_CANCEL          object:nil];
     [self setupView];// set up filter and commenting
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:)     name:@"AddDeletionCell"     object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:)  name:@"RemoveDeletionCell"  object:nil];
 
     self.listTable.delaysContentTouches = NO;
     
@@ -417,32 +421,14 @@
     [self.view bringSubviewToFront:self.videoBar];
     
     self.selectedTag = nil;
-    /*
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
-        if(feeds && !self.feeds){
-            self.feeds = feeds;
-            Feed *theFeed = [[feeds allValues] firstObject];
-            [self.videoPlayer playFeed:theFeed];
-        }
-        
-
-        
-        if(eventTags.count > 0 && !self.tagsToDisplay){
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
-            self.allTagsArray = [ NSMutableArray arrayWithArray:[eventTags copy]];
-            [self reloadTableData];
-        }
-
-
-        
-    }}];
-     */
 
     // Richard
     [self.commentingField clear];
     self.commentingField.ratingScale.rating = 0;
     self.commentingField.enabled = NO;
-
+    
+    [self.deleteTagIds removeAllObjects];
+    [self showOrHideDeleteAllButton];
     
     self.videoPlayer.mute = NO;
 }
@@ -889,6 +875,33 @@
 }
 
 
+#pragma mark - multi delete
+
+-(void) addDeletionCell: (NSNotification *) notification {
+    
+    id cell = notification.object;
+    if ([cell isKindOfClass:[ListViewCell class]]) {
+        NSIndexPath* path = [self.listTable indexPathForCell:cell];
+        Tag* tag = [self tagForIndexPath:path];
+        if (tag != nil) {
+            [self.deleteTagIds addObject:tag.ID];
+        }
+        NSLog(@"deleting open: %@", tag.ID );
+        [self showOrHideDeleteAllButton];
+    }
+}
+-(void)removeDeletionCell: (NSNotification *) notification {
+    id cell = notification.object;
+    if ([cell isKindOfClass:[ListViewCell class]]) {
+        NSIndexPath* path = [self.listTable indexPathForCell:cell];
+        Tag* tag = [self tagForIndexPath:path];
+        if (tag != nil) {
+            [self.deleteTagIds removeObject:tag.ID];
+        }
+        NSLog(@"deleting closed: %@", tag.ID );
+        [self showOrHideDeleteAllButton];
+    }
+}
 
 
 #pragma mark - Sorting Methods
@@ -1055,8 +1068,9 @@
     if (indexPath != nil) {
         [self.listTable deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section ] withRowAnimation:UITableViewRowAnimationFade];
     }
+    [self.deleteTagIds removeObject:tag.ID];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-//    [self checkDeleteAllButton];
+    [self showOrHideDeleteAllButton];
 }
 
 -(NSIndexPath*) pathForTag:(Tag*) tag {
@@ -1071,34 +1085,34 @@
 }
 
 -(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
-    return self.tagsToDisplay[indexPath.section];
+    return indexPath == nil ? nil : self.tagsToDisplay[indexPath.section];
 }
 
 -(void) hideDeleteAllButton {
+    NSLog(@"hide delete all button");
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.5];
-    self.deleteAllButton.frame = CGRectMake(568, 768, 370, 0);
+    self.deleteAllButton.frame = CGRectMake(self.listTable.frame.origin.x, 768, self.listTable.frame.size.width, 0);
     [UIView commitAnimations];
     
 }
 
 -(void) showDeleteAllButton {
+    NSLog(@"show delete all button");
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.5];
-    self.deleteAllButton.frame = CGRectMake(568, 708, 370, 60);
+    self.deleteAllButton.frame = CGRectMake(self.listTable.frame.origin.x, 708, self.listTable.frame.size.width, 60);
     [UIView commitAnimations];
     
 }
 
-/*
 -(void) showOrHideDeleteAllButton {
-    if (self.setOfDeletingCells.count < 2){
+    if (self.deleteTagIds.count < 2){
         [self hideDeleteAllButton];
     } else {
         [self showDeleteAllButton];
     }
 }
-*/
 
 -(BOOL) isSelectedTag:(Tag*) tag {
     return [tag.ID isEqualToString:self.selectedTag.ID];
@@ -1276,7 +1290,7 @@
     cell.deleteBlock = ^(UITableViewCell *theCell) {
         NSIndexPath* anIndexPath = [self.listTable indexPathForCell:theCell];
         [self promptUserToDeleteTag:[self tagForIndexPath:anIndexPath]];
-//        [self checkDeleteAllButton];
+        [self showOrHideDeleteAllButton];
         
     };
     
@@ -1363,6 +1377,11 @@
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];
     
     if ([self isSelectedTag:tag]) {
+        [self.deleteTagIds removeObject:tag.ID]; // just in case
+        [cell setCellAccordingToState:cellStateNormal];
+    } else if ([self.deleteTagIds containsObject:tag.ID]) {
+        [cell setCellAccordingToState:cellStateDeleting];
+    } else {
         [cell setCellAccordingToState:cellStateNormal];
     }
     

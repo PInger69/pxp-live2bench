@@ -15,6 +15,8 @@
 		D815526A1E3A8301003010D4 /* CommentingRatingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552691E3A8301003010D4 /* CommentingRatingField.m */; };
 		D815526D1E3AA8EA003010D4 /* HeaderBarForListView.m in Sources */ = {isa = PBXBuildFile; fileRef = D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */; };
 		D81552711E3C1570003010D4 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552701E3C1570003010D4 /* LoginViewController.m */; };
+		D81552761E428F7E003010D4 /* CreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D81552731E428F7E003010D4 /* CreditsView.xib */; };
+		D81552771E428F7E003010D4 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552751E428F7E003010D4 /* CreditsViewController.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -104,7 +106,6 @@
 		D83E82451E2D90A5000FC23F /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F5F1E2D90A2000FC23F /* ContentViewController.m */; };
 		D83E82461E2D90A5000FC23F /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F601E2D90A2000FC23F /* continue_unselected.png */; };
 		D83E82471E2D90A5000FC23F /* continue_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F611E2D90A2000FC23F /* continue_unselected@2x.png */; };
-		D83E82481E2D90A5000FC23F /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F631E2D90A2000FC23F /* CreditsViewController.m */; };
 		D83E82491E2D90A5000FC23F /* CustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F651E2D90A2000FC23F /* CustomButton.m */; };
 		D83E824A1E2D90A5000FC23F /* CustomLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F671E2D90A2000FC23F /* CustomLabel.m */; };
 		D83E824B1E2D90A5000FC23F /* CustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F691E2D90A2000FC23F /* CustomTabBar.m */; };
@@ -293,7 +294,6 @@
 		D83E832C1E2D90A5000FC23F /* ProtoTypeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80B91E2D90A3000FC23F /* ProtoTypeEncoder.m */; };
 		D83E832D1E2D90A5000FC23F /* ProtoTypeEncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80BB1E2D90A3000FC23F /* ProtoTypeEncoderTask.m */; };
 		D83E832E1E2D90A5000FC23F /* ProtoTypeEncoderTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80BD1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.m */; };
-		D83E832F1E2D90A5000FC23F /* pxp_blank_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80BE1E2D90A3000FC23F /* pxp_blank_bg.png */; };
 		D83E83301E2D90A5000FC23F /* PxpAddButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80C01E2D90A3000FC23F /* PxpAddButton.m */; };
 		D83E83311E2D90A5000FC23F /* PxpArrowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80C21E2D90A3000FC23F /* PxpArrowButton.m */; };
 		D83E83321E2D90A5000FC23F /* PxpBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80C41E2D90A3000FC23F /* PxpBorderButton.m */; };
@@ -638,7 +638,6 @@
 		D83E8B6A1E2D9153000FC23F /* ClipSharePopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88561E2D914E000FC23F /* ClipSharePopoverViewController.m */; };
 		D83E8B6B1E2D9153000FC23F /* CoachFilterProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */; };
 		D83E8B6C1E2D9153000FC23F /* CopyDeviceVideoToOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */; };
-		D83E8B6D1E2D9153000FC23F /* CreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E885B1E2D914E000FC23F /* CreditsView.xib */; };
 		D83E8B6E1E2D9153000FC23F /* CustomAlertControllerQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */; };
 		D83E8B6F1E2D9153000FC23F /* CustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885F1E2D914E000FC23F /* CustomAlertView.m */; };
 		D83E8B701E2D9153000FC23F /* DebugOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88611E2D914E000FC23F /* DebugOutput.m */; };
@@ -706,6 +705,9 @@
 		D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBarForListView.m; sourceTree = "<group>"; };
 		D815526F1E3C1570003010D4 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		D81552701E3C1570003010D4 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		D81552731E428F7E003010D4 /* CreditsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreditsView.xib; sourceTree = "<group>"; };
+		D81552741E428F7E003010D4 /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditsViewController.h; sourceTree = "<group>"; };
+		D81552751E428F7E003010D4 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditsViewController.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1029,8 +1031,6 @@
 		D83E7F5F1E2D90A2000FC23F /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 		D83E7F601E2D90A2000FC23F /* continue_unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continue_unselected.png; sourceTree = "<group>"; };
 		D83E7F611E2D90A2000FC23F /* continue_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue_unselected@2x.png"; sourceTree = "<group>"; };
-		D83E7F621E2D90A2000FC23F /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditsViewController.h; sourceTree = "<group>"; };
-		D83E7F631E2D90A2000FC23F /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditsViewController.m; sourceTree = "<group>"; };
 		D83E7F641E2D90A2000FC23F /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		D83E7F651E2D90A2000FC23F /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
 		D83E7F661E2D90A2000FC23F /* CustomLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLabel.h; sourceTree = "<group>"; };
@@ -1308,7 +1308,6 @@
 		D83E80BB1E2D90A3000FC23F /* ProtoTypeEncoderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoderTask.m; sourceTree = "<group>"; };
 		D83E80BC1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoderTaskQueue.h; sourceTree = "<group>"; };
 		D83E80BD1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoderTaskQueue.m; sourceTree = "<group>"; };
-		D83E80BE1E2D90A3000FC23F /* pxp_blank_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pxp_blank_bg.png; sourceTree = "<group>"; };
 		D83E80BF1E2D90A3000FC23F /* PxpAddButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpAddButton.h; sourceTree = "<group>"; };
 		D83E80C01E2D90A3000FC23F /* PxpAddButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpAddButton.m; sourceTree = "<group>"; };
 		D83E80C11E2D90A3000FC23F /* PxpArrowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpArrowButton.h; sourceTree = "<group>"; };
@@ -1906,7 +1905,6 @@
 		D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoachFilterProcessor.m; sourceTree = "<group>"; };
 		D83E88591E2D914E000FC23F /* CopyDeviceVideoToOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyDeviceVideoToOperation.h; sourceTree = "<group>"; };
 		D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyDeviceVideoToOperation.m; sourceTree = "<group>"; };
-		D83E885B1E2D914E000FC23F /* CreditsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreditsView.xib; sourceTree = "<group>"; };
 		D83E885C1E2D914E000FC23F /* CustomAlertControllerQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlertControllerQueue.h; sourceTree = "<group>"; };
 		D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlertControllerQueue.m; sourceTree = "<group>"; };
 		D83E885E1E2D914E000FC23F /* CustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlertView.h; sourceTree = "<group>"; };
@@ -2077,6 +2075,16 @@
 				D81552701E3C1570003010D4 /* LoginViewController.m */,
 			);
 			path = LoginViewController;
+			sourceTree = "<group>";
+		};
+		D81552721E428F13003010D4 /* Credits */ = {
+			isa = PBXGroup;
+			children = (
+				D81552731E428F7E003010D4 /* CreditsView.xib */,
+				D81552741E428F7E003010D4 /* CreditsViewController.h */,
+				D81552751E428F7E003010D4 /* CreditsViewController.m */,
+			);
+			path = Credits;
 			sourceTree = "<group>";
 		};
 		D83E7DB81E2D86CB000FC23F = {
@@ -2882,7 +2890,6 @@
 				D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */,
 				D83E88591E2D914E000FC23F /* CopyDeviceVideoToOperation.h */,
 				D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */,
-				D83E885B1E2D914E000FC23F /* CreditsView.xib */,
 				D83E885C1E2D914E000FC23F /* CustomAlertControllerQueue.h */,
 				D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */,
 				D83E885E1E2D914E000FC23F /* CustomAlertView.h */,
@@ -3060,8 +3067,6 @@
 				D83E7F5F1E2D90A2000FC23F /* ContentViewController.m */,
 				D83E7F601E2D90A2000FC23F /* continue_unselected.png */,
 				D83E7F611E2D90A2000FC23F /* continue_unselected@2x.png */,
-				D83E7F621E2D90A2000FC23F /* CreditsViewController.h */,
-				D83E7F631E2D90A2000FC23F /* CreditsViewController.m */,
 				D83E7F641E2D90A2000FC23F /* CustomButton.h */,
 				D83E7F651E2D90A2000FC23F /* CustomButton.m */,
 				D83E7F661E2D90A2000FC23F /* CustomLabel.h */,
@@ -3285,7 +3290,6 @@
 				D83E80BB1E2D90A3000FC23F /* ProtoTypeEncoderTask.m */,
 				D83E80BC1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.h */,
 				D83E80BD1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.m */,
-				D83E80BE1E2D90A3000FC23F /* pxp_blank_bg.png */,
 				D83E80BF1E2D90A3000FC23F /* PxpAddButton.h */,
 				D83E80C01E2D90A3000FC23F /* PxpAddButton.m */,
 				D83E80C11E2D90A3000FC23F /* PxpArrowButton.h */,
@@ -3713,6 +3717,7 @@
 				D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
+				D81552721E428F13003010D4 /* Credits */,
 				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
@@ -3968,6 +3973,7 @@
 				D83E836A1E2D90A5000FC23F /* RedSettingsButton@2x.png in Resources */,
 				D83E82E61E2D90A5000FC23F /* logo_unselected@2x.png in Resources */,
 				D83E82861E2D90A5000FC23F /* extendstartsec@2x.png in Resources */,
+				D81552761E428F7E003010D4 /* CreditsView.xib in Resources */,
 				D83E82F61E2D90A5000FC23F /* myclipfilterorange.png in Resources */,
 				D83E7EF21E2D87FE000FC23F /* VKImages.bundle in Resources */,
 				D83E838E1E2D90A5000FC23F /* sline.png in Resources */,
@@ -4053,7 +4059,6 @@
 				D83E83071E2D90A5000FC23F /* normalsp.png in Resources */,
 				D83E83C41E2D90A5000FC23F /* trash.png in Resources */,
 				D83E82841E2D90A5000FC23F /* extendendsec@2x.png in Resources */,
-				D83E8B6D1E2D9153000FC23F /* CreditsView.xib in Resources */,
 				D83E82CC1E2D90A5000FC23F /* lineButtonSelect@2x.png in Resources */,
 				D83E82A81E2D90A5000FC23F /* HardwareString.txt in Resources */,
 				D83E82851E2D90A5000FC23F /* extendstartsec.png in Resources */,
@@ -4067,7 +4072,6 @@
 				D83E82CB1E2D90A5000FC23F /* lineButtonSelect.png in Resources */,
 				D83E82CA1E2D90A5000FC23F /* lineButton@2x.png in Resources */,
 				D83E83BF1E2D90A5000FC23F /* testPic.jpg in Resources */,
-				D83E832F1E2D90A5000FC23F /* pxp_blank_bg.png in Resources */,
 				D83E7EEC1E2D87FE000FC23F /* install-ffmpeg-ios.sh in Resources */,
 				D83E82E31E2D90A5000FC23F /* logo_selected.png in Resources */,
 				D83E82C11E2D90A5000FC23F /* landingElement.png in Resources */,
@@ -4239,6 +4243,7 @@
 				D83E83DD1E2D90A5000FC23F /* Utility.m in Sources */,
 				D83E8B501E2D9153000FC23F /* AnalyzeLoader.m in Sources */,
 				D83E8AE21E2D9153000FC23F /* PxpFilterButtonScrollView.m in Sources */,
+				D81552771E428F7E003010D4 /* CreditsViewController.m in Sources */,
 				D83E88B31E2D9151000FC23F /* DownloadThumbnailOperation.m in Sources */,
 				D83E82821E2D90A5000FC23F /* ExportPlayersSync.m in Sources */,
 				D83E8ABA1E2D9152000FC23F /* LiveIndicatorLight.m in Sources */,
@@ -4408,7 +4413,6 @@
 				D83E83361E2D90A5000FC23F /* PxpClipContext.m in Sources */,
 				D83E834B1E2D90A5000FC23F /* PxpPlayerLight.m in Sources */,
 				D83E8B331E2D9153000FC23F /* TestGroupOperation.m in Sources */,
-				D83E82481E2D90A5000FC23F /* CreditsViewController.m in Sources */,
 				D83E82211E2D90A5000FC23F /* BorderlessButton.m in Sources */,
 				D83E830D1E2D90A5000FC23F /* OBSlider.m in Sources */,
 				D83E82791E2D90A5000FC23F /* FakeEncoder.m in Sources */,
@@ -4712,6 +4716,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = XFAUEUBKQC;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -4750,6 +4755,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = XFAUEUBKQC;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

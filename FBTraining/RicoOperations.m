@@ -429,7 +429,7 @@
 
             
             if (weakself.completionHandler != nil) {
-                weakself.completionHandler(finished);
+                weakself.completionHandler(finished, nil);
                 
             }
             
@@ -437,7 +437,20 @@
         }];
     } else {
         [self completeOperation];
-        NSLog(@"Seeking Complete FAIL");
+        NSLog(@"Seeking Complete FAIL: player status=%lu,  error=%@", avp.status, avp.error);
+        NSLog(@"Seeking Complete FAIL:   item status=%lu,  error=%@", avp.currentItem.status, avp.currentItem.error);
+
+        NSLog(@"completion handler is %@", weakself.completionHandler == nil ? @"nil" : @"not nil");
+        if (weakself.completionHandler != nil) {
+            if (avp.error != nil) {
+                weakself.completionHandler(finished, avp.error);
+            } else if (avp.currentItem.error != nil) {
+                weakself.completionHandler(finished, avp.currentItem.error);
+            } else {
+                weakself.completionHandler(finished, [[NSError alloc] initWithDomain:@"com.avoca.error" code:999 userInfo:@{ NSLocalizedDescriptionKey : @"Unknown video error" }]);
+            }
+            
+        }
         
         NSString * dur = @"";
         if([self.player.currentItem.seekableTimeRanges count]) {
@@ -513,7 +526,7 @@
             [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
                 weakself.success = afinished;
                 if (weakself.completionHandler != nil) {
-                    weakself.completionHandler(finished);
+                    weakself.completionHandler(finished, nil);
                     
                 }
                 [weakself completeOperation];
@@ -521,9 +534,16 @@
         } else {
             [self completeOperation];
             NSLog(@"Seeking Complete FAIL op");
+            if (weakself.completionHandler != nil) {
+                if (avp.error != nil) {
+                    weakself.completionHandler(finished, avp.error);
+                } else if (avp.currentItem.error != nil) {
+                    weakself.completionHandler(finished, avp.currentItem.error);
+                } else {
+                    weakself.completionHandler(finished, [[NSError alloc] initWithDomain:@"com.avoca.error" code:999 userInfo:@{ NSLocalizedDescriptionKey : @"Unknown video error" }]);
+                }
+            }
         }
-
-    
     
     }
 

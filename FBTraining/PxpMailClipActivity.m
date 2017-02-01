@@ -154,9 +154,9 @@
         
         NSArray * videoKeys = [aClip.videosBySrcKey allKeys];;
         for (NSString * key in videoKeys) {
-            NSString * videoString = aClip.videosBySrcKey[key];
+//            NSString * videoString = aClip.videosBySrcKey[key];
             
-            NSURL * filePath = [NSURL fileURLWithPath:videoString];
+//            NSURL * filePath = [NSURL fileURLWithPath:videoString];
             NSString * scourse = key;
             NSString* destinationfileName = [NSString stringWithFormat:@"%@_%@_%@_%@.mp4",aClip.name,[Utility dateFromEvent:aClip.eventName],aClip.displayTime,scourse];
             

@@ -27,6 +27,7 @@
     if (self = [super initWithAppDelegate:appDel]) {
         self.allTagsArray   = [NSMutableArray array];
         self.tagsToDisplay  = [NSMutableArray array];
+        self.deleteTagIds = [NSMutableSet new];
     }
     return self;
 }

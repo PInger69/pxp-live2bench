@@ -10,7 +10,7 @@
 #import "BookmarkViewcell.h"
 #import "Utility.h"
 #import "Clip.h"
-#import "ListPopoverControllerWithImages.h"
+//#import "ListPopoverControllerWithImages.h"
 #import "AVAsset+Image.h"
 #import "CustomAlertControllerQueue.h"
 
@@ -24,12 +24,12 @@
 #define NO_BUTTON   1
 
 
-@interface BookmarkTableViewController () <UIDocumentInteractionControllerDelegate>
-@property (strong, nonatomic) UIPopoverController *sharePop;
+@interface BookmarkTableViewController () // <UIDocumentInteractionControllerDelegate>
+//@property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 @property (strong, nonatomic) NSMutableArray   *sharingIndexPaths;
-@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSharePopoverViewController;
-@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
+//@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSharePopoverViewController;
+//@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
 
 @end
 
@@ -39,11 +39,13 @@
     self = [super init];
     if (self){
         
+        /*
         _sourceSharePopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
         _sourceSharePopoverViewController.contentViewController.modalInPopover = NO;
         
         _sourceSelectPopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
         _sourceSelectPopoverViewController.contentViewController.modalInPopover = NO;
+        */
         
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
         

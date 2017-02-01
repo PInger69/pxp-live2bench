@@ -13,6 +13,7 @@
 #import "RicoPlayerMonitor.h"
 #import "Ticker.h"
 #include <stdlib.h>
+#import <TSMessages/TSMessage.h>
 
 
 
@@ -287,10 +288,18 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     }
     
     
-    NSOperation * seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:timeWithOffset toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
+    RicoSeekOperation* seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:timeWithOffset toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
     
     [seeker setCompletionBlock:^{
             NSLog(@"Seek finished: %f",CMTimeGetSeconds(self.currentTime));
+    }];
+    
+    [seeker setCompletionHandler:^(BOOL finished, NSError* error) {
+        if (error) {
+            dispatch_async(dispatch_get_main_queue(),^{
+                [self showErrorMessage:@"Playback error" error:error];
+            });
+        }
     }];
 
     if (self.syncronized) {
@@ -307,6 +316,16 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     NSLog(@"Operations %lu",(unsigned long)self.operationQueue.operationCount);
     return seeker;
 }
+
+-(void) showErrorMessage:(NSString*) title error:(NSError*) e {
+    NSString* errorMessage = [NSString stringWithFormat:@"%@",e.localizedFailureReason];
+    [TSMessage showNotificationInViewController:[TSMessage defaultViewController]
+                                          title:title
+                                       subtitle:errorMessage
+                                           type:TSMessageNotificationTypeError
+                                       duration:3];
+}
+
 
 //-(NSOperation*)preroll:(float)rate
 //{
