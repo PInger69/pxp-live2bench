@@ -138,6 +138,71 @@
 
 #pragma mark - Delete tags
 
+-(void) deleteAllSelectedTags {
+    
+    NSMutableArray* tagsToDelete = [NSMutableArray new];
+    for (Tag* tag in [self.allTagsArray copy]) {
+        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]
+            && [self.deleteTagIds containsObject:tag.ID]) {
+            [tagsToDelete addObject:tag];
+        }
+    }
+    
+    if (tagsToDelete.count == 0) {
+        [TSMessage showNotificationInViewController: self.parentViewController
+                                              title:@"Can't delete other users' tags"
+                                           subtitle:@"None of these tags can be deleted because you don't own them"
+                                               type:TSMessageNotificationTypeWarning
+                                           duration:3];
+    } else {
+        [self promptUserToDeleteMultipleTags:^() {
+            [self deleteTagList:tagsToDelete];
+        }];
+        if (tagsToDelete.count < self.deleteTagIds.count) {
+            [TSMessage showNotificationInViewController: self.parentViewController
+                                                  title:@"Can't delete other users' tags"
+                                               subtitle:@"Some tags can't be deleted because you don't own them"
+                                                   type:TSMessageNotificationTypeWarning
+                                               duration:3];
+        }
+    }
+}
+
+-(void) deleteTagList:(NSArray*) tags {
+    [self.allTagsArray removeObjectsInArray:tags];
+    [self.tagsToDisplay removeObjectsInArray:tags];    
+    for (Tag* tag in tags) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    }
+}
+
+
+-(void) promptUserToDeleteMultipleTags:(void(^)()) deleteAction {
+    // Build Alert
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                    message:@"Are you sure you want to delete all these tags?"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Yes"
+                                              style:UIAlertActionStyleDestructive
+                                            handler:^(UIAlertAction * action) {
+         deleteAction();
+         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+     }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"No"
+                                              style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action) {
+         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+     }]];
+    
+    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    if (!isIndecisive) {
+        [self showOrHideDeleteAllButton];
+    }
+    
+}
+
 -(void) deleteTag:(Tag*) tag {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
 }
@@ -151,6 +216,14 @@
                                        duration:3];
 }
 
+
+-(void) showOrHideDeleteAllButton {
+    if (self.deleteTagIds.count < 2){
+        [self hideDeleteAllButton];
+    } else {
+        [self showDeleteAllButton];
+    }
+}
 
 -(void) showDeleteAllButton {
     

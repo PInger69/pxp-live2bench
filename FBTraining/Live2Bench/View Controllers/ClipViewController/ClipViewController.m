@@ -35,7 +35,6 @@
 
 @interface ClipViewController ()
 
-@property (strong, nonatomic) NSMutableSet *setOfSelectedCells;
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressRecognizer;
 @property (assign, nonatomic) BOOL isEditing;
 @property (strong, nonatomic) UIButton *deleteButton;
@@ -72,7 +71,6 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"tabClipView"];
 
-        self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
     }
@@ -145,8 +143,8 @@
         }
         
         if( !self.isEditing ){
-            [self.setOfSelectedCells removeAllObjects];
-            [self checkDeleteAllButton];
+            [self.deleteTagIds removeAllObjects];
+            [self showOrHideDeleteAllButton];
         }
     }
     
@@ -172,7 +170,7 @@
     
     self.deleteButton = [[UIButton alloc] init];
     self.deleteButton.backgroundColor = [UIColor redColor];
-    [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
+    [self.deleteButton addTarget:self action:@selector(deleteAllSelectedTags) forControlEvents:UIControlEventTouchUpInside];
     [self.deleteButton setTitle: NSLocalizedString(@"Delete All", nil) forState: UIControlStateNormal];
     [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
     [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
@@ -197,6 +195,7 @@
 
 }
 
+/*
 -(void)deleteAllButtonTarget{
     
     // Build Alert
@@ -230,7 +229,7 @@
                                              [self.allTagsArray removeObject: tag];
                                          }
                                          [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
-                                         [self.setOfSelectedCells removeAllObjects];
+                                         [self.deleteTagIds removeAllObjects];
                                   
                                          [self deselectAllCell];
 
@@ -256,29 +255,29 @@
         
         
         
-        [self checkDeleteAllButton];
+        [self showOrHideDeleteAllButton];
     }
 
     
     
 }
+*/
 
-
--(void)checkDeleteAllButton{
-    if (self.setOfSelectedCells.count >= 2) {
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.5];
-        self.deleteButton.frame = CGRectMake(self.collectionView.frame.origin.x, 700, self.collectionView.frame.size.width, 68);
-        [UIView commitAnimations];
-        
-    }else{
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.5];
-        self.deleteButton.frame = CGRectMake(self.collectionView.frame.origin.x, 768, self.collectionView.frame.size.width, 0);
-        [UIView commitAnimations];
-    }
+-(void) showDeleteAllButton {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    self.deleteButton.frame = CGRectMake(self.collectionView.frame.origin.x, 700, self.collectionView.frame.size.width, 68);
+    [UIView commitAnimations];
+    
 }
 
+-(void) hideDeleteAllButton {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    self.deleteButton.frame = CGRectMake(self.collectionView.frame.origin.x, 768, self.collectionView.frame.size.width, 0);
+    [UIView commitAnimations];
+    
+}
 
 - (void)viewDidLoad
 {
@@ -335,8 +334,7 @@
     
     [self configurePxpFilter:self.currentEvent];
     [self loadAndDisplayTags];
-    [self.collectionView reloadData];
-    
+//    [self.collectionView reloadData];
 }
 
 
@@ -377,8 +375,8 @@
         }
         
         if( !self.isEditing ){
-            [self.setOfSelectedCells removeAllObjects];
-            [self checkDeleteAllButton];
+            [self.deleteTagIds removeAllObjects];
+            [self showOrHideDeleteAllButton];
         }
         
     }
@@ -472,12 +470,19 @@
 
     [cell setDeletingMode: self.isEditing];
     
-    if ([self.setOfSelectedCells containsObject: indexPath]) {
+    if ([self.deleteTagIds containsObject:tagSelect.ID]) {
         cell.checkmarkOverlay.hidden = NO;
         cell.translucentEditingView.hidden = NO;
     }
 
     return cell;
+}
+
+-(void) deleteTagList:(NSArray*) tags {
+    [super deleteTagList:tags];
+    [self deselectAllCell];
+    [self showOrHideDeleteAllButton];
+    [self.collectionView reloadData];
 }
 
 -(void) deleteTag:(Tag*) tag {
@@ -486,9 +491,8 @@
         [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
     }
     [super deleteTag:tag];
-    [self removeIndexPathFromDeletion];
     [self deselectAllCell];
-    [self checkDeleteAllButton];
+    [self showOrHideDeleteAllButton];
 }
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
@@ -498,27 +502,8 @@
     
     Tag *tag        = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
     if (![self promptUserToDeleteTag:tag]) {
-        [self checkDeleteAllButton];
+        [self showOrHideDeleteAllButton];
     }
-}
-
--(void)removeIndexPathFromDeletion{
-    NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
-    if (self.editingIndexPath) {
-        [self.setOfSelectedCells removeObject:self.editingIndexPath];
-    }
-
-    for (NSIndexPath *indexPath in self.setOfSelectedCells) {
-        if (indexPath.row > self.editingIndexPath.row) {
-            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection: indexPath.section];
-            [newIndexPathSet addObject: newIndexPath];
-        }else{
-            [newIndexPathSet addObject: indexPath];
-        }
-    }
-    
-    self.setOfSelectedCells = newIndexPathSet;
-    [self checkDeleteAllButton];
 }
 
 -(void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
@@ -563,11 +548,11 @@
         cell.checkmarkOverlay.hidden = !cell.checkmarkOverlay.hidden;
         cell.translucentEditingView.hidden = !cell.translucentEditingView.hidden;
         if (!cell.checkmarkOverlay.hidden) {
-            [self.setOfSelectedCells addObject: [self.collectionView indexPathForCell: cell]];
+            [self.deleteTagIds addObject:tagSelect.ID];
         }else{
-            [self.setOfSelectedCells removeObject: [self.collectionView indexPathForCell: cell]];
+            [self.deleteTagIds removeObject:tagSelect.ID];
         }
-        [self checkDeleteAllButton];
+        [self showOrHideDeleteAllButton];
         return;
     }
     
@@ -721,8 +706,8 @@
         [cell setDeletingMode: NO];
     }
     self.isEditing = NO;
-    [self.setOfSelectedCells removeAllObjects];
-    [self checkDeleteAllButton];
+    [self.deleteTagIds removeAllObjects];
+    [self showOrHideDeleteAllButton];
 }
 
 #pragma mark - Filtering Methods

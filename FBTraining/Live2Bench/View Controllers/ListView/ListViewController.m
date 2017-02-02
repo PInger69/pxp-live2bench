@@ -120,11 +120,6 @@
     [self.view addSubview:self.deleteAllButton];
 }
 
--(void) deleteAllSelectedTags {
-    
-}
-
-
 -(void) configureListView {
     self.listTable = [[UITableView alloc] initWithFrame:CGRectMake(1024 - 460, 95, 460, 620) style:UITableViewStylePlain];
     self.listTable.delegate = self;
@@ -877,6 +872,32 @@
 
 #pragma mark - multi delete
 
+-(void) hideDeleteAllButton {
+    NSLog(@"hide delete all button");
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    self.deleteAllButton.frame = CGRectMake(self.listTable.frame.origin.x, 768, self.listTable.frame.size.width, 0);
+    [UIView commitAnimations];
+    
+}
+
+-(void) showDeleteAllButton {
+    NSLog(@"show delete all button");
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    self.deleteAllButton.frame = CGRectMake(self.listTable.frame.origin.x, 708, self.listTable.frame.size.width, 60);
+    [UIView commitAnimations];
+    
+}
+
+-(void) deleteTagList:(NSArray*) tags {
+    [super deleteTagList:tags];
+    [self.deleteTagIds removeAllObjects];
+    [self showOrHideDeleteAllButton];
+    [self.listTable reloadData];
+}
+
+
 -(void) addDeletionCell: (NSNotification *) notification {
     
     id cell = notification.object;
@@ -886,10 +907,10 @@
         if (tag != nil) {
             [self.deleteTagIds addObject:tag.ID];
         }
-        NSLog(@"deleting open: %@", tag.ID );
         [self showOrHideDeleteAllButton];
     }
 }
+
 -(void)removeDeletionCell: (NSNotification *) notification {
     id cell = notification.object;
     if ([cell isKindOfClass:[ListViewCell class]]) {
@@ -898,7 +919,6 @@
         if (tag != nil) {
             [self.deleteTagIds removeObject:tag.ID];
         }
-        NSLog(@"deleting closed: %@", tag.ID );
         [self showOrHideDeleteAllButton];
     }
 }
@@ -1086,32 +1106,6 @@
 
 -(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
     return indexPath == nil ? nil : self.tagsToDisplay[indexPath.section];
-}
-
--(void) hideDeleteAllButton {
-    NSLog(@"hide delete all button");
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5];
-    self.deleteAllButton.frame = CGRectMake(self.listTable.frame.origin.x, 768, self.listTable.frame.size.width, 0);
-    [UIView commitAnimations];
-    
-}
-
--(void) showDeleteAllButton {
-    NSLog(@"show delete all button");
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5];
-    self.deleteAllButton.frame = CGRectMake(self.listTable.frame.origin.x, 708, self.listTable.frame.size.width, 60);
-    [UIView commitAnimations];
-    
-}
-
--(void) showOrHideDeleteAllButton {
-    if (self.deleteTagIds.count < 2){
-        [self hideDeleteAllButton];
-    } else {
-        [self showDeleteAllButton];
-    }
 }
 
 -(BOOL) isSelectedTag:(Tag*) tag {
@@ -1426,10 +1420,13 @@
         cell.selected = YES;
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
+        [self.deleteTagIds removeObject:tag.ID];
+        [cell setCellAccordingToState:cellStateNormal];
         [tableView insertRowsAtIndexPaths:[self createFeedCellPathsForTag:tag] withRowAnimation:UITableViewRowAnimationRight];
         [self selectTag:tag];
     }
     [tableView endUpdates];
+    [self showOrHideDeleteAllButton];
 }
 
 - (CGFloat)tableView:(UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath*) indexPath {

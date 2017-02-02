@@ -30,7 +30,10 @@
 
 -(void) pressFilterButton;
 
+// delete functionality
 -(void) showDeleteAllButton;
 -(void) hideDeleteAllButton;
-
+-(void) showOrHideDeleteAllButton;
+-(void) deleteAllSelectedTags;
+-(void) deleteTagList:(NSArray*) tags;
 @end
