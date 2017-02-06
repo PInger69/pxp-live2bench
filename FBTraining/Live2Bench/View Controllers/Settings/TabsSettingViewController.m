@@ -9,7 +9,6 @@
 #import "TabsSettingViewController.h"
 
 #import "CalendarViewController.h"
-#import "Live2BenchViewController.h"
 #import "ClipViewController.h"
 #import "ListViewController.h"
 #import "BookmarkViewController.h"

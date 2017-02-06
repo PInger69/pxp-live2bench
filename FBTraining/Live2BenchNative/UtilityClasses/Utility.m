@@ -84,6 +84,17 @@ static InternetMonitor* internetMonitor;
     return encodedString;
 }
 
++(NSString*) dictToJsonWithoutEncoding:(NSDictionary*) dict {
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:kNilOptions error:&error];
+    if (jsonData == nil && error != nil) {
+        NSLog(@"JSON serialization error %@", error);
+        return nil;
+    } else {
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+}
+
 
 // Depricated
 +(NSString*)dictToJSON:(NSDictionary*)dict

@@ -15,6 +15,7 @@
 +(NSString*)encodeSpecialCharacters:(NSString*)inputString;
 
 +(NSString*)dictToJSON:(NSDictionary*)dict;
++(NSString*) dictToJsonWithoutEncoding:(NSDictionary*) dict;
 +(NSString*)dictToJSON:(NSDictionary*)dict error:(NSError **)aError;
 +(NSDictionary*)JSONDatatoDict:(NSData*)data;
 +(NSDictionary*)JSONDatatoDict:(NSData*)data error:(NSError **)aError;

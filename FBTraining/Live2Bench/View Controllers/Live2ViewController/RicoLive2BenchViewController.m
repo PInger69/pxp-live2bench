@@ -13,7 +13,7 @@
 
 
 // Singletons
-#import "EncoderClasses/EncoderManager.h"
+#import "EncoderManager.h"
 #import "UserCenter.h"
 
 // UI
@@ -23,7 +23,7 @@
 #import "ContentViewController.h"
 
 // Encoder Model
-#import "EncoderClasses/EncoderProtocol.h"
+#import "EncoderProtocol.h"
 #import "Feed.h"
 #import "TeamPlayer.h"
 #import "LeagueTeam.h"
@@ -2281,26 +2281,10 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
     }
     
+    NSLog(@"Frame button: %@", ((UIButton*)sender).titleLabel.text);
+    
     float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-1.10:1.10;
     [self.ricoPlayerViewController stepByCount:speed];
-    
-//    [self.ricoPlayerViewController pause];
-//    self.ricoPlayerViewController.playerControlBar.playPauseButton.paused = YES;
-//    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-0.10:0.10;
-//    
-//    CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
-//    CMTime  cTime = self.ricoPlayerViewController.primaryPlayer.currentTime;
-////    self.ricoFullScreenControlBar.controlBar.state = self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
-//    
-//    if (self.currentEvent.local) {
-//        [self.ricoPlayerViewController pause];
-//        [self.ricoPlayerViewController stepByCount:(speed>0)?1:-1];
-//    } else {
-//        [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
-//    }
-//
-    
-    
 }
 
 

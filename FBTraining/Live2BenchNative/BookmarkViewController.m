@@ -100,7 +100,7 @@
 {
     self = [super init];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"myClipTab"];
+        [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"TabMyClip"];
     }
     return self;
 }
@@ -109,7 +109,7 @@
 {
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"myClipTab"];
+        [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"TabMyClip"];
         externalControlScreen                   = _appDel.screenController;
         _pxpFilter                              = [[PxpFilter alloc]init];
         _pxpFilter.delegate                     = self;

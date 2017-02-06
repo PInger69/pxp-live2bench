@@ -860,98 +860,6 @@
 }
 
 
-//-(NSURLRequest*)buildRequest:(NSDictionary*)aData
-//{
-//    
-//    self.timeout = 60;
-//   
-//    NSMutableDictionary * tagData = [NSMutableDictionary new];
-//    [tagData addEntriesFromDictionary:aData];
-//    [tagData addEntriesFromDictionary:@{
-//                                        @"time"          : [aData objectForKey:@"time"],
-//                                        @"event"         : (self.encoder.event.live)?LIVE_EVENT:self.encoder.event.name,
-//                                        @"name"          : [Utility encodeSpecialCharacters:@"Start Game"],
-//                                        @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
-//                                        @"user"          : [UserCenter getInstance].userHID,
-//                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
-//                                        @"requesttime"   : GET_NOW_TIME_STRING
-//                                        }];
-//    
-//    NSString    * jsonString                    = [Utility dictToJSON:tagData];
-//    
-//    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagset/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonString ]];
-//    NSURLRequest * req = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
-//
-//    if ([self.encoder isKindOfClass:[Encoder class]]){
-//        NSString * connectionTime;
-//        double ct = ((Encoder*)self.encoder).bitrate;
-//        if (ct < 0.5) {
-//            connectionTime = @"G";
-//        } else if (ct > 3.0) {
-//            connectionTime = @"R";
-//        } else {
-//            connectionTime = @"Y";
-//        }
-//        
-//        PXPDeviceLog(@"TagPost:%@ tType:%@  %@",tagData[@"name"],[tagData[@"type"]stringValue],connectionTime);
-//    }
-//    return req;
-//}
-//
-//-(void)parseDataToEncoder:(NSData*)data
-//{
-//    NSDictionary * dict = [self.encoder.parseModule parse:data mode:ParseModeTagSet for:self.encoder];
-//    
-//    
-//    
-//    // first check to add the real tag to the proxy
-//    
-//    
-//    NSArray * tags = [self.encoder.event.tags copy];
-//    
-//    for ( id <TagProtocol> aTag in tags) {
-//        if ( [aTag conformsToProtocol:@protocol(TagProtocol)] && [aTag isKindOfClass:[TagProxy class]] ) {
-//            // check if aTag matches the data from the dict
-//            
-//            
-//            
-//            if ([[aTag name] isEqualToString:dict[@"name"]] && [aTag time] == [dict[@"time"]doubleValue] && [dict[@"own"]boolValue]) { //match
-//                TagProxy * proxyTag         = (TagProxy *)aTag;
-//                
-//                if (proxyTag.modified) {
-//                    PXPLog(@"Tag was Modded before server responded");
-//                }
-//                
-//                id <TagProtocol> realTag    = [[Tag alloc] initWithData: dict event:self.encoder.event];//  make from data
-//                
-//                [proxyTag addTagToProxy:realTag];
-//                
-//                
-//            }
-//            
-//            
-//        }
-//    }
-//    
-//    
-//    
-//    
-//    //    if ( ![self.encoder.postedTagIDs containsObject:newTag.ID] ){
-//    //        [self.encoder.postedTagIDs addObject:newTag.ID];
-//    //        Tag * tag = [self.encoder.encoder onNewTagsEO:dict];
-//    //        if (tag)self.userInfo = @{@"tag":tag};
-//    //
-//    //    } else {
-//    //        [self.encoder.postedTagIDs removeObject:newTag.ID];
-//    //    }
-//    
-//    
-//    
-//    [super parseDataToEncoder:data];
-//    
-//    
-//    
-//}
 @end
 
 
@@ -964,8 +872,6 @@
 {
     self.timeout = 60;
     
-    
-    NSString * eventType = self.encoder.event.eventType;
     Profession * profession = [ProfessionMap getProfession:self.encoder.event.eventType];
     
     
@@ -979,7 +885,7 @@
                                         @"deviceid"         : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
                                         @"duration"         : [aData objectForKey:@"duration"],
                                         @"event"            : (self.encoder.event.live)?LIVE_EVENT:self.encoder.event.name,
-                                        @"name"             : profession.telestrationTagName,//@"Telestration",//[Utility encodeSpecialCharacters:[aData objectForKey:@"name"]],
+                                        @"name"             : profession.telestrationTagName,
                                         @"telestration"     : [aData objectForKey:@"telestration"],
                                         @"telesrc"          : [aData objectForKey:@"telesrc"],
                                         @"time"             : [aData objectForKey:@"time"],
@@ -997,14 +903,10 @@
         [tData setObject:[UserCenter getInstance].taggingTeam.name forKey:@"userTeam"];
     }
     
-    // build default data
-//    NSData *teleData = [data objectForKey:@"telestration"];
-//    NSString *period = [data objectForKey:@"period"];
-    
     // build JSON data
 
-    NSString *jsonString    = [Utility dictToJSON:tData];
-    jsonString              = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *jsonString    = [Utility dictToJsonWithoutEncoding:tData];
+    NSLog(@"Make telestration JSON: %@", jsonString);
     PXPLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     PXPLog(@"TIME OF TAG SENT TO SERVER: %@",[aData objectForKey:@"time"]);
     PXPLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^");

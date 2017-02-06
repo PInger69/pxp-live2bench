@@ -394,10 +394,9 @@
 //create le thumbnail cell
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
- 
     // Get the data from the array
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+    NSLog(@"Cell for tag %lu, type = %lu", indexPath.row, tagSelect.type);
     
     
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
@@ -438,6 +437,7 @@
     
     __weak UIImageView* weakImageView = cell.imageView;
     if (tagSelect.type == TagTypeTele) {
+        NSLog(@"Cell %lu Telestration tag type", indexPath.row);
         PxpTelestration *tele = cell.data.telestration;
         [cell.data.thumbnails objectForKey:tele.sourceName];
         
@@ -452,6 +452,7 @@
                 NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);
                 weakImageView.image = [UIImage imageNamed:@"imageNotAvailable"];
             } else if (image) {
+                NSLog(@"applying telestration to image");
                 UIImage* imageWithTelestration = [tele renderOverImage:image view:cell.imageView];
                 weakImageView.image = imageWithTelestration;
             }

@@ -20,6 +20,7 @@
 		D815527B1E49082B003010D4 /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815527A1E49082B003010D4 /* CalendarViewController.m */; };
 		D81552801E4908C4003010D4 /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D815527D1E4908C4003010D4 /* ARCalendarTableViewCell.m */; };
 		D81552811E4908C4003010D4 /* ARCalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815527F1E4908C4003010D4 /* ARCalendarTableViewController.m */; };
+		D81552851E490D57003010D4 /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552841E490D57003010D4 /* RicoLive2BenchViewController.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -242,10 +243,6 @@
 		D83E82F61E2D90A5000FC23F /* myclipfilterorange.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80741E2D90A2000FC23F /* myclipfilterorange.png */; };
 		D83E82F71E2D90A5000FC23F /* myclipfilterorange@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80751E2D90A2000FC23F /* myclipfilterorange@2x.png */; };
 		D83E82F81E2D90A5000FC23F /* MyClipFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80771E2D90A2000FC23F /* MyClipFilterViewController.m */; };
-		D83E82F91E2D90A5000FC23F /* myClipTab.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80781E2D90A2000FC23F /* myClipTab.png */; };
-		D83E82FA1E2D90A5000FC23F /* myClipTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80791E2D90A2000FC23F /* myClipTab@2x.png */; };
-		D83E82FB1E2D90A5000FC23F /* myClipTabSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E807A1E2D90A2000FC23F /* myClipTabSelect.png */; };
-		D83E82FC1E2D90A5000FC23F /* myClipTabSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E807B1E2D90A2000FC23F /* myClipTabSelect@2x.png */; };
 		D83E82FD1E2D90A5000FC23F /* myplayXplay_phonecall.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E807C1E2D90A2000FC23F /* myplayXplay_phonecall.png */; };
 		D83E82FE1E2D90A5000FC23F /* myplayXplay_phonecall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E807D1E2D90A2000FC23F /* myplayXplay_phonecall@2x.png */; };
 		D83E82FF1E2D90A5000FC23F /* myplayXplay_tagging.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E807E1E2D90A2000FC23F /* myplayXplay_tagging.png */; };
@@ -358,7 +355,6 @@
 		D83E836B1E2D90A5000FC23F /* RedSettingsButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81351E2D90A3000FC23F /* RedSettingsButtonSelect.png */; };
 		D83E836C1E2D90A5000FC23F /* RedSettingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81361E2D90A3000FC23F /* RedSettingsButtonSelect@2x.png */; };
 		D83E836D1E2D90A5000FC23F /* RicoL2BVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81381E2D90A3000FC23F /* RicoL2BVideoBar.m */; };
-		D83E836E1E2D90A5000FC23F /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E813A1E2D90A3000FC23F /* RicoLive2BenchViewController.m */; };
 		D83E836F1E2D90A5000FC23F /* RJLFreezeCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E813D1E2D90A3000FC23F /* RJLFreezeCounter.m */; };
 		D83E83711E2D90A5000FC23F /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81411E2D90A3000FC23F /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */; };
 		D83E83721E2D90A5000FC23F /* RJLVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81431E2D90A3000FC23F /* RJLVideoPlayer.m */; };
@@ -712,6 +708,8 @@
 		D815527D1E4908C4003010D4 /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
 		D815527E1E4908C4003010D4 /* ARCalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewController.h; sourceTree = "<group>"; };
 		D815527F1E4908C4003010D4 /* ARCalendarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewController.m; sourceTree = "<group>"; };
+		D81552831E490D57003010D4 /* RicoLive2BenchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoLive2BenchViewController.h; sourceTree = "<group>"; };
+		D81552841E490D57003010D4 /* RicoLive2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoLive2BenchViewController.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1240,10 +1238,6 @@
 		D83E80751E2D90A2000FC23F /* myclipfilterorange@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myclipfilterorange@2x.png"; sourceTree = "<group>"; };
 		D83E80761E2D90A2000FC23F /* MyClipFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClipFilterViewController.h; sourceTree = "<group>"; };
 		D83E80771E2D90A2000FC23F /* MyClipFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClipFilterViewController.m; sourceTree = "<group>"; };
-		D83E80781E2D90A2000FC23F /* myClipTab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myClipTab.png; sourceTree = "<group>"; };
-		D83E80791E2D90A2000FC23F /* myClipTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myClipTab@2x.png"; sourceTree = "<group>"; };
-		D83E807A1E2D90A2000FC23F /* myClipTabSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myClipTabSelect.png; sourceTree = "<group>"; };
-		D83E807B1E2D90A2000FC23F /* myClipTabSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myClipTabSelect@2x.png"; sourceTree = "<group>"; };
 		D83E807C1E2D90A2000FC23F /* myplayXplay_phonecall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myplayXplay_phonecall.png; sourceTree = "<group>"; };
 		D83E807D1E2D90A2000FC23F /* myplayXplay_phonecall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myplayXplay_phonecall@2x.png"; sourceTree = "<group>"; };
 		D83E807E1E2D90A2000FC23F /* myplayXplay_tagging.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myplayXplay_tagging.png; sourceTree = "<group>"; };
@@ -1432,8 +1426,6 @@
 		D83E81361E2D90A3000FC23F /* RedSettingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedSettingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D83E81371E2D90A3000FC23F /* RicoL2BVideoBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoL2BVideoBar.h; sourceTree = "<group>"; };
 		D83E81381E2D90A3000FC23F /* RicoL2BVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoL2BVideoBar.m; sourceTree = "<group>"; };
-		D83E81391E2D90A3000FC23F /* RicoLive2BenchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoLive2BenchViewController.h; sourceTree = "<group>"; };
-		D83E813A1E2D90A3000FC23F /* RicoLive2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoLive2BenchViewController.m; sourceTree = "<group>"; };
 		D83E813C1E2D90A3000FC23F /* RJLFreezeCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJLFreezeCounter.h; sourceTree = "<group>"; };
 		D83E813D1E2D90A3000FC23F /* RJLFreezeCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJLFreezeCounter.m; sourceTree = "<group>"; };
 		D83E81401E2D90A3000FC23F /* RJLVideoPlayer+RJLVideoPlayer_Gesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RJLVideoPlayer+RJLVideoPlayer_Gesture.h"; sourceTree = "<group>"; };
@@ -2092,6 +2084,15 @@
 				D815527A1E49082B003010D4 /* CalendarViewController.m */,
 			);
 			path = CalendarViewController;
+			sourceTree = "<group>";
+		};
+		D81552821E490C30003010D4 /* Live2ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D81552831E490D57003010D4 /* RicoLive2BenchViewController.h */,
+				D81552841E490D57003010D4 /* RicoLive2BenchViewController.m */,
+			);
+			path = Live2ViewController;
 			sourceTree = "<group>";
 		};
 		D83E7DB81E2D86CB000FC23F = {
@@ -3217,10 +3218,6 @@
 				D83E80751E2D90A2000FC23F /* myclipfilterorange@2x.png */,
 				D83E80761E2D90A2000FC23F /* MyClipFilterViewController.h */,
 				D83E80771E2D90A2000FC23F /* MyClipFilterViewController.m */,
-				D83E80781E2D90A2000FC23F /* myClipTab.png */,
-				D83E80791E2D90A2000FC23F /* myClipTab@2x.png */,
-				D83E807A1E2D90A2000FC23F /* myClipTabSelect.png */,
-				D83E807B1E2D90A2000FC23F /* myClipTabSelect@2x.png */,
 				D83E807C1E2D90A2000FC23F /* myplayXplay_phonecall.png */,
 				D83E807D1E2D90A2000FC23F /* myplayXplay_phonecall@2x.png */,
 				D83E807E1E2D90A2000FC23F /* myplayXplay_tagging.png */,
@@ -3409,8 +3406,6 @@
 				D83E81361E2D90A3000FC23F /* RedSettingsButtonSelect@2x.png */,
 				D83E81371E2D90A3000FC23F /* RicoL2BVideoBar.h */,
 				D83E81381E2D90A3000FC23F /* RicoL2BVideoBar.m */,
-				D83E81391E2D90A3000FC23F /* RicoLive2BenchViewController.h */,
-				D83E813A1E2D90A3000FC23F /* RicoLive2BenchViewController.m */,
 				D83E813B1E2D90A3000FC23F /* RJLVideoPlayerClasses */,
 				D83E81481E2D90A3000FC23F /* saveToAlbum.png */,
 				D83E81491E2D90A3000FC23F /* saveToAlbum@2x.png */,
@@ -3715,10 +3710,11 @@
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
 				D81552781E4907D5003010D4 /* CalendarViewController */,
-				D81552721E428F13003010D4 /* Credits */,
-				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
+				D81552721E428F13003010D4 /* Credits */,
 				D83E8B991E2E86EA000FC23F /* ListView */,
+				D81552821E490C30003010D4 /* Live2ViewController */,
+				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D815526E1E3C155C003010D4 /* LoginViewController */,
 				D83E8BB91E2EAAD1000FC23F /* LogoViewController */,
 				D83E8BA41E2E9C5B000FC23F /* Settings */,
@@ -3933,7 +3929,6 @@
 				D83E83881E2D90A5000FC23F /* shiftline_fillter_unselected.png in Resources */,
 				D83E82E01E2D90A5000FC23F /* logo _unselected@2x.png in Resources */,
 				D83E83A81E2D90A5000FC23F /* subtractendsec.png in Resources */,
-				D83E82FC1E2D90A5000FC23F /* myClipTabSelect@2x.png in Resources */,
 				D83E8B1C1E2D9153000FC23F /* ScrollViewTest.xib in Resources */,
 				D83E82B01E2D90A5000FC23F /* imageNotAvailable.png in Resources */,
 				D83E82F01E2D90A5000FC23F /* minus.png in Resources */,
@@ -4012,7 +4007,6 @@
 				D83E82311E2D90A5000FC23F /* cline.png in Resources */,
 				D83E83971E2D90A5000FC23F /* sort.png in Resources */,
 				D83E838F1E2D90A5000FC23F /* sline@2x.png in Resources */,
-				D83E82FB1E2D90A5000FC23F /* myClipTabSelect.png in Resources */,
 				D83E82A21E2D90A5000FC23F /* graph@2x.png in Resources */,
 				D83E83871E2D90A5000FC23F /* shiftline_fillter_selected@2x.png in Resources */,
 				D83E820C1E2D90A5000FC23F /* appIcon.png in Resources */,
@@ -4028,7 +4022,6 @@
 				D83E82C91E2D90A5000FC23F /* lineButton.png in Resources */,
 				D83E82E51E2D90A5000FC23F /* logo_unselected.png in Resources */,
 				D83E8B291E2D9153000FC23F /* TabView.xib in Resources */,
-				D83E82FA1E2D90A5000FC23F /* myClipTab@2x.png in Resources */,
 				D83E82371E2D90A5000FC23F /* clip-back.png in Resources */,
 				D83E8AC71E2D9152000FC23F /* NameCameraCellView.xib in Resources */,
 				D83E82431E2D90A5000FC23F /* ContactLabelString.txt in Resources */,
@@ -4046,7 +4039,6 @@
 				D83E8AE91E2D9153000FC23F /* PxpFilterFootballTabViewController.xib in Resources */,
 				D83E83AF1E2D90A5000FC23F /* tab-bar@2x.png in Resources */,
 				D83E8B481E2D9153000FC23F /* ViewController.xib in Resources */,
-				D83E82F91E2D90A5000FC23F /* myClipTab.png in Resources */,
 				D83E82191E2D90A5000FC23F /* BlueSettingsButtonSelect.png in Resources */,
 				D83E82441E2D90A5000FC23F /* ContactString.txt in Resources */,
 				D83E82ED1E2D90A5000FC23F /* mailselected@2x.png in Resources */,
@@ -4185,7 +4177,6 @@
 				D83E833F1E2D90A5000FC23F /* PxpListViewFullscreenViewController.m in Sources */,
 				D83E7EEF1E2D87FE000FC23F /* VKPlayerViewController.m in Sources */,
 				D83E8B161E2D9153000FC23F /* RJLFreezeMonitor.m in Sources */,
-				D83E836E1E2D90A5000FC23F /* RicoLive2BenchViewController.m in Sources */,
 				D83E835B1E2D90A5000FC23F /* PxpTelestrationRenderer.m in Sources */,
 				D83E8B801E2D9153000FC23F /* ExternalScreenButton.m in Sources */,
 				D83E7F0B1E2D9097000FC23F /* TeamPlayer.m in Sources */,
@@ -4460,6 +4451,7 @@
 				D83E83411E2D90A5000FC23F /* PxpMyClipViewFullscreenViewController.m in Sources */,
 				D83E83311E2D90A5000FC23F /* PxpArrowButton.m in Sources */,
 				D83E8AF91E2D9153000FC23F /* PxpFilterToggleButton.m in Sources */,
+				D81552851E490D57003010D4 /* RicoLive2BenchViewController.m in Sources */,
 				D83E8ADE1E2D9153000FC23F /* PxpDropboxActivity.m in Sources */,
 				D83E8B041E2D9153000FC23F /* PxpURLResponse.m in Sources */,
 				D83E83011E2D90A5000FC23F /* NCGhostView.m in Sources */,

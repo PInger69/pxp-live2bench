@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Live2BenchViewController.h"
 #import "CustomLabel.h"
 #import "AbstractBottomViewController.h"
 #import "BottomViewControllerProtocol.h"
