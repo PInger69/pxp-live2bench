@@ -334,7 +334,7 @@
     
     [self configurePxpFilter:self.currentEvent];
     [self loadAndDisplayTags];
-//    [self.collectionView reloadData];
+    [self.collectionView reloadData];
 }
 
 

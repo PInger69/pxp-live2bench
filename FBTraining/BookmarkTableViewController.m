@@ -541,49 +541,7 @@ message:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure 
         [self.tableView endUpdates];
         [self.setOfDeletingCells removeAllObjects];
     }
-    
-//    CustomAlertView *alert = [[CustomAlertView alloc] init];
-//    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-//    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
-//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-//    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-//    [alert showView];
 }
-
-//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    if (buttonIndex == YES_BUTTON) {
-//        NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
-//        
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
-//            [self.delegate tableView:self indexesToBeDeleted:deleteOrderList];
-//        }
-//        
-//        for (NSInteger i =[deleteOrderList count]-1; i>=0 ;i--) {
-//            NSIndexPath *cellIndexPath = deleteOrderList[i];
-//            [self deleteClipAtIndex:cellIndexPath];
-//            if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController
-//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
-//                self.selectedPath = nil;
-//            }
-//        }
-//        
-//        
-//        [self.tableView beginUpdates];
-//        [self.tableView deleteRowsAtIndexPaths:deleteOrderList withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
-////        [self.tableView deleteRowsAtIndexPaths:[self.setOfDeletingCells allObjects] withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
-//        [self.tableView endUpdates];
-//        
-//        [self.setOfDeletingCells removeAllObjects];
-////        [self.tableView reloadData];
-//    }
-//    
-////    [CustomAlertView removeAlert:alertView];
-////    [alertView viewFinished];
-//    [self checkDeleteAllButton]; // hides the delete all button if shown
-//}
-
 
 -(void)removeDeleteSelection
 {

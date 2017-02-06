@@ -82,19 +82,7 @@
     
     [self.myContentView addSubview: self.downloadAll];
 
-    //[self.myContentView addSubview: self.playButton];
 }
-//-(void)prepareForReuse{
-//
-//}
-
-//-(void)playButtonPressed: (UIButton *) sender{
-//    self.sendUserInfo();
-//}
-//
-//-(void)downloadButtonPressed{
-//    self.downloadButtonBlock();
-//}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

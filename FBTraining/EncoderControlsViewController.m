@@ -59,12 +59,6 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     BUTTON_STATE                        = START_HIDDEN | STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN
 };
 
-//@property (strong, nonatomic, nonnull) CustomAlertView *pauseAlertView;
-//@property (strong, nonatomic, nonnull) CustomAlertView *stopAlertView;
-//@property (strong, nonatomic, nonnull) CustomAlertView *shutdownAlertView;
-//@property (strong, nonatomic, nonnull) CustomAlertView *startAlertView;
-//@property (strong, nonatomic, nonnull) CustomAlertView *noTeamAlertView;
-
 #define DEFAULT_LEAGUE @"Select a League"
 #define DEFAULT_HOME_TEAM @"Select a Home Team"
 #define DEFAULT_AWAY_TEAM @"Select a Away Team"

@@ -17,6 +17,9 @@
 		D81552711E3C1570003010D4 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552701E3C1570003010D4 /* LoginViewController.m */; };
 		D81552761E428F7E003010D4 /* CreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D81552731E428F7E003010D4 /* CreditsView.xib */; };
 		D81552771E428F7E003010D4 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552751E428F7E003010D4 /* CreditsViewController.m */; };
+		D815527B1E49082B003010D4 /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815527A1E49082B003010D4 /* CalendarViewController.m */; };
+		D81552801E4908C4003010D4 /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D815527D1E4908C4003010D4 /* ARCalendarTableViewCell.m */; };
+		D81552811E4908C4003010D4 /* ARCalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815527F1E4908C4003010D4 /* ARCalendarTableViewController.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -80,7 +83,6 @@
 		D83E82241E2D90A5000FC23F /* BreadCrumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F351E2D90A2000FC23F /* BreadCrumbView.m */; };
 		D83E82251E2D90A5000FC23F /* calendarTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F361E2D90A2000FC23F /* calendarTab@2x.png */; };
 		D83E82261E2D90A5000FC23F /* calendarTabSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F371E2D90A2000FC23F /* calendarTabSelect@2x.png */; };
-		D83E82271E2D90A5000FC23F /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F391E2D90A2000FC23F /* CalendarViewController.m */; };
 		D83E82281E2D90A5000FC23F /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F3A1E2D90A2000FC23F /* camera.png */; };
 		D83E82291E2D90A5000FC23F /* CameraDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F3C1E2D90A2000FC23F /* CameraDetails.m */; };
 		D83E822A1E2D90A5000FC23F /* CFLBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F3E1E2D90A2000FC23F /* CFLBottomViewController.m */; };
@@ -472,7 +474,6 @@
 		D83E8AA21E2D9152000FC23F /* RicoSourcePickerButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F61E2D9146000FC23F /* RicoSourcePickerButtons.m */; };
 		D83E8AA31E2D9152000FC23F /* EncoderControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F71E2D9146000FC23F /* EncoderControlsViewController.m */; };
 		D83E8AA41E2D9152000FC23F /* RicoFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86F91E2D9147000FC23F /* RicoFullScreenViewController.m */; };
-		D83E8AA61E2D9152000FC23F /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FB1E2D9147000FC23F /* ARCalendarTableViewCell.m */; };
 		D83E8AA71E2D9152000FC23F /* VideoRecieptDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FC1E2D9147000FC23F /* VideoRecieptDataProvider.m */; };
 		D83E8AA81E2D9152000FC23F /* FeedMappingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E86FE1E2D9147000FC23F /* FeedMappingViewController.m */; };
 		D83E8AA91E2D9152000FC23F /* DownloadClipFromTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87001E2D9147000FC23F /* DownloadClipFromTag.m */; };
@@ -541,7 +542,6 @@
 		D83E8AFD1E2D9153000FC23F /* PxpMailClipActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87871E2D9149000FC23F /* PxpMailClipActivity.m */; };
 		D83E8AFF1E2D9153000FC23F /* PxpRangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E878B1E2D9149000FC23F /* PxpRangeModifierButton.m */; };
 		D83E8B001E2D9153000FC23F /* PxpReadyPlayerItemOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E878D1E2D9149000FC23F /* PxpReadyPlayerItemOperation.m */; };
-		D83E8B011E2D9153000FC23F /* PxpTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E878F1E2D9149000FC23F /* PxpTag.m */; };
 		D83E8B021E2D9153000FC23F /* PxpTagDisplayBar.mm in Sources */ = {isa = PBXBuildFile; fileRef = D83E87911E2D9149000FC23F /* PxpTagDisplayBar.mm */; };
 		D83E8B031E2D9153000FC23F /* PxpURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87931E2D9149000FC23F /* PxpURLProtocol.m */; };
 		D83E8B041E2D9153000FC23F /* PxpURLResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87951E2D9149000FC23F /* PxpURLResponse.m */; };
@@ -620,7 +620,6 @@
 		D83E8B4F1E2D9153000FC23F /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88261E2D914D000FC23F /* AlertsSettingViewController.m */; };
 		D83E8B501E2D9153000FC23F /* AnalyzeLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88281E2D914D000FC23F /* AnalyzeLoader.m */; };
 		D83E8B511E2D9153000FC23F /* AppDelegateActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E882B1E2D914D000FC23F /* AppDelegateActionPack.m */; };
-		D83E8B5A1E2D9153000FC23F /* ARCalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88361E2D914D000FC23F /* ARCalendarTableViewController.m */; };
 		D83E8B5B1E2D9153000FC23F /* AVAsset+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88381E2D914D000FC23F /* AVAsset+Image.m */; };
 		D83E8B5C1E2D9153000FC23F /* BasketballBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E88391E2D914D000FC23F /* BasketballBottomViewController.plist */; };
 		D83E8B5E1E2D9153000FC23F /* BookmarkTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E883D1E2D914E000FC23F /* BookmarkTableViewController.m */; };
@@ -639,7 +638,6 @@
 		D83E8B6B1E2D9153000FC23F /* CoachFilterProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */; };
 		D83E8B6C1E2D9153000FC23F /* CopyDeviceVideoToOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */; };
 		D83E8B6E1E2D9153000FC23F /* CustomAlertControllerQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */; };
-		D83E8B6F1E2D9153000FC23F /* CustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885F1E2D914E000FC23F /* CustomAlertView.m */; };
 		D83E8B701E2D9153000FC23F /* DebugOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88611E2D914E000FC23F /* DebugOutput.m */; };
 		D83E8B711E2D9153000FC23F /* DelayOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88631E2D914F000FC23F /* DelayOperation.m */; };
 		D83E8B741E2D9153000FC23F /* DeviceAssetLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88691E2D914F000FC23F /* DeviceAssetLibrary.m */; };
@@ -708,6 +706,12 @@
 		D81552731E428F7E003010D4 /* CreditsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreditsView.xib; sourceTree = "<group>"; };
 		D81552741E428F7E003010D4 /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditsViewController.h; sourceTree = "<group>"; };
 		D81552751E428F7E003010D4 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditsViewController.m; sourceTree = "<group>"; };
+		D81552791E49082B003010D4 /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
+		D815527A1E49082B003010D4 /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
+		D815527C1E4908C4003010D4 /* ARCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewCell.h; sourceTree = "<group>"; };
+		D815527D1E4908C4003010D4 /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
+		D815527E1E4908C4003010D4 /* ARCalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewController.h; sourceTree = "<group>"; };
+		D815527F1E4908C4003010D4 /* ARCalendarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewController.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -997,8 +1001,6 @@
 		D83E7F351E2D90A2000FC23F /* BreadCrumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BreadCrumbView.m; sourceTree = "<group>"; };
 		D83E7F361E2D90A2000FC23F /* calendarTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calendarTab@2x.png"; sourceTree = "<group>"; };
 		D83E7F371E2D90A2000FC23F /* calendarTabSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calendarTabSelect@2x.png"; sourceTree = "<group>"; };
-		D83E7F381E2D90A2000FC23F /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
-		D83E7F391E2D90A2000FC23F /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
 		D83E7F3A1E2D90A2000FC23F /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		D83E7F3B1E2D90A2000FC23F /* CameraDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraDetails.h; sourceTree = "<group>"; };
 		D83E7F3C1E2D90A2000FC23F /* CameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDetails.m; sourceTree = "<group>"; };
@@ -1593,7 +1595,6 @@
 		D83E86F71E2D9146000FC23F /* EncoderControlsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderControlsViewController.m; sourceTree = "<group>"; };
 		D83E86F81E2D9146000FC23F /* RicoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoPlayer.h; sourceTree = "<group>"; };
 		D83E86F91E2D9147000FC23F /* RicoFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoFullScreenViewController.m; sourceTree = "<group>"; };
-		D83E86FB1E2D9147000FC23F /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
 		D83E86FC1E2D9147000FC23F /* VideoRecieptDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRecieptDataProvider.m; sourceTree = "<group>"; };
 		D83E86FD1E2D9147000FC23F /* TagProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagProxy.h; sourceTree = "<group>"; };
 		D83E86FE1E2D9147000FC23F /* FeedMappingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedMappingViewController.m; sourceTree = "<group>"; };
@@ -1713,8 +1714,6 @@
 		D83E878B1E2D9149000FC23F /* PxpRangeModifierButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpRangeModifierButton.m; sourceTree = "<group>"; };
 		D83E878C1E2D9149000FC23F /* PxpReadyPlayerItemOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpReadyPlayerItemOperation.h; sourceTree = "<group>"; };
 		D83E878D1E2D9149000FC23F /* PxpReadyPlayerItemOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpReadyPlayerItemOperation.m; sourceTree = "<group>"; };
-		D83E878E1E2D9149000FC23F /* PxpTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTag.h; sourceTree = "<group>"; };
-		D83E878F1E2D9149000FC23F /* PxpTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTag.m; sourceTree = "<group>"; };
 		D83E87901E2D9149000FC23F /* PxpTagDisplayBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTagDisplayBar.h; sourceTree = "<group>"; };
 		D83E87911E2D9149000FC23F /* PxpTagDisplayBar.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PxpTagDisplayBar.mm; sourceTree = "<group>"; };
 		D83E87921E2D9149000FC23F /* PxpURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpURLProtocol.h; sourceTree = "<group>"; };
@@ -1868,9 +1867,6 @@
 		D83E88291E2D914D000FC23F /* AnalyzeTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyzeTabViewController.h; sourceTree = "<group>"; };
 		D83E882A1E2D914D000FC23F /* AppDelegateActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegateActionPack.h; sourceTree = "<group>"; };
 		D83E882B1E2D914D000FC23F /* AppDelegateActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegateActionPack.m; sourceTree = "<group>"; };
-		D83E88301E2D914D000FC23F /* ARCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewCell.h; sourceTree = "<group>"; };
-		D83E88351E2D914D000FC23F /* ARCalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewController.h; sourceTree = "<group>"; };
-		D83E88361E2D914D000FC23F /* ARCalendarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewController.m; sourceTree = "<group>"; };
 		D83E88371E2D914D000FC23F /* AVAsset+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+Image.h"; sourceTree = "<group>"; };
 		D83E88381E2D914D000FC23F /* AVAsset+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+Image.m"; sourceTree = "<group>"; };
 		D83E88391E2D914D000FC23F /* BasketballBottomViewController.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BasketballBottomViewController.plist; sourceTree = "<group>"; };
@@ -1907,8 +1903,6 @@
 		D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyDeviceVideoToOperation.m; sourceTree = "<group>"; };
 		D83E885C1E2D914E000FC23F /* CustomAlertControllerQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlertControllerQueue.h; sourceTree = "<group>"; };
 		D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlertControllerQueue.m; sourceTree = "<group>"; };
-		D83E885E1E2D914E000FC23F /* CustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlertView.h; sourceTree = "<group>"; };
-		D83E885F1E2D914E000FC23F /* CustomAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlertView.m; sourceTree = "<group>"; };
 		D83E88601E2D914E000FC23F /* DebugOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugOutput.h; sourceTree = "<group>"; };
 		D83E88611E2D914E000FC23F /* DebugOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugOutput.m; sourceTree = "<group>"; };
 		D83E88621E2D914F000FC23F /* DelayOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelayOperation.h; sourceTree = "<group>"; };
@@ -2085,6 +2079,19 @@
 				D81552751E428F7E003010D4 /* CreditsViewController.m */,
 			);
 			path = Credits;
+			sourceTree = "<group>";
+		};
+		D81552781E4907D5003010D4 /* CalendarViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D815527C1E4908C4003010D4 /* ARCalendarTableViewCell.h */,
+				D815527D1E4908C4003010D4 /* ARCalendarTableViewCell.m */,
+				D815527E1E4908C4003010D4 /* ARCalendarTableViewController.h */,
+				D815527F1E4908C4003010D4 /* ARCalendarTableViewController.m */,
+				D81552791E49082B003010D4 /* CalendarViewController.h */,
+				D815527A1E49082B003010D4 /* CalendarViewController.m */,
+			);
+			path = CalendarViewController;
 			sourceTree = "<group>";
 		};
 		D83E7DB81E2D86CB000FC23F = {
@@ -2583,7 +2590,6 @@
 				D83E86F71E2D9146000FC23F /* EncoderControlsViewController.m */,
 				D83E86F81E2D9146000FC23F /* RicoPlayer.h */,
 				D83E86F91E2D9147000FC23F /* RicoFullScreenViewController.m */,
-				D83E86FB1E2D9147000FC23F /* ARCalendarTableViewCell.m */,
 				D83E86FC1E2D9147000FC23F /* VideoRecieptDataProvider.m */,
 				D83E86FD1E2D9147000FC23F /* TagProxy.h */,
 				D83E86FE1E2D9147000FC23F /* FeedMappingViewController.m */,
@@ -2698,8 +2704,6 @@
 				D83E878B1E2D9149000FC23F /* PxpRangeModifierButton.m */,
 				D83E878C1E2D9149000FC23F /* PxpReadyPlayerItemOperation.h */,
 				D83E878D1E2D9149000FC23F /* PxpReadyPlayerItemOperation.m */,
-				D83E878E1E2D9149000FC23F /* PxpTag.h */,
-				D83E878F1E2D9149000FC23F /* PxpTag.m */,
 				D83E87901E2D9149000FC23F /* PxpTagDisplayBar.h */,
 				D83E87911E2D9149000FC23F /* PxpTagDisplayBar.mm */,
 				D83E87921E2D9149000FC23F /* PxpURLProtocol.h */,
@@ -2853,9 +2857,6 @@
 				D83E88291E2D914D000FC23F /* AnalyzeTabViewController.h */,
 				D83E882A1E2D914D000FC23F /* AppDelegateActionPack.h */,
 				D83E882B1E2D914D000FC23F /* AppDelegateActionPack.m */,
-				D83E88301E2D914D000FC23F /* ARCalendarTableViewCell.h */,
-				D83E88351E2D914D000FC23F /* ARCalendarTableViewController.h */,
-				D83E88361E2D914D000FC23F /* ARCalendarTableViewController.m */,
 				D83E88371E2D914D000FC23F /* AVAsset+Image.h */,
 				D83E88381E2D914D000FC23F /* AVAsset+Image.m */,
 				D83E88391E2D914D000FC23F /* BasketballBottomViewController.plist */,
@@ -2892,8 +2893,6 @@
 				D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */,
 				D83E885C1E2D914E000FC23F /* CustomAlertControllerQueue.h */,
 				D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */,
-				D83E885E1E2D914E000FC23F /* CustomAlertView.h */,
-				D83E885F1E2D914E000FC23F /* CustomAlertView.m */,
 				D83E88601E2D914E000FC23F /* DebugOutput.h */,
 				D83E88611E2D914E000FC23F /* DebugOutput.m */,
 				D83E88621E2D914F000FC23F /* DelayOperation.h */,
@@ -3033,8 +3032,6 @@
 				D83E7F351E2D90A2000FC23F /* BreadCrumbView.m */,
 				D83E7F361E2D90A2000FC23F /* calendarTab@2x.png */,
 				D83E7F371E2D90A2000FC23F /* calendarTabSelect@2x.png */,
-				D83E7F381E2D90A2000FC23F /* CalendarViewController.h */,
-				D83E7F391E2D90A2000FC23F /* CalendarViewController.m */,
 				D83E7F3A1E2D90A2000FC23F /* camera.png */,
 				D83E7F3B1E2D90A2000FC23F /* CameraDetails.h */,
 				D83E7F3C1E2D90A2000FC23F /* CameraDetails.m */,
@@ -3717,6 +3714,7 @@
 				D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
+				D81552781E4907D5003010D4 /* CalendarViewController */,
 				D81552721E428F13003010D4 /* Credits */,
 				D8AE26191E2FDBC700BD2EB2 /* UI Preferences */,
 				D83E8BA31E2E9C31000FC23F /* ClipViewController */,
@@ -4240,6 +4238,7 @@
 				D83E83721E2D90A5000FC23F /* RJLVideoPlayer.m in Sources */,
 				D83E8B8B1E2D9153000FC23F /* GetUserTagsOperation.m in Sources */,
 				D83E7F081E2D9097000FC23F /* LeagueTeam.m in Sources */,
+				D81552801E4908C4003010D4 /* ARCalendarTableViewCell.m in Sources */,
 				D83E83DD1E2D90A5000FC23F /* Utility.m in Sources */,
 				D83E8B501E2D9153000FC23F /* AnalyzeLoader.m in Sources */,
 				D83E8AE21E2D9153000FC23F /* PxpFilterButtonScrollView.m in Sources */,
@@ -4275,6 +4274,7 @@
 				D83E83E51E2D90A5000FC23F /* VideoControlBar.m in Sources */,
 				D83E83CA1E2D90A5000FC23F /* UIFont+Default.m in Sources */,
 				D83E8AFD1E2D9153000FC23F /* PxpMailClipActivity.m in Sources */,
+				D81552811E4908C4003010D4 /* ARCalendarTableViewController.m in Sources */,
 				D83E8B3B1E2D9153000FC23F /* UploadOperation.m in Sources */,
 				D83E8AF51E2D9153000FC23F /* PxpFilterTabViewController.m in Sources */,
 				D83E8AAD1E2D9152000FC23F /* FeedMapController.m in Sources */,
@@ -4282,7 +4282,6 @@
 				D83E8B311E2D9153000FC23F /* TempPxpFilterTabUI.m in Sources */,
 				D83E8B1F1E2D9153000FC23F /* SettingItemViewController.m in Sources */,
 				D83E8B071E2D9153000FC23F /* RatingOutput.m in Sources */,
-				D83E8B011E2D9153000FC23F /* PxpTag.m in Sources */,
 				D83E834E1E2D90A5000FC23F /* PxpPlayerPipView.m in Sources */,
 				D83E8B0B1E2D9153000FC23F /* RicoFullScreenControlBar.m in Sources */,
 				D83E83421E2D90A5000FC23F /* PxpPlayer+Feed.m in Sources */,
@@ -4307,6 +4306,7 @@
 				D83E83B41E2D90A5000FC23F /* TagPopOverContent.m in Sources */,
 				D83E82D71E2D90A5000FC23F /* LiveButton.m in Sources */,
 				D83E8AAA1E2D9152000FC23F /* DownloadOperationDepricated.m in Sources */,
+				D815527B1E49082B003010D4 /* CalendarViewController.m in Sources */,
 				D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */,
 				D83E8B5E1E2D9153000FC23F /* BookmarkTableViewController.m in Sources */,
 				D83E83B21E2D90A5000FC23F /* TagMaker.m in Sources */,
@@ -4401,7 +4401,6 @@
 				D83E8AC51E2D9152000FC23F /* MockURLProtocol.m in Sources */,
 				D83E82291E2D90A5000FC23F /* CameraDetails.m in Sources */,
 				D83E83371E2D90A5000FC23F /* PxpColorPicker.m in Sources */,
-				D83E8AA61E2D9152000FC23F /* ARCalendarTableViewCell.m in Sources */,
 				D83E8B381E2D9153000FC23F /* ToggleSettingViewController.m in Sources */,
 				D83E83021E2D90A5000FC23F /* NCPlayer.m in Sources */,
 				D83E82911E2D90A5000FC23F /* FilterComponentAbstract.m in Sources */,
@@ -4449,7 +4448,6 @@
 				D83E8B221E2D9153000FC23F /* SideTagEditButtonDisplayView.m in Sources */,
 				D83E83C91E2D90A5000FC23F /* UIColor+Highlight.m in Sources */,
 				D83E82141E2D90A5000FC23F /* AutoScrollLabel.m in Sources */,
-				D83E8B6F1E2D9153000FC23F /* CustomAlertView.m in Sources */,
 				D83E83D61E2D90A5000FC23F /* UserSettings.m in Sources */,
 				D83E83531E2D90A5000FC23F /* PxpPlayerViewController.m in Sources */,
 				D83E7EE51E2D87FE000FC23F /* VKPlayerControllerBase.m in Sources */,
@@ -4542,7 +4540,6 @@
 				D83E82151E2D90A5000FC23F /* AVPlayerRewindableItem.m in Sources */,
 				D815526A1E3A8301003010D4 /* CommentingRatingField.m in Sources */,
 				D83E82781E2D90A5000FC23F /* Event.m in Sources */,
-				D83E82271E2D90A5000FC23F /* CalendarViewController.m in Sources */,
 				D83E83A61E2D90A5000FC23F /* StarRating.m in Sources */,
 				D83E83061E2D90A5000FC23F /* NCTriPinchGestureRecognizer.m in Sources */,
 				D83E82931E2D90A5000FC23F /* FilterProcessorFBTforPlayers.m in Sources */,
@@ -4576,7 +4573,6 @@
 				D83E83CC1E2D90A5000FC23F /* UIImage+Blend.m in Sources */,
 				D83E8ADF1E2D9153000FC23F /* PxpErrors.m in Sources */,
 				D83E837B1E2D90A5000FC23F /* SeekButton.m in Sources */,
-				D83E8B5A1E2D9153000FC23F /* ARCalendarTableViewController.m in Sources */,
 				D83E83B31E2D90A5000FC23F /* TagMarker.m in Sources */,
 				D83E8B431E2D9153000FC23F /* VideoRecieptTableViewController.m in Sources */,
 				D83E7F091E2D9097000FC23F /* Profession.m in Sources */,

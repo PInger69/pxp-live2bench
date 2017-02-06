@@ -8,7 +8,7 @@
 
 #import "CalendarViewController.h"
 #import "MemoryBar.h"
-#import "UtilityClasses/Utility.h"
+#import "Utility.h"
 #import "ListPopoverController.h"
 #import "CKViewController.h"
 #import "ARCalendarTableViewController.h"

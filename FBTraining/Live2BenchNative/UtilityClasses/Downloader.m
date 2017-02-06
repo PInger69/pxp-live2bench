@@ -106,15 +106,6 @@ static void *  downLoaderContext = &downLoaderContext;
         _pause                  = NO;
         isDownloading           = NO;
         
-//        _IOAlertView            = [[CustomAlertView alloc]init];
-//        _IOAlertView.type = AlertNotification;
-//        
-//        [_IOAlertView setTitle:@"myplayXplay"];
-//        [_IOAlertView setMessage:@"There isn't enough space on the device."];
-//        [_IOAlertView addButtonWithTitle:@"Ok"];
-//        [_IOAlertView setDelegate:self];
-        
-
         
         _alert = [UIAlertController alertControllerWithTitle:@"Insufficient space"
                                                                         message:@"Please clear up some space and try again."
@@ -191,23 +182,9 @@ static void *  downLoaderContext = &downLoaderContext;
         
         
         
-//        if (_IOAlertView) {
-//            if (![_IOAlertView display]) {
-//                [_IOAlertView display];
-//                [CustomAlertView removeAlert:_IOAlertView];
-//            }
-//        }
         isDownloading = NO;
         [self removeFromQueue: [_queue lastObject]];
         PXPLog(@"Device needs more space");
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        CustomAlertView *alert = [[[CustomAlertView alloc]initWithTitle:@"Insufficient space"
-//                                                               message:@"Please clear up some space and try again."
-//                                                              delegate:nil
-//                                                     cancelButtonTitle:@"OK"
-//                                                     otherButtonTitles:nil, nil] showView];
-//
-//        });
         return;
     }
     
@@ -227,11 +204,6 @@ static void *  downLoaderContext = &downLoaderContext;
     
     switch (cItem.status) {
         case DownloadItemStatusIOError:
-//            if (_IOAlertView) {
-//                if (![_IOAlertView display]) {
-//                    [CustomAlertView removeAlert:_IOAlertView];
-//                }
-//            };
             self.pause = YES;
             break;
         case DownloadItemStatusComplete:

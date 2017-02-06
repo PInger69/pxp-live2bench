@@ -132,7 +132,7 @@ static NSUInteger allowedToastType        = 0;
     CGRect theNewFrame = self.animatingView.frame;
     theNewFrame.origin.y = self.parentView.bounds.size.height - 70;
    
-    [UIView animateKeyframesWithDuration: self.easeTime+self.delayTime+self.easeTime delay:0.0 options:nil animations:^{
+    [UIView animateKeyframesWithDuration: self.easeTime+self.delayTime+self.easeTime delay:0.0 options:kNilOptions animations:^{
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:relativeEaseTime animations:^{
             presentingView.frame = theNewFrame;
         }];

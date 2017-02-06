@@ -349,7 +349,7 @@
     NSLog(@"ListViewController viewDidAppear");
     [self configurePxpFilter:self.currentEvent];
     [self loadAndDisplayTags];
-    NSLog(@"current event is %@ and the number of tags is %ld", self.currentEvent == nil ? @"nil" : @"not nil", self.tagsToDisplay.count);
+    NSLog(@"current event is %@ and the number of tags is %lu", self.currentEvent == nil ? @"nil" : @"not nil", self.tagsToDisplay.count);
     [self.listTable reloadData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];

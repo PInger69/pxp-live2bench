@@ -557,7 +557,7 @@
     NSMutableSet * indexes  = [NSMutableSet new];
     
     for (NSDictionary * dict in self.tagSetData) {
-        NSInteger * n = [dict[@"order"]integerValue];
+        NSInteger n = [dict[@"order"]integerValue];
         
         
         [indexes addObject:[NSNumber numberWithInteger:n]];
