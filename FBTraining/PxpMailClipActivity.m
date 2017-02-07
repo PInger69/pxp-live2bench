@@ -50,27 +50,11 @@
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
-    
     BOOL check = YES;
-    
-//    for (NSURL *url in activityItems) {
-//        if (![url isKindOfClass:[NSURL class]]) {
-//            check = NO;
-//        }
-//    }
-    
     return check;
 }
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
-//    NSMutableArray * pool = [NSMutableArray new];
-//    for (NSURL *url in activityItems) {
-//        if ([url isKindOfClass:[NSURL class]]) {
-//            [pool addObject:url];
-//        }
-//    }
-//    
-//    self.urls  = [pool copy];
     
 }
 
@@ -87,11 +71,7 @@
     mailComposeViewController = [[MFMailComposeViewController alloc] init];
     if (mailComposeViewController) {
         mailComposeViewController.mailComposeDelegate = self;
-    //    [mailComposeViewController setToRecipients:@[@"mattt@nshipster•com"]];
         [mailComposeViewController setSubject:@"Live2Bench Clips"];
-    //    [mailComposeViewController setMessageBody:@"Lorem ipsum dolor sit amet"
-    //                                       isHTML:NO];
-        
         
         [mailComposeViewController setMessageBody:[self buildMessageFromClips:self.clips] isHTML:YES];
         
@@ -109,30 +89,15 @@
 -(void)attachClipToEmail:(NSArray*)theClips mailComposer:(MFMailComposeViewController*)mailComposer
 {
     for (Clip* aclip in theClips) {
-        NSString * clipName = aclip.name;
-        NSString * clipTime = aclip.displayTime;
-//        NSArray * videoKeys = [aclip.videosBySrcKey allKeys];;
-        NSArray * videoKeys = aclip.videoFiles;
-        
-        for (NSString * key in videoKeys) {
-            
-            //NSString * videoString = aclip.videosBySrcKey[key];
-            NSString* videoString = key;
-            
+        for (NSString* videoString in aclip.videoFiles) {
             NSURL * filePath = [NSURL fileURLWithPath:videoString];
-            NSLog(@"Checking to see if clip file exists: %@ %@", videoString, [[NSFileManager defaultManager] fileExistsAtPath:videoString] ? @"YES" : @"NO");
             NSData * videoData = [NSData dataWithContentsOfURL:filePath];
-            NSString * scourse = key;
-            NSString* destinationfileName = [NSString stringWithFormat:@"%@_%@_%@_%@.mp4",clipName,[Utility dateFromEvent:aclip.eventName],clipTime,scourse];
+            NSString* destinationfileName = [videoString lastPathComponent];
             if (videoData != nil) {
                 [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:destinationfileName];
             }
-            
         }
-
     }
-
-
 }
 
 
@@ -157,20 +122,10 @@
         [text appendString:[NSString stringWithFormat:@"<strong>%@</strong><br/>",aClip.name]];
         [text appendString:[NSString stringWithFormat:@"File Names: <br/>"]];
         
-        NSArray * videoKeys = [aClip.videosBySrcKey allKeys];;
-        for (NSString * key in videoKeys) {
-//            NSString * videoString = aClip.videosBySrcKey[key];
-            
-//            NSURL * filePath = [NSURL fileURLWithPath:videoString];
-            NSString * scourse = key;
-            NSString* destinationfileName = [NSString stringWithFormat:@"%@_%@_%@_%@.mp4",aClip.name,[Utility dateFromEvent:aClip.eventName],aClip.displayTime,scourse];
-            
-            [text appendString:[NSString stringWithFormat:@"&nbsp&nbsp&nbsp&nbsp%@<br/>",destinationfileName]];
+        
+        for (NSString* videoString in aClip.videoFiles) {
+            [text appendString:[NSString stringWithFormat:@"&nbsp&nbsp&nbsp&nbsp%@<br/>",[videoString lastPathComponent]]];
         }
-        
-        
-        
-        
         
         
         if (aClip.rating) {
@@ -190,11 +145,6 @@
         
     }
     [text appendString:@"</body></html>"];
-
-    
-    
-    
-    
     return [text copy];
 
 }

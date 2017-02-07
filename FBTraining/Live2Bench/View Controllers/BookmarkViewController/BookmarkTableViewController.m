@@ -107,60 +107,9 @@
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
 
-    NSLog(@"Selected clip path for cell: %lu : %@", indexPath.row, clip.path);
-
-    for (NSString* path in clip.videoFiles) {
-        NSLog(@"Video path : %@", path);
-    }
-    
-    NSString* directory = [clip.path stringByDeletingLastPathComponent];
-    
-    NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager] enumeratorAtPath:directory];
-    NSString *filename;
-    
-    while ((filename = [direnum nextObject] )) {
-        NSLog(@"Files in resource folder: %@", filename);
-    }
-    
-    
-//    NSDictionary *videosBySourceKey = clip.videosBySrcKey;
-//    NSArray *sourceKeys = [videosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
-//    
-//    if (sourceKeys.count > 1) {
-//        // multiple source, display popover.
-//        [_sourceSelectPopoverViewController setListOfButtonNames:sourceKeys];
-//        
-//        for (NSUInteger i = 0; i < sourceKeys.count; i++) {
-//            UIButton *button = _sourceSelectPopoverViewController.arrayOfButtons[i];
-//            NSString *path = videosBySourceKey[sourceKeys[i]];
-//            
-//            // get thumbnail image
-//            [button setBackgroundImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
-//        }
-//        
-//        [_sourceSelectPopoverViewController addOnCompletionBlock:^(NSString *sourceKey) {
-//            if (sourceKey) {
-//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip, @"source": sourceKey }];
-//            }
-//        }];
-//        
-//        [_sourceSelectPopoverViewController presentPopoverFromRect:selectedCell.bounds inView:selectedCell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//        
-//    } else {
-//        // single source, just play it.
-//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip }];
-//    }
-    
     
      [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip }];
     
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
-//                                                                                                                                 @"feed": clip,
-//                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
-//                                                                                                                                 @"duration":[clip.rawData objectForKey:@"duration"],
-//                                                                                                                                 @"comment":[clip.rawData objectForKey:@"comment"]},
-//                                                                                                                                 @"forWhole":clip.rawData}];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"tagSelected" object:self userInfo: clip];
     if(![indexPath isEqual:self.selectedPath])
     {
         selectedCell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, selectedCell.frame.size.width, selectedCell.frame.size.height)];
@@ -190,16 +139,12 @@
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
-//    cell.interactionController = [[UIDocumentInteractionController alloc] init];
     
-    NSLog(@"Clip path for cell: %lu : %@", indexPath.row, clip.path);
-
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
     };
     
-    NSDictionary *clipVideosBySourceKey = clip.videosBySrcKey;
     ////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////

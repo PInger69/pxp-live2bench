@@ -16,21 +16,13 @@
 
 @interface Clip : Tag<FilterItemProtocol>
 
-//@property (nonatomic,strong)            NSString       * name;
-//@property (assign,nonatomic)            double         time;
-//@property (assign,nonatomic)            int            duration;
 @property (nonatomic,strong)            NSString       * clipId;
-//@property (nonatomic,assign)            NSInteger            rating;
-//@property (nonatomic,strong)            NSString       * comment;
 @property (nonatomic,strong)            NSMutableDictionary   * localRawData;
 @property (nonatomic,strong)            NSString       * path;
-//@property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
 @property (nonatomic, strong,)         NSMutableDictionary        * videosBySrcKey;
 
 @property (strong, nonatomic) NSString *eventName;
-//@property (strong, nonatomic) NSString *displayTime;
-
 @property (readonly, nonatomic) NSString *globalID;
 
 
@@ -48,7 +40,7 @@
  *
  *  @param data build the Clip
  *
- *  @return
+ *  @return an instance of a Clip
  */
 -(instancetype)initWithDict:(NSDictionary*)data;
 
@@ -63,7 +55,7 @@
 /**
  *  Add another source to the Clip
  *
- *  @param aDict
+ *  @param aDict - the dictionary values of a source
  */
 -(void)addSourceToClip:(NSDictionary*)aDict;
 
