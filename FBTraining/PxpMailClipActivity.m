@@ -89,12 +89,10 @@
 -(void)attachClipToEmail:(NSArray*)theClips mailComposer:(MFMailComposeViewController*)mailComposer
 {
     for (Clip* aclip in theClips) {
-        for (NSString* videoString in aclip.videoFiles) {
-            NSURL * filePath = [NSURL fileURLWithPath:videoString];
-            NSData * videoData = [NSData dataWithContentsOfURL:filePath];
-            NSString* destinationfileName = [videoString lastPathComponent];
+        for (PxpClipSource* clipSource in aclip.clipSources) {
+            NSData * videoData = [NSData dataWithContentsOfURL:clipSource.url];
             if (videoData != nil) {
-                [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:destinationfileName];
+                [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:clipSource.proposedVideoName];
             }
         }
     }
@@ -123,8 +121,8 @@
         [text appendString:[NSString stringWithFormat:@"File Names: <br/>"]];
         
         
-        for (NSString* videoString in aClip.videoFiles) {
-            [text appendString:[NSString stringWithFormat:@"&nbsp&nbsp&nbsp&nbsp%@<br/>",[videoString lastPathComponent]]];
+        for (PxpClipSource* clipSource in aClip.clipSources) {
+            [text appendString:[NSString stringWithFormat:@"&nbsp&nbsp&nbsp&nbsp%@<br/>",[clipSource proposedVideoName]]];
         }
         
         

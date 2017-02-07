@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "FilterItemProtocol.h"
 #import "Tag.h"
+#import "PxpClipSource.h"
 
 /**
  Its kinda like the Event Class but is used to only manage the sources for local content
@@ -20,7 +21,8 @@
 @property (nonatomic,strong)            NSMutableDictionary   * localRawData;
 @property (nonatomic,strong)            NSString       * path;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
-@property (nonatomic, strong,)         NSMutableDictionary        * videosBySrcKey;
+@property (nonatomic, readonly)         NSArray* clipSources;
+@property (nonatomic, strong)           NSMutableDictionary        * videosBySrcKey;
 
 @property (strong, nonatomic) NSString *eventName;
 @property (readonly, nonatomic) NSString *globalID;
@@ -68,6 +70,15 @@
  *  Deletes all mp4s and selfPlist
  */
 -(void)destroy;
+
+/**
+ *  Access an object that encapsulates various attributes of an
+ *  individual video source.
+ *
+ *  @return the clip source
+ */
+-(PxpClipSource*) sourceForKey:(NSString*) source;
+
 
 @end
 

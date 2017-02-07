@@ -48,7 +48,6 @@
 #import "UIImage+Blend.h"
 
 #import "EncoderOperation.h"
-#import "AnalyzeTabViewController.h"
 #import "CustomAlertControllerQueue.h"
 
 

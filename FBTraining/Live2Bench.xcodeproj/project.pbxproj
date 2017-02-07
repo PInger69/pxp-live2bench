@@ -23,6 +23,8 @@
 		D81552851E490D57003010D4 /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552841E490D57003010D4 /* RicoLive2BenchViewController.m */; };
 		D81552891E4946E1003010D4 /* BookmarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552881E4946E1003010D4 /* BookmarkViewController.m */; };
 		D815528C1E4947AA003010D4 /* BookmarkTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815528B1E4947AA003010D4 /* BookmarkTableViewController.m */; };
+		D815528F1E4A28B0003010D4 /* Clip.m in Sources */ = {isa = PBXBuildFile; fileRef = D815528E1E4A28B0003010D4 /* Clip.m */; };
+		D81552921E4A2B12003010D4 /* PxpClipSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552911E4A2B12003010D4 /* PxpClipSource.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -141,7 +143,6 @@
 		D83E82691E2D90A5000FC23F /* BitRateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F971E2D90A2000FC23F /* BitRateViewController.m */; };
 		D83E826A1E2D90A5000FC23F /* BonjourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F991E2D90A2000FC23F /* BonjourModule.m */; };
 		D83E826B1E2D90A5000FC23F /* CheckEncoderShutdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */; };
-		D83E826C1E2D90A5000FC23F /* Clip.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F9D1E2D90A2000FC23F /* Clip.m */; };
 		D83E82711E2D90A5000FC23F /* CloudEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */; };
 		D83E82721E2D90A5000FC23F /* Encoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA51E2D90A2000FC23F /* Encoder.m */; };
 		D83E82731E2D90A5000FC23F /* EncoderCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */; };
@@ -709,6 +710,10 @@
 		D81552881E4946E1003010D4 /* BookmarkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkViewController.m; sourceTree = "<group>"; };
 		D815528A1E4947AA003010D4 /* BookmarkTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkTableViewController.h; sourceTree = "<group>"; };
 		D815528B1E4947AA003010D4 /* BookmarkTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkTableViewController.m; sourceTree = "<group>"; };
+		D815528D1E4A28B0003010D4 /* Clip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clip.h; sourceTree = "<group>"; };
+		D815528E1E4A28B0003010D4 /* Clip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Clip.m; sourceTree = "<group>"; };
+		D81552901E4A2B12003010D4 /* PxpClipSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpClipSource.h; sourceTree = "<group>"; };
+		D81552911E4A2B12003010D4 /* PxpClipSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpClipSource.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1076,8 +1081,6 @@
 		D83E7F991E2D90A2000FC23F /* BonjourModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BonjourModule.m; sourceTree = "<group>"; };
 		D83E7F9A1E2D90A2000FC23F /* CheckEncoderShutdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckEncoderShutdown.h; sourceTree = "<group>"; };
 		D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckEncoderShutdown.m; sourceTree = "<group>"; };
-		D83E7F9C1E2D90A2000FC23F /* Clip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clip.h; sourceTree = "<group>"; };
-		D83E7F9D1E2D90A2000FC23F /* Clip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Clip.m; sourceTree = "<group>"; };
 		D83E7FA21E2D90A2000FC23F /* CloudEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudEncoder.h; sourceTree = "<group>"; };
 		D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudEncoder.m; sourceTree = "<group>"; };
 		D83E7FA41E2D90A2000FC23F /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
@@ -2033,6 +2036,10 @@
 		D81552611E394EA6003010D4 /* Video and Markup */ = {
 			isa = PBXGroup;
 			children = (
+				D815528D1E4A28B0003010D4 /* Clip.h */,
+				D815528E1E4A28B0003010D4 /* Clip.m */,
+				D81552901E4A2B12003010D4 /* PxpClipSource.h */,
+				D81552911E4A2B12003010D4 /* PxpClipSource.m */,
 				D81552621E394F73003010D4 /* Tag.h */,
 				D81552631E394F73003010D4 /* Tag.m */,
 			);
@@ -3538,8 +3545,6 @@
 				D83E7F991E2D90A2000FC23F /* BonjourModule.m */,
 				D83E7F9A1E2D90A2000FC23F /* CheckEncoderShutdown.h */,
 				D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */,
-				D83E7F9C1E2D90A2000FC23F /* Clip.h */,
-				D83E7F9D1E2D90A2000FC23F /* Clip.m */,
 				D83E7FA21E2D90A2000FC23F /* CloudEncoder.h */,
 				D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */,
 				D83E7FA41E2D90A2000FC23F /* Encoder.h */,
@@ -4194,6 +4199,7 @@
 				D83E83D11E2D90A5000FC23F /* UploadButton.m in Sources */,
 				D83E8AC41E2D9152000FC23F /* MockEncoderSource.m in Sources */,
 				D83E8B101E2D9153000FC23F /* RicoPlayerPool.m in Sources */,
+				D81552921E4A2B12003010D4 /* PxpClipSource.m in Sources */,
 				D83E83E21E2D90A5000FC23F /* VideoBarContainerView.m in Sources */,
 				D83E8B761E2D9153000FC23F /* DeviceVideoCollectionViewController.m in Sources */,
 				D83E8A9D1E2D9152000FC23F /* PxpFilter.m in Sources */,
@@ -4272,6 +4278,7 @@
 				D83E826A1E2D90A5000FC23F /* BonjourModule.m in Sources */,
 				D83E8B8A1E2D9153000FC23F /* GetSummaryOperation.m in Sources */,
 				D83E82941E2D90A5000FC23F /* FilterScrollView.m in Sources */,
+				D815528F1E4A28B0003010D4 /* Clip.m in Sources */,
 				D83E827A1E2D90A5000FC23F /* Feed.m in Sources */,
 				D83E8B7B1E2D9153000FC23F /* DropboxManager.m in Sources */,
 				D83E822A1E2D90A5000FC23F /* CFLBottomViewController.m in Sources */,
@@ -4332,7 +4339,6 @@
 				D83E82751E2D90A5000FC23F /* EncoderManagerActionPack.m in Sources */,
 				D83E8AC81E2D9152000FC23F /* NullCameraDetails.m in Sources */,
 				D83E8B151E2D9153000FC23F /* RicoZoomContainer.m in Sources */,
-				D83E826C1E2D90A5000FC23F /* Clip.m in Sources */,
 				D83E8AF21E2D9153000FC23F /* PxpFilterSoccerTabViewController.m in Sources */,
 				D83E827E1E2D90A5000FC23F /* EncoderOperation.m in Sources */,
 				D83E827C1E2D90A5000FC23F /* LocalEncoder.m in Sources */,

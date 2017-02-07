@@ -11,9 +11,6 @@
 #import "LocalMediaManager.h"
 
 @implementation Clip
-{
-//    NSDictionary * _videosBySrcKey;
-}
 
 /**
  *  This is used when making a new plist from scatch
@@ -73,11 +70,41 @@
         
         
         [_localRawData writeToFile:self.path atomically:YES];
-        //[_rawData writeToFile:self.path atomically:YES];
         
         // just save
     }
     return self;
+}
+
+-(PxpClipSource*) sourceForKey:(NSString*) source {
+    NSString* filePath = self.videosBySrcKey[source];
+    NSString* unqualifiedName = [filePath lastPathComponent];
+    
+    NSString* correctedPath = nil;
+    for (NSString* path in self.videoFiles) {
+        if ([unqualifiedName isEqualToString:[path lastPathComponent]]) {
+            correctedPath = path;
+            break;
+        }
+    }
+    
+    if (correctedPath == nil) {
+        return nil;
+    } else {
+        NSString* name = [NSString stringWithFormat:@"%@_%@_%@_%@.mp4",self.name,[Utility dateFromEvent:self.eventName],self.displayTime,source];
+        return [[PxpClipSource alloc] initWithPath:correctedPath name:name];
+    }
+}
+
+-(NSArray*) clipSources {
+    NSMutableArray* result = [NSMutableArray new];
+    for (NSString* source in self.videosBySrcKey) {
+        PxpClipSource* clipSource = [self sourceForKey:source];
+        if (clipSource != nil) {
+            [result addObject:clipSource];
+        }
+    }
+    return [NSArray arrayWithArray:result];
 }
 
 
@@ -94,12 +121,7 @@
     //self = [super initWithData:data event:]
     if (self) {
          _localRawData         = [[NSMutableDictionary alloc]initWithDictionary:self.rawData];
-        //_rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
-        //_name               = [_rawData objectForKey:@"name"];
         _clipId              = self.ID;
-        //_clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
-        //_rating             = [[_rawData objectForKey:@"rating"] intValue];
-        //_comment            = [_rawData objectForKey:@"comment"];
         _rating             = [data[@"rating"] intValue];
         _comment            = data[@"comment"];
         _path               = [data objectForKey:@"plistPath"];
@@ -130,11 +152,6 @@
             [self.videosBySrcKey setObject:[fileNames firstObject] forKey:@"s_00"];
         }
         
-        //_videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
-        //_event = _rawData[@"event"];
-        //_displayTime = _rawData[@"displaytime"];
-        
-        
         NSMutableArray * listOfVideos = [NSMutableArray arrayWithArray:[self videoFiles]];
         BOOL modFlag = NO;
          // this checks to see if the clip is are on the device if not then remove from Dict
@@ -147,9 +164,7 @@
         
         }
 
-        
         if (modFlag) [_localRawData writeToFile:_path atomically:YES];
-        //if (modFlag) [_rawData writeToFile:self.path atomically:YES];
     }
     return self;
 }
@@ -314,45 +329,8 @@
 }
 
 - (NSString *)globalID {
-//    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
     return [NSString stringWithFormat:@"%@_%@", _eventName, _clipId];
 }
-
-//- (nonnull NSDictionary *)sourcesForVideoPaths:(NSArray *)paths {
-//    NSMutableDictionary *sources = [NSMutableDictionary dictionary];
-//    
-//    for (NSString *path in self.videoFiles) {
-//        
-//        // I <3 C, so get the UF8 encoded C string.
-//        const char *s = path.UTF8String;
-//        
-//        // find locations of '+' and "hq.mp4" to grab source from.
-//        const char *a = strchr(s, '+');
-//        const char *b = a ? strstr(a, "hq.mp4") : NULL;
-//        
-//        // check that locations exist for both '+' and "hq.mp4".
-//        if (a && b) {
-//            // calculate length of the string needed from (a + 1) to b. safe to assume a + 1 <= b.
-//            const size_t n = b - (a + 1);
-//            
-//            // stack allocate string with NULL character.
-//            char source[n + 1];
-//            source[n] = '\0';
-//            
-//            // copy the string from (a + 1) to b.
-//            strncpy(source, a + 1, n);
-//            
-//            // add to dictionary.
-//            sources[[NSString stringWithUTF8String:source]] = path;
-//        }
-//    }
-//    
-//    return sources;
-//}
-//
-//- (nonnull NSDictionary *)videosBySrcKey {
-//    return [self sourcesForVideoPaths:self.videoFiles];
-//}
 
 
 -(NSString*)path
