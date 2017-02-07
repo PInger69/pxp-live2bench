@@ -10,12 +10,17 @@
 
 @implementation PxpClipSource
 
--(instancetype) initWithPath:(NSString *)path name:(NSString *)name {
+-(instancetype) initWithPath:(NSString *)path name:(NSString *)name sourceId:(NSString*) source {
     if (self = [super init]) {
-        self.url = [NSURL fileURLWithPath:path];
+        self.path = path;
+        self.source = source;
         self.proposedVideoName = name;
     }
     return self;
+}
+
+-(NSURL*) url {
+    return [NSURL fileURLWithPath:self.path];
 }
 
 @end

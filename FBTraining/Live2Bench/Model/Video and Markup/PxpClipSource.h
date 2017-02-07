@@ -13,9 +13,11 @@
 
 @interface PxpClipSource : NSObject
 
-@property (nonatomic, strong, nullable) NSURL* url;
+@property (nonatomic, readonly, nullable) NSURL* url;
+@property (nonatomic, strong, nullable) NSString* path;
+@property (nonatomic, strong, nullable) NSString* source;
 @property (nonatomic, strong, nullable) NSString* proposedVideoName;
 
--(instancetype) initWithPath:(nonnull NSString*) path name:(nonnull NSString*) name;
+-(instancetype) initWithPath:(nonnull NSString*) path name:(nonnull NSString*) name sourceId:(nonnull NSString*) source;
 
 @end

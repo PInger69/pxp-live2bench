@@ -24,12 +24,9 @@
 #define NO_BUTTON   1
 
 
-@interface BookmarkTableViewController () // <UIDocumentInteractionControllerDelegate>
-//@property (strong, nonatomic) UIPopoverController *sharePop;
+@interface BookmarkTableViewController () 
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 @property (strong, nonatomic) NSMutableArray   *sharingIndexPaths;
-//@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSharePopoverViewController;
-//@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
 
 @end
 
@@ -39,31 +36,14 @@
     self = [super init];
     if (self){
         
-        /*
-        _sourceSharePopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
-        _sourceSharePopoverViewController.contentViewController.modalInPopover = NO;
-        
-        _sourceSelectPopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
-        _sourceSelectPopoverViewController.contentViewController.modalInPopover = NO;
-        */
-        
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
-        
-        //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-        self.sharingIndexPaths = [NSMutableArray new];        
+        self.sharingIndexPaths = [NSMutableArray new];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -235,27 +215,6 @@
             }
             
             
-//            for (NSURL * vidUrl in aClip.videoFiles) {
-//
-//                NSString *eventDate = [aClip.eventName substringToIndex:18];
-//                NSString * sourceKey = @"";
-//                for (NSString * val in [aClip.videosBySrcKey allValues]) {
-//                    NSLog(@"%s",__FUNCTION__);
-//aClip.videosBySrcKey k
-//                }
-//                NSString *fileName = [NSString stringWithFormat:@"%@_%@_%@__%@_%@_VS_%@%@.mp4",aClip.name,aClip.displayTime,eventDate,sourceKey,aClip.homeTeam,aClip.visitTeam,@""];
-//                fileName = [fileName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-//                
-//
-//                
-//                [activityDropbox.urlToFileName setObject:fileName forKey:vidUrl];
-//                
-//            }
-            
-            
-            
-            
-            
             Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
 //            [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
             for (NSString * vidfile in aClip2.videoFiles) {
@@ -377,19 +336,6 @@
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-
-
-
-//// Override to support editing the table view.
-/*- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }
-}*/
 
 
 
@@ -521,16 +467,5 @@ message:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure 
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:clipToDelete userInfo:nil];
     }
 }
-
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

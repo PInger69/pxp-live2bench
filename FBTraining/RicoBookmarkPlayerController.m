@@ -87,54 +87,42 @@
 -(void)playClip:(Clip *)clip
 {
 
-    NSMutableDictionary *videos = [clip.videosBySrcKey mutableCopy];
     for (RicoPlayer * p in self.players) {
         p.reliable = NO;
         p.feed = nil;
     }
     
     
-    Feed * feed;
-    if (videos.allKeys.count > 0) {
-        NSString * akey;
- 
-        for (RicoPlayer * p in self.players) {
-            p.hidden = YES;
-            [p.streamStatus removeFromSuperview];
-            [p.debugOutput removeFromSuperview];
-            
-        }
+    for (RicoPlayer * p in self.players) {
+        p.hidden = YES;
+        [p.streamStatus removeFromSuperview];
+        [p.debugOutput removeFromSuperview];
         
-        for (NSInteger i=0; i<videos.allKeys.count; i++) {
+    }
 
-            akey = videos.allKeys[i];
-        
-            
-            // change the app directory
-            NSString * videoPath = videos[akey];
-            
-            
-            videoPath = [NSString stringWithFormat:@"%@/bookmark/bookmarkvideo/%@",[UserCenter getInstance].localPath,[videoPath lastPathComponent]];
-            
-            
-            if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
-                [videos removeObjectForKey:akey];
-                continue;
-            }
-            
-            feed = [[Feed alloc] initWithFileURL:videoPath];
+    NSMutableDictionary* videos = [NSMutableDictionary new];
+    NSArray* clipSources = clip.clipSources;
+    for (NSInteger i = 0; i < clipSources.count; i++) {
+        PxpClipSource* clipSource = clipSources[i];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:clipSource.path]) {
+            [videos setObject:clipSource.url forKey:clipSource.source];
 
+            Feed* feed = [[Feed alloc] initWithFileURL:clipSource.path];
+            
             RicoPlayer * p = self.players[i];
             [p loadFeed:feed];
             p.hidden = NO;
             p.reliable = YES;
             [p.streamStatus removeFromSuperview];
             [p.debugOutput removeFromSuperview];
-            
         }
+    }
+    
+    if (videos.count > 0) {
         [self.ricoPlayerController play];
         self.ricoGroup.gridMode = (videos.allKeys.count >1);
     }
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:BOOKMARK_PLAYER_CONTROLLER_CHANGE object:self];
 }
 

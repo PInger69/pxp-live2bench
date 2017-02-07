@@ -99,7 +99,7 @@
         return nil;
     } else {
         NSString* name = [NSString stringWithFormat:@"%@_%@_%@_%@.mp4",self.name,[Utility dateFromEvent:self.eventName],self.displayTime,source];
-        return [[PxpClipSource alloc] initWithPath:correctedPath name:name];
+        return [[PxpClipSource alloc] initWithPath:correctedPath name:name sourceId:source];
     }
 }
 

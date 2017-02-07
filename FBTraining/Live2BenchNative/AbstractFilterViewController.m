@@ -1,5 +1,5 @@
 //
-//  BookmarkFilterViewController.m
+//  AbstractFilterViewController.m
 //  Live2BenchNative
 //
 //  Created by DEV on 2013-04-05.

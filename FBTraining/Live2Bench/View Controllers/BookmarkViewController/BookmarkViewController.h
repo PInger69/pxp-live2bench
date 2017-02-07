@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomTabViewController.h"
-#import "BookmarkFilterViewController.h"
 #import "DeletableTableViewController.h"
 #import "PxpMyClipViewFullscreenViewController.h"
 #import "PxpFilter.h"

@@ -25,6 +25,7 @@
 		D815528C1E4947AA003010D4 /* BookmarkTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815528B1E4947AA003010D4 /* BookmarkTableViewController.m */; };
 		D815528F1E4A28B0003010D4 /* Clip.m in Sources */ = {isa = PBXBuildFile; fileRef = D815528E1E4A28B0003010D4 /* Clip.m */; };
 		D81552921E4A2B12003010D4 /* PxpClipSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552911E4A2B12003010D4 /* PxpClipSource.m */; };
+		D81552951E4A49B5003010D4 /* BookmarkViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552941E4A49B5003010D4 /* BookmarkViewCell.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -78,8 +79,6 @@
 		D83E821A1E2D90A5000FC23F /* BlueSettingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F231E2D90A2000FC23F /* BlueSettingsButtonSelect@2x.png */; };
 		D83E821B1E2D90A5000FC23F /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F241E2D90A2000FC23F /* bookmarkedit.png */; };
 		D83E821C1E2D90A5000FC23F /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F251E2D90A2000FC23F /* bookmarkedit@2x.png */; };
-		D83E821D1E2D90A5000FC23F /* BookmarkFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F271E2D90A2000FC23F /* BookmarkFilterViewController.m */; };
-		D83E821E1E2D90A5000FC23F /* BookmarkViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F291E2D90A2000FC23F /* BookmarkViewCell.m */; };
 		D83E82201E2D90A5000FC23F /* BorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F2D1E2D90A2000FC23F /* BorderButton.m */; };
 		D83E82211E2D90A5000FC23F /* BorderlessButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F2F1E2D90A2000FC23F /* BorderlessButton.m */; };
 		D83E82221E2D90A5000FC23F /* BottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F311E2D90A2000FC23F /* BottomViewController.m */; };
@@ -714,6 +713,8 @@
 		D815528E1E4A28B0003010D4 /* Clip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Clip.m; sourceTree = "<group>"; };
 		D81552901E4A2B12003010D4 /* PxpClipSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpClipSource.h; sourceTree = "<group>"; };
 		D81552911E4A2B12003010D4 /* PxpClipSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpClipSource.m; sourceTree = "<group>"; };
+		D81552931E4A49B5003010D4 /* BookmarkViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkViewCell.h; sourceTree = "<group>"; };
+		D81552941E4A49B5003010D4 /* BookmarkViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkViewCell.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -985,10 +986,6 @@
 		D83E7F231E2D90A2000FC23F /* BlueSettingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueSettingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D83E7F241E2D90A2000FC23F /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
 		D83E7F251E2D90A2000FC23F /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
-		D83E7F261E2D90A2000FC23F /* BookmarkFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkFilterViewController.h; sourceTree = "<group>"; };
-		D83E7F271E2D90A2000FC23F /* BookmarkFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkFilterViewController.m; sourceTree = "<group>"; };
-		D83E7F281E2D90A2000FC23F /* BookmarkViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkViewCell.h; sourceTree = "<group>"; };
-		D83E7F291E2D90A2000FC23F /* BookmarkViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkViewCell.m; sourceTree = "<group>"; };
 		D83E7F2C1E2D90A2000FC23F /* BorderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderButton.h; sourceTree = "<group>"; };
 		D83E7F2D1E2D90A2000FC23F /* BorderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BorderButton.m; sourceTree = "<group>"; };
 		D83E7F2E1E2D90A2000FC23F /* BorderlessButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderlessButton.h; sourceTree = "<group>"; };
@@ -2092,6 +2089,8 @@
 			children = (
 				D815528A1E4947AA003010D4 /* BookmarkTableViewController.h */,
 				D815528B1E4947AA003010D4 /* BookmarkTableViewController.m */,
+				D81552931E4A49B5003010D4 /* BookmarkViewCell.h */,
+				D81552941E4A49B5003010D4 /* BookmarkViewCell.m */,
 				D81552871E4946E1003010D4 /* BookmarkViewController.h */,
 				D81552881E4946E1003010D4 /* BookmarkViewController.m */,
 			);
@@ -3010,10 +3009,6 @@
 				D83E7F231E2D90A2000FC23F /* BlueSettingsButtonSelect@2x.png */,
 				D83E7F241E2D90A2000FC23F /* bookmarkedit.png */,
 				D83E7F251E2D90A2000FC23F /* bookmarkedit@2x.png */,
-				D83E7F261E2D90A2000FC23F /* BookmarkFilterViewController.h */,
-				D83E7F271E2D90A2000FC23F /* BookmarkFilterViewController.m */,
-				D83E7F281E2D90A2000FC23F /* BookmarkViewCell.h */,
-				D83E7F291E2D90A2000FC23F /* BookmarkViewCell.m */,
 				D83E7F2C1E2D90A2000FC23F /* BorderButton.h */,
 				D83E7F2D1E2D90A2000FC23F /* BorderButton.m */,
 				D83E7F2E1E2D90A2000FC23F /* BorderlessButton.h */,
@@ -4270,7 +4265,6 @@
 				D83E8B091E2D9153000FC23F /* RicoBaseFullScreenViewController.m in Sources */,
 				D83E8AFF1E2D9153000FC23F /* PxpRangeModifierButton.m in Sources */,
 				D83E7EF11E2D87FE000FC23F /* VKStreamInfoView.m in Sources */,
-				D83E821E1E2D90A5000FC23F /* BookmarkViewCell.m in Sources */,
 				D83E82761E2D90A5000FC23F /* EncoderStatusMonitor.m in Sources */,
 				D83E8B471E2D9153000FC23F /* ViewController.m in Sources */,
 				D83E8B821E2D9153000FC23F /* FakeEncoderBitrate.m in Sources */,
@@ -4322,6 +4316,7 @@
 				D83E8B111E2D9153000FC23F /* RicoPlayerViewController.m in Sources */,
 				D83E8AA31E2D9152000FC23F /* EncoderControlsViewController.m in Sources */,
 				D83E8B451E2D9153000FC23F /* VideoUploadRecieptActivity.m in Sources */,
+				D81552951E4A49B5003010D4 /* BookmarkViewCell.m in Sources */,
 				D83E82961E2D90A5000FC23F /* FilterTabViewController.m in Sources */,
 				D83E8B2C1E2D9153000FC23F /* TagProxy.m in Sources */,
 				D83E83921E2D90A5000FC23F /* Slomo.m in Sources */,
@@ -4345,7 +4340,6 @@
 				D83E8B1E1E2D9153000FC23F /* SetSummaryOperation.m in Sources */,
 				D83E8AE01E2D9153000FC23F /* PxpFilterButton.m in Sources */,
 				D83E8B701E2D9153000FC23F /* DebugOutput.m in Sources */,
-				D83E821D1E2D90A5000FC23F /* BookmarkFilterViewController.m in Sources */,
 				D83E8B461E2D9153000FC23F /* VideoZoomManager.m in Sources */,
 				D83E8B771E2D9153000FC23F /* DeviceVideoDataSource.m in Sources */,
 				D83E83BE1E2D90A5000FC23F /* TeleViewController.m in Sources */,
