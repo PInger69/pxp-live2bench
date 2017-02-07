@@ -107,6 +107,22 @@
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
 
+    NSLog(@"Selected clip path for cell: %lu : %@", indexPath.row, clip.path);
+
+    for (NSString* path in clip.videoFiles) {
+        NSLog(@"Video path : %@", path);
+    }
+    
+    NSString* directory = [clip.path stringByDeletingLastPathComponent];
+    
+    NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager] enumeratorAtPath:directory];
+    NSString *filename;
+    
+    while ((filename = [direnum nextObject] )) {
+        NSLog(@"Files in resource folder: %@", filename);
+    }
+    
+    
 //    NSDictionary *videosBySourceKey = clip.videosBySrcKey;
 //    NSArray *sourceKeys = [videosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
 //    
@@ -175,6 +191,8 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
 //    cell.interactionController = [[UIDocumentInteractionController alloc] init];
+    
+    NSLog(@"Clip path for cell: %lu : %@", indexPath.row, clip.path);
 
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];

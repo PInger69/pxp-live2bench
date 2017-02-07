@@ -13,7 +13,6 @@
 
 #import "LogoViewController.h"
 #import "CalendarViewController.h"
-//#import "Live2BenchViewController.h"
 #import "ClipViewController.h"
 #import "ListViewController.h"
 #import "BookmarkViewController.h"
@@ -30,7 +29,6 @@
 #import "TabsSettingViewController.h"
 
 #import "UserCenter.h"
-//#import "StatsTabViewController.h"
 
 typedef NS_OPTIONS(NSInteger, PXPTabs) {
     PXPTabsLogoTab      = 1<<1,
@@ -41,7 +39,6 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     PXPTabsMyClipsTab   = 1<<6,
     PXPTabsStatsTab     = 1<<7,
     PXPTabsDebuggingTab = 1<<10,
-    //    EventButtonControlStatesDisabled    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN,
     
 };
 

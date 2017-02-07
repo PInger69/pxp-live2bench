@@ -15,6 +15,4 @@
 
 - (instancetype)initWithClips:(NSArray*)clips;
 
-
--(void)clipsToMessage:(NSArray*)clips;
 @end

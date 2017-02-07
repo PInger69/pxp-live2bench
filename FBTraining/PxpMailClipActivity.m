@@ -111,17 +111,22 @@
     for (Clip* aclip in theClips) {
         NSString * clipName = aclip.name;
         NSString * clipTime = aclip.displayTime;
-        NSArray * videoKeys = [aclip.videosBySrcKey allKeys];;
+//        NSArray * videoKeys = [aclip.videosBySrcKey allKeys];;
+        NSArray * videoKeys = aclip.videoFiles;
         
         for (NSString * key in videoKeys) {
             
-            NSString * videoString = aclip.videosBySrcKey[key];
+            //NSString * videoString = aclip.videosBySrcKey[key];
+            NSString* videoString = key;
             
             NSURL * filePath = [NSURL fileURLWithPath:videoString];
+            NSLog(@"Checking to see if clip file exists: %@ %@", videoString, [[NSFileManager defaultManager] fileExistsAtPath:videoString] ? @"YES" : @"NO");
             NSData * videoData = [NSData dataWithContentsOfURL:filePath];
             NSString * scourse = key;
             NSString* destinationfileName = [NSString stringWithFormat:@"%@_%@_%@_%@.mp4",clipName,[Utility dateFromEvent:aclip.eventName],clipTime,scourse];
-            [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:destinationfileName];
+            if (videoData != nil) {
+                [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:destinationfileName];
+            }
             
         }
 

@@ -8,7 +8,6 @@
 
 #import "DownloadClipFromTag.h"
 #import "DownloadOperation.h"
-#import "DownloadOperationDepricated.h"
 #import "DownloaderQueue.h"
 
 @interface DownloadClipFromTag ()
@@ -155,7 +154,7 @@
             
 
             NSString    * destinationPath  = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-            
+            NSLog(@"download destination path %@", destinationPath);
             
             
             downloadOperation.source        = [NSURL URLWithString:remotePath];

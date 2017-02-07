@@ -649,4 +649,8 @@ static NSMutableDictionary * openDurationTagsWithID;
     return _thumbnails;
 }
 
+-(BOOL) isTelestration {
+    return self.type == TagTypeTele || self.telestration != nil;
+}
+
 @end

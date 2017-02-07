@@ -23,7 +23,7 @@
 #import "Event.h"
 #import "Clip.h"
 #import "Tag.h"
-#import "TagProxy.h"
+//#import "TagProxy.h"
 #import "TagProtocol.h"
 #import "UserCenter.h"
 #import "LocalMediaManager.h"

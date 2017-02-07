@@ -732,7 +732,7 @@
 }
 
 
-
+/*
 //extend the tag duration by adding five secs at the beginning of the tag
 -(void)startRangeBeenModified:(CustomButton*)button{
     Tag *tagToBeModified = self.selectedTag;
@@ -828,6 +828,7 @@
     }
 
 }
+*/
 
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -1301,7 +1302,7 @@
     
     NSString *src = tag.thumbnails.allKeys.firstObject;
     
-    if (tag.telestration) {
+    if (tag.isTelestration) {
         for (NSString *k in tag.thumbnails.keyEnumerator) {
             if ([tag.telestration.sourceName isEqualToString:k]) {
                 src = k;

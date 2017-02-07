@@ -94,12 +94,6 @@
         [tabClassForIdentifierTemp setObject:[DebuggingTabViewController class] forKey:TAB_DEBUG];
     }
     
-//    [toggles addObject:@{@"Name": @"RicoDualView",      @"Identifier": @"RicoDualView" }];
-//    [tabClassForIdentifierTemp setObject:[RicoDualViewTabViewController class] forKey:@"RicoDualView"];
-    
-//    [toggles addObject:@{@"Name": @"RicoL2B",      @"Identifier": @"RicoL2B" }];
-//    [tabClassForIdentifierTemp setObject:[RicoLive2BenchViewController class] forKey:@"RicoL2B"];
-    
     self = [super initWithAppDelegate:appDel
                                  name:NSLocalizedString(@"Main Tabs", nil)
                            identifier:@"Main Tabs"

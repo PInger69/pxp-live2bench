@@ -120,9 +120,6 @@
         [_pxpFilterTab addTab:        [[PxpFilterMyClipTabViewController alloc]init]];
         _tagsToDisplay                          = [NSMutableArray new];
         
-//        _playerViewController                   = [[PxpPlayerViewController alloc] init];
-//        self.ricoPlayerController               = [RicoPlayerViewController new];
-
         _videoBar       = [[PxpVideoBar alloc] init];
         
         [_videoBar.forwardSeekButton    addTarget:self action:@selector(onSeekButtonPress:) forControlEvents:UIControlEventTouchUpInside];
@@ -141,16 +138,12 @@
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REMOVE_INFORMATION object:nil queue:nil usingBlock:^(NSNotification *note){
         [clipContentDisplay displayClip:nil];
     }];
-//    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
-//        [self.allClips removeObjectIdenticalTo:note.userInfo];
-//    }];
     
     [self setupView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipAutoSaved:) name:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self.tableViewController selector:@selector(reloadData) name:NOTIF_AUTO_DOWNLOAD_COMPLETE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBookmarkPlayerControlerChange:) name:BOOKMARK_PLAYER_CONTROLLER_CHANGE object:nil];
   
     // This is for the tag count
@@ -621,9 +614,6 @@
 #pragma mark -
 -(void)onBookmarkPlayerControlerChange:(NSNotification*)note
 {
-//    RicoBookmarkPlayerController * controller = (RicoBookmarkPlayerController *)note.object;
-    
-    // if its more then one feed then hide the telestaration
 }
 
 -(void)frameByFrame:(id)sender{

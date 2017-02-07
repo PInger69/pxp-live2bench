@@ -332,7 +332,6 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
 
 
 
-// PipViewController
 #define NOTIF_SET_PLAYER_FEED               @"setPlayerFeed"   // userInfo:@{@"time":<float>,  @"feed": <NSString>,  @"state":<playerState> }
 
 /**

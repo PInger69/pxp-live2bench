@@ -30,7 +30,7 @@
     IBOutlet UILabel *_periodLabel;
     IBOutlet UISegmentedControl *_homeSegControl;
     IBOutlet UISegmentedControl *_awaySegControl;
-    MPMoviePlayerController *_moviePlayer;
+//    MPMoviePlayerController *_moviePlayer;
     NSString *oldName;
     NSDictionary *oldDict;
     NSDictionary *dict;
@@ -63,7 +63,7 @@
 @property (nonatomic,strong) IBOutlet UIView *leftView;
 @property (nonatomic,strong) IBOutlet UIView *middleView;
 @property (nonatomic,strong) IBOutlet UIView *rightView;
-@property (nonatomic,strong) MPMoviePlayerController *moviePlayer;
+//@property (nonatomic,strong) MPMoviePlayerController *moviePlayer;
 @property (nonatomic,strong) NSString *oldName;
 - (IBAction)segmentValueChanged:(id)sender;
 - (IBAction)periodSegmentValueChanged:(id)sender;

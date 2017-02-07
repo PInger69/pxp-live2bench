@@ -2187,7 +2187,6 @@ static void * eventContext      = &eventContext;
         
         if (newDuration > _selectedTag.duration) {
             _selectedTag.duration = newDuration;
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
             
             Encoder * eventEncoder = (Encoder *)self.currentEvent.parentEncoder;
             EncoderOperation * modTagOperation = [[EncoderOperationModTag alloc]initEncoder:eventEncoder tag:_selectedTag];
@@ -2245,7 +2244,6 @@ static void * eventContext      = &eventContext;
         int newDuration = newDuration = endTime - startTime;
         if (newDuration > _selectedTag.duration) {
             _selectedTag.duration = newDuration;
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
             Encoder * eventEncoder = (Encoder *)self.currentEvent.parentEncoder;
             EncoderOperation * modTagOperation = [[EncoderOperationModTag alloc]initEncoder:eventEncoder tag:_selectedTag];
             [eventEncoder runOperation:modTagOperation];

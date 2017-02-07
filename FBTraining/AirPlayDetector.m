@@ -6,7 +6,7 @@
 
 #import "AirPlayDetector.h"
 #import <Foundation/Foundation.h>
-#import <MediaPlayer/MPMoviePlayerController.h>
+//#import <MediaPlayer/MPMoviePlayerController.h>
 #import <MediaPlayer/MediaPlayer.h>
 
 NSString *AirPlayAvailabilityChanged = @"AirPlayAvailabilityChanged";

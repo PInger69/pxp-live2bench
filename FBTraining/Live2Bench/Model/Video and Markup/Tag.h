@@ -85,6 +85,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) NSString       * userTeam;
 @property (assign, nonatomic) BOOL          deleted;
 
+@property (readonly, nonatomic) BOOL isTelestration;
+
 /// The telestration accociated with the tag.
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 

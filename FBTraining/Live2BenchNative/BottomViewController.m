@@ -26,7 +26,7 @@
 @synthesize periodSegmentedControl=_periodSegmentedControl;
 @synthesize homeSegControl=_homeSegControl;
 @synthesize awaySegControl =_awaySegControl;
-@synthesize moviePlayer=_moviePlayer;
+//@synthesize moviePlayer=_moviePlayer;
 @synthesize oldName;
 
 

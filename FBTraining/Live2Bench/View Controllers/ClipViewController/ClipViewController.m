@@ -328,10 +328,6 @@
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:true];
-#ifdef DEBUG
-    NSLog(@"ClipViewController viewDidAppear: current event is %@", self.currentEvent == nil ? @"nil" : @"not nil");
-#endif
-    
     [self configurePxpFilter:self.currentEvent];
     [self loadAndDisplayTags];
     [self.collectionView reloadData];
@@ -396,8 +392,6 @@
 {
     // Get the data from the array
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
-    NSLog(@"Cell for tag %lu, type = %lu", indexPath.row, tagSelect.type);
-    
     
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
     cell.backgroundPlaneView = nil;
@@ -436,7 +430,7 @@
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
     
     __weak UIImageView* weakImageView = cell.imageView;
-    if (tagSelect.type == TagTypeTele) {
+    if (tagSelect.isTelestration) {
         NSLog(@"Cell %lu Telestration tag type", indexPath.row);
         PxpTelestration *tele = cell.data.telestration;
         [cell.data.thumbnails objectForKey:tele.sourceName];
@@ -560,7 +554,7 @@
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     [self.sourceSelectPopover clear];
     
-     if (selectedCell.data.eventInstance.feeds.count >=2 && !tagSelect.telestration) { // if is new
+     if (selectedCell.data.eventInstance.feeds.count >=2 && !tagSelect.isTelestration) { // if is new
         NSArray * listOfScource = [[selectedCell.data.eventInstance.feeds allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
         [self.sourceSelectPopover setListOfButtonNames:listOfScource];
@@ -613,7 +607,7 @@
             
         
         
-    } else if (tagSelect.telestration) {
+    } else if (tagSelect.isTelestration) {
         
         Feed *feed = selectedCell.data.eventInstance.feeds[tagSelect.telestration.sourceName];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB

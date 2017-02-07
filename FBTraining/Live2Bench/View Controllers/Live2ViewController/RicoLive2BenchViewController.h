@@ -1,5 +1,5 @@
 //
-//  Live2BenchViewController.h
+//  RicoLive2BenchViewController.h
 //  Live2BenchNative
 //
 //  Created by DEV on 2013-01-21.
