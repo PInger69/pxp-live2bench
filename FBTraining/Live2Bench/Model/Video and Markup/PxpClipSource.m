@@ -19,6 +19,10 @@
     return self;
 }
 
+-(BOOL) videoFileExists {
+    return [[NSFileManager defaultManager] fileExistsAtPath:self.path];
+}
+
 -(NSURL*) url {
     return [NSURL fileURLWithPath:self.path];
 }

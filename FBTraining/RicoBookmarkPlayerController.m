@@ -104,7 +104,7 @@
     NSArray* clipSources = clip.clipSources;
     for (NSInteger i = 0; i < clipSources.count; i++) {
         PxpClipSource* clipSource = clipSources[i];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:clipSource.path]) {
+        if (clipSource.videoFileExists) {
             [videos setObject:clipSource.url forKey:clipSource.source];
 
             Feed* feed = [[Feed alloc] initWithFileURL:clipSource.path];

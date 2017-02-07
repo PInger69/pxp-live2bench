@@ -229,10 +229,6 @@
 		D83E82E61E2D90A5000FC23F /* logo_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80611E2D90A2000FC23F /* logo_unselected@2x.png */; };
 		D83E82E71E2D90A5000FC23F /* logoTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80621E2D90A2000FC23F /* logoTab@2x.png */; };
 		D83E82E81E2D90A5000FC23F /* logoTabSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80631E2D90A2000FC23F /* logoTabSelect@2x.png */; };
-		D83E82EA1E2D90A5000FC23F /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80661E2D90A2000FC23F /* mail.png */; };
-		D83E82EB1E2D90A5000FC23F /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80671E2D90A2000FC23F /* mail@2x.png */; };
-		D83E82EC1E2D90A5000FC23F /* mailselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80681E2D90A2000FC23F /* mailselected.png */; };
-		D83E82ED1E2D90A5000FC23F /* mailselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80691E2D90A2000FC23F /* mailselected@2x.png */; };
 		D83E82EF1E2D90A5000FC23F /* MemoryBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E806C1E2D90A2000FC23F /* MemoryBar.m */; };
 		D83E82F01E2D90A5000FC23F /* minus.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E806D1E2D90A2000FC23F /* minus.png */; };
 		D83E82F11E2D90A5000FC23F /* minusfivesec.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E806E1E2D90A2000FC23F /* minusfivesec.png */; };
@@ -626,7 +622,6 @@
 		D83E8B671E2D9153000FC23F /* CKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88501E2D914E000FC23F /* CKCalendarView.m */; };
 		D83E8B681E2D9153000FC23F /* CKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88521E2D914E000FC23F /* CKViewController.m */; };
 		D83E8B691E2D9153000FC23F /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88541E2D914E000FC23F /* ClipControlBarSlider.m */; };
-		D83E8B6A1E2D9153000FC23F /* ClipSharePopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88561E2D914E000FC23F /* ClipSharePopoverViewController.m */; };
 		D83E8B6B1E2D9153000FC23F /* CoachFilterProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */; };
 		D83E8B6C1E2D9153000FC23F /* CopyDeviceVideoToOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885A1E2D914E000FC23F /* CopyDeviceVideoToOperation.m */; };
 		D83E8B6E1E2D9153000FC23F /* CustomAlertControllerQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E885D1E2D914E000FC23F /* CustomAlertControllerQueue.m */; };
@@ -1216,10 +1211,6 @@
 		D83E80611E2D90A2000FC23F /* logo_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_unselected@2x.png"; sourceTree = "<group>"; };
 		D83E80621E2D90A2000FC23F /* logoTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoTab@2x.png"; sourceTree = "<group>"; };
 		D83E80631E2D90A2000FC23F /* logoTabSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoTabSelect@2x.png"; sourceTree = "<group>"; };
-		D83E80661E2D90A2000FC23F /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
-		D83E80671E2D90A2000FC23F /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
-		D83E80681E2D90A2000FC23F /* mailselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mailselected.png; sourceTree = "<group>"; };
-		D83E80691E2D90A2000FC23F /* mailselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mailselected@2x.png"; sourceTree = "<group>"; };
 		D83E806B1E2D90A2000FC23F /* MemoryBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryBar.h; sourceTree = "<group>"; };
 		D83E806C1E2D90A2000FC23F /* MemoryBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MemoryBar.m; sourceTree = "<group>"; };
 		D83E806D1E2D90A2000FC23F /* minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = minus.png; sourceTree = "<group>"; };
@@ -1875,8 +1866,6 @@
 		D83E88521E2D914E000FC23F /* CKViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKViewController.m; sourceTree = "<group>"; };
 		D83E88531E2D914E000FC23F /* ClipControlBarSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipControlBarSlider.h; sourceTree = "<group>"; };
 		D83E88541E2D914E000FC23F /* ClipControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipControlBarSlider.m; sourceTree = "<group>"; };
-		D83E88551E2D914E000FC23F /* ClipSharePopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipSharePopoverViewController.h; sourceTree = "<group>"; };
-		D83E88561E2D914E000FC23F /* ClipSharePopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipSharePopoverViewController.m; sourceTree = "<group>"; };
 		D83E88571E2D914E000FC23F /* CoachFilterProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoachFilterProcessor.h; sourceTree = "<group>"; };
 		D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoachFilterProcessor.m; sourceTree = "<group>"; };
 		D83E88591E2D914E000FC23F /* CopyDeviceVideoToOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyDeviceVideoToOperation.h; sourceTree = "<group>"; };
@@ -2883,8 +2872,6 @@
 				D83E88521E2D914E000FC23F /* CKViewController.m */,
 				D83E88531E2D914E000FC23F /* ClipControlBarSlider.h */,
 				D83E88541E2D914E000FC23F /* ClipControlBarSlider.m */,
-				D83E88551E2D914E000FC23F /* ClipSharePopoverViewController.h */,
-				D83E88561E2D914E000FC23F /* ClipSharePopoverViewController.m */,
 				D83E88571E2D914E000FC23F /* CoachFilterProcessor.h */,
 				D83E88581E2D914E000FC23F /* CoachFilterProcessor.m */,
 				D83E88591E2D914E000FC23F /* CopyDeviceVideoToOperation.h */,
@@ -3189,10 +3176,6 @@
 				D83E80611E2D90A2000FC23F /* logo_unselected@2x.png */,
 				D83E80621E2D90A2000FC23F /* logoTab@2x.png */,
 				D83E80631E2D90A2000FC23F /* logoTabSelect@2x.png */,
-				D83E80661E2D90A2000FC23F /* mail.png */,
-				D83E80671E2D90A2000FC23F /* mail@2x.png */,
-				D83E80681E2D90A2000FC23F /* mailselected.png */,
-				D83E80691E2D90A2000FC23F /* mailselected@2x.png */,
 				D83E806B1E2D90A2000FC23F /* MemoryBar.h */,
 				D83E806C1E2D90A2000FC23F /* MemoryBar.m */,
 				D83E806D1E2D90A2000FC23F /* minus.png */,
@@ -3872,7 +3855,6 @@
 				D83E7EE91E2D87FE000FC23F /* VideoKitforIOSv2.4.pdf in Resources */,
 				D83E83B81E2D90A5000FC23F /* teleButtonSelect@2x.png in Resources */,
 				D83E82A41E2D90A5000FC23F /* GreenSettingsButton.png in Resources */,
-				D83E82EC1E2D90A5000FC23F /* mailselected.png in Resources */,
 				D83E8AC11E2D9152000FC23F /* MakeEventView.xib in Resources */,
 				D83E83D01E2D90A5000FC23F /* undoButtonSelect@2x.png in Resources */,
 				D83E82531E2D90A5000FC23F /* Default-Landscape.png in Resources */,
@@ -3887,7 +3869,6 @@
 				D83E8B301E2D9153000FC23F /* tempData.plist in Resources */,
 				D83E83C61E2D90A5000FC23F /* twitter.jpeg in Resources */,
 				D83E83B61E2D90A5000FC23F /* teleButton@2x.png in Resources */,
-				D83E82EB1E2D90A5000FC23F /* mail@2x.png in Resources */,
 				D83E82FF1E2D90A5000FC23F /* myplayXplay_tagging.png in Resources */,
 				D83E822F1E2D90A5000FC23F /* chevrect.png in Resources */,
 				D83E82891E2D90A5000FC23F /* facebook@2x.png in Resources */,
@@ -4024,7 +4005,6 @@
 				D83E8B481E2D9153000FC23F /* ViewController.xib in Resources */,
 				D83E82191E2D90A5000FC23F /* BlueSettingsButtonSelect.png in Resources */,
 				D83E82441E2D90A5000FC23F /* ContactString.txt in Resources */,
-				D83E82ED1E2D90A5000FC23F /* mailselected@2x.png in Resources */,
 				D83E8B5C1E2D9153000FC23F /* BasketballBottomViewController.plist in Resources */,
 				D83E838B1E2D90A5000FC23F /* signalStrength.png in Resources */,
 				D83E831E1E2D90A5000FC23F /* period_half_unfocus@2x.png in Resources */,
@@ -4076,7 +4056,6 @@
 				D83E83831E2D90A5000FC23F /* settingsButtonSelect@2x.png in Resources */,
 				D83E82A61E2D90A5000FC23F /* GreenSettingsButtonSelect.png in Resources */,
 				D83E830F1E2D90A5000FC23F /* orangeSelect.png in Resources */,
-				D83E82EA1E2D90A5000FC23F /* mail.png in Resources */,
 				D83E83901E2D90A5000FC23F /* slineoff.png in Resources */,
 				D83E82611E2D90A5000FC23F /* dropdownSelect.png in Resources */,
 				D83E8B881E2D9153000FC23F /* FeedMappingView.xib in Resources */,
@@ -4377,7 +4356,6 @@
 				D83E83091E2D90A5000FC23F /* NSArray+BinarySearch.m in Sources */,
 				D83E82A31E2D90A5000FC23F /* GraphView.m in Sources */,
 				D81552711E3C1570003010D4 /* LoginViewController.m in Sources */,
-				D83E8B6A1E2D9153000FC23F /* ClipSharePopoverViewController.m in Sources */,
 				D83E83361E2D90A5000FC23F /* PxpClipContext.m in Sources */,
 				D83E834B1E2D90A5000FC23F /* PxpPlayerLight.m in Sources */,
 				D83E8B331E2D9153000FC23F /* TestGroupOperation.m in Sources */,
