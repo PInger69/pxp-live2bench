@@ -76,8 +76,11 @@
     return self;
 }
 
--(PxpClipSource*) sourceForKey:(NSString*) source {
-    NSString* filePath = self.videosBySrcKey[source];
+// for some reason the high-level document directory moves, and the fully-qualified
+// path of the video that's recorded in the plist file is incorrect. You can find
+// the correct path relatively straight-forwardly. Perhaps we shouldn't try to put
+// a fully-qualified path in the plist in the first place.
+-(NSString*) findCorrectedPathForRecordedPath:(NSString*) filePath {
     NSString* unqualifiedName = [filePath lastPathComponent];
     
     NSString* correctedPath = nil;
@@ -87,7 +90,11 @@
             break;
         }
     }
-    
+    return correctedPath;
+}
+
+-(PxpClipSource*) sourceForKey:(NSString*) source {
+    NSString* correctedPath = [self findCorrectedPathForRecordedPath:self.videosBySrcKey[source]];
     if (correctedPath == nil) {
         return nil;
     } else {
