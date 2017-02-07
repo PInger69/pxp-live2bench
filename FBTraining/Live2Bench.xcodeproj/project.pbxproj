@@ -26,6 +26,9 @@
 		D815528F1E4A28B0003010D4 /* Clip.m in Sources */ = {isa = PBXBuildFile; fileRef = D815528E1E4A28B0003010D4 /* Clip.m */; };
 		D81552921E4A2B12003010D4 /* PxpClipSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552911E4A2B12003010D4 /* PxpClipSource.m */; };
 		D81552951E4A49B5003010D4 /* BookmarkViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552941E4A49B5003010D4 /* BookmarkViewCell.m */; };
+		D81552991E4A822D003010D4 /* EncoderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552981E4A822D003010D4 /* EncoderManager.m */; };
+		D815529C1E4A8251003010D4 /* Encoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D815529B1E4A8251003010D4 /* Encoder.m */; };
+		D815529F1E4A8416003010D4 /* LocalEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D815529E1E4A8416003010D4 /* LocalEncoder.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -143,9 +146,7 @@
 		D83E826A1E2D90A5000FC23F /* BonjourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F991E2D90A2000FC23F /* BonjourModule.m */; };
 		D83E826B1E2D90A5000FC23F /* CheckEncoderShutdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */; };
 		D83E82711E2D90A5000FC23F /* CloudEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */; };
-		D83E82721E2D90A5000FC23F /* Encoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA51E2D90A2000FC23F /* Encoder.m */; };
 		D83E82731E2D90A5000FC23F /* EncoderCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */; };
-		D83E82741E2D90A5000FC23F /* EncoderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA91E2D90A2000FC23F /* EncoderManager.m */; };
 		D83E82751E2D90A5000FC23F /* EncoderManagerActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FAB1E2D90A2000FC23F /* EncoderManagerActionPack.m */; };
 		D83E82761E2D90A5000FC23F /* EncoderStatusMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FAF1E2D90A2000FC23F /* EncoderStatusMonitor.m */; };
 		D83E82771E2D90A5000FC23F /* EncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB11E2D90A2000FC23F /* EncoderTask.m */; };
@@ -153,7 +154,6 @@
 		D83E82791E2D90A5000FC23F /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB51E2D90A2000FC23F /* FakeEncoder.m */; };
 		D83E827A1E2D90A5000FC23F /* Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB71E2D90A2000FC23F /* Feed.m */; };
 		D83E827B1E2D90A5000FC23F /* FeedSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB91E2D90A2000FC23F /* FeedSwitchView.m */; };
-		D83E827C1E2D90A5000FC23F /* LocalEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FBB1E2D90A2000FC23F /* LocalEncoder.m */; };
 		D83E827D1E2D90A5000FC23F /* ParseModuleDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FBD1E2D90A2000FC23F /* ParseModuleDefault.m */; };
 		D83E827E1E2D90A5000FC23F /* EncoderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FBF1E2D90A2000FC23F /* EncoderOperation.m */; };
 		D83E827F1E2D90A5000FC23F /* EulaModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FC11E2D90A2000FC23F /* EulaModalViewController.m */; };
@@ -286,9 +286,6 @@
 		D83E83291E2D90A5000FC23F /* plusfivesec.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80B41E2D90A3000FC23F /* plusfivesec.png */; };
 		D83E832A1E2D90A5000FC23F /* plusfivesec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80B51E2D90A3000FC23F /* plusfivesec@2x.png */; };
 		D83E832B1E2D90A5000FC23F /* PopoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80B71E2D90A3000FC23F /* PopoverButton.m */; };
-		D83E832C1E2D90A5000FC23F /* ProtoTypeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80B91E2D90A3000FC23F /* ProtoTypeEncoder.m */; };
-		D83E832D1E2D90A5000FC23F /* ProtoTypeEncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80BB1E2D90A3000FC23F /* ProtoTypeEncoderTask.m */; };
-		D83E832E1E2D90A5000FC23F /* ProtoTypeEncoderTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80BD1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.m */; };
 		D83E83301E2D90A5000FC23F /* PxpAddButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80C01E2D90A3000FC23F /* PxpAddButton.m */; };
 		D83E83311E2D90A5000FC23F /* PxpArrowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80C21E2D90A3000FC23F /* PxpArrowButton.m */; };
 		D83E83321E2D90A5000FC23F /* PxpBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80C41E2D90A3000FC23F /* PxpBorderButton.m */; };
@@ -615,8 +612,6 @@
 		D83E8B601E2D9153000FC23F /* BottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E88401E2D914E000FC23F /* BottomViewController.plist */; };
 		D83E8B611E2D9153000FC23F /* ButtonMultiScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88441E2D914E000FC23F /* ButtonMultiScreen.m */; };
 		D83E8B621E2D9153000FC23F /* ButtonViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88461E2D914E000FC23F /* ButtonViewManager.m */; };
-		D83E8B631E2D9153000FC23F /* CalendarBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88481E2D914E000FC23F /* CalendarBar.m */; };
-		D83E8B641E2D9153000FC23F /* CalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E884A1E2D914E000FC23F /* CalendarTableViewController.m */; };
 		D83E8B651E2D9153000FC23F /* CameraResource.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E884C1E2D914E000FC23F /* CameraResource.m */; };
 		D83E8B661E2D9153000FC23F /* CameraResourceNonLive.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E884E1E2D914E000FC23F /* CameraResourceNonLive.m */; };
 		D83E8B671E2D9153000FC23F /* CKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88501E2D914E000FC23F /* CKCalendarView.m */; };
@@ -710,6 +705,12 @@
 		D81552911E4A2B12003010D4 /* PxpClipSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpClipSource.m; sourceTree = "<group>"; };
 		D81552931E4A49B5003010D4 /* BookmarkViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkViewCell.h; sourceTree = "<group>"; };
 		D81552941E4A49B5003010D4 /* BookmarkViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkViewCell.m; sourceTree = "<group>"; };
+		D81552971E4A822D003010D4 /* EncoderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderManager.h; sourceTree = "<group>"; };
+		D81552981E4A822D003010D4 /* EncoderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderManager.m; sourceTree = "<group>"; };
+		D815529A1E4A8251003010D4 /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
+		D815529B1E4A8251003010D4 /* Encoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Encoder.m; sourceTree = "<group>"; };
+		D815529D1E4A8416003010D4 /* LocalEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalEncoder.h; sourceTree = "<group>"; };
+		D815529E1E4A8416003010D4 /* LocalEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalEncoder.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1075,12 +1076,8 @@
 		D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckEncoderShutdown.m; sourceTree = "<group>"; };
 		D83E7FA21E2D90A2000FC23F /* CloudEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudEncoder.h; sourceTree = "<group>"; };
 		D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudEncoder.m; sourceTree = "<group>"; };
-		D83E7FA41E2D90A2000FC23F /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
-		D83E7FA51E2D90A2000FC23F /* Encoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Encoder.m; sourceTree = "<group>"; };
 		D83E7FA61E2D90A2000FC23F /* EncoderCommander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderCommander.h; sourceTree = "<group>"; };
 		D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderCommander.m; sourceTree = "<group>"; };
-		D83E7FA81E2D90A2000FC23F /* EncoderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderManager.h; sourceTree = "<group>"; };
-		D83E7FA91E2D90A2000FC23F /* EncoderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderManager.m; sourceTree = "<group>"; };
 		D83E7FAA1E2D90A2000FC23F /* EncoderManagerActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderManagerActionPack.h; sourceTree = "<group>"; };
 		D83E7FAB1E2D90A2000FC23F /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderManagerActionPack.m; sourceTree = "<group>"; };
 		D83E7FAC1E2D90A2000FC23F /* EncoderParseProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderParseProtocol.h; sourceTree = "<group>"; };
@@ -1097,8 +1094,6 @@
 		D83E7FB71E2D90A2000FC23F /* Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Feed.m; sourceTree = "<group>"; };
 		D83E7FB81E2D90A2000FC23F /* FeedSwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSwitchView.h; sourceTree = "<group>"; };
 		D83E7FB91E2D90A2000FC23F /* FeedSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSwitchView.m; sourceTree = "<group>"; };
-		D83E7FBA1E2D90A2000FC23F /* LocalEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalEncoder.h; sourceTree = "<group>"; };
-		D83E7FBB1E2D90A2000FC23F /* LocalEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalEncoder.m; sourceTree = "<group>"; };
 		D83E7FBC1E2D90A2000FC23F /* ParseModuleDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseModuleDefault.h; sourceTree = "<group>"; };
 		D83E7FBD1E2D90A2000FC23F /* ParseModuleDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseModuleDefault.m; sourceTree = "<group>"; };
 		D83E7FBE1E2D90A2000FC23F /* EncoderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderOperation.h; sourceTree = "<group>"; };
@@ -1284,12 +1279,6 @@
 		D83E80B51E2D90A3000FC23F /* plusfivesec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "plusfivesec@2x.png"; sourceTree = "<group>"; };
 		D83E80B61E2D90A3000FC23F /* PopoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverButton.h; sourceTree = "<group>"; };
 		D83E80B71E2D90A3000FC23F /* PopoverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverButton.m; sourceTree = "<group>"; };
-		D83E80B81E2D90A3000FC23F /* ProtoTypeEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoder.h; sourceTree = "<group>"; };
-		D83E80B91E2D90A3000FC23F /* ProtoTypeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoder.m; sourceTree = "<group>"; };
-		D83E80BA1E2D90A3000FC23F /* ProtoTypeEncoderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoderTask.h; sourceTree = "<group>"; };
-		D83E80BB1E2D90A3000FC23F /* ProtoTypeEncoderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoderTask.m; sourceTree = "<group>"; };
-		D83E80BC1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoderTaskQueue.h; sourceTree = "<group>"; };
-		D83E80BD1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoderTaskQueue.m; sourceTree = "<group>"; };
 		D83E80BF1E2D90A3000FC23F /* PxpAddButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpAddButton.h; sourceTree = "<group>"; };
 		D83E80C01E2D90A3000FC23F /* PxpAddButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpAddButton.m; sourceTree = "<group>"; };
 		D83E80C11E2D90A3000FC23F /* PxpArrowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpArrowButton.h; sourceTree = "<group>"; };
@@ -1852,10 +1841,6 @@
 		D83E88441E2D914E000FC23F /* ButtonMultiScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonMultiScreen.m; sourceTree = "<group>"; };
 		D83E88451E2D914E000FC23F /* ButtonViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonViewManager.h; sourceTree = "<group>"; };
 		D83E88461E2D914E000FC23F /* ButtonViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonViewManager.m; sourceTree = "<group>"; };
-		D83E88471E2D914E000FC23F /* CalendarBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarBar.h; sourceTree = "<group>"; };
-		D83E88481E2D914E000FC23F /* CalendarBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarBar.m; sourceTree = "<group>"; };
-		D83E88491E2D914E000FC23F /* CalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarTableViewController.h; sourceTree = "<group>"; };
-		D83E884A1E2D914E000FC23F /* CalendarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarTableViewController.m; sourceTree = "<group>"; };
 		D83E884B1E2D914E000FC23F /* CameraResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraResource.h; sourceTree = "<group>"; };
 		D83E884C1E2D914E000FC23F /* CameraResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraResource.m; sourceTree = "<group>"; };
 		D83E884D1E2D914E000FC23F /* CameraResourceNonLive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraResourceNonLive.h; sourceTree = "<group>"; };
@@ -2086,6 +2071,19 @@
 			path = BookmarkViewController;
 			sourceTree = "<group>";
 		};
+		D81552961E4A81D8003010D4 /* Encoder */ = {
+			isa = PBXGroup;
+			children = (
+				D815529A1E4A8251003010D4 /* Encoder.h */,
+				D815529B1E4A8251003010D4 /* Encoder.m */,
+				D81552971E4A822D003010D4 /* EncoderManager.h */,
+				D81552981E4A822D003010D4 /* EncoderManager.m */,
+				D815529D1E4A8416003010D4 /* LocalEncoder.h */,
+				D815529E1E4A8416003010D4 /* LocalEncoder.m */,
+			);
+			path = Encoder;
+			sourceTree = "<group>";
+		};
 		D83E7DB81E2D86CB000FC23F = {
 			isa = PBXGroup;
 			children = (
@@ -2109,6 +2107,7 @@
 		D83E7DC31E2D86CB000FC23F /* Live2Bench */ = {
 			isa = PBXGroup;
 			children = (
+				D81552961E4A81D8003010D4 /* Encoder */,
 				D81552601E394E96003010D4 /* Model */,
 				D83E8B981E2E8680000FC23F /* View Controllers */,
 				D83E7DD51E2D86CB000FC23F /* Info.plist */,
@@ -2858,10 +2857,6 @@
 				D83E88441E2D914E000FC23F /* ButtonMultiScreen.m */,
 				D83E88451E2D914E000FC23F /* ButtonViewManager.h */,
 				D83E88461E2D914E000FC23F /* ButtonViewManager.m */,
-				D83E88471E2D914E000FC23F /* CalendarBar.h */,
-				D83E88481E2D914E000FC23F /* CalendarBar.m */,
-				D83E88491E2D914E000FC23F /* CalendarTableViewController.h */,
-				D83E884A1E2D914E000FC23F /* CalendarTableViewController.m */,
 				D83E884B1E2D914E000FC23F /* CameraResource.h */,
 				D83E884C1E2D914E000FC23F /* CameraResource.m */,
 				D83E884D1E2D914E000FC23F /* CameraResourceNonLive.h */,
@@ -3249,12 +3244,6 @@
 				D83E80B51E2D90A3000FC23F /* plusfivesec@2x.png */,
 				D83E80B61E2D90A3000FC23F /* PopoverButton.h */,
 				D83E80B71E2D90A3000FC23F /* PopoverButton.m */,
-				D83E80B81E2D90A3000FC23F /* ProtoTypeEncoder.h */,
-				D83E80B91E2D90A3000FC23F /* ProtoTypeEncoder.m */,
-				D83E80BA1E2D90A3000FC23F /* ProtoTypeEncoderTask.h */,
-				D83E80BB1E2D90A3000FC23F /* ProtoTypeEncoderTask.m */,
-				D83E80BC1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.h */,
-				D83E80BD1E2D90A3000FC23F /* ProtoTypeEncoderTaskQueue.m */,
 				D83E80BF1E2D90A3000FC23F /* PxpAddButton.h */,
 				D83E80C01E2D90A3000FC23F /* PxpAddButton.m */,
 				D83E80C11E2D90A3000FC23F /* PxpArrowButton.h */,
@@ -3525,12 +3514,8 @@
 				D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */,
 				D83E7FA21E2D90A2000FC23F /* CloudEncoder.h */,
 				D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */,
-				D83E7FA41E2D90A2000FC23F /* Encoder.h */,
-				D83E7FA51E2D90A2000FC23F /* Encoder.m */,
 				D83E7FA61E2D90A2000FC23F /* EncoderCommander.h */,
 				D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */,
-				D83E7FA81E2D90A2000FC23F /* EncoderManager.h */,
-				D83E7FA91E2D90A2000FC23F /* EncoderManager.m */,
 				D83E7FAA1E2D90A2000FC23F /* EncoderManagerActionPack.h */,
 				D83E7FAB1E2D90A2000FC23F /* EncoderManagerActionPack.m */,
 				D83E7FAC1E2D90A2000FC23F /* EncoderParseProtocol.h */,
@@ -3547,8 +3532,6 @@
 				D83E7FB71E2D90A2000FC23F /* Feed.m */,
 				D83E7FB81E2D90A2000FC23F /* FeedSwitchView.h */,
 				D83E7FB91E2D90A2000FC23F /* FeedSwitchView.m */,
-				D83E7FBA1E2D90A2000FC23F /* LocalEncoder.h */,
-				D83E7FBB1E2D90A2000FC23F /* LocalEncoder.m */,
 				D83E7FBC1E2D90A2000FC23F /* ParseModuleDefault.h */,
 				D83E7FBD1E2D90A2000FC23F /* ParseModuleDefault.m */,
 			);
@@ -4150,7 +4133,6 @@
 				D83E8BB11E2E9C84000FC23F /* SettingsTableViewController.m in Sources */,
 				D83E83661E2D90A5000FC23F /* PxpVideoBar.m in Sources */,
 				D815525E1E3934E3003010D4 /* DeletableTableViewCell.m in Sources */,
-				D83E8B631E2D9153000FC23F /* CalendarBar.m in Sources */,
 				D83E832B1E2D90A5000FC23F /* PopoverButton.m in Sources */,
 				D83E8B031E2D9153000FC23F /* PxpURLProtocol.m in Sources */,
 				D83E83301E2D90A5000FC23F /* PxpAddButton.m in Sources */,
@@ -4165,6 +4147,7 @@
 				D83E839A1E2D90A5000FC23F /* SpinnerView.m in Sources */,
 				D83E8AE31E2D9153000FC23F /* PxpFilterButtonView.m in Sources */,
 				D83E8B131E2D9153000FC23F /* RicoVideoBar.m in Sources */,
+				D815529F1E4A8416003010D4 /* LocalEncoder.m in Sources */,
 				D83E8B051E2D9153000FC23F /* RangeSlider.m in Sources */,
 				D83E835D1E2D90A5000FC23F /* PxpTelestrationViewController.m in Sources */,
 				D83E8AAC1E2D9152000FC23F /* RicoPlayer.m in Sources */,
@@ -4178,7 +4161,6 @@
 				D83E8B761E2D9153000FC23F /* DeviceVideoCollectionViewController.m in Sources */,
 				D83E8A9D1E2D9152000FC23F /* PxpFilter.m in Sources */,
 				D83E82F51E2D90A5000FC23F /* MultiPip.m in Sources */,
-				D83E8B641E2D9153000FC23F /* CalendarTableViewController.m in Sources */,
 				D83E835C1E2D90A5000FC23F /* PxpTelestrationRenderView.m in Sources */,
 				D83E82D91E2D90A5000FC23F /* TagFlagViewController.m in Sources */,
 				D83E82091E2D90A5000FC23F /* AbstractFilterViewController.m in Sources */,
@@ -4292,6 +4274,7 @@
 				D83E8AAE1E2D9152000FC23F /* RicoPlayerGroupContainer.m in Sources */,
 				D83E83351E2D90A5000FC23F /* PxpCircleButton.m in Sources */,
 				D83E8B791E2D9153000FC23F /* DownloadOperation.m in Sources */,
+				D81552991E4A822D003010D4 /* EncoderManager.m in Sources */,
 				D83E8B111E2D9153000FC23F /* RicoPlayerViewController.m in Sources */,
 				D83E8AA31E2D9152000FC23F /* EncoderControlsViewController.m in Sources */,
 				D83E8B451E2D9153000FC23F /* VideoUploadRecieptActivity.m in Sources */,
@@ -4302,7 +4285,6 @@
 				D83E829C1E2D90A5000FC23F /* ListPopoverController.m in Sources */,
 				D83E82641E2D90A5000FC23F /* DualViewPeriodTableViewController.m in Sources */,
 				D83E82A91E2D90A5000FC23F /* HeaderBar.m in Sources */,
-				D83E832D1E2D90A5000FC23F /* ProtoTypeEncoderTask.m in Sources */,
 				D83E8ABF1E2D9152000FC23F /* LoginOperation.m in Sources */,
 				D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */,
 				D83E8AED1E2D9153000FC23F /* PxpFilterRangeSlider.m in Sources */,
@@ -4315,7 +4297,6 @@
 				D83E8B151E2D9153000FC23F /* RicoZoomContainer.m in Sources */,
 				D83E8AF21E2D9153000FC23F /* PxpFilterSoccerTabViewController.m in Sources */,
 				D83E827E1E2D90A5000FC23F /* EncoderOperation.m in Sources */,
-				D83E827C1E2D90A5000FC23F /* LocalEncoder.m in Sources */,
 				D83E8B1E1E2D9153000FC23F /* SetSummaryOperation.m in Sources */,
 				D83E8AE01E2D9153000FC23F /* PxpFilterButton.m in Sources */,
 				D83E8B701E2D9153000FC23F /* DebugOutput.m in Sources */,
@@ -4327,7 +4308,6 @@
 				D83E8B141E2D9153000FC23F /* RicoView.m in Sources */,
 				D83E8AA81E2D9152000FC23F /* FeedMappingViewController.m in Sources */,
 				D83E83D71E2D90A5000FC23F /* ActionList.m in Sources */,
-				D83E82741E2D90A5000FC23F /* EncoderManager.m in Sources */,
 				D83E8B841E2D9153000FC23F /* FeedMap.m in Sources */,
 				D83E83281E2D90A5000FC23F /* PlayerCollectionViewController.m in Sources */,
 				D83E835E1E2D90A5000FC23F /* PXPTIFAction.c in Sources */,
@@ -4363,7 +4343,6 @@
 				D83E830D1E2D90A5000FC23F /* OBSlider.m in Sources */,
 				D83E82791E2D90A5000FC23F /* FakeEncoder.m in Sources */,
 				D83E825A1E2D90A5000FC23F /* DragContext.m in Sources */,
-				D83E82721E2D90A5000FC23F /* Encoder.m in Sources */,
 				D83E827F1E2D90A5000FC23F /* EulaModalViewController.m in Sources */,
 				D83E835F1E2D90A5000FC23F /* PXPTIFByteBlock.c in Sources */,
 				D83E8B0F1E2D9153000FC23F /* RicoPlayerMonitor.m in Sources */,
@@ -4433,6 +4412,7 @@
 				D83E82601E2D90A5000FC23F /* DropdownButton.m in Sources */,
 				D83E83D41E2D90A5000FC23F /* UserColorButton.m in Sources */,
 				D83E83E31E2D90A5000FC23F /* VideoBarListViewController.m in Sources */,
+				D815529C1E4A8251003010D4 /* Encoder.m in Sources */,
 				D83E825B1E2D90A5000FC23F /* DragDropManager.m in Sources */,
 				D83E8A9E1E2D9152000FC23F /* RicoDualViewTabViewController.m in Sources */,
 				D83E8B6B1E2D9153000FC23F /* CoachFilterProcessor.m in Sources */,
@@ -4461,7 +4441,6 @@
 				D83E82D31E2D90A5000FC23F /* BottomViewControllerBase.m in Sources */,
 				D83E7F071E2D9097000FC23F /* League.m in Sources */,
 				D83E7EE71E2D87FE000FC23F /* VKAVDecodeManager.m in Sources */,
-				D83E832C1E2D90A5000FC23F /* ProtoTypeEncoder.m in Sources */,
 				D83E83271E2D90A5000FC23F /* playerCell.m in Sources */,
 				D83E82511E2D90A5000FC23F /* DebuggingTabViewController.m in Sources */,
 				D83E8AEF1E2D9153000FC23F /* PxpFilterRatingView.m in Sources */,
@@ -4530,7 +4509,6 @@
 				D83E8B4E1E2D9153000FC23F /* AirPlayDetector.m in Sources */,
 				D83E8B4F1E2D9153000FC23F /* AlertsSettingViewController.m in Sources */,
 				D83E833E1E2D90A5000FC23F /* PxpLineButton.m in Sources */,
-				D83E832E1E2D90A5000FC23F /* ProtoTypeEncoderTaskQueue.m in Sources */,
 				D83E8AC61E2D9152000FC23F /* NameCameraCellView.m in Sources */,
 				D83E8B0A1E2D9153000FC23F /* RicoBookmarkPlayerController.m in Sources */,
 				D83E83441E2D90A5000FC23F /* PxpPlayer.m in Sources */,

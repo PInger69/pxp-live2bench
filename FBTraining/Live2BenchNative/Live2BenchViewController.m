@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 
 // Singletons
-#import "EncoderClasses/EncoderManager.h"
+#import "EncoderManager.h"
 #import "UserCenter.h"
 
 // UI

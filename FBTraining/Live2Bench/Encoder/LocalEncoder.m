@@ -23,7 +23,6 @@
 #import "Event.h"
 #import "Clip.h"
 #import "Tag.h"
-//#import "TagProxy.h"
 #import "TagProtocol.h"
 #import "UserCenter.h"
 #import "LocalMediaManager.h"
@@ -31,8 +30,6 @@
 
 #define LOCAL_PLIST     @"EventsHid.plist"
 #define VIDEO_EXT       @"mp4"
-//#define TAG_SYNC        1
-//#define TAG_UPLOAD      2
 
 #define NEW_TAG_UPLOAD    1
 #define OLD_TAG_UPDATE    2
@@ -47,13 +44,12 @@
 @implementation NSURLDataConnection
 @end
 
-
 static LocalEncoder * instance;
 @implementation LocalEncoder
 {
 
     NSMutableArray  * tagSyncConnections;
-    NSURLDataConnection *encoderConnection;
+//    NSURLDataConnection *encoderConnection;
     NSDictionary    * closeTags;
     NSOperationQueue * operationQueue; // new
 }
@@ -102,11 +98,11 @@ static LocalEncoder * instance;
         NSDictionary * rawLocaltagData = [NSDictionary dictionaryWithContentsOfFile:aPath];
         NSArray * locTagsRaw = [rawLocaltagData allValues];
         
-        for (NSDictionary * aTagRaw in locTagsRaw) {
+//        for (NSDictionary * aTagRaw in locTagsRaw) {
 //            Tag *aTag = [Tag alloc]ini
             
 //            [_localTags addObject:aTag];
-        }
+//        }
         
         NSLog(@"%s",__FUNCTION__);
 
@@ -160,9 +156,6 @@ static LocalEncoder * instance;
 
 -(void) writeToPlist{
     
-// local event write to plist
-    //NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
-    
     for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
         Event *localEvent = eventDic[@"local"];
         NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:localEvent.datapath]stringByAppendingPathExtension:@"plist"];
@@ -175,26 +168,6 @@ static LocalEncoder * instance;
 
 // local tags write to plist
     NSMutableDictionary *data = [[NSMutableDictionary alloc]init];
-    
-//    for(int i = 0; i < self.localTags.count; i++){
-////        id <TagProtocol> tag = self.localTags[i];
-//        
-//        Tag *tag = self.localTags[i];
-//        if ([tag type] != TagTypeOpenDuration) {
-//            NSMutableDictionary *combDict = [[NSMutableDictionary alloc]init];
-//            [combDict addEntriesFromDictionary:[tag rawData]];
-//            [data setObject:combDict forKey:[NSString stringWithFormat:@"%i", i]];
-//        }
-//    }
-//    
-//    NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
-////    [data writeToFile:localplistNamePath atomically:YES];
-//    
-//    if (![data writeToFile:localplistNamePath atomically:YES]) {
-//        NSLog(@"error writing tag");
-//    }
-    
-    
 // modified tags that weren't made locally write to plist
     [data removeAllObjects];
     for (int i = 0; i < self.modifiedTags.count; i++) {
@@ -206,14 +179,6 @@ static LocalEncoder * instance;
             [data setObject:combDict forKey:[NSString stringWithFormat:@"%i", i]];
         }
     }
-    
-//    NSString * modifiedplistNamePath = [[_localPath stringByAppendingPathComponent:@"modifiedTags"] stringByAppendingPathExtension:@"plist"];
-//    [data setObject:@"true" forKey:@"modifiedTags"];
-////    [data writeToFile:modifiedplistNamePath atomically:YES];
-//   
-//    if (![data writeToFile:modifiedplistNamePath atomically:YES]) {
-//        NSLog(@"error writing tag");
-//    }
 }
 
 

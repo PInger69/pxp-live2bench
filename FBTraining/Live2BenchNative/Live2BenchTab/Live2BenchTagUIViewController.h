@@ -29,8 +29,6 @@
 
 @interface Live2BenchTagUIViewController : UIViewController
 {
-    //NSMutableArray          * tagButtonsLeft;
-    //NSMutableArray          * tagButtonsRight;
     NSInteger               tagCount;
     NSMutableDictionary     * buttons;
 }

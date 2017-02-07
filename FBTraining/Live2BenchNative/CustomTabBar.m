@@ -21,7 +21,7 @@
 #import "LoginViewController.h"
 #import "CustomTabBar.h"
 #import "SpinnerView.h"
-#import "EncoderClasses/EncoderManager.h"
+#import "EncoderManager.h"
 #import "CustomTabViewController.h"
 #import "DebuggingTabViewController.h"
 #import "SettingsPageViewController.h"

@@ -12,7 +12,7 @@
 #import "NCRecordButton.h"
 #import "UserCenter.h"
 #import "EncoderClasses/EncoderProtocol.h"
-#import "EncoderClasses/EncoderManager.h"
+#import "EncoderManager.h"
 #import "RJLVideoPlayer.h"
 #import "Slomo.h"
 #import "FeedSelectionController.h"

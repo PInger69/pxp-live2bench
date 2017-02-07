@@ -37,19 +37,19 @@
     self = [super init];
     swipeSide = side;
     if (self) {
-        UISwipeGestureRecognizer *oneFingerSwipeLeft = [[UISwipeGestureRecognizer alloc]
-                                                        initWithTarget:self
-                                                        action:@selector(oneFingerSwipeLeft:)];
-        [oneFingerSwipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
-        [oneFingerSwipeLeft setCancelsTouchesInView:YES];
+//        UISwipeGestureRecognizer *oneFingerSwipeLeft = [[UISwipeGestureRecognizer alloc]
+//                                                        initWithTarget:self
+//                                                        action:@selector(oneFingerSwipeLeft:)];
+//        [oneFingerSwipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+//        [oneFingerSwipeLeft setCancelsTouchesInView:YES];
 //        [self addGestureRecognizer:oneFingerSwipeLeft];
         
         //register right swipe
-        UISwipeGestureRecognizer *oneFingerSwipeRight = [[UISwipeGestureRecognizer alloc]
-                                                         initWithTarget:self
-                                                         action:@selector(oneFingerSwipeRight:)] ;
-        [oneFingerSwipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
-        [oneFingerSwipeLeft setCancelsTouchesInView:YES];
+//        UISwipeGestureRecognizer *oneFingerSwipeRight = [[UISwipeGestureRecognizer alloc]
+//                                                         initWithTarget:self
+//                                                         action:@selector(oneFingerSwipeRight:)] ;
+//        [oneFingerSwipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+//        [oneFingerSwipeLeft setCancelsTouchesInView:YES];
 //        [self addGestureRecognizer:oneFingerSwipeRight];
         
         //key "left" represents the tag name buttons on the left side, and key value equals to 0 means, the buttons are not swiped out, 1 means, the buttons are swiped out; same for the right  buttons
@@ -174,8 +174,6 @@
 {
     UIView * placementView;
     id fullScreenObserver;
-    Tray   * _leftTray;
-    Tray   * _rightTray;
 }
 
 @synthesize currentEvent                = _currentEvent;

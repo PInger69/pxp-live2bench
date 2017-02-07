@@ -540,7 +540,7 @@
 /**
  *  This makes the feeds from the data and returns the a dict based of the feeds labeled by scource name as key
  *
- *  @param dict raw data
+ *  @param aDict raw data
  *
  *  @return key
  */

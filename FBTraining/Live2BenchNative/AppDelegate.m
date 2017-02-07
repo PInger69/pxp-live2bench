@@ -13,7 +13,7 @@
 
 #import "PxpURLProtocol.h"
 #import "MockURLProtocol.h"
-#import "EncoderClasses/EncoderManager.h"
+#import "EncoderManager.h"
 #import "UserCenter.h"
 #import "UtilityClasses/ActionList.h"
 #import "AppDelegateActionPack.h"

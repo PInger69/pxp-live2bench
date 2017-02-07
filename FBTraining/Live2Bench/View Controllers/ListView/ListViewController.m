@@ -464,6 +464,12 @@
     self.ricoFullScreenControlBar.currentTagLabel.text =self.selectedTag.name;
 }
 
+-(void) playFeed:(Feed*) feed {
+    if (self.mainPlayer.feed != feed){
+        [self.mainPlayer loadFeed:feed];
+        self.mainPlayer.name = feed.sourceName;
+    }
+}
 
 
 #pragma mark - TextView Delegate Methods
@@ -1243,22 +1249,8 @@
     }
 
     collapsableCell.sendUserInfo = ^(){
-        NSLog(@"send user info...");
-        /*
         Feed *feed = [tag.eventInstance.feeds objectForKey:key];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{//@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                   //@"feed":tag.feeds[key],
-                                                                                                                                   //@"feed":tag.name,
-                                                                                                                                   
-                                                                                                                                   @"name": key,
-                                                                                                                                   @"feed":feed,
-                                                                                                                                   @"time": [NSString stringWithFormat:@"%f",tag.startTime],
-                                                                                                                                   @"duration": [NSString stringWithFormat:@"%d",tag.duration],
-                                                                                                                                   @"comment": tag.comment ? tag.comment : @"",
-                                                                                                                                   @"forWhole":tag,
-                                                                                                                                   @"state":[NSNumber numberWithInteger:RJLPS_Play]
-                                                                                                                                   }}];
-         */
+        [self playFeed:feed];
     };
     return collapsableCell;
 
