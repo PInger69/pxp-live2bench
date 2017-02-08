@@ -694,21 +694,6 @@
 
 }
 
-//select all the tags in the list view
--(void)selectAllCells:(id)sender
-{
-    
-    for (int row = 0; row < [self.tagsToDisplay count]; row++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        NSDictionary *tag = [self.tagsToDisplay objectAtIndex:indexPath.row];
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc] initWithObjects:tag,indexPath, nil] forKeys:[[NSArray alloc]initWithObjects:@"tag",@"indexpath", nil]];
-        [selectedCellRows setObject:dict forKey:[NSString stringWithFormat:@"%d",row]];
-    }
-    [self reloadTableData];
-}
-
-
-
 //exit from the editing mode
 -(void)cancelEditingCells
 {

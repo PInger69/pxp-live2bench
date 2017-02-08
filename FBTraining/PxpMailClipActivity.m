@@ -90,9 +90,13 @@
 {
     for (Clip* aclip in theClips) {
         for (PxpClipSource* clipSource in aclip.clipSources) {
-            NSData * videoData = [NSData dataWithContentsOfURL:clipSource.url];
-            if (videoData != nil) {
-                [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:clipSource.proposedVideoName];
+            if (clipSource.videoFileExists) {
+                NSData * videoData = [NSData dataWithContentsOfFile:clipSource.path];
+                if (videoData != nil) {
+                    [mailComposer addAttachmentData:videoData mimeType:@"video/mp4" fileName:clipSource.proposedVideoName];
+                }
+            } else {
+                NSLog(@"Video could not be located at : %@", clipSource.path);
             }
         }
     }

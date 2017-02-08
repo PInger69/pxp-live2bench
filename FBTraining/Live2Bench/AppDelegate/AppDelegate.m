@@ -15,7 +15,7 @@
 #import "MockURLProtocol.h"
 #import "EncoderManager.h"
 #import "UserCenter.h"
-#import "UtilityClasses/ActionList.h"
+#import "ActionList.h"
 #import "AppDelegateActionPack.h"
 #import "SpinnerView.h"
 #import "ToastObserver.h"
