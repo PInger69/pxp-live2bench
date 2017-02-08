@@ -29,6 +29,9 @@
 		D81552991E4A822D003010D4 /* EncoderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552981E4A822D003010D4 /* EncoderManager.m */; };
 		D815529C1E4A8251003010D4 /* Encoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D815529B1E4A8251003010D4 /* Encoder.m */; };
 		D815529F1E4A8416003010D4 /* LocalEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D815529E1E4A8416003010D4 /* LocalEncoder.m */; };
+		D81552A21E4A9232003010D4 /* Live2BenchTagUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552A11E4A9232003010D4 /* Live2BenchTagUIViewController.m */; };
+		D81552A61E4B8E1A003010D4 /* UIImageView+TagThumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552A51E4B8E1A003010D4 /* UIImageView+TagThumbnail.m */; };
+		D81552A91E4B9303003010D4 /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552A81E4B9303003010D4 /* FeedSelectCell.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -212,7 +215,6 @@
 		D83E82D21E2D90A5000FC23F /* Live2BenchNative-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E803F1E2D90A2000FC23F /* Live2BenchNative-Info.plist */; };
 		D83E82D31E2D90A5000FC23F /* BottomViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80451E2D90A2000FC23F /* BottomViewControllerBase.m */; };
 		D83E82D41E2D90A5000FC23F /* L2BFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80471E2D90A2000FC23F /* L2BFullScreenViewController.m */; };
-		D83E82D61E2D90A5000FC23F /* Live2BenchTagUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E804B1E2D90A2000FC23F /* Live2BenchTagUIViewController.m */; };
 		D83E82D71E2D90A5000FC23F /* LiveButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E804D1E2D90A2000FC23F /* LiveButton.m */; };
 		D83E82D81E2D90A5000FC23F /* TablePopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E804F1E2D90A2000FC23F /* TablePopoverController.m */; };
 		D83E82D91E2D90A5000FC23F /* TagFlagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80511E2D90A2000FC23F /* TagFlagViewController.m */; };
@@ -431,7 +433,6 @@
 		D83E83CE1E2D90A5000FC23F /* undoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81C51E2D90A4000FC23F /* undoButton@2x.png */; };
 		D83E83CF1E2D90A5000FC23F /* undoButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81C61E2D90A4000FC23F /* undoButtonSelect.png */; };
 		D83E83D01E2D90A5000FC23F /* undoButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81C71E2D90A4000FC23F /* undoButtonSelect@2x.png */; };
-		D83E83D11E2D90A5000FC23F /* UploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81C91E2D90A4000FC23F /* UploadButton.m */; };
 		D83E83D21E2D90A5000FC23F /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81CB1E2D90A4000FC23F /* UserCenter.m */; };
 		D83E83D31E2D90A5000FC23F /* UserCenterActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81CD1E2D90A4000FC23F /* UserCenterActionPack.m */; };
 		D83E83D41E2D90A5000FC23F /* UserColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81CF1E2D90A4000FC23F /* UserColorButton.m */; };
@@ -640,7 +641,6 @@
 		D83E8B861E2D9153000FC23F /* FeedMapDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88911E2D9150000FC23F /* FeedMapDisplay.m */; };
 		D83E8B871E2D9153000FC23F /* FeedMapIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88931E2D9150000FC23F /* FeedMapIcon.m */; };
 		D83E8B881E2D9153000FC23F /* FeedMappingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E88941E2D9150000FC23F /* FeedMappingView.xib */; };
-		D83E8B891E2D9153000FC23F /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88981E2D9150000FC23F /* FeedSelectCell.m */; };
 		D83E8B8A1E2D9153000FC23F /* GetSummaryOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E889B1E2D9150000FC23F /* GetSummaryOperation.m */; };
 		D83E8B8B1E2D9153000FC23F /* GetUserTagsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E889D1E2D9150000FC23F /* GetUserTagsOperation.m */; };
 		D83E8B8C1E2D9153000FC23F /* GroupDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */; };
@@ -711,6 +711,12 @@
 		D815529B1E4A8251003010D4 /* Encoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Encoder.m; sourceTree = "<group>"; };
 		D815529D1E4A8416003010D4 /* LocalEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalEncoder.h; sourceTree = "<group>"; };
 		D815529E1E4A8416003010D4 /* LocalEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalEncoder.m; sourceTree = "<group>"; };
+		D81552A01E4A9232003010D4 /* Live2BenchTagUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Live2BenchTagUIViewController.h; sourceTree = "<group>"; };
+		D81552A11E4A9232003010D4 /* Live2BenchTagUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Live2BenchTagUIViewController.m; sourceTree = "<group>"; };
+		D81552A41E4B8E1A003010D4 /* UIImageView+TagThumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+TagThumbnail.h"; sourceTree = "<group>"; };
+		D81552A51E4B8E1A003010D4 /* UIImageView+TagThumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+TagThumbnail.m"; sourceTree = "<group>"; };
+		D81552A71E4B9303003010D4 /* FeedSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectCell.h; sourceTree = "<group>"; };
+		D81552A81E4B9303003010D4 /* FeedSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectCell.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1183,8 +1189,6 @@
 		D83E80451E2D90A2000FC23F /* BottomViewControllerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomViewControllerBase.m; sourceTree = "<group>"; };
 		D83E80461E2D90A2000FC23F /* L2BFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = L2BFullScreenViewController.h; sourceTree = "<group>"; };
 		D83E80471E2D90A2000FC23F /* L2BFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = L2BFullScreenViewController.m; sourceTree = "<group>"; };
-		D83E804A1E2D90A2000FC23F /* Live2BenchTagUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Live2BenchTagUIViewController.h; sourceTree = "<group>"; };
-		D83E804B1E2D90A2000FC23F /* Live2BenchTagUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Live2BenchTagUIViewController.m; sourceTree = "<group>"; };
 		D83E804C1E2D90A2000FC23F /* LiveButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveButton.h; sourceTree = "<group>"; };
 		D83E804D1E2D90A2000FC23F /* LiveButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveButton.m; sourceTree = "<group>"; };
 		D83E804E1E2D90A2000FC23F /* TablePopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TablePopoverController.h; sourceTree = "<group>"; };
@@ -1507,8 +1511,6 @@
 		D83E81C51E2D90A4000FC23F /* undoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "undoButton@2x.png"; sourceTree = "<group>"; };
 		D83E81C61E2D90A4000FC23F /* undoButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = undoButtonSelect.png; sourceTree = "<group>"; };
 		D83E81C71E2D90A4000FC23F /* undoButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "undoButtonSelect@2x.png"; sourceTree = "<group>"; };
-		D83E81C81E2D90A4000FC23F /* UploadButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadButton.h; sourceTree = "<group>"; };
-		D83E81C91E2D90A4000FC23F /* UploadButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadButton.m; sourceTree = "<group>"; };
 		D83E81CA1E2D90A4000FC23F /* UserCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenter.h; sourceTree = "<group>"; };
 		D83E81CB1E2D90A4000FC23F /* UserCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenter.m; sourceTree = "<group>"; };
 		D83E81CC1E2D90A4000FC23F /* UserCenterActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenterActionPack.h; sourceTree = "<group>"; };
@@ -1903,8 +1905,6 @@
 		D83E88941E2D9150000FC23F /* FeedMappingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedMappingView.xib; sourceTree = "<group>"; };
 		D83E88951E2D9150000FC23F /* FeedMappingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedMappingViewController.h; sourceTree = "<group>"; };
 		D83E88961E2D9150000FC23F /* FeedProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedProtocol.h; sourceTree = "<group>"; };
-		D83E88971E2D9150000FC23F /* FeedSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectCell.h; sourceTree = "<group>"; };
-		D83E88981E2D9150000FC23F /* FeedSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectCell.m; sourceTree = "<group>"; };
 		D83E88991E2D9150000FC23F /* FilterItemProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterItemProtocol.h; sourceTree = "<group>"; };
 		D83E889A1E2D9150000FC23F /* GetSummaryOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetSummaryOperation.h; sourceTree = "<group>"; };
 		D83E889B1E2D9150000FC23F /* GetSummaryOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetSummaryOperation.m; sourceTree = "<group>"; };
@@ -2052,6 +2052,8 @@
 		D81552821E490C30003010D4 /* Live2ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				D81552A01E4A9232003010D4 /* Live2BenchTagUIViewController.h */,
+				D81552A11E4A9232003010D4 /* Live2BenchTagUIViewController.m */,
 				D81552831E490D57003010D4 /* RicoLive2BenchViewController.h */,
 				D81552841E490D57003010D4 /* RicoLive2BenchViewController.m */,
 			);
@@ -2084,6 +2086,15 @@
 			path = Encoder;
 			sourceTree = "<group>";
 		};
+		D81552A31E4B8DD9003010D4 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				D81552A41E4B8E1A003010D4 /* UIImageView+TagThumbnail.h */,
+				D81552A51E4B8E1A003010D4 /* UIImageView+TagThumbnail.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		D83E7DB81E2D86CB000FC23F = {
 			isa = PBXGroup;
 			children = (
@@ -2107,6 +2118,7 @@
 		D83E7DC31E2D86CB000FC23F /* Live2Bench */ = {
 			isa = PBXGroup;
 			children = (
+				D81552A31E4B8DD9003010D4 /* Utilities */,
 				D81552961E4A81D8003010D4 /* Encoder */,
 				D81552601E394E96003010D4 /* Model */,
 				D83E8B981E2E8680000FC23F /* View Controllers */,
@@ -2919,8 +2931,6 @@
 				D83E88941E2D9150000FC23F /* FeedMappingView.xib */,
 				D83E88951E2D9150000FC23F /* FeedMappingViewController.h */,
 				D83E88961E2D9150000FC23F /* FeedProtocol.h */,
-				D83E88971E2D9150000FC23F /* FeedSelectCell.h */,
-				D83E88981E2D9150000FC23F /* FeedSelectCell.m */,
 				D83E88991E2D9150000FC23F /* FilterItemProtocol.h */,
 				D83E889A1E2D9150000FC23F /* GetSummaryOperation.h */,
 				D83E889B1E2D9150000FC23F /* GetSummaryOperation.m */,
@@ -3462,8 +3472,6 @@
 				D83E81C51E2D90A4000FC23F /* undoButton@2x.png */,
 				D83E81C61E2D90A4000FC23F /* undoButtonSelect.png */,
 				D83E81C71E2D90A4000FC23F /* undoButtonSelect@2x.png */,
-				D83E81C81E2D90A4000FC23F /* UploadButton.h */,
-				D83E81C91E2D90A4000FC23F /* UploadButton.m */,
 				D83E81CA1E2D90A4000FC23F /* UserCenter.h */,
 				D83E81CB1E2D90A4000FC23F /* UserCenter.m */,
 				D83E81CC1E2D90A4000FC23F /* UserCenterActionPack.h */,
@@ -3553,8 +3561,6 @@
 				D83E80431E2D90A2000FC23F /* BottomViewClasses */,
 				D83E80461E2D90A2000FC23F /* L2BFullScreenViewController.h */,
 				D83E80471E2D90A2000FC23F /* L2BFullScreenViewController.m */,
-				D83E804A1E2D90A2000FC23F /* Live2BenchTagUIViewController.h */,
-				D83E804B1E2D90A2000FC23F /* Live2BenchTagUIViewController.m */,
 				D83E804C1E2D90A2000FC23F /* LiveButton.h */,
 				D83E804D1E2D90A2000FC23F /* LiveButton.m */,
 				D83E804E1E2D90A2000FC23F /* TablePopoverController.h */,
@@ -3653,6 +3659,8 @@
 				D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */,
 				D815525C1E3934E3003010D4 /* DeletableTableViewController.h */,
 				D815525D1E3934E3003010D4 /* DeletableTableViewController.m */,
+				D81552A71E4B9303003010D4 /* FeedSelectCell.h */,
+				D81552A81E4B9303003010D4 /* FeedSelectCell.m */,
 				D81552651E39626D003010D4 /* ListPopoverControllerWithImages.h */,
 				D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
@@ -4153,7 +4161,6 @@
 				D83E8AAC1E2D9152000FC23F /* RicoPlayer.m in Sources */,
 				D83E82241E2D90A5000FC23F /* BreadCrumbView.m in Sources */,
 				D83E8B7F1E2D9153000FC23F /* EmailActivity.m in Sources */,
-				D83E83D11E2D90A5000FC23F /* UploadButton.m in Sources */,
 				D83E8AC41E2D9152000FC23F /* MockEncoderSource.m in Sources */,
 				D83E8B101E2D9153000FC23F /* RicoPlayerPool.m in Sources */,
 				D81552921E4A2B12003010D4 /* PxpClipSource.m in Sources */,
@@ -4240,6 +4247,7 @@
 				D83E8B8D1E2D9153000FC23F /* GroupOperation.m in Sources */,
 				D83E83B41E2D90A5000FC23F /* TagPopOverContent.m in Sources */,
 				D83E82D71E2D90A5000FC23F /* LiveButton.m in Sources */,
+				D81552A61E4B8E1A003010D4 /* UIImageView+TagThumbnail.m in Sources */,
 				D815527B1E49082B003010D4 /* CalendarViewController.m in Sources */,
 				D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */,
 				D83E83961E2D90A5000FC23F /* SoccerBottomViewController.m in Sources */,
@@ -4252,7 +4260,6 @@
 				D83E8B201E2D9153000FC23F /* SideTagButton.m in Sources */,
 				D83E8AE61E2D9153000FC23F /* PxpFilterDefaultTabViewController.m in Sources */,
 				D83E8B661E2D9153000FC23F /* CameraResourceNonLive.m in Sources */,
-				D83E82D61E2D90A5000FC23F /* Live2BenchTagUIViewController.m in Sources */,
 				D83E7EF01E2D87FE000FC23F /* VKGLES2View.m in Sources */,
 				D83E83341E2D90A5000FC23F /* PxpCancelButton.m in Sources */,
 				D83E83DA1E2D90A5000FC23F /* DownloadItem.m in Sources */,
@@ -4260,6 +4267,7 @@
 				D83E82F81E2D90A5000FC23F /* MyClipFilterViewController.m in Sources */,
 				D83E82D41E2D90A5000FC23F /* L2BFullScreenViewController.m in Sources */,
 				D83E83C11E2D90A5000FC23F /* PxpTheme.m in Sources */,
+				D81552A21E4A9232003010D4 /* Live2BenchTagUIViewController.m in Sources */,
 				D83E8ADD1E2D9153000FC23F /* PostOperation.m in Sources */,
 				D83E83451E2D90A5000FC23F /* PxpPlayerContext+Tag.m in Sources */,
 				D83E836D1E2D90A5000FC23F /* RicoL2BVideoBar.m in Sources */,
@@ -4401,12 +4409,12 @@
 				D83E82491E2D90A5000FC23F /* CustomButton.m in Sources */,
 				D83E8B081E2D9153000FC23F /* ReusableBottomViewController.m in Sources */,
 				D83E8B9C1E2E86FD000FC23F /* ListViewCell.m in Sources */,
+				D81552A91E4B9303003010D4 /* FeedSelectCell.m in Sources */,
 				D83E83031E2D90A5000FC23F /* NCPlayerContext.m in Sources */,
 				D83E8B651E2D9153000FC23F /* CameraResource.m in Sources */,
 				D83E8ABB1E2D9152000FC23F /* LiveLight.m in Sources */,
 				D83E8B3D1E2D9153000FC23F /* VideoControlBarSlider.m in Sources */,
 				D83E8B1B1E2D9153000FC23F /* ScrollViewTest.m in Sources */,
-				D83E8B891E2D9153000FC23F /* FeedSelectCell.m in Sources */,
 				D83E83631E2D90A5000FC23F /* PXPTIFTelestration.c in Sources */,
 				D83E8AFB1E2D9153000FC23F /* PxpFilterUserInputScrollView.m in Sources */,
 				D83E82601E2D90A5000FC23F /* DropdownButton.m in Sources */,

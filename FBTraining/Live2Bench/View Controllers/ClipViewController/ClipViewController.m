@@ -8,7 +8,6 @@
 
 #import "ClipViewController.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
 #import <TSMessages/TSMessage.h>
 
 #import "AbstractFilterViewController.h"
@@ -19,6 +18,7 @@
 #import "ImageAssetManager.h"
 #import "Tag.h"
 #import "RatingOutput.h"
+#import "UIImageView+TagThumbnail.h"
 
 #import "AVAsset+Image.h"
 #import "CustomAlertControllerQueue.h"
@@ -412,10 +412,6 @@
         cell.thumbGameTime.text = [Utility translateTimeFormat:startTime];
     }
     
-    
-    
-//    [Utility translateTimeFormat:tagSelect.time]
-    
     [cell.thumbDur setText:[NSString stringWithFormat:@"%.2ds",tagSelect.duration]];
     cell.ratingscale.rating = tagSelect.rating;
     cell.checkmarkOverlay.hidden = YES;
@@ -427,42 +423,7 @@
     profession.onClipViewCellStyle(cell,tagSelect);
     
     
-    NSString *url = [[tagSelect.thumbnails allValues]firstObject];
-    
-    __weak UIImageView* weakImageView = cell.imageView;
-    if (tagSelect.isTelestration) {
-        NSLog(@"Cell %lu Telestration tag type", indexPath.row);
-        PxpTelestration *tele = cell.data.telestration;
-        [cell.data.thumbnails objectForKey:tele.sourceName];
-        
-        NSString * checkName = (!tele.sourceName)?[cell.data.thumbnails allKeys][0]:tele.sourceName;
-        
-        NSString * imageURL = ([cell.data.thumbnails objectForKey:checkName])?[cell.data.thumbnails objectForKey:checkName]:[NSString stringWithFormat:@"%@.png",[[NSUUID UUID]UUIDString]];
-        
-
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
-
-            if (error) {
-                NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);
-                weakImageView.image = [UIImage imageNamed:@"imageNotAvailable"];
-            } else if (image) {
-                NSLog(@"applying telestration to image");
-                UIImage* imageWithTelestration = [tele renderOverImage:image view:cell.imageView];
-                weakImageView.image = imageWithTelestration;
-            }
-
-        }];
-        
-        
-    } else {
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
-            if (error) {
-                NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);
-                weakImageView.image = [UIImage imageNamed:@"imageNotAvailable"];
-            }
-        }];
-    }
-
+    [cell.imageView pxp_setTagThumbnail:tagSelect];
     [cell setDeletingMode: self.isEditing];
     
     if ([self.deleteTagIds containsObject:tagSelect.ID]) {

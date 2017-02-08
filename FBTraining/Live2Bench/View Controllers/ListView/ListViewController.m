@@ -9,7 +9,6 @@
 
 #import "ListViewController.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
 #import <TSMessages/TSMessage.h>
 
 #import "CommentingRatingField.h"
@@ -48,6 +47,8 @@
 #import "DownloadOperation.h"
 #import "DownloadClipFromTag.h"
 #import "FeedSelectCell.h"
+
+#import "UIImageView+TagThumbnail.h"
 
 #define CELL_HEIGHT                  155//172
 #define LABEL_HEIGHT                 40
@@ -1292,35 +1293,7 @@
     backgroundView.layer.borderColor = [PRIMARY_APP_COLOR CGColor];
     cell.backgroundView = backgroundView;
     
-    NSString *src = tag.thumbnails.allKeys.firstObject;
-    
-    if (tag.isTelestration) {
-        for (NSString *k in tag.thumbnails.keyEnumerator) {
-            if ([tag.telestration.sourceName isEqualToString:k]) {
-                src = k;
-                break;
-            }
-        }
-        
-        NSString* imageURL = tag.thumbnails[src];
-        
-        
-        __weak UIImageView* weakImageView = cell.tagImage;
-        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
-            
-            if (image) {
-                UIImage* imageWithTelestration = [tag.telestration renderOverImage:image view:weakImageView];
-                weakImageView.image = imageWithTelestration;
-            }
-            
-        }];
-        
-    } else {
-        NSString* url = tag.thumbnails[src];
-        [cell.tagImage sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"]];
-    }
-    
-    
+    [cell.tagImage pxp_setTagThumbnail:tag];
     [cell.tagname setText:[tag.name stringByRemovingPercentEncoding]];
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     

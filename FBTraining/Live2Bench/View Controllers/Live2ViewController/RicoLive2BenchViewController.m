@@ -139,9 +139,9 @@ static void * eventContext      = &eventContext;
 /**
  *  New init method
  *
- *  @param mainappDelegate
+ *  @param mainappDelegate - the main application delegate
  *
- *  @return
+ *  @return an instance of the view controller
  */
 -(id)initWithAppDelegate:(AppDelegate *)mainappDelegate
 {
@@ -214,7 +214,7 @@ static void * eventContext      = &eventContext;
     [_videoBar.backwardSeekButton addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_videoBar.forwardSeekButton  addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_videoBar.slomoButton removeTarget:_videoBar action:@selector(slomoAction:)  forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.slomoButton removeTarget:_videoBar action:@selector(slomoPressed:)  forControlEvents:UIControlEventTouchUpInside];
     [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     [_videoBar.frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
@@ -334,7 +334,7 @@ static void * eventContext      = &eventContext;
     self.gameTimeLabel.hidden = NO;
     [UserCenter getInstance].isStartLocked = YES;
     
-    BOOL found;
+    BOOL found = NO;
     for (id<TagProtocol> cTag in self.currentEvent.tags) {
         if ([cTag type] == TagTypeGameStart) {
             found = YES;
@@ -427,11 +427,13 @@ static void * eventContext      = &eventContext;
         [[RicoPlayerPool instance].pooledPlayers addObject:justPlayer1];
     } else {
         
+        /*
         NSString* (^getSource)(NSString*location) = ^NSString*(NSString*location) {
             FeedMapDisplay * display = [[FeedMapController instance].feedMapDisplaysDict objectForKey:location];
             CameraDetails * cam = display.cameraDetails;
             return cam.source;
         };
+        */
         
 //        NSInteger feedCount = ([feeds count] <4)?4:[feeds count];
         
@@ -490,7 +492,7 @@ static void * eventContext      = &eventContext;
     
     wasMulti = NO;
 //    [self changeSourceNonPress:picker.selectedTag];
-    NSString * selectedString  = picker.selectedString;
+//    NSString * selectedString  = picker.selectedString;
 //////////////////////////////////////////////////////////
     
     self.telestrationViewController.showsControls = YES;
@@ -538,11 +540,11 @@ static void * eventContext      = &eventContext;
         if ([rPlayers count] == 0) return;
         self.ricoZoomGroup.gridMode = NO;
         
-        for (RicoPlayer * player in rPlayers) {
+//        for (RicoPlayer * player in rPlayers) {
             
 //            player.hidden = ([rPlayers count]==1)? NO: YES;
 //            [player refresh];
-        }
+//        }
         
 
 
@@ -1282,7 +1284,6 @@ static void * eventContext      = &eventContext;
     
 
     // Getting user preferences
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString * mode =  [UserCenter getInstance].l2bMode;
 
     
@@ -1328,11 +1329,13 @@ static void * eventContext      = &eventContext;
         
     } else { ///////////////////////////////////////////////////////////////////////////////////////////////
         
+        /*
         NSString* (^getSource)(NSString*location) = ^NSString*(NSString*location) {
             FeedMapDisplay * display = [[FeedMapController instance].feedMapDisplaysDict objectForKey:location];
             CameraDetails * cam = display.cameraDetails;
             return cam.source;
         };
+        */
         
         
         NSInteger feedCount = [feeds count];//([feeds count] <4)?4:[feeds count];//
@@ -1408,7 +1411,7 @@ static void * eventContext      = &eventContext;
     // clear if made already
     
     if (self.sourceButtonPicker){
-        NSInteger indx  = [self.view indexOfAccessibilityElement:self.sourceButtonPicker];
+//        NSInteger indx  = [self.view indexOfAccessibilityElement:self.sourceButtonPicker];
         [self.sourceButtonPicker removeFromSuperview];
         self.sourceButtonPicker.delegate = nil;
         
@@ -2137,7 +2140,7 @@ static void * eventContext      = &eventContext;
         }
         
     } else {
-        CMTime atimeof =CMTimeAdd(cTime, sTime);
+//        CMTime atimeof =CMTimeAdd(cTime, sTime);
         [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
     }
 }

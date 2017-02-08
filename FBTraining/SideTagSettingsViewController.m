@@ -170,16 +170,7 @@
     }
     
     if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
-    
-        NSArray *sortedTags = [tags sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-            NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
-            NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
-            NSComparisonResult result =  [first compare:second];
-            return result;
-        }];
-        
-        
-        
+
         NSInteger rightCount = 0;
         for (NSInteger i = 0; i<[tags count]; i++) {
             NSString * pos  = tags[i][@"position"];
@@ -341,37 +332,6 @@
     [alert addAction:noButton];
     
     [self presentViewController:alert animated:YES completion:nil];
-    
-    
-    
-    
-    
-//    self.editTagPopup = [PopUpTagSetButtonEditViewController new];
-//    self.editTagPopup.contentViewController.modalInPopover = NO;
-//    self.editTagPopup.delegate = self;
-//    
-////    [self.editTagPopup presentPopoverFromBarButtonItem:button permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
-//    [self.editTagPopup presentPopoverFromRect: display.frame inView:display permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
-    
-    
-//    PopUpTagSetButtonEditViewController *controller = [PopUpTagSetButtonEditViewController new];
-//    controller.modalInPopover = YES;
-//    
-//    [self presentViewController:controller animated:YES completion:nil];
-//    
-//    UIPopoverPresentationController *presentationController = [controller popoverPresentationController];
-//    presentationController.sourceView = self.view;
-//    presentationController.delegate = controller;
-//
-//    UIView * v = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 400, 200)];
-//    
-//    UIPopoverPresentationController *presentationController = [self popoverPresentationController];
-//    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
-//    presentationController.sourceView               = v;
-//    presentationController.permittedArrowDirections = 0;
-//    
-//    [self presentViewController:v animated:YES completion:nil];
-//[self presentViewController:controller animated:YES completion:nil];
 }
 
 -(void)onButtonEditComplete
@@ -423,28 +383,6 @@
     NSMutableDictionary * customersTagSetData = [[defaults objectForKey:[UserCenter getInstance].customerEmail]mutableCopy];
     NSMutableDictionary * userTagSets = [customersTagSetData[@"tagSets"] mutableCopy];
     
-//
-//    [customersTagSetData setObject:DEFAULT_TAG_SET forKey:@"currentTagSetName"];
-//    
-//    [userTagSets removeObjectForKey:name];
-//    [customersTagSetData setObject:userTagSets forKey:@"tagSets"];
-//    
-//    [defaults setObject:customersTagSetData forKey:[UserCenter getInstance].customerEmail];
-//    [defaults synchronize];
-//    
-//    [self.listTagSetName removeObject:name];
-//    [self.tagSetPicker reloadAllComponents];
-//    self.currentTagSetName = name;
-//    
-//    self.currentTagSetName = nil;
-//    
-//    [self pickerView:self.tagSetPicker didSelectRow:0 inComponent:0];
-//    [self.tagSetPicker selectRow:[self.listTagSetName indexOfObject:DEFAULT_TAG_SET] inComponent:0 animated:YES];
-//
-//    
-    
-    
-
     UIAlertController * alert=   [UIAlertController
                                   alertControllerWithTitle:@"Tag Set Builder"
                                   message:@"Are you sure you want to delete this tag set"
@@ -488,9 +426,6 @@
     [alert addAction:noButton];
     
     [self presentViewController:alert animated:YES completion:nil];
-
-    
-    
 }
 
 #pragma mark - UIPickerViewDataSource Delegate Methods
