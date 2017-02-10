@@ -35,6 +35,9 @@
 		D81552AD1E4BCA28003010D4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552AC1E4BCA28003010D4 /* AppDelegate.m */; };
 		D81552B11E4BD2E9003010D4 /* DownloadClipFromTag.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552B01E4BD2E9003010D4 /* DownloadClipFromTag.m */; };
 		D81552B41E4BD37F003010D4 /* EncoderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552B31E4BD37F003010D4 /* EncoderOperation.m */; };
+		D81552B81E4BD70F003010D4 /* SideTagSettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D81552B51E4BD70F003010D4 /* SideTagSettingsView.xib */; };
+		D81552B91E4BD70F003010D4 /* SideTagSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552B71E4BD70F003010D4 /* SideTagSettingsViewController.m */; };
+		D81552BC1E4BDA68003010D4 /* PxpTagDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D81552BB1E4BDA68003010D4 /* PxpTagDefinition.m */; };
 		D83E7DC61E2D86CB000FC23F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DC51E2D86CB000FC23F /* main.m */; };
 		D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E7DDD1E2D87FE000FC23F /* cmdutils.c */; };
 		D83E7EDC1E2D87FE000FC23F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E7E5D1E2D87FE000FC23F /* libavcodec.a */; };
@@ -562,8 +565,6 @@
 		D83E8B201E2D9153000FC23F /* SideTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87D01E2D914B000FC23F /* SideTagButton.m */; };
 		D83E8B211E2D9153000FC23F /* SideTagEditButtonDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E87D11E2D914B000FC23F /* SideTagEditButtonDisplay.xib */; };
 		D83E8B221E2D9153000FC23F /* SideTagEditButtonDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87D31E2D914B000FC23F /* SideTagEditButtonDisplayView.m */; };
-		D83E8B231E2D9153000FC23F /* SideTagSettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E87D41E2D914B000FC23F /* SideTagSettingsView.xib */; };
-		D83E8B241E2D9153000FC23F /* SideTagSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87D61E2D914B000FC23F /* SideTagSettingsViewController.m */; };
 		D83E8B251E2D9153000FC23F /* SoccerBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E87D71E2D914B000FC23F /* SoccerBottomViewController.plist */; };
 		D83E8B261E2D9153000FC23F /* StreamViewVideoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87DA1E2D914B000FC23F /* StreamViewVideoKit.m */; };
 		D83E8B271E2D9153000FC23F /* SwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87DC1E2D914B000FC23F /* SwipeableTableViewCell.m */; };
@@ -723,6 +724,11 @@
 		D81552B01E4BD2E9003010D4 /* DownloadClipFromTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadClipFromTag.m; sourceTree = "<group>"; };
 		D81552B21E4BD37F003010D4 /* EncoderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderOperation.h; sourceTree = "<group>"; };
 		D81552B31E4BD37F003010D4 /* EncoderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderOperation.m; sourceTree = "<group>"; };
+		D81552B51E4BD70F003010D4 /* SideTagSettingsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideTagSettingsView.xib; sourceTree = "<group>"; };
+		D81552B61E4BD70F003010D4 /* SideTagSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagSettingsViewController.h; sourceTree = "<group>"; };
+		D81552B71E4BD70F003010D4 /* SideTagSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagSettingsViewController.m; sourceTree = "<group>"; };
+		D81552BA1E4BDA68003010D4 /* PxpTagDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTagDefinition.h; sourceTree = "<group>"; };
+		D81552BB1E4BDA68003010D4 /* PxpTagDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTagDefinition.m; sourceTree = "<group>"; };
 		D83E7DC11E2D86CB000FC23F /* Live2Bench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2Bench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83E7DC51E2D86CB000FC23F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D83E7DD51E2D86CB000FC23F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1747,9 +1753,6 @@
 		D83E87D11E2D914B000FC23F /* SideTagEditButtonDisplay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideTagEditButtonDisplay.xib; sourceTree = "<group>"; };
 		D83E87D21E2D914B000FC23F /* SideTagEditButtonDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagEditButtonDisplayView.h; sourceTree = "<group>"; };
 		D83E87D31E2D914B000FC23F /* SideTagEditButtonDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagEditButtonDisplayView.m; sourceTree = "<group>"; };
-		D83E87D41E2D914B000FC23F /* SideTagSettingsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideTagSettingsView.xib; sourceTree = "<group>"; };
-		D83E87D51E2D914B000FC23F /* SideTagSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagSettingsViewController.h; sourceTree = "<group>"; };
-		D83E87D61E2D914B000FC23F /* SideTagSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagSettingsViewController.m; sourceTree = "<group>"; };
 		D83E87D71E2D914B000FC23F /* SoccerBottomViewController.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SoccerBottomViewController.plist; sourceTree = "<group>"; };
 		D83E87D81E2D914B000FC23F /* StreamViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamViewProtocol.h; sourceTree = "<group>"; };
 		D83E87D91E2D914B000FC23F /* StreamViewVideoKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamViewVideoKit.h; sourceTree = "<group>"; };
@@ -2013,6 +2016,8 @@
 				D81552911E4A2B12003010D4 /* PxpClipSource.m */,
 				D81552621E394F73003010D4 /* Tag.h */,
 				D81552631E394F73003010D4 /* Tag.m */,
+				D81552BA1E4BDA68003010D4 /* PxpTagDefinition.h */,
+				D81552BB1E4BDA68003010D4 /* PxpTagDefinition.m */,
 			);
 			path = "Video and Markup";
 			sourceTree = "<group>";
@@ -2793,9 +2798,6 @@
 				D83E87D11E2D914B000FC23F /* SideTagEditButtonDisplay.xib */,
 				D83E87D21E2D914B000FC23F /* SideTagEditButtonDisplayView.h */,
 				D83E87D31E2D914B000FC23F /* SideTagEditButtonDisplayView.m */,
-				D83E87D41E2D914B000FC23F /* SideTagSettingsView.xib */,
-				D83E87D51E2D914B000FC23F /* SideTagSettingsViewController.h */,
-				D83E87D61E2D914B000FC23F /* SideTagSettingsViewController.m */,
 				D83E87D71E2D914B000FC23F /* SoccerBottomViewController.plist */,
 				D83E87D81E2D914B000FC23F /* StreamViewProtocol.h */,
 				D83E87D91E2D914B000FC23F /* StreamViewVideoKit.h */,
@@ -3733,6 +3735,9 @@
 				D83E8BA91E2E9C84000FC23F /* SettingsPageViewController.m */,
 				D83E8BAA1E2E9C84000FC23F /* SettingsTableViewController.h */,
 				D83E8BAB1E2E9C84000FC23F /* SettingsTableViewController.m */,
+				D81552B51E4BD70F003010D4 /* SideTagSettingsView.xib */,
+				D81552B61E4BD70F003010D4 /* SideTagSettingsViewController.h */,
+				D81552B71E4BD70F003010D4 /* SideTagSettingsViewController.m */,
 				D83E8BAC1E2E9C84000FC23F /* TabsSettingViewController.h */,
 				D83E8BAD1E2E9C84000FC23F /* TabsSettingViewController.m */,
 			);
@@ -3907,6 +3912,7 @@
 				D83E831F1E2D90A5000FC23F /* playbackRateButtonBack.png in Resources */,
 				D83E83F01E2D90A5000FC23F /* youtubeSelect@2x.png in Resources */,
 				D83E7EEB1E2D87FE000FC23F /* gas-preprocessor.pl in Resources */,
+				D81552B81E4BD70F003010D4 /* SideTagSettingsView.xib in Resources */,
 				D83E83241E2D90A5000FC23F /* playbackRateButtonForward@2x.png in Resources */,
 				D83E8AC91E2D9152000FC23F /* filter-icon.png in Resources */,
 				D83E83101E2D90A5000FC23F /* orangeSelect@2x.png in Resources */,
@@ -4049,7 +4055,6 @@
 				D83E83941E2D90A5000FC23F /* slowmo@2x.png in Resources */,
 				D83E8B3F1E2D9153000FC23F /* VideoReciept.xib in Resources */,
 				D83E825F1E2D90A5000FC23F /* dropboxicoSel@2x.png in Resources */,
-				D83E8B231E2D9153000FC23F /* SideTagSettingsView.xib in Resources */,
 				D83E83AA1E2D90A5000FC23F /* subtractstartsec.png in Resources */,
 				D83E82591E2D90A5000FC23F /* downloading@2x.gif in Resources */,
 				D83E837A1E2D90A5000FC23F /* seek@2x.png in Resources */,
@@ -4247,6 +4252,7 @@
 				D83E8AD81E2D9152000FC23F /* ParseModuleAlpha.m in Sources */,
 				D83E8B091E2D9153000FC23F /* RicoBaseFullScreenViewController.m in Sources */,
 				D83E8AFF1E2D9153000FC23F /* PxpRangeModifierButton.m in Sources */,
+				D81552BC1E4BDA68003010D4 /* PxpTagDefinition.m in Sources */,
 				D83E7EF11E2D87FE000FC23F /* VKStreamInfoView.m in Sources */,
 				D83E82761E2D90A5000FC23F /* EncoderStatusMonitor.m in Sources */,
 				D83E8B471E2D9153000FC23F /* ViewController.m in Sources */,
@@ -4304,6 +4310,7 @@
 				D81552951E4A49B5003010D4 /* BookmarkViewCell.m in Sources */,
 				D83E82961E2D90A5000FC23F /* FilterTabViewController.m in Sources */,
 				D83E8B2C1E2D9153000FC23F /* TagProxy.m in Sources */,
+				D81552B91E4BD70F003010D4 /* SideTagSettingsViewController.m in Sources */,
 				D81552AD1E4BCA28003010D4 /* AppDelegate.m in Sources */,
 				D83E83921E2D90A5000FC23F /* Slomo.m in Sources */,
 				D83E829C1E2D90A5000FC23F /* ListPopoverController.m in Sources */,
@@ -4338,7 +4345,6 @@
 				D83E8B3E1E2D9153000FC23F /* VideoCuttingTool.m in Sources */,
 				D83E83481E2D90A5000FC23F /* PxpPlayerControlSlider.m in Sources */,
 				D83E8B911E2D9153000FC23F /* InternetMonitor.m in Sources */,
-				D83E8B241E2D9153000FC23F /* SideTagSettingsViewController.m in Sources */,
 				D83E83671E2D90A5000FC23F /* RatingInput.m in Sources */,
 				D83E83D51E2D90A5000FC23F /* UserColourView.m in Sources */,
 				D83E8B061E2D9153000FC23F /* RatingAndCommentingField.m in Sources */,

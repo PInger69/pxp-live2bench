@@ -185,6 +185,8 @@
  
     [self clear]; // clear if any is present
     
+    NSLog(@"list of new tags to display: %@", listOfDicts);
+    
     NSMutableArray * left  = [[NSMutableArray alloc]init];
     NSMutableArray * right = [[NSMutableArray alloc]init];
     
