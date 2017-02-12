@@ -11,6 +11,7 @@
 #import "PopUpTagSetButtonEditViewController.h"
 #import "TagSetEditPopUpViewController.h"
 #import "UserCenter.h"
+#import "PxpTagDefinition.h"
 
 #define DEFAULT_TAG_SET @"Default (non editable)"
 
@@ -21,7 +22,8 @@
 
 
 @property (nonatomic,strong) NSMutableArray * listTagSetName;
-@property (nonatomic,strong) NSMutableArray * tagSetData;
+//@property (nonatomic,strong) NSMutableArray * tagSetData;
+@property (nonatomic,strong) NSMutableDictionary* tagDefinitions;
 
 @property (nonatomic,strong) NSArray        * tagSetButtons;
 @property (nonatomic,strong) PopUpTagSetButtonEditViewController * editTagPopup;
@@ -32,13 +34,9 @@
 
 @implementation SideTagSettingsViewController
 
-
-
-
-
-
 - (void)viewDidLoad {
-        [super viewDidLoad];
+    [super viewDidLoad];
+    NSLog(@"SideTagSettingsViewController viewDidLoad");
     self.tagSetButtons = @[self.buttonPlaceHolder1,
                            self.buttonPlaceHolder2,
                            self.buttonPlaceHolder3,
@@ -65,14 +63,11 @@
                            self.buttonPlaceHolder24];
     
     
-    
-   
-    
     self.tagSetButtons = [self replacePlaceHolders:self.tagSetButtons];
-    
     
     self.currentTagSetName          = DEFAULT_TAG_SET;
     self.listTagSetName             = [NSMutableArray new];
+    self.tagDefinitions             = [NSMutableDictionary new];
     self.tagSetPicker.dataSource    = self;
     self.tagSetPicker.delegate      = self;
     
@@ -110,7 +105,7 @@
         } else {
             [self setUpButtons:customersTagSetData[@"tagSets"][self.currentTagSetName]]; // buils UI
             // update Live2Bench
-            [UserCenter getInstance].tagNames = self.tagSetData;
+            [UserCenter getInstance].tagNames = [NSMutableArray arrayWithArray:[self tagDefinitionsAsArrayOfDictionaries]];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         }
         
@@ -129,6 +124,74 @@
     [self.tagSetPicker selectRow: [self.listTagSetName indexOfObject:self.currentTagSetName] inComponent:0 animated:NO];
     }
 }
+
+-(void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // if we've just logged in, we might not have set up the default tags
+    if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET] && self.tagDefinitions.count == 0) {
+        [self setUpButtons:[UserCenter getInstance].defaultTagNames];
+    }
+}
+
+// this is to comfirm that changes then the post a Notification to update the tags in L2B
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    /*
+    NSMutableArray * temp   = [NSMutableArray new];
+    
+    for (NSInteger k=0; k<24; k++) {
+        NSString * pos = (k<12)?@"left":@"right";
+        [temp addObject:@{@"name":@"--", @"order":[NSNumber numberWithInteger:k],@"position":pos}];
+    }
+    
+    
+    NSMutableSet * indexes  = [NSMutableSet new];
+    
+    for (NSDictionary * dict in self.tagSetData) {
+        NSInteger n = [dict[@"order"]integerValue];
+        
+        
+        [indexes addObject:[NSNumber numberWithInteger:n]];
+    }
+    
+    
+    
+    for (NSInteger i=0; i<[self.tagSetData count]; i++) {
+        
+        NSDictionary * tagSet = self.tagSetData[i];
+        NSInteger order = [tagSet[@"order"]integerValue];
+        temp[order] = tagSet;
+    }
+    */
+    
+    NSArray* temp = [self tagDefinitionsAsArrayOfDictionaries];
+    
+    
+    
+    if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
+        [UserCenter getInstance].tagNames = [UserCenter getInstance].defaultTagNames;
+    } else {
+        [UserCenter getInstance].tagNames = [temp mutableCopy];
+    }
+    
+    
+    
+    NSMutableSet * autoSet = [NSMutableSet new];
+    for (SideTagEditButtonDisplayView * display in self.tagSetButtons) {
+        if (display.autoSwitch.isOn) {
+            [autoSet addObject:display.name];
+        }
+    }
+    [UserCenter getInstance].tagsFlaggedForAutoDownload = [autoSet copy];
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+}
+
+
 
 -(NSArray*)replacePlaceHolders:(NSArray*)list
 {
@@ -171,19 +234,25 @@
     
     if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
 
-        NSInteger rightCount = 0;
+        NSInteger leftCount = 0;
+        NSInteger rightCount = 12;
         for (NSInteger i = 0; i<[tags count]; i++) {
             NSString * pos  = tags[i][@"position"];
-            NSInteger offset = i;
             
+            NSInteger offset = 0;
             if ([pos isEqualToString:@"right"]){
-                offset = rightCount+12;
-                rightCount += 1;
+                offset = rightCount;
+                rightCount++;
+            } else {
+                offset = leftCount;
+                leftCount++;
             }
             SideTagEditButtonDisplayView * display = self.tagSetButtons[offset];
-            
+
             [display.button setTitle:tags[i][@"name"] forState:UIControlStateNormal];
             display.typeLabel.text = (tags[i][@"type"])?tags[i][@"type"]:@"Normal";
+            PxpTagDefinition* tagDefinition = [[PxpTagDefinition alloc] initWithName:tags[i][@"name"] order:offset position:[pos isEqualToString:@"left"] ? PxpTagDefinitionPositionLeft : PxpTagDefinitionPositionRight];
+            [self addOrRemoveDefinition:tagDefinition key:@(offset)];
             
             if ([display.typeLabel.text isEqualToString:@"Normal"]) {
                 display.typeLabel.textColor = [UIColor blackColor];
@@ -195,10 +264,13 @@
         for (NSInteger i = 0; i<[tags count]; i++) {
             NSInteger order = [tags[i][@"order"]integerValue];
             NSString * pos  = tags[i][@"position"];
-            
+
             if (order < 12 && [pos isEqualToString:@"right"]){
                 order += 12;
             }
+
+            PxpTagDefinition* tagDefinition = [[PxpTagDefinition alloc] initWithName:tags[i][@"name"] order:order position:[pos isEqualToString:@"left"] ? PxpTagDefinitionPositionLeft : PxpTagDefinitionPositionRight];
+            [self addOrRemoveDefinition:tagDefinition key:@(order)];
             
             SideTagEditButtonDisplayView * display = self.tagSetButtons[order];
             [display.button setTitle:tags[i][@"name"] forState:UIControlStateNormal];
@@ -208,18 +280,70 @@
                 display.typeLabel.textColor = [UIColor blackColor];
             }
         }
-
-    
     }
-    
-      if (!tags.count){
+
+    /*
+    if (!tags.count){
         self.tagSetData = [NSMutableArray new];
     } else {
         self.tagSetData = [tags mutableCopy];  // Saves Data
     }
+     */
     
 }
 
+-(void) assignNewTag:(NSString*) name view:(SideTagEditButtonDisplayView*) display {
+    
+    PxpTagDefinition* tagDefinition = name == nil ? nil : [[PxpTagDefinition alloc] initWithName:name order:[display.order integerValue] position:[display.position isEqualToString:@"left"] ? PxpTagDefinitionPositionLeft : PxpTagDefinitionPositionRight];
+    [self addOrRemoveDefinition:tagDefinition key:display.order];
+    
+    if (tagDefinition == nil) {
+        display.typeLabel.text = @"None";
+        display.typeLabel.textColor = [UIColor grayColor];
+        display.name                = @"";
+        display.selected = NO;
+        /*
+        for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
+            
+            NSInteger order = [self.tagSetData[i][@"order"]integerValue];
+            
+            if (order == display.button.tag) {
+                [self.tagSetData removeObjectAtIndex:i];
+                [self persistTags];
+                return;
+            }
+        }
+        */
+        
+        [self persistTags];
+        return;
+    }
+    
+    display.typeLabel.text      = @"Normal";
+    display.typeLabel.textColor = [UIColor blackColor];
+    display.name                = name;
+    display.selected            = NO;
+    
+    /*
+    for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
+        if (i == display.button.tag) {
+            self.tagSetData[i] = [display data];
+            [self persistTags];
+            return;
+        }
+    }
+    [self.tagSetData addObject:[display data]];
+     */
+    [self persistTags];
+}
+
+-(void) addOrRemoveDefinition:(PxpTagDefinition*) tagDefinition key:(NSNumber*) order {
+    if (tagDefinition == nil) {
+        [self.tagDefinitions removeObjectForKey:order];
+    } else {
+        [self.tagDefinitions setObject:tagDefinition forKey:order];
+    }
+}
 
 -(void)onButtonPress:(id)sender
 {
@@ -247,43 +371,7 @@
                                     //Handel your yes please button action here
                                     
                                     NSString * nameNew = ((UITextField *)alert.textFields[0]).text;
-                                    
-                                    if ([nameNew isEqualToString:@""] ||[nameNew isEqualToString:@" "]) {
-                                        display.typeLabel.text = @"None";
-                                        display.typeLabel.textColor = [UIColor grayColor];
-                                        display.name                = @"";
-                                        display.selected = NO;
-                                        for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
-                                            
-                                            NSInteger order = [self.tagSetData[i][@"order"]integerValue];
-                                            
-                                            if (order == display.button.tag) {
-                                                [self.tagSetData removeObjectAtIndex:i];
-                                                [self onButtonEditComplete];
-                                                return;
-                                            }
-                                        }
-                                        
-                                        [self onButtonEditComplete];
-                                        return;
-                                    }
-                                    
-                                    display.typeLabel.text      = @"Normal";
-                                    display.typeLabel.textColor = [UIColor blackColor];
-                                    display.name                = nameNew;
-                                    display.selected            = NO;
-                                    
-                                    for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
-                                        if (i == display.button.tag) {
-                                            self.tagSetData[i] = [display data];
-                                            [self onButtonEditComplete];
-                                            return;
-                                        }
-                                    }
-                                    
-                                    [self.tagSetData addObject:[display data]];
-                                    [self onButtonEditComplete];
-//                                    [alert dismissViewControllerAnimated:YES completion:nil];
+                                    [self assignNewTag:nameNew view:display];
                                     
                                 }];
     UIAlertAction* noneButton = [UIAlertAction
@@ -295,18 +383,21 @@
                                     display.typeLabel.textColor = [UIColor grayColor];
                                     display.name                = @"";
                                     display.selected = NO;
+                                    [self addOrRemoveDefinition:nil key:display.order];
+                                    /*
                                     for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
                                         
                                         NSInteger order = [self.tagSetData[i][@"order"]integerValue];
                                         
                                         if (order == display.button.tag) {
                                             [self.tagSetData removeObjectAtIndex:i];
-                                            [self onButtonEditComplete];
+                                            [self persistTags];
                                             return;
                                         }
                                     }
+                                    */
 
-                                    [self onButtonEditComplete];
+                                    [self persistTags];
                                 }];
     UIAlertAction* noButton = [UIAlertAction
                                actionWithTitle:@"Cancel"
@@ -334,20 +425,25 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)onButtonEditComplete
-{
+-(void) persistTags {
     NSUserDefaults      * defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary * userDefaults = [[defaults objectForKey:[UserCenter getInstance].customerEmail]mutableCopy];
     userDefaults[@"currentTagSetName"] = self.currentTagSetName;
     userDefaults[@"tagSets"] =  [userDefaults[@"tagSets"] mutableCopy];
-    userDefaults[@"tagSets"][self.currentTagSetName] = self.tagSetData;
+    userDefaults[@"tagSets"][self.currentTagSetName] = [self tagDefinitionsAsArrayOfDictionaries]; //self.tagSetData;
     [defaults setObject:userDefaults forKey:[UserCenter getInstance].customerEmail];
     [defaults synchronize];
 
 }
 
 
-
+-(NSArray*) tagDefinitionsAsArrayOfDictionaries {
+    NSMutableArray* result = [NSMutableArray new];
+    for (PxpTagDefinition* tagDefinition in [self.tagDefinitions allValues]) {
+        [result addObject:[tagDefinition toDictionary]];
+    }
+    return [NSArray arrayWithArray:result];
+}
 
 
 
@@ -363,6 +459,7 @@
     [defaults setObject:customersTagSetData forKey:[UserCenter getInstance].customerEmail];
     [defaults synchronize];
     
+    [self.tagDefinitions removeAllObjects];
     [self setUpButtons:nil]; // clear out the list
     
     [self.listTagSetName addObject:name];
@@ -455,7 +552,8 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     self.currentTagSetName = self.listTagSetName[row];
-    
+
+    [self.tagDefinitions removeAllObjects];
     if ( [self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
         
         [self setUpButtons:[UserCenter getInstance].defaultTagNames];
@@ -475,61 +573,6 @@
 }
 
 
-
-// this is to comfirm that changes then the post a Notification to update the tags in L2B
--(void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-
-    NSMutableArray * temp   = [NSMutableArray new];
-    
-    for (NSInteger k=0; k<24; k++) {
-        NSString * pos = (k<12)?@"left":@"right";
-        [temp addObject:@{@"name":@"--", @"order":[NSNumber numberWithInteger:k],@"position":pos}];
-    }
-    
-    
-    NSMutableSet * indexes  = [NSMutableSet new];
-    
-    for (NSDictionary * dict in self.tagSetData) {
-        NSInteger n = [dict[@"order"]integerValue];
-        
-        
-        [indexes addObject:[NSNumber numberWithInteger:n]];
-    }
-    
-    
-    
-    for (NSInteger i=0; i<[self.tagSetData count]; i++) {
-        
-        NSDictionary * tagSet = self.tagSetData[i];
-        NSInteger order = [tagSet[@"order"]integerValue];
-        temp[order] = tagSet;
-    }
-    
-    
-    
-    
-    
-    if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
-        [UserCenter getInstance].tagNames = [UserCenter getInstance].defaultTagNames;
-    } else {
-        [UserCenter getInstance].tagNames = temp;
-    }
-    
-    
-    
-    NSMutableSet * autoSet = [NSMutableSet new];
-    for (SideTagEditButtonDisplayView * display in self.tagSetButtons) {
-        if (display.autoSwitch.isOn) {
-            [autoSet addObject:display.name];
-        }
-    }
-    [UserCenter getInstance].tagsFlaggedForAutoDownload = [autoSet copy];
-    
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
-}
 
 #pragma mark Stepper Method
 
@@ -579,19 +622,10 @@
     } else {
         self.addRemoveControl.value = 1;
         // delete current tag set, if its default then do nothing
-        if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) return;
-        
-        [self deleteTagSet:self.currentTagSetName];
-        
+        if (![self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
+            [self deleteTagSet:self.currentTagSetName];
+        }
     }
 }
-
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 @end

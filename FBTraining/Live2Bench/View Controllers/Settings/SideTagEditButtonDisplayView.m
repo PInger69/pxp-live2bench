@@ -111,7 +111,7 @@
 
     [super tintColorDidChange];
 
-    if (_enabled){
+    if (self.enabled){
         self.button.layer.borderColor = self.tintColor.CGColor;
     } else {
        self.button.layer.borderColor = [UIColor lightGrayColor].CGColor;
@@ -130,34 +130,5 @@
 {
     return self.button.titleLabel.text;
 }
-
--(void)setPosition:(NSString *)position
-{
-    _position = position;
-}
-
--(NSString*)position
-{
-    return _position;
-}
-
--(void)setOrder:(NSNumber *)order
-{
-    _order = order;
-}
-
--(NSNumber*)order
-{
-    return _order;
-}
-
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

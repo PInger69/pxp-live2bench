@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		639465BD1E4E916C00D497BE /* SideTagEditButtonDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639465BC1E4E916C00D497BE /* SideTagEditButtonDisplayView.m */; };
+		639465BF1E4ECA9000D497BE /* SideTagEditButtonDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 639465BE1E4ECA9000D497BE /* SideTagEditButtonDisplay.xib */; };
 		A76B350F88EF9958344C1A38 /* libPods-Live2Bench.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E736934C43C2EE28A639060 /* libPods-Live2Bench.a */; };
 		D815525E1E3934E3003010D4 /* DeletableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */; };
 		D815525F1E3934E3003010D4 /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D815525D1E3934E3003010D4 /* DeletableTableViewController.m */; };
@@ -563,8 +565,6 @@
 		D83E8B1E1E2D9153000FC23F /* SetSummaryOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87CC1E2D914B000FC23F /* SetSummaryOperation.m */; };
 		D83E8B1F1E2D9153000FC23F /* SettingItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87CE1E2D914B000FC23F /* SettingItemViewController.m */; };
 		D83E8B201E2D9153000FC23F /* SideTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87D01E2D914B000FC23F /* SideTagButton.m */; };
-		D83E8B211E2D9153000FC23F /* SideTagEditButtonDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E87D11E2D914B000FC23F /* SideTagEditButtonDisplay.xib */; };
-		D83E8B221E2D9153000FC23F /* SideTagEditButtonDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87D31E2D914B000FC23F /* SideTagEditButtonDisplayView.m */; };
 		D83E8B251E2D9153000FC23F /* SoccerBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E87D71E2D914B000FC23F /* SoccerBottomViewController.plist */; };
 		D83E8B261E2D9153000FC23F /* StreamViewVideoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87DA1E2D914B000FC23F /* StreamViewVideoKit.m */; };
 		D83E8B271E2D9153000FC23F /* SwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87DC1E2D914B000FC23F /* SwipeableTableViewCell.m */; };
@@ -670,6 +670,9 @@
 /* Begin PBXFileReference section */
 		3D2D3E0A12BF51BAA4741C1E /* Pods-Live2Bench.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Live2Bench.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Live2Bench/Pods-Live2Bench.debug.xcconfig"; sourceTree = "<group>"; };
 		5E736934C43C2EE28A639060 /* libPods-Live2Bench.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Live2Bench.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		639465BB1E4E916C00D497BE /* SideTagEditButtonDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagEditButtonDisplayView.h; sourceTree = "<group>"; };
+		639465BC1E4E916C00D497BE /* SideTagEditButtonDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagEditButtonDisplayView.m; sourceTree = "<group>"; };
+		639465BE1E4ECA9000D497BE /* SideTagEditButtonDisplay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideTagEditButtonDisplay.xib; sourceTree = "<group>"; };
 		8F74F983CD3A53DCCF7EC927 /* Pods-Live2Bench.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Live2Bench.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Live2Bench/Pods-Live2Bench.release.xcconfig"; sourceTree = "<group>"; };
 		D815525A1E3934E3003010D4 /* DeletableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewCell.h; sourceTree = "<group>"; };
 		D815525B1E3934E3003010D4 /* DeletableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewCell.m; sourceTree = "<group>"; };
@@ -1750,9 +1753,6 @@
 		D83E87CE1E2D914B000FC23F /* SettingItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingItemViewController.m; sourceTree = "<group>"; };
 		D83E87CF1E2D914B000FC23F /* SideTagButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagButton.h; sourceTree = "<group>"; };
 		D83E87D01E2D914B000FC23F /* SideTagButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagButton.m; sourceTree = "<group>"; };
-		D83E87D11E2D914B000FC23F /* SideTagEditButtonDisplay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideTagEditButtonDisplay.xib; sourceTree = "<group>"; };
-		D83E87D21E2D914B000FC23F /* SideTagEditButtonDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagEditButtonDisplayView.h; sourceTree = "<group>"; };
-		D83E87D31E2D914B000FC23F /* SideTagEditButtonDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagEditButtonDisplayView.m; sourceTree = "<group>"; };
 		D83E87D71E2D914B000FC23F /* SoccerBottomViewController.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SoccerBottomViewController.plist; sourceTree = "<group>"; };
 		D83E87D81E2D914B000FC23F /* StreamViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamViewProtocol.h; sourceTree = "<group>"; };
 		D83E87D91E2D914B000FC23F /* StreamViewVideoKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamViewVideoKit.h; sourceTree = "<group>"; };
@@ -2795,9 +2795,6 @@
 				D83E87CE1E2D914B000FC23F /* SettingItemViewController.m */,
 				D83E87CF1E2D914B000FC23F /* SideTagButton.h */,
 				D83E87D01E2D914B000FC23F /* SideTagButton.m */,
-				D83E87D11E2D914B000FC23F /* SideTagEditButtonDisplay.xib */,
-				D83E87D21E2D914B000FC23F /* SideTagEditButtonDisplayView.h */,
-				D83E87D31E2D914B000FC23F /* SideTagEditButtonDisplayView.m */,
 				D83E87D71E2D914B000FC23F /* SoccerBottomViewController.plist */,
 				D83E87D81E2D914B000FC23F /* StreamViewProtocol.h */,
 				D83E87D91E2D914B000FC23F /* StreamViewVideoKit.h */,
@@ -3735,6 +3732,9 @@
 				D83E8BA91E2E9C84000FC23F /* SettingsPageViewController.m */,
 				D83E8BAA1E2E9C84000FC23F /* SettingsTableViewController.h */,
 				D83E8BAB1E2E9C84000FC23F /* SettingsTableViewController.m */,
+				639465BE1E4ECA9000D497BE /* SideTagEditButtonDisplay.xib */,
+				639465BB1E4E916C00D497BE /* SideTagEditButtonDisplayView.h */,
+				639465BC1E4E916C00D497BE /* SideTagEditButtonDisplayView.m */,
 				D81552B51E4BD70F003010D4 /* SideTagSettingsView.xib */,
 				D81552B61E4BD70F003010D4 /* SideTagSettingsViewController.h */,
 				D81552B71E4BD70F003010D4 /* SideTagSettingsViewController.m */,
@@ -3770,12 +3770,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D83E7DD81E2D86CB000FC23F /* Build configuration list for PBXNativeTarget "Live2Bench" */;
 			buildPhases = (
-				6FAEBD7039586D4C51AFB277 /* 📦 Check Pods Manifest.lock */,
+				6FAEBD7039586D4C51AFB277 /* [CP] Check Pods Manifest.lock */,
 				D83E7DBD1E2D86CB000FC23F /* Sources */,
 				D83E7DBE1E2D86CB000FC23F /* Frameworks */,
 				D83E7DBF1E2D86CB000FC23F /* Resources */,
-				21865314DE0AC035EE9B4FC7 /* 📦 Embed Pods Frameworks */,
-				FD14C8F6F9FDE300B6600FFF /* 📦 Copy Pods Resources */,
+				21865314DE0AC035EE9B4FC7 /* [CP] Embed Pods Frameworks */,
+				FD14C8F6F9FDE300B6600FFF /* [CP] Copy Pods Resources */,
 				D8AE261F1E30269900BD2EB2 /* ShellScript */,
 			);
 			buildRules = (
@@ -3833,6 +3833,7 @@
 				D83E82E11E2D90A5000FC23F /* logo.png in Resources */,
 				D83E83211E2D90A5000FC23F /* playbackRateButtonBackSelected.png in Resources */,
 				D83E83CD1E2D90A5000FC23F /* undoButton.png in Resources */,
+				639465BF1E4ECA9000D497BE /* SideTagEditButtonDisplay.xib in Resources */,
 				D83E825D1E2D90A5000FC23F /* dropboxico@2x.png in Resources */,
 				D83E8B851E2D9153000FC23F /* FeedMapCell.xib in Resources */,
 				D83E83B11E2D90A5000FC23F /* TaggingString.txt in Resources */,
@@ -3876,7 +3877,6 @@
 				D83E8B4A1E2D9153000FC23F /* ViewController2.xib in Resources */,
 				D83E83ED1E2D90A5000FC23F /* youtube.png in Resources */,
 				D83E83A91E2D90A5000FC23F /* subtractendsec@2x.png in Resources */,
-				D83E8B211E2D9153000FC23F /* SideTagEditButtonDisplay.xib in Resources */,
 				D83E820F1E2D90A5000FC23F /* arrow@2x.png in Resources */,
 				D83E8B301E2D9153000FC23F /* tempData.plist in Resources */,
 				D83E83C61E2D90A5000FC23F /* twitter.jpeg in Resources */,
@@ -4081,14 +4081,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		21865314DE0AC035EE9B4FC7 /* 📦 Embed Pods Frameworks */ = {
+		21865314DE0AC035EE9B4FC7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4096,19 +4096,19 @@
 			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-Live2Bench/Pods-Live2Bench-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6FAEBD7039586D4C51AFB277 /* 📦 Check Pods Manifest.lock */ = {
+		6FAEBD7039586D4C51AFB277 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D8AE261F1E30269900BD2EB2 /* ShellScript */ = {
@@ -4124,14 +4124,14 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" 641798b3e14e69b71f69425feebd13f4d2699f67 c309c35c58b04aeb9eade11ad691ef1a5e2967ee75d4597ba5eb6eddaabc71b2";
 		};
-		FD14C8F6F9FDE300B6600FFF /* 📦 Copy Pods Resources */ = {
+		FD14C8F6F9FDE300B6600FFF /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4317,6 +4317,7 @@
 				D83E82641E2D90A5000FC23F /* DualViewPeriodTableViewController.m in Sources */,
 				D83E82A91E2D90A5000FC23F /* HeaderBar.m in Sources */,
 				D83E8ABF1E2D9152000FC23F /* LoginOperation.m in Sources */,
+				639465BD1E4E916C00D497BE /* SideTagEditButtonDisplayView.m in Sources */,
 				D83E7EDB1E2D87FE000FC23F /* cmdutils.c in Sources */,
 				D83E8AED1E2D9153000FC23F /* PxpFilterRangeSlider.m in Sources */,
 				D81552B11E4BD2E9003010D4 /* DownloadClipFromTag.m in Sources */,
@@ -4401,7 +4402,6 @@
 				D83E83381E2D90A5000FC23F /* PxpEventContext.m in Sources */,
 				D83E8B5B1E2D9153000FC23F /* AVAsset+Image.m in Sources */,
 				D83E83321E2D90A5000FC23F /* PxpBorderButton.m in Sources */,
-				D83E8B221E2D9153000FC23F /* SideTagEditButtonDisplayView.m in Sources */,
 				D83E83C91E2D90A5000FC23F /* UIColor+Highlight.m in Sources */,
 				D83E82141E2D90A5000FC23F /* AutoScrollLabel.m in Sources */,
 				D83E83D61E2D90A5000FC23F /* UserSettings.m in Sources */,

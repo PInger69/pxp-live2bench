@@ -11,6 +11,7 @@
 #import "UserCenter.h"
 #import "TeamPlayer.h"
 #import "ContentViewController.h"
+#import "PxpTagDefinition.h"
 
 //#import "Globals.h"
 
@@ -186,13 +187,23 @@
     [self clear]; // clear if any is present
     
     NSLog(@"list of new tags to display: %@", listOfDicts);
-    
+    NSArray* tagDefinitions = [PxpTagDefinition fromArrayOfDictionaries:listOfDicts];
+
+    tagDefinitions = [tagDefinitions sortedArrayUsingComparator:^NSComparisonResult(PxpTagDefinition* a, PxpTagDefinition* b) {
+        NSNumber * first   = @(a.order);
+        NSNumber * second  = @(b.order);
+        return [first compare:second];
+    }];
+
+    for (PxpTagDefinition* tagDefinition in tagDefinitions) {
+        [self _buildButton:tagDefinition];
+    }
+    /*
     NSMutableArray * left  = [[NSMutableArray alloc]init];
     NSMutableArray * right = [[NSMutableArray alloc]init];
     
     for (NSDictionary * btnData in listOfDicts) {
          // Builds the button and adds it to the view
-         //[placementView addSubview:[self _buildButton:btnData]];
         if ([[btnData objectForKey:@"position"]isEqualToString:@"left"]) {
             [left addObject:btnData];
         } else {
@@ -201,7 +212,6 @@
 
      }
     
-   
     NSArray *sortedLeft = [left sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
         NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
         NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
@@ -227,7 +237,7 @@
     for (NSDictionary * dc in sortedRight) {
         [self _buildButton:dc];
     }
-    
+    */
 
     self.enabled = _enabled; // sets the fade after build base off last setting of enabled
     
@@ -271,16 +281,16 @@
     [buttons removeAllObjects];
 }
 
--(SideTagButton *)_buildButton:(NSDictionary*)dict
+-(SideTagButton *)_buildButton:(PxpTagDefinition*) tagDefinition
 {
     
     SideTagButton * btn = [SideTagButton buttonWithType:UIButtonTypeCustom];
-    [btn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
+    [btn setTitle:tagDefinition.name forState:UIControlStateNormal];
     [btn setTag:tagCount++];
     
-    [buttons setObject:btn forKey:[dict objectForKey:@"name"]];
+    [buttons setObject:btn forKey:tagDefinition.name];
     
-    if( [[dict objectForKey:@"side"] isEqualToString:@"left"]  || [[dict objectForKey:@"position"] isEqualToString:@"left"]){
+    if (tagDefinition.position == PxpTagDefinitionPositionLeft) {
         
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         [btn.durationView.timeLabel setTextAlignment:NSTextAlignmentRight];
@@ -289,7 +299,7 @@
         [btn setAccessibilityValue:@"left"];
         
         [btn setFrame:CGRectMake(0,
-                                 ( [_tagButtonsLeft count] * (_buttonSize.height + _gap) ) + 0,
+                                 ( tagDefinition.order * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
@@ -310,18 +320,12 @@
         [btn setAccessibilityValue:@"right"];
         //        self.view.bounds.size.width - _buttonSize.width
         [btn setFrame:CGRectMake(0,
-                                 ( [_tagButtonRight count] * (_buttonSize.height + _gap) ) + 0,
+                                 ( (tagDefinition.order-12) * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
         [_tagButtonRight addObject:btn];
         [_rightTray addSubview:btn];
-    }
-    
-    //This check is to make the filler buttons blank
-
-    if ([[[dict objectForKey:@"name"]substringToIndex:1] isEqualToString:@"-"]) {
-        btn.hidden = YES;
     }
     
     return btn;

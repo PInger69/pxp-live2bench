@@ -98,6 +98,8 @@ static UserCenter * instance;
             [self updateCustomerInfoWith:rawResponce];
             _tagNames           = [self convertToL2BReadable: rawResponce key:@"tagnames"];
             _defaultTagNames    = [_tagNames copy];
+        } else {
+            NSLog(@"No account info");
         }
         
         eventHIDs = [[NSArray alloc]initWithContentsOfFile:[_localPath stringByAppendingPathComponent:PLIST_EVENT_HID]];
@@ -242,7 +244,7 @@ static UserCenter * instance;
 -(void)cloudCredentialsResponce:(NSData *)data
 {
     
-
+    NSLog(@"response data from login: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     
  // role
 //    0 = superUser
@@ -357,6 +359,9 @@ static UserCenter * instance;
 
 -(void)tagnameUpdate:(NSDictionary *)dic
 {
+    NSLog(@"tagnameUpdate: %@", dic);
+    
+    
     NSMutableDictionary         * tgnames = [dic mutableCopy];
     
     // this is clearing out all the illigal NULL in the dict, so the plist can be written
@@ -403,6 +408,7 @@ static UserCenter * instance;
     } else {
         if ([self.currentTagSetName isEqualToString:@"Default (non editable)"]) {
             _tagNames =[self convertToL2BReadable: rawResponce key:@"tagnames"];
+            _defaultTagNames = [_tagNames copy];
             //                _tagNames = [self _buildTagNames:localPath];
         }
     }
@@ -426,10 +432,11 @@ static UserCenter * instance;
             NSDictionary  * tbtn = items2[i];
             NSString * side = [tbtn objectForKey:@"position"];
             if ([side isEqualToString:@"left"]) {
-                
-                [tempLeft addObject:@{@"name":items2[i][@"name"], @"position":side, @"order": [NSNumber numberWithInt:i]}];
+                NSInteger order = tempLeft.count;
+                [tempLeft addObject:@{@"name":items2[i][@"name"], @"position":side, @"order": [NSNumber numberWithInteger:order]}];
             } else {
-                [tempRigh addObject:@{@"name":items2[i][@"name"], @"position":side, @"order": [NSNumber numberWithInt:i]}];
+                NSInteger order = tempRigh.count;
+                [tempRigh addObject:@{@"name":items2[i][@"name"], @"position":side, @"order": [NSNumber numberWithInteger:order + 12]}];
             }
         }
         

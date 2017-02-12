@@ -19,4 +19,8 @@ typedef NS_ENUM(NSUInteger, PxpTagDefinitionPosition) {
 @property (nonatomic, assign) NSInteger order;
 @property (nonatomic, assign) PxpTagDefinitionPosition position;
 
+-(nonnull instancetype) initWithName:(nonnull NSString*) name order:(NSInteger) order position:(PxpTagDefinitionPosition) position;
+-(nonnull NSDictionary*) toDictionary;
++(nullable PxpTagDefinition*) fromDictionary:(nonnull NSDictionary*) dictionary;
++(nonnull NSArray*) fromArrayOfDictionaries:(nonnull NSArray*) array;
 @end

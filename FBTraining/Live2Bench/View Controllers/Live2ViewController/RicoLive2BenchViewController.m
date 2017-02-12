@@ -1835,6 +1835,8 @@ static void * eventContext      = &eventContext;
     [_tagButtonController didMoveToParentViewController:self];
        
     NSArray * tNames = [_userCenter.tagNames copy]; //self.tagNames;
+    NSLog(@"tNames: %@", tNames);
+    
     [_tagButtonController inputTagData:tNames];
 
     //Add Actions
