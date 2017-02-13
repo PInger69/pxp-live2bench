@@ -27,6 +27,7 @@
 #import "FeedMapController.h"
 #import "DownloaderQueue.h"
 #import "DownloadClipFromTag.h"
+#import "Downloader.h"
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 

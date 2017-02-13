@@ -46,6 +46,7 @@
 #import "DownloaderQueue.h"
 #import "DownloadOperation.h"
 #import "DownloadClipFromTag.h"
+#import "Downloader.h"
 #import "FeedSelectCell.h"
 
 #import "UIImageView+TagThumbnail.h"
