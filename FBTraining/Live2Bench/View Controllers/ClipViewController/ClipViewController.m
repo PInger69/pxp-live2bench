@@ -114,7 +114,7 @@
 
 
 -(void)clear{
-    self.tagsToDisplay = nil;
+    self.tagsToDisplay = [NSMutableArray new];
     [self.allTagsArray removeAllObjects];
     [self.collectionView reloadData];
 }

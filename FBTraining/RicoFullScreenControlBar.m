@@ -87,7 +87,8 @@
         
         // player
         const CGFloat playerWidth = contentWidth, playerHeight = playerWidth / (16.0 / 9.0);
-        const CGFloat playerX = 0.0, playerY = (contentHeight - playerHeight) / 2.0;
+//        const CGFloat playerX = 0.0;
+        const CGFloat playerY = (contentHeight - playerHeight) / 2.0;
         
         CGFloat alignY = 80;
 
@@ -104,7 +105,7 @@
 
         
         CGFloat maxx = CGRectGetMaxX(contentRect);
-        CGFloat minx = CGRectGetMinX(contentRect);
+//        CGFloat minx = CGRectGetMinX(contentRect);
         CGFloat midx = CGRectGetMidX(contentRect);
         
         _backwardSeekButton.center  = CGPointMake(maxx*0.16, alignY);

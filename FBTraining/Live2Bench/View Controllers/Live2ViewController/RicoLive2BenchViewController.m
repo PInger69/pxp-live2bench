@@ -217,8 +217,8 @@ static void * eventContext      = &eventContext;
     [_videoBar.slomoButton removeTarget:_videoBar action:@selector(slomoPressed:)  forControlEvents:UIControlEventTouchUpInside];
     [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_videoBar.frameForward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoBar.frameBackward addTarget:self action:@selector(frameByFrame:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.frameForward addTarget:self action:@selector(frameForward:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.frameBackward addTarget:self action:@selector(frameBackward:) forControlEvents:UIControlEventTouchUpInside];
     
     // Rico
     self.ricoZoomGroup              = [[RicoPlayerGroupContainer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
@@ -269,8 +269,8 @@ static void * eventContext      = &eventContext;
     [self.ricoFullScreenControlBar.liveButton                   addTarget: self action:@selector(goToLive)            forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.startRangeModifierButton     addTarget: self action:@selector(extendStartAction:)  forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.endRangeModifierButton       addTarget: self action:@selector(extendEndAction:)    forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.frameBackward                addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
-    [self.ricoFullScreenControlBar.frameForward                 addTarget: self action:@selector(frameByFrame:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.frameBackward                addTarget: self action:@selector(frameBackward:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.frameForward                 addTarget: self action:@selector(frameForward:)       forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.controlBar.playPauseButton   addTarget:self action:@selector(controlBarPlay) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.fullscreenButton             addTarget:self action:@selector(onFullScreenButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreen.bottomBar                              addSubview:self.ricoFullScreenControlBar];
@@ -2276,16 +2276,17 @@ static void * eventContext      = &eventContext;
     
 }
 
-
--(void)frameByFrame:(id)sender{
-    
+-(void) frameForward:(id) sender {
+    [self frameByFrame:1.10f];
+}
+-(void) frameBackward:(id) sender {
+    [self frameByFrame:-1.10f];
+}
+-(void) frameByFrame:(float) speed {
+    // BCH: it looks like the actual value of speed doesn't matter, only whether or not it's positive or negative
     if (self.telestrationViewController.telestration) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:nil];
     }
-    
-    NSLog(@"Frame button: %@", ((UIButton*)sender).titleLabel.text);
-    
-    float speed = ([((UIButton*)sender).titleLabel.text isEqualToString:@"FB"] )?-1.10:1.10;
     [self.ricoPlayerViewController stepByCount:speed];
 }
 
