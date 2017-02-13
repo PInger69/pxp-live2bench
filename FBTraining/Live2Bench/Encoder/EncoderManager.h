@@ -12,7 +12,6 @@
 #import "CloudEncoder.h"
 #import "LocalEncoder.h"
 #import "Event.h"
-//#import "EncoderCommander.h"
 #import "ActionListItemDelegate.h"
 #import "LocalMediaManager.h"
 #import "BonjourModule.h"
@@ -66,7 +65,6 @@
 
 
 // important encoders
-//@property (nonatomic,strong)            EncoderCommander        * encoderCommander; // Main box encoder
 @property (nonatomic,strong)            Encoder                 * masterEncoder; // Main box encoder
 @property (nonatomic,strong)            LocalEncoder            * localEncoder;  // the device acts like an in app encoder / with clips
 @property (nonatomic,strong)            LocalMediaManager       * localMediaManager;

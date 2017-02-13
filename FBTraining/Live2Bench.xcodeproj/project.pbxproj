@@ -156,7 +156,6 @@
 		D83E826A1E2D90A5000FC23F /* BonjourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F991E2D90A2000FC23F /* BonjourModule.m */; };
 		D83E826B1E2D90A5000FC23F /* CheckEncoderShutdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */; };
 		D83E82711E2D90A5000FC23F /* CloudEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */; };
-		D83E82731E2D90A5000FC23F /* EncoderCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */; };
 		D83E82751E2D90A5000FC23F /* EncoderManagerActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FAB1E2D90A2000FC23F /* EncoderManagerActionPack.m */; };
 		D83E82761E2D90A5000FC23F /* EncoderStatusMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FAF1E2D90A2000FC23F /* EncoderStatusMonitor.m */; };
 		D83E82771E2D90A5000FC23F /* EncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB11E2D90A2000FC23F /* EncoderTask.m */; };
@@ -1095,8 +1094,6 @@
 		D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckEncoderShutdown.m; sourceTree = "<group>"; };
 		D83E7FA21E2D90A2000FC23F /* CloudEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudEncoder.h; sourceTree = "<group>"; };
 		D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudEncoder.m; sourceTree = "<group>"; };
-		D83E7FA61E2D90A2000FC23F /* EncoderCommander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderCommander.h; sourceTree = "<group>"; };
-		D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderCommander.m; sourceTree = "<group>"; };
 		D83E7FAA1E2D90A2000FC23F /* EncoderManagerActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderManagerActionPack.h; sourceTree = "<group>"; };
 		D83E7FAB1E2D90A2000FC23F /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderManagerActionPack.m; sourceTree = "<group>"; };
 		D83E7FAC1E2D90A2000FC23F /* EncoderParseProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderParseProtocol.h; sourceTree = "<group>"; };
@@ -3537,8 +3534,6 @@
 				D83E7F9B1E2D90A2000FC23F /* CheckEncoderShutdown.m */,
 				D83E7FA21E2D90A2000FC23F /* CloudEncoder.h */,
 				D83E7FA31E2D90A2000FC23F /* CloudEncoder.m */,
-				D83E7FA61E2D90A2000FC23F /* EncoderCommander.h */,
-				D83E7FA71E2D90A2000FC23F /* EncoderCommander.m */,
 				D83E7FAA1E2D90A2000FC23F /* EncoderManagerActionPack.h */,
 				D83E7FAB1E2D90A2000FC23F /* EncoderManagerActionPack.m */,
 				D83E7FAC1E2D90A2000FC23F /* EncoderParseProtocol.h */,
@@ -4230,7 +4225,6 @@
 				D83E83041E2D90A5000FC23F /* NCPlayerView.m in Sources */,
 				D8AE261D1E2FDDD300BD2EB2 /* PxpPreference.m in Sources */,
 				D83E83401E2D90A5000FC23F /* PxpLoadAction.m in Sources */,
-				D83E82731E2D90A5000FC23F /* EncoderCommander.m in Sources */,
 				D815525F1E3934E3003010D4 /* DeletableTableViewController.m in Sources */,
 				D83E8B261E2D9153000FC23F /* StreamViewVideoKit.m in Sources */,
 				D83E83E51E2D90A5000FC23F /* VideoControlBar.m in Sources */,
