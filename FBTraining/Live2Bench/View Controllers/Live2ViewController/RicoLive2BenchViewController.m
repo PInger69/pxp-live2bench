@@ -2277,9 +2277,11 @@ static void * eventContext      = &eventContext;
 }
 
 -(void) frameForward:(id) sender {
+    NSLog(@"Frame forward");
     [self frameByFrame:1.10f];
 }
 -(void) frameBackward:(id) sender {
+    NSLog(@"Frame backward");
     [self frameByFrame:-1.10f];
 }
 -(void) frameByFrame:(float) speed {

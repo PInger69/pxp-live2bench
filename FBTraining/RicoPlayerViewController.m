@@ -544,9 +544,15 @@ static CMClockRef _masterClock;
         }
     } else {
         float speed = (stepCount < 0 )?-0.10:0.10;
+        NSLog(@"frame speed: %f", speed);
         CMTime  sTime = CMTimeMakeWithSeconds(speed, NSEC_PER_SEC);
         CMTime  cTime = self.primaryPlayer.currentTime;
         CMTime  nTime = CMTimeAdd(cTime, sTime);
+        
+        
+        NSLog(@"sTime = %f, cTime = %f, nTime = %f", CMTimeGetSeconds(sTime), CMTimeGetSeconds(cTime), CMTimeGetSeconds(nTime));
+        
+
         [self seekToTime:nTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
     }
 
