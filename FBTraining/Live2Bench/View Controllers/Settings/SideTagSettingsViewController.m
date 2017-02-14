@@ -78,11 +78,6 @@
     [self.listTagSetName addObject:DEFAULT_TAG_SET];
     
   
-    
-//    [defaults setObject:nil forKey:[UserCenter getInstance].customerEmail];
-//    [defaults synchronize];
-//    return;
-    // check to see if there is used data
     if ([UserCenter getInstance].customerEmail && [defaults objectForKey:[UserCenter getInstance].customerEmail]){
         NSDictionary * customersTagSetData = [defaults objectForKey:[UserCenter getInstance].customerEmail];
         self.currentTagSetName = customersTagSetData[@"currentTagSetName"];
@@ -139,45 +134,13 @@
 {
     [super viewDidDisappear:animated];
 
-    /*
-    NSMutableArray * temp   = [NSMutableArray new];
-    
-    for (NSInteger k=0; k<24; k++) {
-        NSString * pos = (k<12)?@"left":@"right";
-        [temp addObject:@{@"name":@"--", @"order":[NSNumber numberWithInteger:k],@"position":pos}];
-    }
-    
-    
-    NSMutableSet * indexes  = [NSMutableSet new];
-    
-    for (NSDictionary * dict in self.tagSetData) {
-        NSInteger n = [dict[@"order"]integerValue];
-        
-        
-        [indexes addObject:[NSNumber numberWithInteger:n]];
-    }
-    
-    
-    
-    for (NSInteger i=0; i<[self.tagSetData count]; i++) {
-        
-        NSDictionary * tagSet = self.tagSetData[i];
-        NSInteger order = [tagSet[@"order"]integerValue];
-        temp[order] = tagSet;
-    }
-    */
-    
     NSArray* temp = [self tagDefinitionsAsArrayOfDictionaries];
-    
-    
     
     if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
         [UserCenter getInstance].tagNames = [UserCenter getInstance].defaultTagNames;
     } else {
         [UserCenter getInstance].tagNames = [temp mutableCopy];
     }
-    
-    
     
     NSMutableSet * autoSet = [NSMutableSet new];
     for (SideTagEditButtonDisplayView * display in self.tagSetButtons) {
@@ -281,15 +244,6 @@
             }
         }
     }
-
-    /*
-    if (!tags.count){
-        self.tagSetData = [NSMutableArray new];
-    } else {
-        self.tagSetData = [tags mutableCopy];  // Saves Data
-    }
-     */
-    
 }
 
 -(void) assignNewTag:(NSString*) name view:(SideTagEditButtonDisplayView*) display {
@@ -302,19 +256,6 @@
         display.typeLabel.textColor = [UIColor grayColor];
         display.name                = @"";
         display.selected = NO;
-        /*
-        for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
-            
-            NSInteger order = [self.tagSetData[i][@"order"]integerValue];
-            
-            if (order == display.button.tag) {
-                [self.tagSetData removeObjectAtIndex:i];
-                [self persistTags];
-                return;
-            }
-        }
-        */
-        
         [self persistTags];
         return;
     }
@@ -324,16 +265,6 @@
     display.name                = name;
     display.selected            = NO;
     
-    /*
-    for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
-        if (i == display.button.tag) {
-            self.tagSetData[i] = [display data];
-            [self persistTags];
-            return;
-        }
-    }
-    [self.tagSetData addObject:[display data]];
-     */
     [self persistTags];
 }
 
@@ -384,18 +315,6 @@
                                     display.name                = @"";
                                     display.selected = NO;
                                     [self addOrRemoveDefinition:nil key:display.order];
-                                    /*
-                                    for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
-                                        
-                                        NSInteger order = [self.tagSetData[i][@"order"]integerValue];
-                                        
-                                        if (order == display.button.tag) {
-                                            [self.tagSetData removeObjectAtIndex:i];
-                                            [self persistTags];
-                                            return;
-                                        }
-                                    }
-                                    */
 
                                     [self persistTags];
                                 }];

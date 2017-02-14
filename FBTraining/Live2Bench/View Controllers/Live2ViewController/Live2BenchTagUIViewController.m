@@ -132,7 +132,6 @@
                                                 style:UIAlertActionStyleCancel
                                                 handler:^(UIAlertAction * action)
                                                 {
-                                                    //                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:_alert animated:YES completion:nil];
                                                 }];
                 [alert addAction:cancelButtons];
                 
@@ -168,7 +167,6 @@
                                                 style:UIAlertActionStyleCancel
                                                 handler:^(UIAlertAction * action)
                                                 {
-//                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:_alert animated:YES completion:nil];
                                                 }];
                 [alert addAction:cancelButtons];
                 
@@ -198,47 +196,6 @@
     for (PxpTagDefinition* tagDefinition in tagDefinitions) {
         [self _buildButton:tagDefinition];
     }
-    /*
-    NSMutableArray * left  = [[NSMutableArray alloc]init];
-    NSMutableArray * right = [[NSMutableArray alloc]init];
-    
-    for (NSDictionary * btnData in listOfDicts) {
-         // Builds the button and adds it to the view
-        if ([[btnData objectForKey:@"position"]isEqualToString:@"left"]) {
-            [left addObject:btnData];
-        } else {
-            [right addObject:btnData];
-        }
-
-     }
-    
-    NSArray *sortedLeft = [left sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
-        NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
-        NSComparisonResult result =  [first compare:second];
-        
-        
-        return result;
-    }];
-
-    NSArray *sortedRight = [right sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
-        NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
-        NSComparisonResult result =  [first compare:second];
-        
-        
-        return result;
-    }];
-    
-    for (NSDictionary * dc in sortedLeft) {
-        [self _buildButton:dc];
-    }
-    
-    for (NSDictionary * dc in sortedRight) {
-        [self _buildButton:dc];
-    }
-    */
-
     self.enabled = _enabled; // sets the fade after build base off last setting of enabled
     
 
@@ -306,11 +263,6 @@
         
         [_tagButtonsLeft addObject:btn];
         [_leftTray addSubview:btn];
-        // TODO DEPREICATED START
-        //        if (![[Globals instance].LEFT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
-        //            [[Globals instance].LEFT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
-        //        }
-        // TODO DEPREICATED END
         
     } else { /// Right Tags
         
@@ -419,7 +371,6 @@
 {
     // removes observer if one is attached... just preventing future memory leaks
     if (_fullScreenViewController) {
-//        [_fullScreenViewController removeObserver:self forKeyPath:@"enable" context:fullScreenContext];
     }
    
 }
@@ -434,9 +385,7 @@
 
     if (_fullScreenViewController.enable) {
         [_fullScreenViewController.view addSubview:_leftTray];
-        //[_leftTray setCenter:CGPointMake(_leftTray.center.x/2, _leftTray.center.y)];
         [_fullScreenViewController.view addSubview:_rightTray];
-        //[_rightTray setCenter:CGPointMake(_rightTray.center.x/2, _rightTray.center.y)];
     } else {
         [placementView addSubview:_leftTray];
         [placementView addSubview:_rightTray];

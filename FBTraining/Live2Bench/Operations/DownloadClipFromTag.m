@@ -26,7 +26,7 @@
 
 - (instancetype)initWithTag:(id<TagProtocol>)tag encoder:(id<EncoderProtocol>)encoder sources:(NSArray*)sources
 {
-    
+    // BCH: this is really bad form, doing all this internal initialization prior to calling the super init, but I don't have time to make it right.
     executing               = NO;
     finished                = NO;
     
