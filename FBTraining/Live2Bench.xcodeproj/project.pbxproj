@@ -86,10 +86,6 @@
 		D83E82141E2D90A5000FC23F /* AutoScrollLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F1C1E2D90A2000FC23F /* AutoScrollLabel.m */; };
 		D83E82151E2D90A5000FC23F /* AVPlayerRewindableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F1E1E2D90A2000FC23F /* AVPlayerRewindableItem.m */; };
 		D83E82161E2D90A5000FC23F /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F1F1E2D90A2000FC23F /* BG.png */; };
-		D83E82171E2D90A5000FC23F /* BlueSettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F201E2D90A2000FC23F /* BlueSettingsButton.png */; };
-		D83E82181E2D90A5000FC23F /* BlueSettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F211E2D90A2000FC23F /* BlueSettingsButton@2x.png */; };
-		D83E82191E2D90A5000FC23F /* BlueSettingsButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F221E2D90A2000FC23F /* BlueSettingsButtonSelect.png */; };
-		D83E821A1E2D90A5000FC23F /* BlueSettingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F231E2D90A2000FC23F /* BlueSettingsButtonSelect@2x.png */; };
 		D83E821B1E2D90A5000FC23F /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F241E2D90A2000FC23F /* bookmarkedit.png */; };
 		D83E821C1E2D90A5000FC23F /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7F251E2D90A2000FC23F /* bookmarkedit@2x.png */; };
 		D83E82201E2D90A5000FC23F /* BorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7F2D1E2D90A2000FC23F /* BorderButton.m */; };
@@ -201,10 +197,6 @@
 		D83E82A11E2D90A5000FC23F /* graph.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FF81E2D90A2000FC23F /* graph.png */; };
 		D83E82A21E2D90A5000FC23F /* graph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FF91E2D90A2000FC23F /* graph@2x.png */; };
 		D83E82A31E2D90A5000FC23F /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FFB1E2D90A2000FC23F /* GraphView.m */; };
-		D83E82A41E2D90A5000FC23F /* GreenSettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FFC1E2D90A2000FC23F /* GreenSettingsButton.png */; };
-		D83E82A51E2D90A5000FC23F /* GreenSettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FFD1E2D90A2000FC23F /* GreenSettingsButton@2x.png */; };
-		D83E82A61E2D90A5000FC23F /* GreenSettingsButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FFE1E2D90A2000FC23F /* GreenSettingsButtonSelect.png */; };
-		D83E82A71E2D90A5000FC23F /* GreenSettingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FFF1E2D90A2000FC23F /* GreenSettingsButtonSelect@2x.png */; };
 		D83E82A81E2D90A5000FC23F /* HardwareString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D83E80001E2D90A2000FC23F /* HardwareString.txt */; };
 		D83E82A91E2D90A5000FC23F /* HeaderBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80021E2D90A2000FC23F /* HeaderBar.m */; };
 		D83E82AA1E2D90A5000FC23F /* HockeyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80041E2D90A2000FC23F /* HockeyBottomViewController.m */; };
@@ -266,10 +258,6 @@
 		D83E830E1E2D90A5000FC23F /* or.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D83E80961E2D90A3000FC23F /* or.jpg */; };
 		D83E830F1E2D90A5000FC23F /* orangeSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80971E2D90A3000FC23F /* orangeSelect.png */; };
 		D83E83101E2D90A5000FC23F /* orangeSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80981E2D90A3000FC23F /* orangeSelect@2x.png */; };
-		D83E83111E2D90A5000FC23F /* OrangeSettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80991E2D90A3000FC23F /* OrangeSettingsButton.png */; };
-		D83E83121E2D90A5000FC23F /* OrangeSettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E809A1E2D90A3000FC23F /* OrangeSettingsButton@2x.png */; };
-		D83E83131E2D90A5000FC23F /* OrangeSettingsButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E809B1E2D90A3000FC23F /* OrangeSettingsButtonSelect.png */; };
-		D83E83141E2D90A5000FC23F /* OrangeSettingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E809C1E2D90A3000FC23F /* OrangeSettingsButtonSelect@2x.png */; };
 		D83E83151E2D90A5000FC23F /* ortri.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E809D1E2D90A3000FC23F /* ortri.png */; };
 		D83E83161E2D90A5000FC23F /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E809F1E2D90A3000FC23F /* OverlayViewController.m */; };
 		D83E83171E2D90A5000FC23F /* pausevideo.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80A01E2D90A3000FC23F /* pausevideo.png */; };
@@ -350,10 +338,6 @@
 		D83E83661E2D90A5000FC23F /* PxpVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E812E1E2D90A3000FC23F /* PxpVideoBar.m */; };
 		D83E83671E2D90A5000FC23F /* RatingInput.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81301E2D90A3000FC23F /* RatingInput.m */; };
 		D83E83681E2D90A5000FC23F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81321E2D90A3000FC23F /* Reachability.m */; };
-		D83E83691E2D90A5000FC23F /* RedSettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81331E2D90A3000FC23F /* RedSettingsButton.png */; };
-		D83E836A1E2D90A5000FC23F /* RedSettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81341E2D90A3000FC23F /* RedSettingsButton@2x.png */; };
-		D83E836B1E2D90A5000FC23F /* RedSettingsButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81351E2D90A3000FC23F /* RedSettingsButtonSelect.png */; };
-		D83E836C1E2D90A5000FC23F /* RedSettingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81361E2D90A3000FC23F /* RedSettingsButtonSelect@2x.png */; };
 		D83E836D1E2D90A5000FC23F /* RicoL2BVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81381E2D90A3000FC23F /* RicoL2BVideoBar.m */; };
 		D83E836F1E2D90A5000FC23F /* RJLFreezeCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E813D1E2D90A3000FC23F /* RJLFreezeCounter.m */; };
 		D83E83711E2D90A5000FC23F /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81411E2D90A3000FC23F /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */; };
@@ -993,10 +977,6 @@
 		D83E7F1D1E2D90A2000FC23F /* AVPlayerRewindableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerRewindableItem.h; sourceTree = "<group>"; };
 		D83E7F1E1E2D90A2000FC23F /* AVPlayerRewindableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerRewindableItem.m; sourceTree = "<group>"; };
 		D83E7F1F1E2D90A2000FC23F /* BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BG.png; sourceTree = "<group>"; };
-		D83E7F201E2D90A2000FC23F /* BlueSettingsButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueSettingsButton.png; sourceTree = "<group>"; };
-		D83E7F211E2D90A2000FC23F /* BlueSettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueSettingsButton@2x.png"; sourceTree = "<group>"; };
-		D83E7F221E2D90A2000FC23F /* BlueSettingsButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueSettingsButtonSelect.png; sourceTree = "<group>"; };
-		D83E7F231E2D90A2000FC23F /* BlueSettingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueSettingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D83E7F241E2D90A2000FC23F /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
 		D83E7F251E2D90A2000FC23F /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
 		D83E7F2C1E2D90A2000FC23F /* BorderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderButton.h; sourceTree = "<group>"; };
@@ -1170,10 +1150,6 @@
 		D83E7FF91E2D90A2000FC23F /* graph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "graph@2x.png"; sourceTree = "<group>"; };
 		D83E7FFA1E2D90A2000FC23F /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
 		D83E7FFB1E2D90A2000FC23F /* GraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
-		D83E7FFC1E2D90A2000FC23F /* GreenSettingsButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GreenSettingsButton.png; sourceTree = "<group>"; };
-		D83E7FFD1E2D90A2000FC23F /* GreenSettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenSettingsButton@2x.png"; sourceTree = "<group>"; };
-		D83E7FFE1E2D90A2000FC23F /* GreenSettingsButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GreenSettingsButtonSelect.png; sourceTree = "<group>"; };
-		D83E7FFF1E2D90A2000FC23F /* GreenSettingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenSettingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D83E80001E2D90A2000FC23F /* HardwareString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = HardwareString.txt; sourceTree = "<group>"; };
 		D83E80011E2D90A2000FC23F /* HeaderBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderBar.h; sourceTree = "<group>"; };
 		D83E80021E2D90A2000FC23F /* HeaderBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBar.m; sourceTree = "<group>"; };
@@ -1259,10 +1235,6 @@
 		D83E80961E2D90A3000FC23F /* or.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = or.jpg; sourceTree = "<group>"; };
 		D83E80971E2D90A3000FC23F /* orangeSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orangeSelect.png; sourceTree = "<group>"; };
 		D83E80981E2D90A3000FC23F /* orangeSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "orangeSelect@2x.png"; sourceTree = "<group>"; };
-		D83E80991E2D90A3000FC23F /* OrangeSettingsButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeSettingsButton.png; sourceTree = "<group>"; };
-		D83E809A1E2D90A3000FC23F /* OrangeSettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeSettingsButton@2x.png"; sourceTree = "<group>"; };
-		D83E809B1E2D90A3000FC23F /* OrangeSettingsButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeSettingsButtonSelect.png; sourceTree = "<group>"; };
-		D83E809C1E2D90A3000FC23F /* OrangeSettingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeSettingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D83E809D1E2D90A3000FC23F /* ortri.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ortri.png; sourceTree = "<group>"; };
 		D83E809E1E2D90A3000FC23F /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewController.h; sourceTree = "<group>"; };
 		D83E809F1E2D90A3000FC23F /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
@@ -1406,10 +1378,6 @@
 		D83E81301E2D90A3000FC23F /* RatingInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatingInput.m; sourceTree = "<group>"; };
 		D83E81311E2D90A3000FC23F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		D83E81321E2D90A3000FC23F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		D83E81331E2D90A3000FC23F /* RedSettingsButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedSettingsButton.png; sourceTree = "<group>"; };
-		D83E81341E2D90A3000FC23F /* RedSettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedSettingsButton@2x.png"; sourceTree = "<group>"; };
-		D83E81351E2D90A3000FC23F /* RedSettingsButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedSettingsButtonSelect.png; sourceTree = "<group>"; };
-		D83E81361E2D90A3000FC23F /* RedSettingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedSettingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D83E81371E2D90A3000FC23F /* RicoL2BVideoBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoL2BVideoBar.h; sourceTree = "<group>"; };
 		D83E81381E2D90A3000FC23F /* RicoL2BVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoL2BVideoBar.m; sourceTree = "<group>"; };
 		D83E813C1E2D90A3000FC23F /* RJLFreezeCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJLFreezeCounter.h; sourceTree = "<group>"; };
@@ -3004,10 +2972,6 @@
 				D83E7F1D1E2D90A2000FC23F /* AVPlayerRewindableItem.h */,
 				D83E7F1E1E2D90A2000FC23F /* AVPlayerRewindableItem.m */,
 				D83E7F1F1E2D90A2000FC23F /* BG.png */,
-				D83E7F201E2D90A2000FC23F /* BlueSettingsButton.png */,
-				D83E7F211E2D90A2000FC23F /* BlueSettingsButton@2x.png */,
-				D83E7F221E2D90A2000FC23F /* BlueSettingsButtonSelect.png */,
-				D83E7F231E2D90A2000FC23F /* BlueSettingsButtonSelect@2x.png */,
 				D83E7F241E2D90A2000FC23F /* bookmarkedit.png */,
 				D83E7F251E2D90A2000FC23F /* bookmarkedit@2x.png */,
 				D83E7F2C1E2D90A2000FC23F /* BorderButton.h */,
@@ -3150,10 +3114,6 @@
 				D83E7FF91E2D90A2000FC23F /* graph@2x.png */,
 				D83E7FFA1E2D90A2000FC23F /* GraphView.h */,
 				D83E7FFB1E2D90A2000FC23F /* GraphView.m */,
-				D83E7FFC1E2D90A2000FC23F /* GreenSettingsButton.png */,
-				D83E7FFD1E2D90A2000FC23F /* GreenSettingsButton@2x.png */,
-				D83E7FFE1E2D90A2000FC23F /* GreenSettingsButtonSelect.png */,
-				D83E7FFF1E2D90A2000FC23F /* GreenSettingsButtonSelect@2x.png */,
 				D83E80001E2D90A2000FC23F /* HardwareString.txt */,
 				D83E80011E2D90A2000FC23F /* HeaderBar.h */,
 				D83E80021E2D90A2000FC23F /* HeaderBar.m */,
@@ -3230,10 +3190,6 @@
 				D83E80961E2D90A3000FC23F /* or.jpg */,
 				D83E80971E2D90A3000FC23F /* orangeSelect.png */,
 				D83E80981E2D90A3000FC23F /* orangeSelect@2x.png */,
-				D83E80991E2D90A3000FC23F /* OrangeSettingsButton.png */,
-				D83E809A1E2D90A3000FC23F /* OrangeSettingsButton@2x.png */,
-				D83E809B1E2D90A3000FC23F /* OrangeSettingsButtonSelect.png */,
-				D83E809C1E2D90A3000FC23F /* OrangeSettingsButtonSelect@2x.png */,
 				D83E809D1E2D90A3000FC23F /* ortri.png */,
 				D83E809E1E2D90A3000FC23F /* OverlayViewController.h */,
 				D83E809F1E2D90A3000FC23F /* OverlayViewController.m */,
@@ -3377,10 +3333,6 @@
 				D83E81301E2D90A3000FC23F /* RatingInput.m */,
 				D83E81311E2D90A3000FC23F /* Reachability.h */,
 				D83E81321E2D90A3000FC23F /* Reachability.m */,
-				D83E81331E2D90A3000FC23F /* RedSettingsButton.png */,
-				D83E81341E2D90A3000FC23F /* RedSettingsButton@2x.png */,
-				D83E81351E2D90A3000FC23F /* RedSettingsButtonSelect.png */,
-				D83E81361E2D90A3000FC23F /* RedSettingsButtonSelect@2x.png */,
 				D83E81371E2D90A3000FC23F /* RicoL2BVideoBar.h */,
 				D83E81381E2D90A3000FC23F /* RicoL2BVideoBar.m */,
 				D83E813B1E2D90A3000FC23F /* RJLVideoPlayerClasses */,
@@ -3829,7 +3781,6 @@
 				D83E83B11E2D90A5000FC23F /* TaggingString.txt in Resources */,
 				D83E82111E2D90A5000FC23F /* arrowButton@2x.png in Resources */,
 				D83E7EEE1E2D87FE000FC23F /* license-form.plist in Resources */,
-				D83E82A51E2D90A5000FC23F /* GreenSettingsButton@2x.png in Resources */,
 				D83E83C51E2D90A5000FC23F /* trash@2x.png in Resources */,
 				D83E8AE51E2D9153000FC23F /* PxpFilterCFLTabController.xib in Resources */,
 				D83E82661E2D90A5000FC23F /* InfoPlist.strings in Resources */,
@@ -3857,13 +3808,11 @@
 				D83E838C1E2D90A5000FC23F /* signalStrength@2x.gif in Resources */,
 				D83E7EE91E2D87FE000FC23F /* VideoKitforIOSv2.4.pdf in Resources */,
 				D83E83B81E2D90A5000FC23F /* teleButtonSelect@2x.png in Resources */,
-				D83E82A41E2D90A5000FC23F /* GreenSettingsButton.png in Resources */,
 				D83E8AC11E2D9152000FC23F /* MakeEventView.xib in Resources */,
 				D83E83D01E2D90A5000FC23F /* undoButtonSelect@2x.png in Resources */,
 				D83E82531E2D90A5000FC23F /* Default-Landscape.png in Resources */,
 				D83E83AB1E2D90A5000FC23F /* subtractstartsec@2x.png in Resources */,
 				D83E8AF61E2D9153000FC23F /* PxpFilterTabViewController.xib in Resources */,
-				D83E83131E2D90A5000FC23F /* OrangeSettingsButtonSelect.png in Resources */,
 				D83E8B4A1E2D9153000FC23F /* ViewController2.xib in Resources */,
 				D83E83ED1E2D90A5000FC23F /* youtube.png in Resources */,
 				D83E83A91E2D90A5000FC23F /* subtractendsec@2x.png in Resources */,
@@ -3879,7 +3828,6 @@
 				D83E8ACC1E2D9152000FC23F /* reorder@2x.png in Resources */,
 				D83E83181E2D90A5000FC23F /* pausevideo@2x.png in Resources */,
 				D83E831C1E2D90A5000FC23F /* period_half_focus@2x.png in Resources */,
-				D83E82181E2D90A5000FC23F /* BlueSettingsButton@2x.png in Resources */,
 				D83E82551E2D90A5000FC23F /* download_selected.png in Resources */,
 				D83E830A1E2D90A5000FC23F /* num-button.png in Resources */,
 				D83E82A01E2D90A5000FC23F /* gotoliveSelect@2x.png in Resources */,
@@ -3891,7 +3839,6 @@
 				D83E82621E2D90A5000FC23F /* dropdownSelect@2x.png in Resources */,
 				D83E82DA1E2D90A5000FC23F /* live2BenchTab@2x.png in Resources */,
 				D83E83261E2D90A5000FC23F /* playbackRateButtonForwardSelected@2x.png in Resources */,
-				D83E82A71E2D90A5000FC23F /* GreenSettingsButtonSelect@2x.png in Resources */,
 				D83E83881E2D90A5000FC23F /* shiftline_fillter_unselected.png in Resources */,
 				D83E82E01E2D90A5000FC23F /* logo _unselected@2x.png in Resources */,
 				D83E83A81E2D90A5000FC23F /* subtractendsec.png in Resources */,
@@ -3910,7 +3857,6 @@
 				D83E82671E2D90A5000FC23F /* Localizable.strings in Resources */,
 				D83E82131E2D90A5000FC23F /* arrowButtonSelect@2x.png in Resources */,
 				D83E82C31E2D90A5000FC23F /* like.jpeg in Resources */,
-				D83E836C1E2D90A5000FC23F /* RedSettingsButtonSelect@2x.png in Resources */,
 				D83E82F21E2D90A5000FC23F /* minusfivesec@2x.png in Resources */,
 				D83E82E41E2D90A5000FC23F /* logo_selected@2x.png in Resources */,
 				D83E828A1E2D90A5000FC23F /* facebookselected.png in Resources */,
@@ -3918,7 +3864,6 @@
 				D83E8AF31E2D9153000FC23F /* PxpFilterSoccerTabViewController.xib in Resources */,
 				D83E83AD1E2D90A5000FC23F /* tab-bar-right@2x.png in Resources */,
 				D83E82FD1E2D90A5000FC23F /* myplayXplay_phonecall.png in Resources */,
-				D83E83141E2D90A5000FC23F /* OrangeSettingsButtonSelect@2x.png in Resources */,
 				D83E831D1E2D90A5000FC23F /* period_half_unfocus.png in Resources */,
 				D83E8ACD1E2D9152000FC23F /* reorderSelected.png in Resources */,
 				D83E7EED1E2D87FE000FC23F /* mlpdsp.patch in Resources */,
@@ -3927,10 +3872,8 @@
 				D83E822B1E2D90A5000FC23F /* checkmarkOverlay.png in Resources */,
 				D83E82E71E2D90A5000FC23F /* logoTab@2x.png in Resources */,
 				D83E82381E2D90A5000FC23F /* clip-back@2x.png in Resources */,
-				D83E836B1E2D90A5000FC23F /* RedSettingsButtonSelect.png in Resources */,
 				D83E8AEC1E2D9153000FC23F /* PxpFilterMyClipTabViewController.xib in Resources */,
 				D83E82251E2D90A5000FC23F /* calendarTab@2x.png in Resources */,
-				D83E836A1E2D90A5000FC23F /* RedSettingsButton@2x.png in Resources */,
 				D83E82E61E2D90A5000FC23F /* logo_unselected@2x.png in Resources */,
 				D83E82861E2D90A5000FC23F /* extendstartsec@2x.png in Resources */,
 				D81552761E428F7E003010D4 /* CreditsView.xib in Resources */,
@@ -3950,7 +3893,6 @@
 				D83E8AF11E2D9153000FC23F /* PxpFilterRugbyTabViewController.xib in Resources */,
 				D83E8AA01E2D9152000FC23F /* EncoderStatusView.xib in Resources */,
 				D83E83CE1E2D90A5000FC23F /* undoButton@2x.png in Resources */,
-				D83E83121E2D90A5000FC23F /* OrangeSettingsButton@2x.png in Resources */,
 				D83E83B51E2D90A5000FC23F /* teleButton.png in Resources */,
 				D83E7EE81E2D87FE000FC23F /* license-management.pdf in Resources */,
 				D83E82361E2D90A5000FC23F /* clip-back-old@2x.png in Resources */,
@@ -3962,7 +3904,6 @@
 				D83E822D1E2D90A5000FC23F /* chevbothpoints.png in Resources */,
 				D83E7EFB1E2D908A000FC23F /* Media.xcassets in Resources */,
 				D83E82DB1E2D90A5000FC23F /* live2BenchTabSelect@2x.png in Resources */,
-				D83E83111E2D90A5000FC23F /* OrangeSettingsButton.png in Resources */,
 				D83E829F1E2D90A5000FC23F /* gotoliveSelect.png in Resources */,
 				D83E828F1E2D90A5000FC23F /* filter@2x.png in Resources */,
 				D83E82351E2D90A5000FC23F /* clip-back-old.png in Resources */,
@@ -3978,7 +3919,6 @@
 				D83E83871E2D90A5000FC23F /* shiftline_fillter_selected@2x.png in Resources */,
 				D83E820C1E2D90A5000FC23F /* appIcon.png in Resources */,
 				D83E82F71E2D90A5000FC23F /* myclipfilterorange@2x.png in Resources */,
-				D83E821A1E2D90A5000FC23F /* BlueSettingsButtonSelect@2x.png in Resources */,
 				D83E82331E2D90A5000FC23F /* clip-back-just.png in Resources */,
 				D83E82D21E2D90A5000FC23F /* Live2BenchNative-Info.plist in Resources */,
 				D83E8B421E2D9153000FC23F /* VideoRecieptTableViewCell.xib in Resources */,
@@ -4006,7 +3946,6 @@
 				D83E8AE91E2D9153000FC23F /* PxpFilterFootballTabViewController.xib in Resources */,
 				D83E83AF1E2D90A5000FC23F /* tab-bar@2x.png in Resources */,
 				D83E8B481E2D9153000FC23F /* ViewController.xib in Resources */,
-				D83E82191E2D90A5000FC23F /* BlueSettingsButtonSelect.png in Resources */,
 				D83E82441E2D90A5000FC23F /* ContactString.txt in Resources */,
 				D83E8B5C1E2D9153000FC23F /* BasketballBottomViewController.plist in Resources */,
 				D83E838B1E2D90A5000FC23F /* signalStrength.png in Resources */,
@@ -4040,7 +3979,6 @@
 				D83E83BB1E2D90A5000FC23F /* telestrationIconOn.png in Resources */,
 				D83E82541E2D90A5000FC23F /* Default-Landscape@2x.png in Resources */,
 				D83E82881E2D90A5000FC23F /* facebook.png in Resources */,
-				D83E82171E2D90A5000FC23F /* BlueSettingsButton.png in Resources */,
 				D83E830E1E2D90A5000FC23F /* or.jpg in Resources */,
 				D83E83941E2D90A5000FC23F /* slowmo@2x.png in Resources */,
 				D83E8B3F1E2D9153000FC23F /* VideoReciept.xib in Resources */,
@@ -4056,14 +3994,12 @@
 				D83E82161E2D90A5000FC23F /* BG.png in Resources */,
 				D83E828B1E2D90A5000FC23F /* facebookselected@2x.png in Resources */,
 				D83E83831E2D90A5000FC23F /* settingsButtonSelect@2x.png in Resources */,
-				D83E82A61E2D90A5000FC23F /* GreenSettingsButtonSelect.png in Resources */,
 				D83E830F1E2D90A5000FC23F /* orangeSelect.png in Resources */,
 				D83E83901E2D90A5000FC23F /* slineoff.png in Resources */,
 				D83E82611E2D90A5000FC23F /* dropdownSelect.png in Resources */,
 				D83E8B881E2D9153000FC23F /* FeedMappingView.xib in Resources */,
 				D83E83801E2D90A5000FC23F /* settingsButton.png in Resources */,
 				D83E822C1E2D90A5000FC23F /* checkmarkOverlay@2x.png in Resources */,
-				D83E83691E2D90A5000FC23F /* RedSettingsButton.png in Resources */,
 				D83E838D1E2D90A5000FC23F /* signalStrength@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
