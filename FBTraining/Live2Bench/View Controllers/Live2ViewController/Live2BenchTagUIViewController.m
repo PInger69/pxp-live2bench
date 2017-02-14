@@ -299,7 +299,7 @@
         [btn setAccessibilityValue:@"left"];
         
         [btn setFrame:CGRectMake(0,
-                                 ( tagDefinition.order * (_buttonSize.height + _gap) ) + 0,
+                                 ( (tagDefinition.order % 12) * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
@@ -320,7 +320,7 @@
         [btn setAccessibilityValue:@"right"];
         //        self.view.bounds.size.width - _buttonSize.width
         [btn setFrame:CGRectMake(0,
-                                 ( (tagDefinition.order-12) * (_buttonSize.height + _gap) ) + 0,
+                                 ( (tagDefinition.order % 12) * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
