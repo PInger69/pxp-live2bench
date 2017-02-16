@@ -415,7 +415,7 @@ static EncoderManager * instance;
  *  This removes an encoder and posts to the app to let it know when a feed changes or when master is lost
  *  If master is loas Setting ViewController is always checking for master status
  *
- *  @param aEncoder
+ *  @param aEncoder the encoder to unregister
  */
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {

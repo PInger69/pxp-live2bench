@@ -104,9 +104,9 @@ static void * eventContext      = &eventContext;
 /**
  *  New init method
  *
- *  @param mainappDelegate
+ *  @param mainappDelegate the instance of the app delegate
  *
- *  @return
+ *  @return the instance of the view controller
  */
 -(id)initWithAppDelegate:(AppDelegate *)mainappDelegate
 {

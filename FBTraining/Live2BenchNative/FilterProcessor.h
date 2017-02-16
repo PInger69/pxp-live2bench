@@ -48,7 +48,7 @@
  *  This updates by taking the unfiltered list and evaluates the tags based of the list of predicate whitch relates to the
  *  buttons that were selected during the FilterComponenent
  *
- *  @param filters Selected Filtering
+ *  @param predicates Selected Filtering
  */
 -(void)updateWithPredicate:(NSArray*)predicates;
 

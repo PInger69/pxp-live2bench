@@ -64,7 +64,7 @@
  *  The segmentView is added to the view controller here, because this is the
  *  first time that SegmentedView receives a reference to its View controller
  *
- *  @param viewController is just a delegate that abides by the view receiver protocol,
+ *  @param parentView is just a delegate that abides by the view receiver protocol,
  *  this allows the SegmentedView to get access to the View Controllers view
  */
 -(void)setParentView: (UIView *)parentView{
@@ -91,7 +91,7 @@
  *  The frame of the first segment piece is the only one that has to be specified.
  *  The rest will be set based on its width and height
  *
- *  @param frame, this is only the frame of the first segment
+ *  @param frame this is only the frame of the first segment
  */
 -(void)setFrame:(CGRect)frame{
     if (self.segmentQuantity == 1) {

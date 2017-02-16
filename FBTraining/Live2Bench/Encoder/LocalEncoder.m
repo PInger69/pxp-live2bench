@@ -39,9 +39,13 @@
 // PRIVATE CLASS
 @interface NSURLDataConnection : NSURLConnection
 @property (strong, nonatomic) NSMutableData *cumulatedData;
-@property (assign, nonatomic) int context;
 @end
 @implementation NSURLDataConnection
+@end
+
+
+@interface LocalEncoder()
+@property (assign, nonatomic) int localTagIdSeed;
 @end
 
 static LocalEncoder * instance;
@@ -49,7 +53,6 @@ static LocalEncoder * instance;
 {
 
     NSMutableArray  * tagSyncConnections;
-//    NSURLDataConnection *encoderConnection;
     NSDictionary    * closeTags;
     NSOperationQueue * operationQueue; // new
 }
@@ -84,7 +87,6 @@ static LocalEncoder * instance;
         _localTags                      = [[NSMutableArray alloc] init];
         _modifiedTags                   = [[NSMutableArray alloc] init];
         tagSyncConnections              = [NSMutableArray array];
-//        _eventContext                   = [PxpEventContext context];
         _urlProtocol                    = @"local";
         _ipAddress                      = @"ip";
         _version                        = @"local";
@@ -271,8 +273,8 @@ static LocalEncoder * instance;
                   @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event, // LIVE_EVENT == @"live"
                   @"id"            : tagToModify.ID, 
                   @"requesttime"   : GET_NOW_TIME_STRING,
-                  @"name"          : tagToModify.name,
-                  @"user"          : tagToModify.user
+                  @"name"          : tagToModify.name == nil ? @"" : tagToModify.name,
+                  @"user"          : tagToModify.user == nil ? @"" : tagToModify.user
                   }];
         
         
@@ -359,19 +361,16 @@ static LocalEncoder * instance;
 #pragma mark - Command Methods
 -(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    
     //over write add request time
     [tData addEntriesFromDictionary:@{
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
 
     Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
-    NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
-//    double tagArePresentCount       = tagArePresent.count + 1;
-//    newTag.uniqueID                 = tagArePresentCount;
     
-    // BCH: this is a terrible choice.
-    newTag.uniqueID                 = (int)[self.event.tags count]+100;
+    // BCH: this started off as a terrible algorithm, and I've adjusted it to be a little less terrible,
+    //      but it's still far from a good algorithm.
+    newTag.uniqueID                 = self.localTagIdSeed++;
     
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
     newTag.own                      = YES;
@@ -396,23 +395,6 @@ static LocalEncoder * instance;
 
     }
 
-   
-//    TagProxy * proxy = [[TagProxy alloc]init];
-//    proxy.colour      = newTag.colour;
-//    proxy.comment     = newTag.comment;
-//    proxy.deviceID    = newTag.deviceID;
-//    proxy.duration    = newTag.duration;
-//    proxy.event       = newTag.event;
-//    proxy.ID          = newTag.ID;
-//    proxy.name        = newTag.name;
-//    proxy.rating      = newTag.rating;
-//    proxy.time        = newTag.time;
-//    proxy.displayTime = newTag.displayTime;
-//    proxy.startTime   = newTag.startTime;
-//    proxy.user        = newTag.user;
-//    
-
-    
     [self.localTagSyncManager addTag:[newTag rawData]];
     
 //    [self.localTags addObject:newTag];
@@ -488,6 +470,7 @@ static LocalEncoder * instance;
 
 // Check if all event that need to be build before updating tags is build
 -(void)onEventBuildFinished:(Event *)event{
+    NSLog(@"LocalEncoder onEventBuildFinished:");
     event.delegate = nil;
     
     NSMutableSet *eventToBeBuilt = [[NSMutableSet alloc]init];
@@ -652,6 +635,7 @@ static LocalEncoder * instance;
 
 -(void)setEvent:(Event *)event
 {
+    NSLog(@"LocalEncoder setEvent:");
     if (event ==_event){
         return;
     }
@@ -659,6 +643,11 @@ static LocalEncoder * instance;
     _event      =  event;
     [self didChangeValueForKey:@"event"];
     _eventContext.event = event;
+    int maxTagId = 0;
+    for (Tag* tag in _event.tags) {
+        maxTagId = MAX(tag.uniqueID, maxTagId);
+    }
+    self.localTagIdSeed = maxTagId + 50;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":_event.eventType}];
 }
 

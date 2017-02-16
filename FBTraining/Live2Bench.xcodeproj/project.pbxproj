@@ -158,7 +158,6 @@
 		D83E82781E2D90A5000FC23F /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB31E2D90A2000FC23F /* Event.m */; };
 		D83E82791E2D90A5000FC23F /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB51E2D90A2000FC23F /* FakeEncoder.m */; };
 		D83E827A1E2D90A5000FC23F /* Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB71E2D90A2000FC23F /* Feed.m */; };
-		D83E827B1E2D90A5000FC23F /* FeedSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FB91E2D90A2000FC23F /* FeedSwitchView.m */; };
 		D83E827D1E2D90A5000FC23F /* ParseModuleDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FBD1E2D90A2000FC23F /* ParseModuleDefault.m */; };
 		D83E827F1E2D90A5000FC23F /* EulaModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E7FC11E2D90A2000FC23F /* EulaModalViewController.m */; };
 		D83E82801E2D90A5000FC23F /* EulaString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D83E7FC21E2D90A2000FC23F /* EulaString.txt */; };
@@ -234,7 +233,6 @@
 		D83E82F21E2D90A5000FC23F /* minusfivesec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E806F1E2D90A2000FC23F /* minusfivesec@2x.png */; };
 		D83E82F31E2D90A5000FC23F /* minusfiveseclarge.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80701E2D90A2000FC23F /* minusfiveseclarge.png */; };
 		D83E82F41E2D90A5000FC23F /* minusfiveseclarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80711E2D90A2000FC23F /* minusfiveseclarge@2x.png */; };
-		D83E82F51E2D90A5000FC23F /* MultiPip.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80731E2D90A2000FC23F /* MultiPip.m */; };
 		D83E82F61E2D90A5000FC23F /* myclipfilterorange.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80741E2D90A2000FC23F /* myclipfilterorange.png */; };
 		D83E82F71E2D90A5000FC23F /* myclipfilterorange@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E80751E2D90A2000FC23F /* myclipfilterorange@2x.png */; };
 		D83E82F81E2D90A5000FC23F /* MyClipFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E80771E2D90A2000FC23F /* MyClipFilterViewController.m */; };
@@ -460,7 +458,6 @@
 		D83E8AAE1E2D9152000FC23F /* RicoPlayerGroupContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87051E2D9147000FC23F /* RicoPlayerGroupContainer.m */; };
 		D83E8AAF1E2D9152000FC23F /* AnalyzeTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87061E2D9147000FC23F /* AnalyzeTabViewController.m */; };
 		D83E8AB91E2D9152000FC23F /* PxpLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87121E2D9147000FC23F /* PxpLogViewController.m */; };
-		D83E8ABA1E2D9152000FC23F /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87141E2D9147000FC23F /* LiveIndicatorLight.m */; };
 		D83E8ABB1E2D9152000FC23F /* LiveLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87161E2D9147000FC23F /* LiveLight.m */; };
 		D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87181E2D9147000FC23F /* LocalMediaManager.m */; };
 		D83E8ABD1E2D9152000FC23F /* LocalTagSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */; };
@@ -479,7 +476,6 @@
 		D83E8ACD1E2D9152000FC23F /* reorderSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E87341E2D9147000FC23F /* reorderSelected.png */; };
 		D83E8ACE1E2D9152000FC23F /* reorderSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E87351E2D9147000FC23F /* reorderSelected@2x.png */; };
 		D83E8AD81E2D9152000FC23F /* ParseModuleAlpha.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87401E2D9148000FC23F /* ParseModuleAlpha.m */; };
-		D83E8AD91E2D9153000FC23F /* Pip.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87421E2D9148000FC23F /* Pip.m */; };
 		D83E8ADB1E2D9153000FC23F /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87461E2D9148000FC23F /* PopoverViewController.m */; };
 		D83E8ADC1E2D9153000FC23F /* PopUpTagSetButtonEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87481E2D9148000FC23F /* PopUpTagSetButtonEditViewController.m */; };
 		D83E8ADE1E2D9153000FC23F /* PxpDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E874C1E2D9148000FC23F /* PxpDropboxActivity.m */; };
@@ -1087,8 +1083,6 @@
 		D83E7FB51E2D90A2000FC23F /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeEncoder.m; sourceTree = "<group>"; };
 		D83E7FB61E2D90A2000FC23F /* Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Feed.h; sourceTree = "<group>"; };
 		D83E7FB71E2D90A2000FC23F /* Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Feed.m; sourceTree = "<group>"; };
-		D83E7FB81E2D90A2000FC23F /* FeedSwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSwitchView.h; sourceTree = "<group>"; };
-		D83E7FB91E2D90A2000FC23F /* FeedSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSwitchView.m; sourceTree = "<group>"; };
 		D83E7FBC1E2D90A2000FC23F /* ParseModuleDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseModuleDefault.h; sourceTree = "<group>"; };
 		D83E7FBD1E2D90A2000FC23F /* ParseModuleDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseModuleDefault.m; sourceTree = "<group>"; };
 		D83E7FC01E2D90A2000FC23F /* EulaModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EulaModalViewController.h; sourceTree = "<group>"; };
@@ -1200,8 +1194,6 @@
 		D83E806F1E2D90A2000FC23F /* minusfivesec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "minusfivesec@2x.png"; sourceTree = "<group>"; };
 		D83E80701E2D90A2000FC23F /* minusfiveseclarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = minusfiveseclarge.png; sourceTree = "<group>"; };
 		D83E80711E2D90A2000FC23F /* minusfiveseclarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "minusfiveseclarge@2x.png"; sourceTree = "<group>"; };
-		D83E80721E2D90A2000FC23F /* MultiPip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPip.h; sourceTree = "<group>"; };
-		D83E80731E2D90A2000FC23F /* MultiPip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiPip.m; sourceTree = "<group>"; };
 		D83E80741E2D90A2000FC23F /* myclipfilterorange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myclipfilterorange.png; sourceTree = "<group>"; };
 		D83E80751E2D90A2000FC23F /* myclipfilterorange@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myclipfilterorange@2x.png"; sourceTree = "<group>"; };
 		D83E80761E2D90A2000FC23F /* MyClipFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClipFilterViewController.h; sourceTree = "<group>"; };
@@ -1548,8 +1540,6 @@
 		D83E87061E2D9147000FC23F /* AnalyzeTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyzeTabViewController.m; sourceTree = "<group>"; };
 		D83E87071E2D9147000FC23F /* TagProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagProtocol.h; sourceTree = "<group>"; };
 		D83E87121E2D9147000FC23F /* PxpLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLogViewController.m; sourceTree = "<group>"; };
-		D83E87131E2D9147000FC23F /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = "<group>"; };
-		D83E87141E2D9147000FC23F /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = "<group>"; };
 		D83E87151E2D9147000FC23F /* LiveLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveLight.h; sourceTree = "<group>"; };
 		D83E87161E2D9147000FC23F /* LiveLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveLight.m; sourceTree = "<group>"; };
 		D83E87171E2D9147000FC23F /* LocalMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMediaManager.h; sourceTree = "<group>"; };
@@ -1578,8 +1568,6 @@
 		D83E87351E2D9147000FC23F /* reorderSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reorderSelected@2x.png"; sourceTree = "<group>"; };
 		D83E873F1E2D9147000FC23F /* ParseModuleAlpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseModuleAlpha.h; sourceTree = "<group>"; };
 		D83E87401E2D9148000FC23F /* ParseModuleAlpha.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseModuleAlpha.m; sourceTree = "<group>"; };
-		D83E87411E2D9148000FC23F /* Pip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pip.h; sourceTree = "<group>"; };
-		D83E87421E2D9148000FC23F /* Pip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pip.m; sourceTree = "<group>"; };
 		D83E87451E2D9148000FC23F /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
 		D83E87461E2D9148000FC23F /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverViewController.m; sourceTree = "<group>"; };
 		D83E87471E2D9148000FC23F /* PopUpTagSetButtonEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopUpTagSetButtonEditViewController.h; sourceTree = "<group>"; };
@@ -2605,8 +2593,6 @@
 				D83E87061E2D9147000FC23F /* AnalyzeTabViewController.m */,
 				D83E87071E2D9147000FC23F /* TagProtocol.h */,
 				D83E87121E2D9147000FC23F /* PxpLogViewController.m */,
-				D83E87131E2D9147000FC23F /* LiveIndicatorLight.h */,
-				D83E87141E2D9147000FC23F /* LiveIndicatorLight.m */,
 				D83E87151E2D9147000FC23F /* LiveLight.h */,
 				D83E87161E2D9147000FC23F /* LiveLight.m */,
 				D83E87171E2D9147000FC23F /* LocalMediaManager.h */,
@@ -2630,8 +2616,6 @@
 				D83E872F1E2D9147000FC23F /* Old App Images */,
 				D83E873F1E2D9147000FC23F /* ParseModuleAlpha.h */,
 				D83E87401E2D9148000FC23F /* ParseModuleAlpha.m */,
-				D83E87411E2D9148000FC23F /* Pip.h */,
-				D83E87421E2D9148000FC23F /* Pip.m */,
 				D83E87451E2D9148000FC23F /* PopoverViewController.h */,
 				D83E87461E2D9148000FC23F /* PopoverViewController.m */,
 				D83E87471E2D9148000FC23F /* PopUpTagSetButtonEditViewController.h */,
@@ -3155,8 +3139,6 @@
 				D83E806F1E2D90A2000FC23F /* minusfivesec@2x.png */,
 				D83E80701E2D90A2000FC23F /* minusfiveseclarge.png */,
 				D83E80711E2D90A2000FC23F /* minusfiveseclarge@2x.png */,
-				D83E80721E2D90A2000FC23F /* MultiPip.h */,
-				D83E80731E2D90A2000FC23F /* MultiPip.m */,
 				D83E80741E2D90A2000FC23F /* myclipfilterorange.png */,
 				D83E80751E2D90A2000FC23F /* myclipfilterorange@2x.png */,
 				D83E80761E2D90A2000FC23F /* MyClipFilterViewController.h */,
@@ -3495,8 +3477,6 @@
 				D83E7FB51E2D90A2000FC23F /* FakeEncoder.m */,
 				D83E7FB61E2D90A2000FC23F /* Feed.h */,
 				D83E7FB71E2D90A2000FC23F /* Feed.m */,
-				D83E7FB81E2D90A2000FC23F /* FeedSwitchView.h */,
-				D83E7FB91E2D90A2000FC23F /* FeedSwitchView.m */,
 				D83E7FBC1E2D90A2000FC23F /* ParseModuleDefault.h */,
 				D83E7FBD1E2D90A2000FC23F /* ParseModuleDefault.m */,
 			);
@@ -4114,11 +4094,9 @@
 				D83E83E21E2D90A5000FC23F /* VideoBarContainerView.m in Sources */,
 				D83E8B761E2D9153000FC23F /* DeviceVideoCollectionViewController.m in Sources */,
 				D83E8A9D1E2D9152000FC23F /* PxpFilter.m in Sources */,
-				D83E82F51E2D90A5000FC23F /* MultiPip.m in Sources */,
 				D83E835C1E2D90A5000FC23F /* PxpTelestrationRenderView.m in Sources */,
 				D83E82D91E2D90A5000FC23F /* TagFlagViewController.m in Sources */,
 				D83E82091E2D90A5000FC23F /* AbstractFilterViewController.m in Sources */,
-				D83E827B1E2D90A5000FC23F /* FeedSwitchView.m in Sources */,
 				D83E82631E2D90A5000FC23F /* DualViewClipTableViewController.m in Sources */,
 				D83E8B691E2D9153000FC23F /* ClipControlBarSlider.m in Sources */,
 				D83E834C1E2D90A5000FC23F /* PxpPlayerMultiView.m in Sources */,
@@ -4133,7 +4111,6 @@
 				D81552771E428F7E003010D4 /* CreditsViewController.m in Sources */,
 				D83E88B31E2D9151000FC23F /* DownloadThumbnailOperation.m in Sources */,
 				D83E82821E2D90A5000FC23F /* ExportPlayersSync.m in Sources */,
-				D83E8ABA1E2D9152000FC23F /* LiveIndicatorLight.m in Sources */,
 				D83E828C1E2D90A5000FC23F /* FBTFilterViewController.m in Sources */,
 				D83E8B001E2D9153000FC23F /* PxpReadyPlayerItemOperation.m in Sources */,
 				D83E82771E2D90A5000FC23F /* EncoderTask.m in Sources */,
@@ -4333,7 +4310,6 @@
 				D83E8AB91E2D9152000FC23F /* PxpLogViewController.m in Sources */,
 				D83E8B6E1E2D9153000FC23F /* CustomAlertControllerQueue.m in Sources */,
 				D83E8B741E2D9153000FC23F /* DeviceAssetLibrary.m in Sources */,
-				D83E8AD91E2D9153000FC23F /* Pip.m in Sources */,
 				D83E8B281E2D9153000FC23F /* TabView.m in Sources */,
 				D83E83411E2D90A5000FC23F /* PxpMyClipViewFullscreenViewController.m in Sources */,
 				D83E83311E2D90A5000FC23F /* PxpArrowButton.m in Sources */,

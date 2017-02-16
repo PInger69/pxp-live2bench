@@ -302,8 +302,6 @@
 
 /**
  *  Update the tagMarker Positions based off player length
- *
- *  @param liveTime  MAX(globals.PLAYABLE_DURATION, videoPlayer.duration);
  */
 -(void)update
 {

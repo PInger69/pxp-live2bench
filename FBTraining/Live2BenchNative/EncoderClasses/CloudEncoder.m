@@ -59,7 +59,7 @@
 /**
  *  Asked to check user info
  *
- *  @param note
+ *  @param note the notification that invoked this method
  */
 -(void)verifyUser:(NSNotification*)note
 {

@@ -72,7 +72,6 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.eventInstance   = aEvent;
         self.rawData         = tagData;
         self.colour          = tagData[@"colour"];
-        _comment             = tagData[@"comment"];
         self.deviceID        = tagData[@"deviceid"];
         self.displayTime     = tagData[@"displaytime"];
         self.duration        = [tagData[@"duration"]intValue];
@@ -83,14 +82,17 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.isLive          = [tagData[@"islive"] boolValue];
         self.name            = tagData[@"name"];
         self.own             = [tagData[@"own"] boolValue];
-        _rating              = [tagData[@"rating"] intValue];
         self.requestURL      = tagData[@"requrl"];
         self.startTime       = [tagData[@"starttime"] doubleValue];
         self.time            = [tagData[@"time"] doubleValue];
         _type                = [tagData[@"type"] intValue];
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
+        
+        // these items have side-effects in their setters.
         _coachPick           = [tagData[@"coachpick"] boolValue];
+        _rating              = [tagData[@"rating"] intValue];
+        _comment             = tagData[@"comment"];
         
         
      
@@ -229,31 +231,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     [self didChangeValueForKey:NSStringFromSelector(@selector(type))];
    if (_type == TagTypeCloseDuration && durationTagWarningTimer){
        
-       id <EncoderProtocol> closingEncoder = self.eventInstance.parentEncoder;
-       
-//       MAKE_TAG
-//       MODIFY_TAG
-       
-       
-//       (lldb) po mutableDict
-//       {
-//           colour = 3af20f;
-//           deviceid = "922FB422-01C7-4ADC-92E7-A299263F82B2";
-//           event = live;
-//           id = 7;
-//           name = "COACH%20CALL";
-//           requesttime = "999704.872756";
-//           time = "123.832534";
-//           type = 100;
-//           user = ae1e7198bc3074ff1b2e9ff520c30bc1898d038e;
-//       }
-
-       
-       
-//       [closingEncoder issueCommand:MAKE_TAG priority:5 timeoutInSec:5 tagData:[NSMutableDictionary dictionaryWithDictionary:[self makeTagData]] timeStamp:GET_NOW_TIME];
-       
     if (durationTagWarningTimer && (_type == TagTypeCloseDuration || _type == TagTypeDeleted )) {
-//           [durationTagWarningTimer invalidate];
            durationTagWarningTimer = nil;
        }
 

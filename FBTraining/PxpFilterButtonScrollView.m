@@ -335,7 +335,7 @@
  *
  *  @param frame  buttons Position and size
  *  @param btnTxt the text that will be visible on the button
- *  @param aLabel accessibilityLabel
+ *  @param btnValue accessibilityLabel
  *
  *  @return produced button
  */

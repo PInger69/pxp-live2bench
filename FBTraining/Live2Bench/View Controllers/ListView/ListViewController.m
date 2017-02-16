@@ -14,7 +14,7 @@
 #import "CommentingRatingField.h"
 #import "HeaderBarForListView.h"
 #import "VideoBarListViewController.h"
-#import "FeedSwitchView.h"
+#import "EncoderManager.h"
 #import "Feed.h"
 
 #import "FullScreenViewController.h"

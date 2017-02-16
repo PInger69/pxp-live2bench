@@ -92,7 +92,7 @@ static UIImage * __nonnull _circleArrow;
  *  Enter in a float number to be showen in the center of the icon.
  *  Reccomended range .01 to 999.49. If you go passed these ranges you will see  .00 or  1...
  *
- *  @param num nubmer to be displayed
+ *  @param textNumber nubmer to be displayed
  */
 - (void)setTextNumber:(CGFloat)textNumber {
     _textNumber = textNumber;

@@ -651,7 +651,7 @@ static LocalMediaManager * instance;
 /**
  *  This saves sent Events by taking the raw data and then making a dir to store the videos and then writes the plist
  *
- *  @param aEvent Event to Save as plist
+ *  @param eventDic Event to Save as plist
  *
  *  @return returns path of folder to save the videos
  */

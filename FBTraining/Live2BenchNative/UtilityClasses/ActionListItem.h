@@ -45,7 +45,7 @@
 /**
  *  should toggle isFinished and success
  *
- *  @return
+ *  @return an action list item
  */
 -(id <ActionListItem>)reset;
 
