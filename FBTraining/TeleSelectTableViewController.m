@@ -55,9 +55,7 @@
     _timeLabel.text = teleTag.displayTime;
     if (thumb) {
         _thumbnailView.image = thumb;
-    } else {
-        //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc] init];
-        
+    } else {        
         NSString *url = teleTag.telestration.sourceName && teleTag.thumbnails[teleTag.telestration.sourceName] ? teleTag.thumbnails[teleTag.telestration.sourceName] : teleTag.thumbnails.allValues.firstObject;
         [[ImageAssetManager getInstance] imageForURL:url atImageView:_thumbnailView withTelestration:teleTag.telestration];
     }

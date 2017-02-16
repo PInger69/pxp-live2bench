@@ -7,12 +7,12 @@
 //
 
 #import "FeedSelectCell.h"
-#import "ImageAssetManager.h"
 #import "DownloadItem.h"
 
 #import "Tag.h"
 #import "Feed.h"
 #import "AVAsset+Image.h"
+#import "UIImageView+TagThumbnail.h"
 
 @implementation FeedSelectCell
 
@@ -33,10 +33,7 @@
         unsigned long n;
         _feedName.text = sscanf(name.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : name;
         
-        //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-        
-        
-        [[ImageAssetManager getInstance] imageForURL:url atImageView:self.feedView];
+        [self.feedView pxp_setTagThumbnailFromUrl:url];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -85,17 +82,7 @@
         unsigned long n;
         _feedName.text = sscanf(source.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : source;
         
-        UIImage *thumb = [tag thumbnailForSource:source];
-        
-        //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-        
-        if (thumb) {
-            self.feedView.image = thumb;
-        } else {
-            PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:source] ? tag.telestration : nil;
-            
-            [[ImageAssetManager getInstance] imageForURL:tag.thumbnails[source] atImageView:self.feedView withTelestration:tele];
-        }
+        [self.feedView pxp_setTagThumbnail:tag withSource:source];
         
         _downloadButton = [[DownloadButton alloc] init];;
         

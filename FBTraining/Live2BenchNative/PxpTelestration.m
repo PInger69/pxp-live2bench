@@ -230,7 +230,10 @@
 -(nullable UIImage*) renderOverImage:(UIImage*) theImage view:(UIImageView*) viewReference {
     CGFloat ratio = theImage.size.width / theImage.size.height;
     CGSize bounds = viewReference.bounds.size;
-    CGSize size = bounds.width > bounds.height ? CGSizeMake(bounds.width, bounds.width / ratio) : CGSizeMake(bounds.height * ratio, bounds.height);
+    CGSize size = CGSizeMake(theImage.size.width, theImage.size.height);
+    if (bounds.width > 0 && bounds.height > 0) {
+        size = bounds.width > bounds.height ? CGSizeMake(bounds.width, bounds.width / ratio) : CGSizeMake(bounds.height * ratio, bounds.height);
+    }
     
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
     

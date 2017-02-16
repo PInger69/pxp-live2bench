@@ -12,5 +12,7 @@
 @interface UIImageView (TagThumbnail)
 
 -(void) pxp_setTagThumbnail:(Tag*) tag;
+-(void) pxp_setTagThumbnailFromUrl:(NSString*) url;
+-(void) pxp_setTagThumbnail:(Tag*) tag withSource:(NSString*) source;
 
 @end

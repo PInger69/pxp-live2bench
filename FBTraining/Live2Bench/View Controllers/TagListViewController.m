@@ -53,7 +53,6 @@
 
 -(void) loadAndDisplayTags {
     self.allTagsArray = [NSMutableArray arrayWithArray:[self.currentEvent.tags copy]];
-    NSLog(@"There are %ld tags%@.", self.allTagsArray.count, self.pxpFilter == nil ? @" but the pxpFilter is nil" : @"");
     [self.pxpFilter filterTags:self.allTagsArray];
     [self sortAndDisplayUniqueTags:self.pxpFilter.filteredTags];
 }
@@ -142,8 +141,7 @@
     
     NSMutableArray* tagsToDelete = [NSMutableArray new];
     for (Tag* tag in [self.allTagsArray copy]) {
-        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]
-            && [self.deleteTagIds containsObject:tag.ID]) {
+        if (tag.own && [self.deleteTagIds containsObject:tag.ID]) {
             [tagsToDelete addObject:tag];
         }
     }

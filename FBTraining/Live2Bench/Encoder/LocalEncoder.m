@@ -94,9 +94,12 @@ static LocalEncoder * instance;
   
         instance = self;
         self.cameraResource = [CameraResource new];
-        NSString * aPath = [_localPath stringByAppendingPathComponent:@"localTags.plist"];
-        NSDictionary * rawLocaltagData = [NSDictionary dictionaryWithContentsOfFile:aPath];
-        NSArray * locTagsRaw = [rawLocaltagData allValues];
+        
+        NSLog(@"LocalEncoder local path: %@", _localPath);
+        
+//        NSString * aPath = [_localPath stringByAppendingPathComponent:@"localTags.plist"];
+//        NSDictionary * rawLocaltagData = [NSDictionary dictionaryWithContentsOfFile:aPath];
+//        NSArray * locTagsRaw = [rawLocaltagData allValues];
         
 //        for (NSDictionary * aTagRaw in locTagsRaw) {
 //            Tag *aTag = [Tag alloc]ini
@@ -366,6 +369,8 @@ static LocalEncoder * instance;
     NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
 //    double tagArePresentCount       = tagArePresent.count + 1;
 //    newTag.uniqueID                 = tagArePresentCount;
+    
+    // BCH: this is a terrible choice.
     newTag.uniqueID                 = (int)[self.event.tags count]+100;
     
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];

@@ -81,12 +81,6 @@
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
 
-// depricated
-
-//-(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet;
-//-(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration;
-//-(void)modifyTag:(NSMutableDictionary *)data;
-//-(void)closeDurationTag:(NSString *)tagName;
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
 -(Event*)getEventByHID:(NSString*)eventHID;
@@ -110,6 +104,5 @@
 -(id<ActionListItem>)checkForWiFiAction;
 -(id<ActionListItem>)checkForACloudAction;
 -(id<ActionListItem>)checkForMasterAction;
-//-(id<ActionListItem>)logoutAction;
 
 @end
