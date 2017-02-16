@@ -15,7 +15,6 @@
 #import "BreadCrumbsViewController.h"
 #import "ListPopoverControllerWithImages.h"
 #import "EncoderManager.h"
-#import "ImageAssetManager.h"
 #import "Tag.h"
 #import "RatingOutput.h"
 #import "UIImageView+TagThumbnail.h"
@@ -374,6 +373,7 @@
 
 -(void) deleteTag:(Tag*) tag {
     [self.tagsToDisplay removeObject:tag];
+    NSLog(@"deleting tag \"%@\".", tag.name);
     if (self.editingIndexPath) {
         [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
     }
@@ -383,14 +383,11 @@
 }
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
-    thumbnailCell *cell = (thumbnailCell *)sender.superview;
-    NSIndexPath *pathToDelete = [self.collectionView indexPathForCell: cell];
-    self.editingIndexPath = pathToDelete;
-    
-    Tag *tag        = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-    if (![self promptUserToDeleteTag:tag]) {
-        [self showOrHideDeleteAllButton];
-    }
+    NSLog(@"button pressed....");
+    UICollectionViewCell* cell = (UICollectionViewCell*)sender.superview;
+    NSIndexPath *pathToDelete = [self.collectionView indexPathForCell:cell];
+    Tag *tag = [self tagForIndexPath:pathToDelete];
+    [self promptUserToDeleteTag:tag];
 }
 
 -(void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
@@ -398,15 +395,15 @@
     [self.collectionView setNeedsDisplay]; // force drawRect:
 }
 
-
+-(Tag*) tagForIndexPath:(NSIndexPath*) indexPath {
+    return [self.tagsToDisplay objectAtIndex:indexPath.row];
+}
 
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-  
-    Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+    Tag *tagSelect = [self tagForIndexPath:indexPath];
     
     
     if ([tagSelect.name isEqualToString:@"telestration"]) {
@@ -452,24 +449,14 @@
         [self.sourceSelectPopover setListOfButtonNames:listOfScource];
         
         //This is where the Thumbnail images are added to the popover
-        NSDictionary *tagThumbnails = selectedCell.data.thumbnails ;
-        
         int i = 0;
         for (NSString *src in listOfScource){
-            //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
-            
-            
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
             
-            PxpTelestration *tele = listOfScource.count <= 1 || [selectedCell.data.telestration.sourceName isEqualToString:src] ? selectedCell.data.telestration : nil;
-            
-            [[ImageAssetManager getInstance] imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
-            
+            [imageView pxp_setTagThumbnail:tagSelect withSource:src];
             [(UIButton *)self.sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
             ++i;
         }
-        
-
         
         //if ( [tagSelect count] >1 ){
             [self.sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
@@ -581,7 +568,6 @@
     if ([self.view window] == nil){
         self.view = nil;
     }
-    [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {

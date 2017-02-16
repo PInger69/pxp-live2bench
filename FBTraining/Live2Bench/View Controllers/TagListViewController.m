@@ -63,8 +63,7 @@
 }
 
 -(BOOL) promptUserToDeleteTag:(Tag*) tag {
-    BOOL isYourTag  = [tag.user isEqualToString:[UserCenter getInstance].userHID];
-    if (!isYourTag) {
+    if (!tag.own) {
         [self showDeletePermissionError];
         return NO;
     } else {
