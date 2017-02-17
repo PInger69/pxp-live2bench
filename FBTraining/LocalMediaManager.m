@@ -626,7 +626,7 @@ static LocalMediaManager * instance;
  */
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData
 {
-    
+    NSLog(@"saveClip with %@ and data %@", aName, tagData);
     // check the device if the clip is there.. if not then make a new clip from and make get an Id
     NSString *event     = tagData[@"event"];
     NSString *globalID  = [NSString stringWithFormat:@"%@_%@", event, tagData[@"id"]];

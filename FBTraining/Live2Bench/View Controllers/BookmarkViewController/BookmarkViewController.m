@@ -19,7 +19,6 @@
 #import "LocalMediaManager.h"
 #import "PxpPlayerViewController.h"
 #import "PxpFullscreenViewController.h"
-#import "PxpClipContext.h"
 #import "PxpVideoBar.h"
 
 
@@ -51,12 +50,6 @@
 @property (strong, nonatomic) UIButton                      * filterButton;
 @property (strong, nonatomic) UIButton                      * userSortButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
-
-
-
-
-@property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
-
 
 
 @property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
@@ -535,11 +528,8 @@
 {
     for (NSIndexPath *cellIndexPath in toBeDeleted) {
         Clip * aClip = [_tagsToDisplay objectAtIndex:cellIndexPath.row];
-        if (aClip ==_clipContext.clip){ /// if selected and deleted clear UI
-            [_clipContext.mainPlayer pause];
-            [_clipContext.mainPlayer replaceCurrentItemWithPlayerItem:nil];
+        if (aClip == nil) {
             [clipContentDisplay displayClip:nil];
-//            [_playerViewController zeroControlBarTimes];
             [_videoBar clear];
         }
 

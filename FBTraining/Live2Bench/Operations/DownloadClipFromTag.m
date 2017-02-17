@@ -135,17 +135,15 @@
                  
                  NSString * ip                = [weakSelf.encoder ipAddress];
                  NSString * remoteSrc         = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
-//                 NSString * downloaderRefKey  =  paredData[@"srcValue"]; // this is used for the downloader and the localmedia manager
+                 if (remoteSrc == nil) {
+                     remoteSrc = srcKey;
+                 }
                  NSString * eventName        = ([weakSelf.encoder event].live)?LIVE_EVENT:paredData[@"event"] ;
-                 
+                 if (eventName == nil) {
+                     eventName = tag.event;
+                 }
                  
                  remotePath       = [NSString stringWithFormat:@"http://%@/events/%@/video/%@_vid_%@.mp4", ip,eventName, remoteSrc, tagID];
-                 
-                 
-                
-//                 NSString        * dlKey = [NSString stringWithFormat:@"%@-%@",tagID,downloaderRefKey ];
-                 
-
              } else {
                  remotePath = urlForImageOnServer;
                  videoName        = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",paredData[@"event"],paredData[@"id"], @"s_00hq"];
