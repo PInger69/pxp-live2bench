@@ -589,8 +589,6 @@
 // Sort tags by time index. Ensure that tags are unique
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
     [super sortAndDisplayUniqueTags:tags];
-    NSLog(@"the number of tags to display: %lu", tags.count);
-    NSLog(@"the total number of tags:      %lu", self.allTagsArray.count);
     
     if (self.refreshTimer.isValid) {
         [self.refreshTimer invalidate];

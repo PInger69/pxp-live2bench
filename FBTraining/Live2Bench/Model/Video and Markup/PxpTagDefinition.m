@@ -61,7 +61,7 @@
 }
 
 -(NSString*) description {
-    return [NSString stringWithFormat:@"#%ld: %@", self.order, self.name];
+    return [NSString stringWithFormat:@"#%ld: %@", (long) self.order, self.name];
 }
 
 @end

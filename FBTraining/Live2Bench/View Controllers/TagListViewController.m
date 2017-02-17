@@ -130,7 +130,7 @@
     }
     NSMutableSet * uniqueList = [NSMutableSet new];
     [uniqueList addObjectsFromArray:tags];
-    NSLog(@"number of items in the unique list %lu", uniqueList.count);
+    NSLog(@"number of items in the unique list %lu", (unsigned long) uniqueList.count);
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
     [self.tagsToDisplay removeAllObjects];
     [self.tagsToDisplay addObjectsFromArray:
