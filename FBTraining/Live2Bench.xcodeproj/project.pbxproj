@@ -625,7 +625,6 @@
 		D83E8B971E2D93EE000FC23F /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83E8B961E2D93EE000FC23F /* DropboxSDK.framework */; };
 		D83E8B9C1E2E86FD000FC23F /* ListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8B9A1E2E86FD000FC23F /* ListViewCell.m */; };
 		D83E8B9F1E2E878F000FC23F /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8B9D1E2E878F000FC23F /* ListViewController.m */; };
-		D83E8BA21E2E882D000FC23F /* ListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BA11E2E882D000FC23F /* ListTableViewController.m */; };
 		D83E8BAE1E2E9C84000FC23F /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E8BA51E2E9C84000FC23F /* PreferencesView.xib */; };
 		D83E8BAF1E2E9C84000FC23F /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BA71E2E9C84000FC23F /* PreferencesViewController.m */; };
 		D83E8BB01E2E9C84000FC23F /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BA91E2E9C84000FC23F /* SettingsPageViewController.m */; };
@@ -1869,8 +1868,6 @@
 		D83E8B9B1E2E86FD000FC23F /* ListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewCell.h; sourceTree = "<group>"; };
 		D83E8B9D1E2E878F000FC23F /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
 		D83E8B9E1E2E878F000FC23F /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
-		D83E8BA01E2E882D000FC23F /* ListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListTableViewController.h; sourceTree = "<group>"; };
-		D83E8BA11E2E882D000FC23F /* ListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListTableViewController.m; sourceTree = "<group>"; };
 		D83E8BA51E2E9C84000FC23F /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
 		D83E8BA61E2E9C84000FC23F /* PreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesViewController.h; sourceTree = "<group>"; };
 		D83E8BA71E2E9C84000FC23F /* PreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesViewController.m; sourceTree = "<group>"; };
@@ -3623,8 +3620,6 @@
 				D81552691E3A8301003010D4 /* CommentingRatingField.m */,
 				D815526B1E3AA8EA003010D4 /* HeaderBarForListView.h */,
 				D815526C1E3AA8EA003010D4 /* HeaderBarForListView.m */,
-				D83E8BA01E2E882D000FC23F /* ListTableViewController.h */,
-				D83E8BA11E2E882D000FC23F /* ListTableViewController.m */,
 				D83E8B9B1E2E86FD000FC23F /* ListViewCell.h */,
 				D83E8B9A1E2E86FD000FC23F /* ListViewCell.m */,
 				D83E8B9E1E2E878F000FC23F /* ListViewController.h */,
@@ -4075,7 +4070,6 @@
 				D83E82201E2D90A5000FC23F /* BorderButton.m in Sources */,
 				D83E8AAF1E2D9152000FC23F /* AnalyzeTabViewController.m in Sources */,
 				D83E83591E2D90A5000FC23F /* PxpTelestrationCaptureArea.m in Sources */,
-				D83E8BA21E2E882D000FC23F /* ListTableViewController.m in Sources */,
 				D83E83491E2D90A5000FC23F /* PxpPlayerControlToolbar.m in Sources */,
 				D83E82DC1E2D90A5000FC23F /* Live2BenchViewController.m in Sources */,
 				D83E8BB71E2E9C9B000FC23F /* ClipViewController.m in Sources */,

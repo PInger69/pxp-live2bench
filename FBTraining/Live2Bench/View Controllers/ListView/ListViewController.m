@@ -1169,6 +1169,39 @@
     
 }
 
+-(void)downloadLocal:(Tag*) tag source:(NSString*) src tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath cell:(FeedSelectCell*) cell {
+    NSArray *keys = [[NSMutableArray arrayWithArray:[tag.eventInstance.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSString *key = keys[indexPath.row - 1];
+    
+    // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+    NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID, key];
+    [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+    
+    // this takes the download item and attaches it to the cell
+    void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+        //videoItem = downloadItem;
+        cell.downloadButton.downloadItem = downloadItem;
+        __block FeedSelectCell *weakerCell = cell;
+        [cell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                weakerCell.downloadButton.progress = progress;
+                if (progress >= 1.0) {
+                    weakerCell.downloadButton.downloadComplete = 1.0;
+                }
+                
+                [weakerCell.downloadButton setNeedsDisplay];
+            });
+        }];
+    };
+    
+    //    NSString *src = [NSString stringWithFormat:@"%@hq", key];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+                                                                                                           @"block": blockName,
+                                                                                                           @"tag": tag,
+                                                                                                           @"src":src,
+                                                                                                           @"key":key}];
+}
+
 #pragma mark UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView*) tableView {
@@ -1231,7 +1264,7 @@
         };
     } else { // local event
         collapsableCell.downloadButtonBlock = ^(){
-//            [self downloadLocal:tag source:src2 tableView:tableView cellForRowAtIndexPath:indexPath cell:weakCell];
+            [self downloadLocal:tag source:key tableView:tableView cellForRowAtIndexPath:indexPath cell:weakCell];
         };
     }
 
