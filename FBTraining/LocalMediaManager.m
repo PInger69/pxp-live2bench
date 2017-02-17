@@ -7,6 +7,9 @@
 //
 
 #import "LocalMediaManager.h"
+
+#import <SDWebImage/SDImageCache.h>
+
 #import "Event.h"
 #import "Clip.h"
 #import "LocalEncoder.h"
@@ -119,13 +122,13 @@ static LocalMediaManager * instance;
                 }
                 
                 
-//                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
                 Event * anEvent = [[Event alloc]initWithDict:dict localPath:self.localPath];
                 anEvent.parentEncoder       = [LocalEncoder getInstance];
                     anEvent.local               = YES;
                     anEvent.isBuilt             = YES;
                     anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                     
+                
                 
                 if ([dict objectForKey:@"savedTeamData"]){
                    anEvent.teams =  [self parsedTeamData:dict];
@@ -145,9 +148,13 @@ static LocalMediaManager * instance;
                         // all thumbs were saved on the device by the real file name but will be keyed by the download path
                         NSString    * imageLocation =  [thumbFolder stringByAppendingPathComponent:[orgFilePathName lastPathComponent]];
                         UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
-                        if (thmb) [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
+                        if (thmb) {
+                            [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
+                            NSLog(@"adding thumbnail for original path %@", orgFilePathName);
+                            
+                            [self prepopulateImageCache:thmb forEvent:anEvent location:orgFilePathName];
+                        }
                     }
-
                 }
                 
                     NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
@@ -264,6 +271,26 @@ static LocalMediaManager * instance;
         return self;
 }
 
+
+-(void) prepopulateImageCache:(UIImage*) image forEvent:(Event*) event location:(NSString*) path {
+    NSString* unqualifiedTagImageName = [path lastPathComponent];
+    NSString* originalUrl = nil;
+    for (Tag* tag in event.tags) {
+        for (NSString* thumbnailUrl in [tag.thumbnails allValues]) {
+            if ([[thumbnailUrl lastPathComponent] isEqualToString:unqualifiedTagImageName]) {
+                originalUrl = thumbnailUrl;
+                break;
+            }
+        }
+    }
+    
+    if (originalUrl != nil) {
+        NSLog(@"Saving image for original url %@", originalUrl);
+        [[SDImageCache sharedImageCache] storeImage:image forKey:path];
+    } else {
+        NSLog(@"No sign of original url for %@", path);
+    }
+}
 
 -(void)refresh
 {
