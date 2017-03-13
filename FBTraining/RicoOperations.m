@@ -437,10 +437,6 @@
         }];
     } else {
         [self completeOperation];
-        NSLog(@"Seeking Complete FAIL: player status=%lu,  error=%@", (long) avp.status, avp.error);
-        NSLog(@"Seeking Complete FAIL:   item status=%lu,  error=%@", (long) avp.currentItem.status, avp.currentItem.error);
-
-        NSLog(@"completion handler is %@", weakself.completionHandler == nil ? @"nil" : @"not nil");
         if (weakself.completionHandler != nil) {
             if (avp.error != nil) {
                 weakself.completionHandler(finished, avp.error);
