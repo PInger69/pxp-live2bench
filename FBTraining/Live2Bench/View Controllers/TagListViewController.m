@@ -63,7 +63,7 @@
 }
 
 -(BOOL) promptUserToDeleteTag:(Tag*) tag {
-    if (!tag.own) {
+    if (![self isDeletableTag:tag]) {
         [self showDeletePermissionError];
         return NO;
     } else {
@@ -139,11 +139,15 @@
 
 #pragma mark - Delete tags
 
+-(BOOL) isDeletableTag:(Tag*) tag {
+    return YES;
+}
+
 -(void) deleteAllSelectedTags {
     
     NSMutableArray* tagsToDelete = [NSMutableArray new];
     for (Tag* tag in [self.allTagsArray copy]) {
-        if (tag.own && [self.deleteTagIds containsObject:tag.ID]) {
+        if ([self isDeletableTag:tag] && [self.deleteTagIds containsObject:tag.ID]) {
             [tagsToDelete addObject:tag];
         }
     }
