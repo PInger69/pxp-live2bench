@@ -16,7 +16,7 @@
     if (url == nil) {
         self.image = [UIImage imageNamed:@"defaultTagView"];
     } else {
-        [self sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [self sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"] options:SDWebImageRefreshCached completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             if (error) {
                 NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);
                 self.image = [UIImage imageNamed:@"imageNotAvailable"];
@@ -43,7 +43,7 @@
     if (imageURL == nil) {
         self.image = [UIImage imageNamed:@"defaultTagView"];
     } else {
-        [self sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [self sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] options:SDWebImageRefreshCached completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             
             if (error) {
                 NSLog(@"Error downloading image at URL %@: %@", imageURL, error.localizedDescription);

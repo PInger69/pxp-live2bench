@@ -25,7 +25,7 @@
 @property (nonatomic, copy, nullable) void(^sendUserInfo)();
 @property (nonatomic,strong, nullable)    Event           * event;
 
-- (nonnull instancetype)initWithImageData:(nullable NSString *)url andName: (nullable NSString *)name;
+- (nonnull instancetype)initWithName: (nullable NSString *)name;
 
 - (nonnull instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source;
 

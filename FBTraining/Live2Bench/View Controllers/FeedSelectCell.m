@@ -16,7 +16,7 @@
 
 @implementation FeedSelectCell
 
-- (nonnull instancetype)initWithImageData:(nullable NSString *)url andName: (nullable NSString *)name{
+- (nonnull instancetype)initWithName: (nullable NSString *)name{
     self = [super init];
     if (self) {
         _dowdloadSize   = [[UILabel alloc] init];
@@ -32,8 +32,6 @@
         
         unsigned long n;
         _feedName.text = sscanf(name.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : name;
-        
-        [self.feedView pxp_setTagThumbnailFromUrl:url];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];

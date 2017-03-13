@@ -248,7 +248,7 @@
         feed = urls[key];
         data = [[feed.allPaths firstObject] absoluteString];
         
-        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:nil andName:key];
+        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithName:key];
         collapsableCell.feedView.hidden = YES;
         
         collapsableCell.event = event;
