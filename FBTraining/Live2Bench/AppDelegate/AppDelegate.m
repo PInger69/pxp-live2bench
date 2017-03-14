@@ -7,9 +7,11 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
+#import "AppDelegate.h"
+
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
-#import "AppDelegate.h"
+#import <SDWebImage/SDWebImageManager.h>
 
 #import "PxpURLProtocol.h"
 #import "MockURLProtocol.h"
@@ -123,7 +125,7 @@
     self.sharedFilterTab    = [TabView sharedFilterTabBar];
     [self.sharedFilterTab setPxpFilter:self.sharedFilter];
     
-    
+    [[[SDWebImageManager sharedManager] imageCache] clearDisk];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd";

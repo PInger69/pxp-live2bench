@@ -580,7 +580,8 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (feed.path) {
         NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
-        
+
+        NSLog(@"Feed path: %@", feed.path);
         AVAsset *asset = [AVURLAsset URLAssetWithURL:feed.path options:nil];
         UIImage *thumb = [asset imageForTime:CMTimeMake(time, 1)];
         

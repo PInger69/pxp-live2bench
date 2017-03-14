@@ -26,7 +26,7 @@
     CGImageRelease(imageRef);
     
     if (error) {
-    
+        NSLog(@"AVAsset imageForTime: Error: %@", error);
     }
     
     return image && !error ? image : nil;

@@ -125,9 +125,6 @@
 
 
 -(void) sortAndDisplayUniqueTags:(NSArray*) tags {
-    for (Tag* t in tags) {
-        NSLog(@"Tag %@ has unique ID %d", t.ID, t.uniqueID);
-    }
     NSMutableSet * uniqueList = [NSMutableSet new];
     [uniqueList addObjectsFromArray:tags];
     NSLog(@"number of items in the unique list %lu", (unsigned long) uniqueList.count);

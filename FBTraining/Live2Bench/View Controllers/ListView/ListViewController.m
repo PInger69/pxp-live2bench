@@ -354,7 +354,7 @@
     NSLog(@"current event is %@ and the number of tags is %lu", self.currentEvent == nil ? @"nil" : @"not nil", (unsigned long) self.tagsToDisplay.count);
     [self.listTable reloadData];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
     
     [self.view bringSubviewToFront:self.videoBar];
@@ -440,39 +440,34 @@
 }
 
 
--(void) feedSelected: (NSNotification *) notification
-{
+-(void) feedSelected: (NSNotification *) notification {
 // [self.downloadAllButton setEnabled:YES];
     NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
     
     Feed *feed = [userInfo objectForKey:@"feed"];
     
-    self.selectedTag = userInfo[@"forWhole"];
+    Tag* tag = userInfo[@"forWhole"];
+    [self feedSelected:feed forTag:tag];
+}
+
+-(void) feedSelected:(Feed*) feed forTag:(Tag*) tag {
     if (self.mainPlayer.feed != feed){
         [self.mainPlayer loadFeed:feed];
         self.mainPlayer.name = feed.sourceName;
     }
 
-    [self.ricoPlayerViewController playTag:self.selectedTag];
+    [self.ricoPlayerViewController playTag:tag];
     [self.ricoPlayerViewController play];
     
     [self.commentingField clear];
     self.commentingField.enabled             = YES;
-    self.commentingField.text                = self.selectedTag.comment;
-    self.commentingField.ratingScale.rating  = self.selectedTag.rating;
+    self.commentingField.text                = tag.comment;
+    self.commentingField.ratingScale.rating  = tag.rating;
     
     self.ricoFullScreenControlBar.controlBar.range = self.ricoPlayerControlBar.range;
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeList;
-    self.ricoFullScreenControlBar.currentTagLabel.text =self.selectedTag.name;
+    self.ricoFullScreenControlBar.currentTagLabel.text = tag.name;
 }
-
--(void) playFeed:(Feed*) feed {
-    if (self.mainPlayer.feed != feed){
-        [self.mainPlayer loadFeed:feed];
-        self.mainPlayer.name = feed.sourceName;
-    }
-}
-
 
 #pragma mark - TextView Delegate Methods
 
@@ -1270,7 +1265,7 @@
 
     collapsableCell.sendUserInfo = ^(){
         Feed *feed = [tag.eventInstance.feeds objectForKey:key];
-        [self playFeed:feed];
+        [self feedSelected:feed forTag:tag];
     };
     return collapsableCell;
 
