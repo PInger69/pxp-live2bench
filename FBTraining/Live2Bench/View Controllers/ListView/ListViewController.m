@@ -13,7 +13,6 @@
 
 #import "CommentingRatingField.h"
 #import "HeaderBarForListView.h"
-#import "VideoBarListViewController.h"
 #import "EncoderManager.h"
 #import "Feed.h"
 
