@@ -63,116 +63,25 @@
     return self;
 }
 
-
-// @{@"text":<String>,@"accessValue":<String>}
--(void)buildButtonsWithDictList:(NSArray *)buttonDataList
-{
-    // This builds or removes buttons
-    
-    NSMutableDictionary * tempPool          = [NSMutableDictionary new];
-    for (NSDictionary * buttonData in buttonDataList) {
-        NSString * txt  = buttonData[@"text"];
-        NSString * accV = buttonData[@"accessValue"];
-        if( ![_cachedButtons objectForKey:txt]){
-            CustomButton  *eventButton = [self buildButton:CGRectZero btnText:txt btnValue:accV];
-            
-            [tempPool setObject:eventButton forKey:txt];
-            self.modified = YES;
-        }
-    }
-    if (!self.modified) return ; // no changes ignore
-    
-    _cachedButtons = tempPool;
-    
-    // Remove all buttons if modified
-    for (CustomButton * buttonObj in _buttonList) {
-        [buttonObj removeFromSuperview];
-    }
-    [_buttonList removeAllObjects];
-    
-    // make a new list of buttons and sort if needed
-    
-    _buttonList = [NSMutableArray arrayWithArray:[_cachedButtons allValues]];
-    
-    
-    NSUInteger colNum = 0;
-    NSUInteger rowNum = 0;
-    NSUInteger rowCount;
-    
-    if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
-        rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
-    } else {
-        rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.width+_buttonMargin.width);
-    }
-    
-    for (NSUInteger k = 0; k < _buttonList.count; k++ ) {
-        
-        CustomButton  *eventButton  = _buttonList[k];
-
-        CGRect      rect            =  CGRectMake(colNum * (_buttonSize.width+_buttonMargin.width),
-                                                  rowNum * (_buttonSize.height+_buttonMargin.height),
-                                                  _buttonSize.width, _buttonSize.height);
-        [eventButton setFrame:rect];
-        
-        
-        if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
-            if (++rowNum ==rowCount){
-                rowNum = 0;
-                colNum++;
-            }
-        } else {
-            if (++colNum ==rowCount){
-                colNum = 0;
-                rowNum++;
-            }
-        }
-
-        [self addSubview:eventButton];
-    }
-    
-    
-    if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
-        [self setContentSize:CGSizeMake((colNum+1)*_buttonSize.width, self.frame.size.height)];
-    } else {
-        [self setContentSize:CGSizeMake(self.frame.size.width, (rowNum+1)*_buttonSize.height)];
-    }
-    
-    
-    
-    
-    // this builds the predicates for the buttons
-    NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
-    for (CustomButton  *b in _buttonList) {
-        if(b.selected == YES){
-            
-            NSString * theKey = (b.accessibilityValue)?b.accessibilityValue:b.titleLabel.text;
-            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, theKey]];
-        }
-    }
-    if (!self.filterModuleDelegate)_predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
-
-    self.modified = NO;
-}
-
-
-
-
-
 -(void)buildButtonsWith:(NSArray *)buttonLabels
 {
     
     NSMutableDictionary * tempPool          = [NSMutableDictionary new];
-    for (NSString * lbl in buttonLabels) {
-        NSString * txt  = lbl;
-        NSString * accV = lbl;
+    for (NSString * txt in buttonLabels) {
         if( ![_cachedButtons objectForKey:txt]){
-            CustomButton  *eventButton = [self buildButton:CGRectZero btnText:txt btnValue:accV];
+            CustomButton* eventButton = [self buildButton:CGRectZero btnText:txt btnValue:txt];
             
             [tempPool setObject:eventButton forKey:txt];
             self.modified = YES;
         } else {
             [tempPool setObject:[_cachedButtons objectForKey:txt] forKey:txt];
-        
+        }
+    }
+    
+    for (NSString* tagLabel in [[_cachedButtons allKeys] copy]) {
+        if (![buttonLabels containsObject:tagLabel]) {
+            [_cachedButtons removeObjectForKey:tagLabel];
+            self.modified = YES;
         }
     }
     
