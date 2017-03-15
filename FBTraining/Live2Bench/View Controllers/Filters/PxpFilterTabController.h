@@ -22,5 +22,6 @@
 - (void)show;
 - (void)hide;
 
+-(void) refreshTagNames;
 
 @end

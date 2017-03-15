@@ -8,12 +8,14 @@
 
 #import "PxpFilterTabController.h"
 
+#import "PxpFilterButtonScrollView.h"
+#import "Tag.h"
+
 @interface PxpFilterTabController ()
 
 @end
 
 @implementation PxpFilterTabController
-@synthesize pxpFilter = _pxpFilter;
 
 - (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
     return [self initWithNibName:nibNameOrNil bundle:nibBundleOrNil tabImage:nil];
@@ -39,24 +41,15 @@
     
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    
-    // Do any additional setup after loading the view.
+-(void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//    [self refreshTagNames];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    
-    // Dispose of any resources that can be recreated.
+- (void)show {
 }
 
-- (void)show{
-    
-}
-
-- (void)hide{
+- (void)hide {
     
 }
 
@@ -64,6 +57,35 @@
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+-(void) refreshTagNames {
+    NSLog(@"refreshTagNames");
+    PxpFilterButtonScrollView* tagNamesList = [self filterButtonScrollView];
+
+    if (tagNamesList != nil) {
+        
+        
+        NSMutableSet* tagNames = [NSMutableSet new];
+        for (Tag* t in self.pxpFilter.unfilteredTags) {
+            if (!t.deleted) {
+                [tagNames addObject:t.name];
+            }
+        }
+        [tagNamesList buildButtonsWith:[tagNames allObjects]];
+    }
+}
+
+-(PxpFilterButtonScrollView*) filterButtonScrollView {
+    PxpFilterButtonScrollView* result = nil;
+    for (NSObject* module in self.modules) {
+        if ([module isKindOfClass:[PxpFilterButtonScrollView class]]) {
+            result = (PxpFilterButtonScrollView*) module;
+            break;
+        }
+    }
+    return result;
+}
+
 /*
 #pragma mark - Navigation
 

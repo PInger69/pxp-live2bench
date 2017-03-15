@@ -205,7 +205,9 @@
 }
 
 -(void) deleteTag:(Tag*) tag {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    [self.allTagsArray removeObject:tag];
+    [self.tagsToDisplay removeObject:tag];
+   [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
 }
 
 
