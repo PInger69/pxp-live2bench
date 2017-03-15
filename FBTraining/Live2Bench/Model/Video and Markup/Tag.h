@@ -85,6 +85,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) NSString       * userTeam;
 @property (assign, nonatomic) BOOL          deleted;
 
+/** @property userInitiated
+ *  @brief "true" indicates that the tag was explicitly-created via 
+ *         user interaction (tapping a button, etc.), rather than 
+ *         implicitly created (say, when a new live game starts).
+ *         Note that old tags on the server won't have this attribute and
+ *         in that case the userInitiated property will be false.
+ */
+@property (assign, nonatomic) BOOL          userInitiated;
+
 @property (readonly, nonatomic) BOOL isTelestration;
 
 /// The telestration accociated with the tag.

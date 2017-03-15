@@ -89,6 +89,9 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         
+        NSString* userInitiatedFlag = tagData[@"userInitiated"];
+        self.userInitiated = [@"true" isEqualToString:userInitiatedFlag];
+        
         // these items have side-effects in their setters.
         _coachPick           = [tagData[@"coachpick"] boolValue];
         _rating              = [tagData[@"rating"] intValue];
@@ -400,6 +403,9 @@ static NSMutableDictionary * openDurationTagsWithID;
     if (self.period) {
         tagDict[@"period"] = self.period;
     }
+    if (self.userInitiated) {
+        tagDict[@"userInitiated"] = @"true";
+    }
     
     return tagDict;
 }
@@ -420,6 +426,7 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
                                                                                   @"comment"     : (_comment)?_comment:@"",
+                                                                                  @"userInitiated": self.userInitiated ? @"true" : @"false",
                                                                                   @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@""
                                                                                   
                                                                                   }];

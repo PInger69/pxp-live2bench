@@ -418,20 +418,20 @@
 // Post tags at the very beginning of a new event
 -(void)postTagsAtBeginning{
     if ([self getTags:TagTypeHockeyPeriodStart secondType:TagTypeHockeyPeriodStop].count == 0) {
-        NSDictionary *dic = @{@"name":@"1",@"period":@"1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]};
+        NSDictionary *dic = @{@"name":@"1",@"period":@"1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart], @"userInitiated":@"false"};
         _periodSegmentedControl.selectedSegmentIndex = 0;
         [super postTag:dic];
     }
     
     if ([self getTags:TagTypeHockeyStrengthStart secondType:TagTypeHockeyStrengthStop].count == 0) {
-        NSDictionary *dic = @{@"name":@"5,5",@"strength":@"5,5",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart],@"period":[self currentPeriod]};
+        NSDictionary *dic = @{@"name":@"5,5",@"strength":@"5,5",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart],@"period":[self currentPeriod], @"userInitiated":@"false"};
         _homeSegControl.selectedSegmentIndex = 2;
         _awaySegControl.selectedSegmentIndex = 2;
         [super postTag:dic];
     }
     
     if ([self getTags:TagTypeHockeyStartOLine secondType:TagTypeHockeyStopOLine].count == 0) {
-        NSDictionary *dic = @{@"name":@"line_f_1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":@"line_f_1"};
+        NSDictionary *dic = @{@"name":@"line_f_1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":@"line_f_1", @"userInitiated":@"false"};
         UIButton *button = [offenseButton objectForKey:@"1"];
         button.backgroundColor = tintColor;
         button.selected = true;
@@ -441,7 +441,7 @@
     }
     
     if ([self getTags:TagTypeHockeyStartDLine secondType:TagTypeHockeyStartDLine].count == 0) {
-        NSDictionary *dic = @{@"name":@"line_d_1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":@"line_d_1"};
+        NSDictionary *dic = @{@"name":@"line_d_1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":@"line_d_1", @"userInitiated":@"false"};
         UIButton *button = [defenseButton objectForKey:@"1"];
         button.backgroundColor = tintColor;
         button.selected = true;
@@ -525,7 +525,7 @@
     }
     
     NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart],@"time":[NSString stringWithFormat:@"%f",time]};
-    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]}];
+    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart], @"userInitiated": @"true"}];
     [super postTag:tagDic];
     
 }
@@ -558,7 +558,7 @@
     NSString *name = [NSString stringWithFormat:@"%d,%d",homeValue,awayValue];
     
     NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart],@"strength":name,@"period":[self currentPeriod]};
-    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]}];
+    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart], @"userInitiated":@"true"}];
     [super postTag:dic];
         
     //if i have more players the the other team then the H view is green, other wise it is red
@@ -637,7 +637,7 @@
         button.selected = true;
         [offenseButton setValue:button forKey:@"current"];
         NSString *name =[[@"line_" stringByAppendingString:@"f_"] stringByAppendingString:button.titleLabel.text];
-        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":name};
+        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":name, @"userInitiated":@"true"};
         [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine]}];
         [super postTag:dic];
 
@@ -737,7 +737,7 @@
         button.selected = true;
         [defenseButton setValue:button forKey:@"current"];
         NSString *name =[[@"line_" stringByAppendingString:@"d_"] stringByAppendingString:button.titleLabel.text];
-        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":name};
+        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":name, @"userInitiated":@"true"};
         [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine]}];
         [super postTag:dic];
         
