@@ -1598,7 +1598,8 @@ static void * eventContext      = &eventContext;
                             @"starttime":       [NSString stringWithFormat:@"%f",timeTele],
                             @"displaytime" :    [NSString stringWithFormat:@"%f",timeTele],
                             @"telestration":    tele.data,
-                            @"telesrc":         tele.sourceName
+                            @"telesrc":         tele.sourceName,
+                            @"userInitiated":   @"true"
                             };
     
     Encoder * eventEncoder                          = (Encoder *)self.currentEvent.parentEncoder;
@@ -1902,7 +1903,8 @@ static void * eventContext      = &eventContext;
         NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                          @"name":button.titleLabel.text,
                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
-                                                                                         @"type":[NSNumber numberWithInteger:TagTypeNormal]
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeNormal],
+                                                                                         @"userInitiated": @"true"
                                                                                          }];
         if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
             [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
