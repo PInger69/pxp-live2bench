@@ -406,6 +406,8 @@
 //        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.tick target:self selector:@selector(update) userInfo:nil repeats:YES];
 //    });
 //    
+    NSLog(@"self.player.currentItem.status = %@", self.player.currentItem.status == AVPlayerItemStatusReadyToPlay ? @"AVPlayerItemStatusReadyToPlay" : ((self.player.currentItem.status == AVPlayerItemStatusFailed) ? @"AVPlayerItemStatusFailed" : @"AVPlayerItemStatusUnknown"));
+    NSLog(@"self.player.status = %@", self.player.status == AVPlayerStatusReadyToPlay ? @"AVPlayerStatusReadyToPlay" : ((self.player.status == AVPlayerStatusFailed) ? @"AVPlayerStatusFailed" : @"AVPlayerStatusUnknown"));
     
     if (self.player.status == AVPlayerStatusReadyToPlay && self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
         [avp cancelPendingPrerolls];
@@ -437,7 +439,8 @@
         }];
     } else {
         [self completeOperation];
-        if (weakself.completionHandler != nil) {
+
+        if ((self.player.currentItem.status == AVPlayerItemStatusFailed || self.player.status == AVPlayerStatusFailed) && weakself.completionHandler != nil) {
             if (avp.error != nil) {
                 weakself.completionHandler(finished, avp.error);
             } else if (avp.currentItem.error != nil) {
@@ -445,7 +448,6 @@
             } else {
                 weakself.completionHandler(finished, [[NSError alloc] initWithDomain:@"com.avoca.error" code:999 userInfo:@{ NSLocalizedDescriptionKey : @"Unknown video error" }]);
             }
-            
         }
         
         NSString * dur = @"";

@@ -270,8 +270,14 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     NSLog(@"MaxTime: %f",CMTimeGetSeconds(self.duration));
     NSLog(@"Seeking to:  %f   tolerance: %f / %f ",CMTimeGetSeconds(time),CMTimeGetSeconds(toleranceBefore),CMTimeGetSeconds(toleranceAfter));
     NSLog(@"Has Range: %@",(CMTIMERANGE_IS_VALID(self.range))?@"YES":@"NO");
-    NSLog(@"PlayerStatus: %@",(self.avPlayer.status == AVPlayerStatusReadyToPlay)?@"Ready":@" not Ready");
-    NSLog(@"PlayerStatusItem: %@",(self.avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay)?@"Ready":@" not Ready");
+    NSLog(@"PlayerStatus: %@ (%ld)",(self.avPlayer.status == AVPlayerStatusReadyToPlay)?@"Ready":@" not Ready", self.avPlayer.status);
+    if (self.avPlayer.status != AVPlayerStatusReadyToPlay) {
+        NSLog(@"------player failed:%@",self.avPlayer.error);
+    }
+    NSLog(@"PlayerStatusItem: %@  (%ld)",(self.avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay)?@"Ready":@" not Ready", self.avPlayer.currentItem.status);
+    if (self.avPlayer.currentItem.status != AVPlayerStatusReadyToPlay) {
+        NSLog(@"------player item failed:%@",self.avPlayer.currentItem.error);
+    }
     if (CMTIMERANGE_IS_VALID(self.range)) {
         CMTime start = self.range.start, end = CMTimeAdd(start, self.range.duration);
         if ( CMTIME_COMPARE_INLINE(time, >, end) || CMTIME_COMPARE_INLINE(time, <, start)) {
@@ -287,6 +293,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     }];
     
     [seeker setCompletionHandler:^(BOOL finished, NSError* error) {
+        NSLog(@"seeker completion: %@ %@", finished ? @"YES" : @"NO", error);
         if (error) {
             dispatch_async(dispatch_get_main_queue(),^{
                 [self showErrorMessage:@"Playback error" error:error];
@@ -310,7 +317,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 }
 
 -(void) showErrorMessage:(NSString*) title error:(NSError*) e {
-    NSString* errorMessage = [NSString stringWithFormat:@"%@",e.localizedFailureReason];
+    NSString* errorMessage = [NSString stringWithFormat:@"%@",e.localizedDescription];
     [TSMessage showNotificationInViewController:[TSMessage defaultViewController]
                                           title:title
                                        subtitle:errorMessage
