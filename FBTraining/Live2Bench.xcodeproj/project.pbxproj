@@ -416,15 +416,12 @@
 		D83E83CE1E2D90A5000FC23F /* undoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81C51E2D90A4000FC23F /* undoButton@2x.png */; };
 		D83E83CF1E2D90A5000FC23F /* undoButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81C61E2D90A4000FC23F /* undoButtonSelect.png */; };
 		D83E83D01E2D90A5000FC23F /* undoButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D83E81C71E2D90A4000FC23F /* undoButtonSelect@2x.png */; };
-		D83E83D21E2D90A5000FC23F /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81CB1E2D90A4000FC23F /* UserCenter.m */; };
 		D83E83D31E2D90A5000FC23F /* UserCenterActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81CD1E2D90A4000FC23F /* UserCenterActionPack.m */; };
 		D83E83D41E2D90A5000FC23F /* UserColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81CF1E2D90A4000FC23F /* UserColorButton.m */; };
 		D83E83D51E2D90A5000FC23F /* UserColourView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81D11E2D90A4000FC23F /* UserColourView.m */; };
 		D83E83D61E2D90A5000FC23F /* UserSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81D31E2D90A4000FC23F /* UserSettings.m */; };
 		D83E83D71E2D90A5000FC23F /* ActionList.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81D61E2D90A4000FC23F /* ActionList.m */; };
-		D83E83D81E2D90A5000FC23F /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81DA1E2D90A4000FC23F /* Downloader.m */; };
 		D83E83D91E2D90A5000FC23F /* DownloadEventItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81DC1E2D90A4000FC23F /* DownloadEventItem.m */; };
-		D83E83DA1E2D90A5000FC23F /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81DE1E2D90A4000FC23F /* DownloadItem.m */; };
 		D83E83DB1E2D90A5000FC23F /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81E01E2D90A4000FC23F /* FeedInspector.m */; };
 		D83E83DC1E2D90A5000FC23F /* PxpLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81E21E2D90A4000FC23F /* PxpLog.m */; };
 		D83E83DD1E2D90A5000FC23F /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81E41E2D90A4000FC23F /* Utility.m */; };
@@ -624,6 +621,9 @@
 		D83E8BB81E2E9C9B000FC23F /* thumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BB61E2E9C9B000FC23F /* thumbnailCell.m */; };
 		D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */; };
 		D83E8BBF1E2EBB98000FC23F /* TagListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */; };
+		D8427A401E89B8F90093C50E /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A3C1E89B8F90093C50E /* Downloader.m */; };
+		D8427A411E89B8F90093C50E /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A3F1E89B8F90093C50E /* DownloadItem.m */; };
+		D8427A451E89BE570093C50E /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A441E89BE570093C50E /* UserCenter.m */; };
 		D8799E271E53700900F60B78 /* PostOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E241E53700900F60B78 /* PostOperation.m */; };
 		D8799E281E53700900F60B78 /* GetUserTagsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E261E53700900F60B78 /* GetUserTagsOperation.m */; };
 		D8799E2D1E5370CA00F60B78 /* BooleanOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E2A1E5370CA00F60B78 /* BooleanOperation.m */; };
@@ -1469,8 +1469,6 @@
 		D83E81C51E2D90A4000FC23F /* undoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "undoButton@2x.png"; sourceTree = "<group>"; };
 		D83E81C61E2D90A4000FC23F /* undoButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = undoButtonSelect.png; sourceTree = "<group>"; };
 		D83E81C71E2D90A4000FC23F /* undoButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "undoButtonSelect@2x.png"; sourceTree = "<group>"; };
-		D83E81CA1E2D90A4000FC23F /* UserCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenter.h; sourceTree = "<group>"; };
-		D83E81CB1E2D90A4000FC23F /* UserCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenter.m; sourceTree = "<group>"; };
 		D83E81CC1E2D90A4000FC23F /* UserCenterActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenterActionPack.h; sourceTree = "<group>"; };
 		D83E81CD1E2D90A4000FC23F /* UserCenterActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenterActionPack.m; sourceTree = "<group>"; };
 		D83E81CE1E2D90A4000FC23F /* UserColorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserColorButton.h; sourceTree = "<group>"; };
@@ -1483,12 +1481,8 @@
 		D83E81D61E2D90A4000FC23F /* ActionList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionList.m; sourceTree = "<group>"; };
 		D83E81D71E2D90A4000FC23F /* ActionListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionListItem.h; sourceTree = "<group>"; };
 		D83E81D81E2D90A4000FC23F /* ActionListItemDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionListItemDelegate.h; sourceTree = "<group>"; };
-		D83E81D91E2D90A4000FC23F /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
-		D83E81DA1E2D90A4000FC23F /* Downloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
 		D83E81DB1E2D90A4000FC23F /* DownloadEventItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadEventItem.h; sourceTree = "<group>"; };
 		D83E81DC1E2D90A4000FC23F /* DownloadEventItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadEventItem.m; sourceTree = "<group>"; };
-		D83E81DD1E2D90A4000FC23F /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadItem.h; sourceTree = "<group>"; };
-		D83E81DE1E2D90A4000FC23F /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadItem.m; sourceTree = "<group>"; };
 		D83E81DF1E2D90A4000FC23F /* FeedInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedInspector.h; sourceTree = "<group>"; };
 		D83E81E01E2D90A4000FC23F /* FeedInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedInspector.m; sourceTree = "<group>"; };
 		D83E81E11E2D90A4000FC23F /* PxpLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpLog.h; sourceTree = "<group>"; };
@@ -1865,6 +1859,12 @@
 		D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogoViewController.m; sourceTree = "<group>"; };
 		D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListViewController.h; sourceTree = "<group>"; };
 		D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagListViewController.m; sourceTree = "<group>"; };
+		D8427A3C1E89B8F90093C50E /* Downloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
+		D8427A3D1E89B8F90093C50E /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
+		D8427A3E1E89B8F90093C50E /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadItem.h; sourceTree = "<group>"; };
+		D8427A3F1E89B8F90093C50E /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadItem.m; sourceTree = "<group>"; };
+		D8427A431E89BE570093C50E /* UserCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenter.h; sourceTree = "<group>"; };
+		D8427A441E89BE570093C50E /* UserCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenter.m; sourceTree = "<group>"; };
 		D8799E231E53700900F60B78 /* PostOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostOperation.h; sourceTree = "<group>"; };
 		D8799E241E53700900F60B78 /* PostOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostOperation.m; sourceTree = "<group>"; };
 		D8799E251E53700900F60B78 /* GetUserTagsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetUserTagsOperation.h; sourceTree = "<group>"; };
@@ -1950,6 +1950,7 @@
 			isa = PBXGroup;
 			children = (
 				D884D2501E79ED0900B1CDD4 /* PxpFilter */,
+				D8427A421E89BE090093C50E /* UserCenter */,
 				D81552611E394EA6003010D4 /* Video and Markup */,
 			);
 			path = Model;
@@ -2042,6 +2043,7 @@
 		D81552A31E4B8DD9003010D4 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D8427A3B1E89B89A0093C50E /* Downloader */,
 				D81552A41E4B8E1A003010D4 /* UIImageView+TagThumbnail.h */,
 				D81552A51E4B8E1A003010D4 /* UIImageView+TagThumbnail.m */,
 			);
@@ -3391,8 +3393,6 @@
 				D83E81C51E2D90A4000FC23F /* undoButton@2x.png */,
 				D83E81C61E2D90A4000FC23F /* undoButtonSelect.png */,
 				D83E81C71E2D90A4000FC23F /* undoButtonSelect@2x.png */,
-				D83E81CA1E2D90A4000FC23F /* UserCenter.h */,
-				D83E81CB1E2D90A4000FC23F /* UserCenter.m */,
 				D83E81CC1E2D90A4000FC23F /* UserCenterActionPack.h */,
 				D83E81CD1E2D90A4000FC23F /* UserCenterActionPack.m */,
 				D83E81CE1E2D90A4000FC23F /* UserColorButton.h */,
@@ -3528,12 +3528,8 @@
 				D83E81D61E2D90A4000FC23F /* ActionList.m */,
 				D83E81D71E2D90A4000FC23F /* ActionListItem.h */,
 				D83E81D81E2D90A4000FC23F /* ActionListItemDelegate.h */,
-				D83E81D91E2D90A4000FC23F /* Downloader.h */,
-				D83E81DA1E2D90A4000FC23F /* Downloader.m */,
 				D83E81DB1E2D90A4000FC23F /* DownloadEventItem.h */,
 				D83E81DC1E2D90A4000FC23F /* DownloadEventItem.m */,
-				D83E81DD1E2D90A4000FC23F /* DownloadItem.h */,
-				D83E81DE1E2D90A4000FC23F /* DownloadItem.m */,
 				D83E81DF1E2D90A4000FC23F /* FeedInspector.h */,
 				D83E81E01E2D90A4000FC23F /* FeedInspector.m */,
 				D83E81E11E2D90A4000FC23F /* PxpLog.h */,
@@ -3651,6 +3647,26 @@
 				D83E8BBB1E2EAAE6000FC23F /* LogoViewController.m */,
 			);
 			path = LogoViewController;
+			sourceTree = "<group>";
+		};
+		D8427A3B1E89B89A0093C50E /* Downloader */ = {
+			isa = PBXGroup;
+			children = (
+				D8427A3D1E89B8F90093C50E /* Downloader.h */,
+				D8427A3C1E89B8F90093C50E /* Downloader.m */,
+				D8427A3E1E89B8F90093C50E /* DownloadItem.h */,
+				D8427A3F1E89B8F90093C50E /* DownloadItem.m */,
+			);
+			path = Downloader;
+			sourceTree = "<group>";
+		};
+		D8427A421E89BE090093C50E /* UserCenter */ = {
+			isa = PBXGroup;
+			children = (
+				D8427A431E89BE570093C50E /* UserCenter.h */,
+				D8427A441E89BE570093C50E /* UserCenter.m */,
+			);
+			path = UserCenter;
 			sourceTree = "<group>";
 		};
 		D884D23F1E7860CC00B1CDD4 /* Filters */ = {
@@ -4139,6 +4155,7 @@
 				D83E832B1E2D90A5000FC23F /* PopoverButton.m in Sources */,
 				D83E8B031E2D9153000FC23F /* PxpURLProtocol.m in Sources */,
 				D83E83301E2D90A5000FC23F /* PxpAddButton.m in Sources */,
+				D8427A451E89BE570093C50E /* UserCenter.m in Sources */,
 				D83E82201E2D90A5000FC23F /* BorderButton.m in Sources */,
 				D83E8AAF1E2D9152000FC23F /* AnalyzeTabViewController.m in Sources */,
 				D83E83591E2D90A5000FC23F /* PxpTelestrationCaptureArea.m in Sources */,
@@ -4181,6 +4198,7 @@
 				D83E82771E2D90A5000FC23F /* EncoderTask.m in Sources */,
 				D83E82921E2D90A5000FC23F /* FilterProcessor.m in Sources */,
 				D83E8AAB1E2D9152000FC23F /* DeviceEncoderSource.m in Sources */,
+				D8427A401E89B8F90093C50E /* Downloader.m in Sources */,
 				D83E8B3A1E2D9153000FC23F /* UINotchDisplay.mm in Sources */,
 				D83E83461E2D90A5000FC23F /* PxpPlayerContext.m in Sources */,
 				D83E824B1E2D90A5000FC23F /* CustomTabBar.m in Sources */,
@@ -4188,7 +4206,6 @@
 				D83E8AF01E2D9153000FC23F /* PxpFilterRugbyTabViewController.m in Sources */,
 				D83E8B3C1E2D9153000FC23F /* VideoCollectionViewCell.m in Sources */,
 				D83E8B491E2D9153000FC23F /* ViewController2.m in Sources */,
-				D83E83D81E2D90A5000FC23F /* Downloader.m in Sources */,
 				D83E830C1E2D90A5000FC23F /* NumberedSeekerButton.m in Sources */,
 				D83E8AE41E2D9153000FC23F /* PxpFilterCFLTabController.m in Sources */,
 				D83E8B2E1E2D9153000FC23F /* TagSetEditPopUpViewController.m in Sources */,
@@ -4249,9 +4266,9 @@
 				D83E8B661E2D9153000FC23F /* CameraResourceNonLive.m in Sources */,
 				D83E7EF01E2D87FE000FC23F /* VKGLES2View.m in Sources */,
 				D83E83341E2D90A5000FC23F /* PxpCancelButton.m in Sources */,
-				D83E83DA1E2D90A5000FC23F /* DownloadItem.m in Sources */,
 				D83E824A1E2D90A5000FC23F /* CustomLabel.m in Sources */,
 				D83E82F81E2D90A5000FC23F /* MyClipFilterViewController.m in Sources */,
+				D8427A411E89B8F90093C50E /* DownloadItem.m in Sources */,
 				D83E82D41E2D90A5000FC23F /* L2BFullScreenViewController.m in Sources */,
 				D83E83C11E2D90A5000FC23F /* PxpTheme.m in Sources */,
 				D81552A21E4A9232003010D4 /* Live2BenchTagUIViewController.m in Sources */,
@@ -4386,7 +4403,6 @@
 				D83E83011E2D90A5000FC23F /* NCGhostView.m in Sources */,
 				D83E8B171E2D9153000FC23F /* RugbyBottomViewController.m in Sources */,
 				D83E83511E2D90A5000FC23F /* PxpPlayerSwapView.m in Sources */,
-				D83E83D21E2D90A5000FC23F /* UserCenter.m in Sources */,
 				D83E82391E2D90A5000FC23F /* ClipCornerView.m in Sources */,
 				D83E83B01E2D90A5000FC23F /* TabBarButton.m in Sources */,
 				D83E82AF1E2D90A5000FC23F /* IconButton.m in Sources */,

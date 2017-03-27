@@ -22,8 +22,21 @@
     if (url == nil) {
         self.image = [UIImage imageNamed:@"defaultTagView"];
         [self pxp_generateLocalScreenCapture:tag source:source];
+    } else if (tag.eventInstance.local) {
+        
+        UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
+        if (thumbnail == nil) {
+            thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
+        }
+        if (thumbnail != nil) {
+            self.image = thumbnail;
+            PXPLog(@"Tag \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, url);
+            NSLog(@"Tag \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, url);
+        } else {
+            [self pxp_generateLocalScreenCapture:tag source:source];
+        }
     } else {
-        [self sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"] options:SDWebImageRefreshCached completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [self sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             if (error) {
                 [self pxp_generateLocalScreenCapture:tag source:source];
             }
@@ -49,8 +62,26 @@
     if (imageURL == nil) {
         self.image = [UIImage imageNamed:@"defaultTagView"];
         [self pxp_generateLocalScreenCapture:tag source:checkName];
+    } else if (tag.eventInstance.local) {
+        
+        UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:imageURL];
+        if (thumbnail == nil) {
+            thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:imageURL];
+        }
+        if (thumbnail != nil) {
+            UIImage* imageWithTelestration = [tele renderOverImage:thumbnail view:self];
+            if (imageWithTelestration != nil) {
+                self.image = imageWithTelestration;
+            } else {
+                self.image = thumbnail;
+            }
+            NSLog(@"Telestration \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, imageURL);
+            PXPLog(@"Telestration \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, imageURL);
+        } else {
+            [self pxp_generateLocalScreenCapture:tag source:checkName];
+        }
     } else {
-        [self sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] options:SDWebImageRefreshCached completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
+        [self sd_setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"defaultTagView"] completed:^(UIImage* image, NSError* error, SDImageCacheType cacheType, NSURL* imageURL) {
             
             if (error) {
                 [self pxp_generateLocalScreenCapture:tag source:checkName];
@@ -113,14 +144,6 @@
             thumbnail = [tag.telestration renderOverImage:thumbnail view:self];
         }
         
-        if (!thumbnail) {
-            NSLog(@"image download failed. Failed to get a screen image for tag %@ / source %@", tag.ID, source);
-            NSLog(@"No joy");
-        } else {
-            NSLog(@"image download failed. Created a screen image for tag %@ / source %@", tag.ID, source);
-            
-        }
-
         dispatch_async(dispatch_get_main_queue(), ^(void){
             if (thumbnail == nil) {
                 self.image = [UIImage imageNamed:@"imageNotAvailable"];

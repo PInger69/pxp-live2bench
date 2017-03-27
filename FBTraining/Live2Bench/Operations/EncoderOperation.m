@@ -736,7 +736,7 @@
 //    }
 //
 //    self.generateProxyTag = YES;
-    
+/*
     if ([tagData[@"type"]integerValue] != TagTypeOpenDuration &&[tagData[@"type"]integerValue] != TagTypeOpenDuration && self.generateProxyTag) {
         Event * event = [self.encoder event];
         NSMutableDictionary * proxyData = [tagData mutableCopy];
@@ -750,7 +750,7 @@
             event.gameStartTag = proxyTag;
         }
     }
-    
+*/    
     
     NSString    * jsonString                    = [Utility dictToJSON:tagData];
     

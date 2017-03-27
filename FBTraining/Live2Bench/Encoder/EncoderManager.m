@@ -521,21 +521,25 @@ static EncoderManager * instance;
 /**
  *  This method prepares the clip for download
  *
- *  @param note
+ *  @param notification the notification that initiated the download request
  */
--(void)notificationDownloadEvent:(NSNotification*)note
+-(void)notificationDownloadEvent:(NSNotification*)notification
 {
-    Event               * theEvent         = (Event *)note.object;
-    NSString            * source           = note.userInfo[@"source"];
+    Event               * theEvent         = (Event*) notification.object;
+    NSString            * source           = notification.userInfo[@"source"];
+    [self downloadEvent:theEvent source:source];
+}
+
+-(void) downloadEvent:(Event*) theEvent source:(NSString*) source {
     NSString            * encoderSource    = (source)?[theEvent.mp4s objectForKey:source][@"hq"]:[[theEvent.mp4s allValues]firstObject][@"hq"];
     NSMutableDictionary * eventDic         = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){
         PXPLog(@"Event Download started!");
         PXPDeviceLog(@"Event Download: %@",theEvent.name);
-
+        
         __block Event * weakEvent = theEvent;
-
+        
         
         NSString * videoFolderPath      = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
         __block Event * weakLocalEvent  = [_localMediaManager getEventByName:weakEvent.name];
@@ -546,22 +550,22 @@ static EncoderManager * instance;
         NSArray * thmbs = grabAllThumbNamesFromEvent(weakEvent);
         for (NSString * item in thmbs) {
             NSString * fileName = [item lastPathComponent];
-
+            
             NSString * thbPath = [videoFolderPath stringByAppendingPathComponent:@"thumbnails"];
             thbPath = [thbPath stringByAppendingPathComponent:fileName];
-
+            
             (void)[Downloader downloadURL:item to:thbPath type:DownloadItem_TypeImage];
-
+            
         }
         
         DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
         [item setOnComplete:^{
-//            weakLocalEvent.originalFeeds;
+            //            weakLocalEvent.originalFeeds;
             
             [weakLocalEvent buildFeeds];
         }];
         
-
+        
         
         
     } else {
@@ -569,6 +573,7 @@ static EncoderManager * instance;
         
         PXPDeviceLog(@"%@ Event Download Failed. Event not ready on server",CODE_ERROR);
     }
+
 }
 
 
