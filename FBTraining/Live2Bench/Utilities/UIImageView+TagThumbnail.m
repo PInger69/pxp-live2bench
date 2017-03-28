@@ -24,15 +24,12 @@
         [self pxp_generateLocalScreenCapture:tag source:source];
     } else if (tag.eventInstance.local) {
         
-        UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
-        if (thumbnail == nil) {
-            thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
-        }
+        UIImage* thumbnail = [self pxp_thumbnailFromImageCache:url];
         if (thumbnail != nil) {
             self.image = thumbnail;
+        } else {
             PXPLog(@"Tag \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, url);
             NSLog(@"Tag \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, url);
-        } else {
             [self pxp_generateLocalScreenCapture:tag source:source];
         }
     } else {
@@ -53,6 +50,14 @@
     }
 }
 
+-(UIImage*) pxp_thumbnailFromImageCache:(NSString*) url {
+    UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
+    if (thumbnail == nil) {
+        thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
+    }
+    return thumbnail;
+}
+
 -(void) pxp_setTagTelestrationThumbnail:(Tag*) tag {
     PxpTelestration* tele = tag.telestration;
     
@@ -63,11 +68,7 @@
         self.image = [UIImage imageNamed:@"defaultTagView"];
         [self pxp_generateLocalScreenCapture:tag source:checkName];
     } else if (tag.eventInstance.local) {
-        
-        UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:imageURL];
-        if (thumbnail == nil) {
-            thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:imageURL];
-        }
+        UIImage* thumbnail = [self pxp_thumbnailFromImageCache:imageURL];
         if (thumbnail != nil) {
             UIImage* imageWithTelestration = [tele renderOverImage:thumbnail view:self];
             if (imageWithTelestration != nil) {
@@ -75,9 +76,9 @@
             } else {
                 self.image = thumbnail;
             }
+        } else {
             NSLog(@"Telestration \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, imageURL);
             PXPLog(@"Telestration \"%@\" (%@) does not seem to have a locally-saved thumbnail (url = %@)", tag.name, tag.ID, imageURL);
-        } else {
             [self pxp_generateLocalScreenCapture:tag source:checkName];
         }
     } else {
