@@ -28,6 +28,8 @@
 #define PLIST_EVENT_HID         @"EventsHid.plist"
 #define PLIST_ACCOUNT_INFO      @"accountInformation.plist"
 
+#define DEFAULT_TAG_SET_NAME @"Default (non editable)"
+
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 
 #define ROLE_SUPERUSER    0
@@ -105,7 +107,6 @@ static UserCenter * instance;
         eventHIDs = [[NSArray alloc]initWithContentsOfFile:[_localPath stringByAppendingPathComponent:PLIST_EVENT_HID]];
         
         _checkLoginPlistAction     = [[CheckLoginPlistAction alloc]initWithCenter:self];
-//        logoutAction                = [[LogoutAction alloc]initWithUserCenter:self];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logUserOutOfDevice:) name:NOTIF_LOGOUT_USER object:nil];
         
@@ -154,14 +155,16 @@ static UserCenter * instance;
     LoginOperation * loginOp = [[LoginOperation alloc]initWithEmail:user password:password];
     
     [loginOp setOnRequestComplete:^(NSData * data, NSOperation *op) {
+        NSLog(@"LoginOperation onRequestComplete block");
         [self cloudCredentialsResponce:data];
     }];
     
     [self.queue addOperation:loginOp];
 }
 
--(void)updateTagInfoFromCloud
-{
+-(void)updateTagInfoFromCloud {
+    _tagNames           = [self convertToL2BReadable: rawResponce key:@"tagnames"];
+    _defaultTagNames    = [_tagNames copy];
     [self tagNamesGet:[NSMutableDictionary dictionaryWithDictionary:rawResponce] timeStamp:GET_NOW_TIME];
 }
 
@@ -386,7 +389,7 @@ static UserCenter * instance;
     if (tgnames){// no respoince from cloud
         
         // convert new tags for Live to bench
-        if ([self.currentTagSetName isEqualToString:@"Default (non editable)"]) {
+        if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET_NAME]) {
             _tagNames = [self convertToL2BReadable: tgnames key:@"tagbuttons"];
         }
         
@@ -406,7 +409,7 @@ static UserCenter * instance;
         }
         
     } else {
-        if ([self.currentTagSetName isEqualToString:@"Default (non editable)"]) {
+        if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET_NAME]) {
             _tagNames =[self convertToL2BReadable: rawResponce key:@"tagnames"];
             _defaultTagNames = [_tagNames copy];
             //                _tagNames = [self _buildTagNames:localPath];
@@ -414,7 +417,6 @@ static UserCenter * instance;
     }
     
 }
-
 
 -(NSMutableArray*)convertToL2BReadable:(NSDictionary *)toConvert key:(NSString*)key
 {
