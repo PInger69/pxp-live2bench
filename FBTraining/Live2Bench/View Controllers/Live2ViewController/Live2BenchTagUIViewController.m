@@ -183,8 +183,6 @@
 {
  
     [self clear]; // clear if any is present
-    
-    NSLog(@"list of new tags to display: %@", listOfDicts);
     NSArray* tagDefinitions = [PxpTagDefinition fromArrayOfDictionaries:listOfDicts];
 
     tagDefinitions = [tagDefinitions sortedArrayUsingComparator:^NSComparisonResult(PxpTagDefinition* a, PxpTagDefinition* b) {

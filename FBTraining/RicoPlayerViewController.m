@@ -292,6 +292,7 @@ static CMClockRef _masterClock;
          NSOperation * playOp = [player play];
         [playOp setCompletionBlock:^{
             NSLog(@"## Player play");
+            self.isPlaying = YES;
         }];
         
         

@@ -321,7 +321,6 @@
 		D83E835A1E2D90A5000FC23F /* PxpTelestrationPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81151E2D90A3000FC23F /* PxpTelestrationPoint.m */; };
 		D83E835B1E2D90A5000FC23F /* PxpTelestrationRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81171E2D90A3000FC23F /* PxpTelestrationRenderer.m */; };
 		D83E835C1E2D90A5000FC23F /* PxpTelestrationRenderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E81191E2D90A3000FC23F /* PxpTelestrationRenderView.m */; };
-		D83E835D1E2D90A5000FC23F /* PxpTelestrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E811B1E2D90A3000FC23F /* PxpTelestrationViewController.m */; };
 		D83E835E1E2D90A5000FC23F /* PXPTIFAction.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E811C1E2D90A3000FC23F /* PXPTIFAction.c */; };
 		D83E835F1E2D90A5000FC23F /* PXPTIFByteBlock.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E811E1E2D90A3000FC23F /* PXPTIFByteBlock.c */; };
 		D83E83601E2D90A5000FC23F /* PXPTIFByteBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = D83E81201E2D90A3000FC23F /* PXPTIFByteBuffer.c */; };
@@ -505,7 +504,6 @@
 		D83E8B061E2D9153000FC23F /* RatingAndCommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87991E2D9149000FC23F /* RatingAndCommentingField.m */; };
 		D83E8B071E2D9153000FC23F /* RatingOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E879B1E2D914A000FC23F /* RatingOutput.m */; };
 		D83E8B081E2D9153000FC23F /* ReusableBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E879D1E2D914A000FC23F /* ReusableBottomViewController.m */; };
-		D83E8B091E2D9153000FC23F /* RicoBaseFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E879F1E2D914A000FC23F /* RicoBaseFullScreenViewController.m */; };
 		D83E8B0A1E2D9153000FC23F /* RicoBookmarkPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87A11E2D914A000FC23F /* RicoBookmarkPlayerController.m */; };
 		D83E8B0B1E2D9153000FC23F /* RicoFullScreenControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87A41E2D914A000FC23F /* RicoFullScreenControlBar.m */; };
 		D83E8B0C1E2D9153000FC23F /* RicoJogDial.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87A71E2D914A000FC23F /* RicoJogDial.m */; };
@@ -642,6 +640,8 @@
 		D884D25F1E79FC0500B1CDD4 /* PxpFilterTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = D884D25E1E79FC0500B1CDD4 /* PxpFilterTabController.m */; };
 		D8AE261D1E2FDDD300BD2EB2 /* PxpPreference.m in Sources */ = {isa = PBXBuildFile; fileRef = D8AE261B1E2FDDD300BD2EB2 /* PxpPreference.m */; };
 		D8AE261E1E2FDDD300BD2EB2 /* PxpPreference.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8AE261C1E2FDDD300BD2EB2 /* PxpPreference.plist */; };
+		D8C1CDA71E8AD17700EA0143 /* PxpTelestrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8C1CDA61E8AD17700EA0143 /* PxpTelestrationViewController.m */; };
+		D8C1CDAA1E8AD42900EA0143 /* RicoBaseFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8C1CDA91E8AD42900EA0143 /* RicoBaseFullScreenViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1338,8 +1338,6 @@
 		D83E81171E2D90A3000FC23F /* PxpTelestrationRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationRenderer.m; sourceTree = "<group>"; };
 		D83E81181E2D90A3000FC23F /* PxpTelestrationRenderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationRenderView.h; sourceTree = "<group>"; };
 		D83E81191E2D90A3000FC23F /* PxpTelestrationRenderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationRenderView.m; sourceTree = "<group>"; };
-		D83E811A1E2D90A3000FC23F /* PxpTelestrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationViewController.h; sourceTree = "<group>"; };
-		D83E811B1E2D90A3000FC23F /* PxpTelestrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationViewController.m; sourceTree = "<group>"; };
 		D83E811C1E2D90A3000FC23F /* PXPTIFAction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFAction.c; sourceTree = "<group>"; };
 		D83E811D1E2D90A3000FC23F /* PXPTIFAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFAction.h; sourceTree = "<group>"; };
 		D83E811E1E2D90A3000FC23F /* PXPTIFByteBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFByteBlock.c; sourceTree = "<group>"; };
@@ -1623,8 +1621,6 @@
 		D83E879B1E2D914A000FC23F /* RatingOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatingOutput.m; sourceTree = "<group>"; };
 		D83E879C1E2D914A000FC23F /* ReusableBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReusableBottomViewController.h; sourceTree = "<group>"; };
 		D83E879D1E2D914A000FC23F /* ReusableBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReusableBottomViewController.m; sourceTree = "<group>"; };
-		D83E879E1E2D914A000FC23F /* RicoBaseFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoBaseFullScreenViewController.h; sourceTree = "<group>"; };
-		D83E879F1E2D914A000FC23F /* RicoBaseFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoBaseFullScreenViewController.m; sourceTree = "<group>"; };
 		D83E87A01E2D914A000FC23F /* RicoBookmarkPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoBookmarkPlayerController.h; sourceTree = "<group>"; };
 		D83E87A11E2D914A000FC23F /* RicoBookmarkPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoBookmarkPlayerController.m; sourceTree = "<group>"; };
 		D83E87A21E2D914A000FC23F /* RicoDualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoDualViewTabViewController.h; sourceTree = "<group>"; };
@@ -1900,6 +1896,10 @@
 		D8AE261A1E2FDDD300BD2EB2 /* PxpPreference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPreference.h; sourceTree = "<group>"; };
 		D8AE261B1E2FDDD300BD2EB2 /* PxpPreference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPreference.m; sourceTree = "<group>"; };
 		D8AE261C1E2FDDD300BD2EB2 /* PxpPreference.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PxpPreference.plist; sourceTree = "<group>"; };
+		D8C1CDA51E8AD17700EA0143 /* PxpTelestrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationViewController.h; sourceTree = "<group>"; };
+		D8C1CDA61E8AD17700EA0143 /* PxpTelestrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationViewController.m; sourceTree = "<group>"; };
+		D8C1CDA81E8AD42900EA0143 /* RicoBaseFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoBaseFullScreenViewController.h; sourceTree = "<group>"; };
+		D8C1CDA91E8AD42900EA0143 /* RicoBaseFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoBaseFullScreenViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2008,6 +2008,8 @@
 			children = (
 				D81552A01E4A9232003010D4 /* Live2BenchTagUIViewController.h */,
 				D81552A11E4A9232003010D4 /* Live2BenchTagUIViewController.m */,
+				D8C1CDA81E8AD42900EA0143 /* RicoBaseFullScreenViewController.h */,
+				D8C1CDA91E8AD42900EA0143 /* RicoBaseFullScreenViewController.m */,
 				D81552831E490D57003010D4 /* RicoLive2BenchViewController.h */,
 				D81552841E490D57003010D4 /* RicoLive2BenchViewController.m */,
 			);
@@ -2686,8 +2688,6 @@
 				D83E879B1E2D914A000FC23F /* RatingOutput.m */,
 				D83E879C1E2D914A000FC23F /* ReusableBottomViewController.h */,
 				D83E879D1E2D914A000FC23F /* ReusableBottomViewController.m */,
-				D83E879E1E2D914A000FC23F /* RicoBaseFullScreenViewController.h */,
-				D83E879F1E2D914A000FC23F /* RicoBaseFullScreenViewController.m */,
 				D83E87A01E2D914A000FC23F /* RicoBookmarkPlayerController.h */,
 				D83E87A11E2D914A000FC23F /* RicoBookmarkPlayerController.m */,
 				D83E87A21E2D914A000FC23F /* RicoDualViewTabViewController.h */,
@@ -3272,8 +3272,6 @@
 				D83E81171E2D90A3000FC23F /* PxpTelestrationRenderer.m */,
 				D83E81181E2D90A3000FC23F /* PxpTelestrationRenderView.h */,
 				D83E81191E2D90A3000FC23F /* PxpTelestrationRenderView.m */,
-				D83E811A1E2D90A3000FC23F /* PxpTelestrationViewController.h */,
-				D83E811B1E2D90A3000FC23F /* PxpTelestrationViewController.m */,
 				D83E811C1E2D90A3000FC23F /* PXPTIFAction.c */,
 				D83E811D1E2D90A3000FC23F /* PXPTIFAction.h */,
 				D83E811E1E2D90A3000FC23F /* PXPTIFByteBlock.c */,
@@ -3574,6 +3572,8 @@
 				D81552A81E4B9303003010D4 /* FeedSelectCell.m */,
 				D81552651E39626D003010D4 /* ListPopoverControllerWithImages.h */,
 				D81552661E39626D003010D4 /* ListPopoverControllerWithImages.m */,
+				D8C1CDA51E8AD17700EA0143 /* PxpTelestrationViewController.h */,
+				D8C1CDA61E8AD17700EA0143 /* PxpTelestrationViewController.m */,
 				D83E8BBD1E2EBB98000FC23F /* TagListViewController.h */,
 				D83E8BBE1E2EBB98000FC23F /* TagListViewController.m */,
 				D884D2401E78621000B1CDD4 /* BottomViewController */,
@@ -4167,7 +4167,6 @@
 				D83E8B131E2D9153000FC23F /* RicoVideoBar.m in Sources */,
 				D815529F1E4A8416003010D4 /* LocalEncoder.m in Sources */,
 				D83E8B051E2D9153000FC23F /* RangeSlider.m in Sources */,
-				D83E835D1E2D90A5000FC23F /* PxpTelestrationViewController.m in Sources */,
 				D83E8AAC1E2D9152000FC23F /* RicoPlayer.m in Sources */,
 				D83E82241E2D90A5000FC23F /* BreadCrumbView.m in Sources */,
 				D884D2531E79ED5A00B1CDD4 /* PxpFilter.m in Sources */,
@@ -4236,7 +4235,6 @@
 				D83E8B751E2D9153000FC23F /* DeviceLog.m in Sources */,
 				D83E8AD81E2D9152000FC23F /* ParseModuleAlpha.m in Sources */,
 				D8799E2D1E5370CA00F60B78 /* BooleanOperation.m in Sources */,
-				D83E8B091E2D9153000FC23F /* RicoBaseFullScreenViewController.m in Sources */,
 				D83E8AFF1E2D9153000FC23F /* PxpRangeModifierButton.m in Sources */,
 				D81552BC1E4BDA68003010D4 /* PxpTagDefinition.m in Sources */,
 				D83E7EF11E2D87FE000FC23F /* VKStreamInfoView.m in Sources */,
@@ -4374,6 +4372,7 @@
 				D83E82221E2D90A5000FC23F /* BottomViewController.m in Sources */,
 				D83E8AE11E2D9153000FC23F /* PxpFilterButtonGroupController.m in Sources */,
 				D83E83C21E2D90A5000FC23F /* ToggleButton.m in Sources */,
+				D8C1CDA71E8AD17700EA0143 /* PxpTelestrationViewController.m in Sources */,
 				D83E83571E2D90A5000FC23F /* PxpTelestrationAction.m in Sources */,
 				D83E833D1E2D90A5000FC23F /* PxpL2BFullscreenViewController.m in Sources */,
 				D83E8BBC1E2EAAE6000FC23F /* LogoViewController.m in Sources */,
@@ -4501,6 +4500,7 @@
 				D83E83611E2D90A5000FC23F /* PXPTIFColor.c in Sources */,
 				D83E83741E2D90A5000FC23F /* RJLVideoPlayerResponder.m in Sources */,
 				D83E8B191E2D9153000FC23F /* SamplePxpFilterModule.m in Sources */,
+				D8C1CDAA1E8AD42900EA0143 /* RicoBaseFullScreenViewController.m in Sources */,
 				D83E8B711E2D9153000FC23F /* DelayOperation.m in Sources */,
 				D83E82901E2D90A5000FC23F /* FilterButtonBlockView.m in Sources */,
 				D83E83581E2D90A5000FC23F /* PxpTelestrationButton.m in Sources */,

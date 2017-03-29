@@ -1244,6 +1244,7 @@ static void * eventContext      = &eventContext;
 
 -(void)onEventChange
 {
+    NSLog(@"onEventChange...");
     self.telestrationViewController.showsControls = YES;
     if (_appDel.encoderManager.liveEvent != nil){
         _gotoLiveButton.enabled = YES;
@@ -1550,6 +1551,7 @@ static void * eventContext      = &eventContext;
 - (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController {
     self.telestrationViewController.showsControls = YES;
    _wasPausedBeforeTele = !self.ricoPlayerViewController.isPlaying;
+    NSLog(@"The video %@ before starting the telestration.", (_wasPausedBeforeTele ? @"WAS PAUSED" : @"IS PLAYING"));
     
     [self.ricoPlayerViewController pause];
 //    [self.ricoPlayerViewController seekToTime:self.ricoPlayerViewController.currentTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
@@ -1570,9 +1572,12 @@ static void * eventContext      = &eventContext;
     _tagButtonController.rightTray.hidden   = NO;
     
     if (!_wasPausedBeforeTele){
+        NSLog(@"unpause the video");
         [self.ricoPlayerViewController play];
         self.ricoFullScreenControlBar.controlBar.playPauseButton.paused = NO;
         self.ricoPlayerControlBar.playPauseButton.paused =NO;
+    } else {
+        NSLog(@"leave the video paused");
     }
     
     if (tele.actionStack.count == 0) return ;
@@ -1836,7 +1841,6 @@ static void * eventContext      = &eventContext;
     [_tagButtonController didMoveToParentViewController:self];
        
     NSArray * tNames = [_userCenter.tagNames copy]; //self.tagNames;
-    NSLog(@"tNames: %@", tNames);
     
     [_tagButtonController inputTagData:tNames];
 
@@ -2042,6 +2046,8 @@ static void * eventContext      = &eventContext;
 
 #pragma mark _ PLAY CLIP FROM CLIP VIEW
 - (void)clipViewPlayFeedNotification:(NSNotification *)note {
+    
+    NSLog(@"clipViewPlayFeedNotification");
     
     // clear clip if one was playing
     self.ricoFullScreenControlBar.mode  = RicoFullScreenModeEvent;

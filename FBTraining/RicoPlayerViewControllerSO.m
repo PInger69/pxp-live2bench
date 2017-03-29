@@ -143,7 +143,8 @@
     }];
     NSOperation * playOp = [player play];
     [playOp setCompletionBlock:^{
-        NSLog(@"## Player play");
+        NSLog(@"## Player play SO");
+        self.isPlaying = YES;
     }];
     
     

@@ -181,7 +181,6 @@
     switch (item.status) {
         case AVPlayerItemStatusReadyToPlay:
             self.success = YES;
-            NSLog(@"RicoOperation Load Item success");
             
             timeMeta = item.timedMetadata;
             tbrf =  item.timebase;
