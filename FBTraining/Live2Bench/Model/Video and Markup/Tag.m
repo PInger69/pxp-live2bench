@@ -567,6 +567,42 @@ static NSMutableDictionary * openDurationTagsWithID;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
 }
 
+
+/**
+ * BCH: The fundamental problem is that the server is giving us bad data about the
+ * thumbnail URL. This entire method feels like a bodge, but it fixes the 
+ * bad server data.
+ */
+- (nullable NSString*) thumbnailUrlForSource:(nullable NSString *)source {
+
+    NSString* urlProvidedByServer = [self.thumbnails valueForKey:source];
+    if (self.thumbnails.count > 1 && [NSSet setWithArray:[self.thumbnails allValues]].count != self.thumbnails.count && [[urlProvidedByServer lastPathComponent] rangeOfString:@"_"].location == NSNotFound) {
+        // it looks like the server is giving us bad data
+        if (source && self.eventInstance.feeds[source]) {
+            Feed* feed = self.eventInstance.feeds[source];
+            NSString* sourceNumber = source;
+            if ([sourceNumber rangeOfString:@"s_"].location == 0) {
+                sourceNumber = [sourceNumber substringFromIndex:2];
+            }
+            
+            NSString* lastPathComponent = [urlProvidedByServer lastPathComponent];
+            if (feed.hasHighQuality) {
+                lastPathComponent = [NSString stringWithFormat:@"%@hq_%@", sourceNumber, lastPathComponent];
+            } else {
+                lastPathComponent = [NSString stringWithFormat:@"%@lq_%@", sourceNumber, lastPathComponent];
+            }
+            NSString* revisedUrl = [NSString stringWithFormat:@"%@/%@",[urlProvidedByServer stringByDeletingLastPathComponent], lastPathComponent];
+            NSLog(@"revising url %@ to %@", urlProvidedByServer, revisedUrl);
+            return revisedUrl;
+        } else {
+            NSLog(@"Thumbnail url %@ is probably wrong for source %@", [self.thumbnails valueForKey:source], source);
+            return urlProvidedByServer;
+        }
+    } else {
+        return urlProvidedByServer;
+    }
+}
+
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
     
 //    if (_cachedThumbnail) {

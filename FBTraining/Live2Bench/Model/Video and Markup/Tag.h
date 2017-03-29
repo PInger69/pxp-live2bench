@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_END
 +(void)addOpenDurationTag:(nonnull Tag*)tag dtid:(nonnull NSString*)uid;
 +(nullable Tag*)getOpenTagByDurationId:(nonnull NSString*)uid;
 
-
+-(nullable NSString*) thumbnailUrlForSource:(nullable NSString *)source;
 
 -(nonnull instancetype) initWithData: (nonnull NSDictionary *)tagData event:(nullable Event*)aEvent;
 -(nonnull NSDictionary *) tagDictionary;

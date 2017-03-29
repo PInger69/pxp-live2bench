@@ -46,7 +46,7 @@
     if (tag.isTelestration && [source isEqualToString:tag.telestration.sourceName]) {
         [self pxp_setTagTelestrationThumbnail:tag];
     } else {
-        [self pxp_setTagThumbnail:tag fromUrl:tag.thumbnails[source] source:source];
+        [self pxp_setTagThumbnail:tag fromUrl:[tag thumbnailUrlForSource:source] source:source];
     }
 }
 
