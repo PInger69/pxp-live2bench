@@ -62,7 +62,7 @@
     PxpTelestration* tele = tag.telestration;
     
     NSString* checkName = (!tele.sourceName)?[tag.thumbnails allKeys][0]:tele.sourceName;
-    NSString* imageURL = ([tag.thumbnails objectForKey:checkName])?[tag.thumbnails objectForKey:checkName]:[[tag.thumbnails allValues] firstObject];
+    NSString* imageURL = [tag thumbnailUrlForSource:checkName];
     
     if (imageURL == nil) {
         self.image = [UIImage imageNamed:@"defaultTagView"];

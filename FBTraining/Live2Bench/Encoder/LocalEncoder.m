@@ -420,9 +420,9 @@ static LocalEncoder * instance;
                                       }];
     
     Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
-    NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
-    double tagArePresentCount       = tagArePresent.count + 1;
-    newTag.uniqueID                 = tagArePresentCount;
+    // BCH: this started off as a terrible algorithm, and I've adjusted it to be a little less terrible,
+    //      but it's still far from a good algorithm.
+    newTag.uniqueID                 = self.localTagIdSeed++;
     newTag.startTime                = newTag.time;
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
     

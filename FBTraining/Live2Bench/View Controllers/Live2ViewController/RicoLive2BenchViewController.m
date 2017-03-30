@@ -354,7 +354,8 @@ static void * eventContext      = &eventContext;
         NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                          @"name":@"Game Start",
                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
-                                                                                         @"type":[NSNumber numberWithInteger:TagTypeGameStart]
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeGameStart],
+                                                                                         @"tagUuid":         [NSUUID UUID].UUIDString
                                                                                          }];
 
         EncoderOperation * postTagOperation = [[EncoderOperationMakeTag alloc]initEncoder:eventEncoder data:[userInfo copy]];
@@ -369,7 +370,8 @@ static void * eventContext      = &eventContext;
         NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                          @"name":@"Game Start",
                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
-                                                                                         @"type":[NSNumber numberWithInteger:TagTypeGameStart]
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeGameStart],
+                                                                                         @"tagUuid":         [NSUUID UUID].UUIDString
                                                                                          }];
         
         
@@ -1604,7 +1606,8 @@ static void * eventContext      = &eventContext;
                             @"displaytime" :    [NSString stringWithFormat:@"%f",timeTele],
                             @"telestration":    tele.data,
                             @"telesrc":         tele.sourceName,
-                            @"userInitiated":   @"true"
+                            @"userInitiated":   @"true",
+                            @"tagUuid":         [NSUUID UUID].UUIDString
                             };
     
     Encoder * eventEncoder                          = (Encoder *)self.currentEvent.parentEncoder;
@@ -1908,7 +1911,8 @@ static void * eventContext      = &eventContext;
                                                                                          @"name":button.titleLabel.text,
                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
                                                                                          @"type":[NSNumber numberWithInteger:TagTypeNormal],
-                                                                                         @"userInitiated": @"true"
+                                                                                         @"userInitiated": @"true",
+                                                                                         @"tagUuid":         [NSUUID UUID].UUIDString
                                                                                          }];
         if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
             [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
@@ -1947,8 +1951,9 @@ static void * eventContext      = &eventContext;
                                                                                          @"name":button.titleLabel.text,
                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
-                                                                                         @"dtagid": button.durationID
-                                                                                         }];
+                                                                                         @"dtagid": button.durationID,
+                                                                                         @"userInitiated": @"true",
+                                                                                         @"tagUuid":         [NSUUID UUID].UUIDString                                                                                         }];
         if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
             [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
         }

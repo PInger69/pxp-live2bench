@@ -62,6 +62,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSString      *visitTeam;
 @property (assign, nonatomic) int           uniqueID;
 @property (strong, nonatomic) NSString      *ID;
+/** @property tagUuid
+ *  @brief a generated UUID to help define a unique identifier of a tag. While the 
+ *         'uniqueID' property provides a unique number that the server can recognize,
+ *         when we generate tags locally, we can't safely generate an appropriate sequential
+ *         number that we can preserve across synchronizations with the server. UUIDs are 
+ *         clearly better for this purpose.
+ */
+@property (strong, nonatomic) NSString      *tagUuid;
 @property (assign, nonatomic) BOOL          isLive;
 @property (strong, nonatomic) NSString      *name;
 @property (assign, nonatomic) BOOL          own;

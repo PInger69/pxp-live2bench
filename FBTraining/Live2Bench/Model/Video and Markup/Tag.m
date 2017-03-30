@@ -79,6 +79,10 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.homeTeam        = tagData[@"homeTeam"];
         self.visitTeam       = tagData[@"visitTeam"];
         self.uniqueID        = [tagData[@"id"] intValue];
+        self.tagUuid         = tagData[@"tagUuid"];
+        if (self.tagUuid == nil) {
+            self.tagUuid = [NSUUID UUID].UUIDString;
+        }
         self.isLive          = [tagData[@"islive"] boolValue];
         self.name            = tagData[@"name"];
         self.own             = [tagData[@"own"] boolValue];
@@ -374,7 +378,9 @@ static NSMutableDictionary * openDurationTagsWithID;
         [tagDict setObject:[_rawData objectForKey:@"telesrc"] forKey:@"telesrc"];
     }
 
-    
+    if (self.tagUuid) {
+        [tagDict setObject:self.tagUuid forKey:@"tagUuid"];
+    }
     
     if (self.requestURL) {
         [tagDict addEntriesFromDictionary:@{@"requrl":self.requestURL}];
@@ -430,6 +436,9 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@""
                                                                                   
                                                                                   }];
+    if (self.tagUuid) {
+        [tagData setObject:self.tagUuid forKey:@"tagUuid"];
+    }
     if (self.durationID) {
         [tagData setObject:self.durationID forKey:@"dtagid"];
     }
