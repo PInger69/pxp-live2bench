@@ -602,7 +602,6 @@
 		D83E8B871E2D9153000FC23F /* FeedMapIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88931E2D9150000FC23F /* FeedMapIcon.m */; };
 		D83E8B881E2D9153000FC23F /* FeedMappingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E88941E2D9150000FC23F /* FeedMappingView.xib */; };
 		D83E8B8C1E2D9153000FC23F /* GroupDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */; };
-		D83E8B8D1E2D9153000FC23F /* GroupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A11E2D9150000FC23F /* GroupOperation.m */; };
 		D83E8B8F1E2D9153000FC23F /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88A61E2D9150000FC23F /* InfoSettingViewController.m */; };
 		D83E8B911E2D9153000FC23F /* InternetMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88AA1E2D9151000FC23F /* InternetMonitor.m */; };
 		D83E8B951E2D9153000FC23F /* ListViewFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E88B21E2D9151000FC23F /* ListViewFullScreenViewController.m */; };
@@ -621,6 +620,7 @@
 		D8427A401E89B8F90093C50E /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A3C1E89B8F90093C50E /* Downloader.m */; };
 		D8427A411E89B8F90093C50E /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A3F1E89B8F90093C50E /* DownloadItem.m */; };
 		D8427A451E89BE570093C50E /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A441E89BE570093C50E /* UserCenter.m */; };
+		D8660EFE1E9439D500B8D5D6 /* GroupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8660EFD1E9439D500B8D5D6 /* GroupOperation.m */; };
 		D8799E271E53700900F60B78 /* PostOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E241E53700900F60B78 /* PostOperation.m */; };
 		D8799E281E53700900F60B78 /* GetUserTagsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E261E53700900F60B78 /* GetUserTagsOperation.m */; };
 		D8799E2D1E5370CA00F60B78 /* BooleanOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E2A1E5370CA00F60B78 /* BooleanOperation.m */; };
@@ -1821,8 +1821,6 @@
 		D83E88991E2D9150000FC23F /* FilterItemProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterItemProtocol.h; sourceTree = "<group>"; };
 		D83E889E1E2D9150000FC23F /* GroupDropboxActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDropboxActivity.h; sourceTree = "<group>"; };
 		D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDropboxActivity.m; sourceTree = "<group>"; };
-		D83E88A01E2D9150000FC23F /* GroupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupOperation.h; sourceTree = "<group>"; };
-		D83E88A11E2D9150000FC23F /* GroupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupOperation.m; sourceTree = "<group>"; };
 		D83E88A41E2D9150000FC23F /* ImageAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAssetManager.h; sourceTree = "<group>"; };
 		D83E88A51E2D9150000FC23F /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
 		D83E88A61E2D9150000FC23F /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
@@ -1858,6 +1856,8 @@
 		D8427A3F1E89B8F90093C50E /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadItem.m; sourceTree = "<group>"; };
 		D8427A431E89BE570093C50E /* UserCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenter.h; sourceTree = "<group>"; };
 		D8427A441E89BE570093C50E /* UserCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenter.m; sourceTree = "<group>"; };
+		D8660EFC1E9439D500B8D5D6 /* GroupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupOperation.h; sourceTree = "<group>"; };
+		D8660EFD1E9439D500B8D5D6 /* GroupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupOperation.m; sourceTree = "<group>"; };
 		D8799E231E53700900F60B78 /* PostOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostOperation.h; sourceTree = "<group>"; };
 		D8799E241E53700900F60B78 /* PostOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostOperation.m; sourceTree = "<group>"; };
 		D8799E251E53700900F60B78 /* GetUserTagsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetUserTagsOperation.h; sourceTree = "<group>"; };
@@ -2069,6 +2069,8 @@
 				D81552B31E4BD37F003010D4 /* EncoderOperation.m */,
 				D8799E251E53700900F60B78 /* GetUserTagsOperation.h */,
 				D8799E261E53700900F60B78 /* GetUserTagsOperation.m */,
+				D8660EFC1E9439D500B8D5D6 /* GroupOperation.h */,
+				D8660EFD1E9439D500B8D5D6 /* GroupOperation.m */,
 				D8799E2B1E5370CA00F60B78 /* InternetOperation.h */,
 				D8799E2C1E5370CA00F60B78 /* InternetOperation.m */,
 				D8799E2F1E53715800F60B78 /* LoginOperation.h */,
@@ -2886,8 +2888,6 @@
 				D83E88991E2D9150000FC23F /* FilterItemProtocol.h */,
 				D83E889E1E2D9150000FC23F /* GroupDropboxActivity.h */,
 				D83E889F1E2D9150000FC23F /* GroupDropboxActivity.m */,
-				D83E88A01E2D9150000FC23F /* GroupOperation.h */,
-				D83E88A11E2D9150000FC23F /* GroupOperation.m */,
 				D83E88A41E2D9150000FC23F /* ImageAssetManager.h */,
 				D83E88A51E2D9150000FC23F /* InfoSettingViewController.h */,
 				D83E88A61E2D9150000FC23F /* InfoSettingViewController.m */,
@@ -4243,13 +4243,13 @@
 				D83E827A1E2D90A5000FC23F /* Feed.m in Sources */,
 				D83E8B7B1E2D9153000FC23F /* DropboxManager.m in Sources */,
 				D83E822A1E2D90A5000FC23F /* CFLBottomViewController.m in Sources */,
-				D83E8B8D1E2D9153000FC23F /* GroupOperation.m in Sources */,
 				D83E83B41E2D90A5000FC23F /* TagPopOverContent.m in Sources */,
 				D83E82D71E2D90A5000FC23F /* LiveButton.m in Sources */,
 				D81552A61E4B8E1A003010D4 /* UIImageView+TagThumbnail.m in Sources */,
 				D815527B1E49082B003010D4 /* CalendarViewController.m in Sources */,
 				D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */,
 				D83E82231E2D90A5000FC23F /* BreadCrumbsViewController.m in Sources */,
+				D8660EFE1E9439D500B8D5D6 /* GroupOperation.m in Sources */,
 				D83E8B8C1E2D9153000FC23F /* GroupDropboxActivity.m in Sources */,
 				D83E82DE1E2D90A5000FC23F /* LoginTextField.m in Sources */,
 				D83E8B681E2D9153000FC23F /* CKViewController.m in Sources */,
