@@ -225,8 +225,30 @@
     _localRawData = mutableDict;
 }
 
+-(void) addSource:(NSString*) source videoName:(NSString*) videoName {
+    if (source != nil && videoName != nil) {
+        if (self.videosBySrcKey == nil) {
+            self.videosBySrcKey = [NSMutableDictionary new];
+        }
+        _localRawData[@"fileNamesByKey"] = self.videosBySrcKey;
+        NSLog(@"add item to videosBySrcKey");
+        [self.videosBySrcKey setObject:videoName forKey:source];
+
+        if (![_localRawData objectForKey:@"fileNames"]){
+            [_localRawData setObject:[[NSMutableArray alloc]init] forKey:@"fileNames"];
+        }
+        NSMutableArray* fileNames = [_localRawData objectForKey:@"fileNames"];
+        if (![fileNames containsObject:videoName]) {
+            [fileNames addObject:videoName];
+        }
+
+        [self persistClip];
+    }
+}
+
 -(void)addSourceToClip:(NSDictionary*)aDict
 {
+    NSLog(@"addSourceToClip %@", aDict);
     NSMutableDictionary *mutableDict = [_localRawData mutableCopy];
     
     if (![mutableDict objectForKey:@"fileNames"]){
@@ -254,6 +276,7 @@
         for (NSString*key in temp2) {
             for (NSString*key2 in uniqueFileNames) {
                 if ([key2 containsString:key]) {
+                    NSLog(@"Found a case where \"%@\" contains \"%@\"", key2, key);
                     if(![key2 containsString:@"bookmark"]) {
                         [self.videosBySrcKey setObject:[NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance]bookmarkedVideosPath],key2] forKey:key];
                     } else {
@@ -268,13 +291,16 @@
     mutableDict[@"fileNamesByKey"] = self.videosBySrcKey;
     _localRawData = mutableDict;
     
+    [self persistClip];
+}
+
+-(void) persistClip {
     @try {
         [_localRawData writeToFile:self.path atomically:YES];
     }
     @catch (NSException *exception) {
         NSLog(@"EXCEPTION: %@", exception);
     }
-    
 }
 
 // This method mods the clip GlobalID so that its no longer connected to live event

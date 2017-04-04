@@ -991,7 +991,7 @@
 {
 
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    
+    NSLog(@"tData json: %@", jsonString);
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/gametags/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
     PXPLogAjax(@"%@://%@/min/ajax/gametags/%@",self.urlProtocol,self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];

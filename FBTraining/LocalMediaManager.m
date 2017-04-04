@@ -653,6 +653,43 @@ static LocalMediaManager * instance;
     
 }
 
+/*
+ *  This saves the clip. This method only saves one source at a time
+ *
+ *  @param aName   !!! This name has to change
+ *  @param tagData the data for the raw clip
+ */
+-(void) recordVideoFile:(NSString*) videoFileName sourceKey:(NSString*) sourceKey tag:(Tag*) tag {
+    NSString* event     = tag.event;
+    NSString* globalId  = [NSString stringWithFormat:@"%@_%@", event, tag.ID];
+    NSLog(@"recordVideoFile:%@ sourceKey:%@ tag:%@", videoFileName, sourceKey, tag.rawData);
+
+    NSMutableDictionary* fileNamesByKey = [NSMutableDictionary new];
+    [fileNamesByKey setObject:videoFileName forKey:sourceKey];
+    
+    // check the device if the clip is there.. if not then make a new clip from and make get an Id
+    Clip* clip;
+    
+    if ([self.clips objectForKey:globalId]) { // if there is a plist there already then just mod the data
+        clip = self.clips[globalId];
+    } else { // there is no plist for this clip... make a new plist
+        NSString *bookmarkPlistPath     = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalId];
+        NSMutableDictionary *clipData   = [tag.rawData mutableCopy];
+        [clipData setObject:@[videoFileName] forKey:@"fileNames"];
+        clipData[@"plistPath"]          = bookmarkPlistPath;
+        clipData[@"fileNamesByKey"]    = fileNamesByKey;
+        clip                           = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data:clipData];
+        
+        [self.clips setObject:clip forKey:clip.globalID];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SAVED object:clip];
+    }
+    
+    if (videoFileName) {
+        [clip addSource:sourceKey videoName:videoFileName];
+    }
+}
+
+
 -(void)myClipDeleteRequest:(NSNotification*)note
 {
     // if the object is is a clip then KILL it with Fire!

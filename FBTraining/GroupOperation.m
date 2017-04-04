@@ -18,35 +18,25 @@
     BOOL _isExecuting;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.internalQueue           = [NSOperationQueue new];
+        self.internalQueue.suspended = YES;
+    }
+    return self;
+}
 
 
 - (instancetype)initWithOperations:(NSArray*)operations withQueue:(NSOperationQueue*)queue
 {
     self = [super init];
     if (self) {
-        _isExecuting                = NO;
-        _isFinished                 = NO;
-        
-        // empty operation to to make all other operation dependant on
-        self.startingOperation      = [NSBlockOperation blockOperationWithBlock:^{}];
-        
-        // finishing block that will depend on all other operation
-        __block GroupOperation * weakSelf = self;
-        self.finishingOperation      = [NSBlockOperation blockOperationWithBlock:^{
-            [weakSelf completeOperation];
-        }];
-        
         self.internalQueue           = queue;
         self.internalQueue.maxConcurrentOperationCount = 1;
         self.internalQueue.suspended = YES;
-        [self.internalQueue addOperation:self.startingOperation];
-        
-        for (NSOperation * ops  in operations) {
-            [ops addDependency:self.startingOperation];
-            [self.finishingOperation addDependency:ops];
-            [self.internalQueue addOperation:ops];
-        }
-        
+        [self invokeOperations:operations];
     }
     return self;
 }
@@ -55,33 +45,36 @@
 {
     self = [super init];
     if (self) {
-        _isExecuting                = NO;
-        _isFinished                 = NO;
-        
-        // empty operation to to make all other operation dependant on
-        self.startingOperation      = [NSBlockOperation blockOperationWithBlock:^{
-            NSLog(@"%s",__FUNCTION__);
-
-        }];
-        
-        // finishing block that will depend on all other operation
-        __block GroupOperation * weakSelf = self;
-        self.finishingOperation      = [NSBlockOperation blockOperationWithBlock:^{
-            [weakSelf completeOperation];            
-        }];
-        
         self.internalQueue           = [NSOperationQueue new];
         self.internalQueue.suspended = YES;
-        [self.internalQueue addOperation:self.startingOperation];
-        
-        for (NSOperation * ops  in operations) {
-            [ops addDependency:self.startingOperation];
-            [self.finishingOperation addDependency:ops];
-            [self.internalQueue addOperation:ops];
-        }
-        
+        [self invokeOperations:operations];
     }
     return self;
+}
+
+-(void) invokeOperations:(NSArray*) operations {
+    _isExecuting                = NO;
+    _isFinished                 = NO;
+    
+    // empty operation to to make all other operation dependant on
+    self.startingOperation      = [NSBlockOperation blockOperationWithBlock:^{
+        NSLog(@"%s",__FUNCTION__);
+        
+    }];
+    
+    // finishing block that will depend on all other operation
+    __block GroupOperation * weakSelf = self;
+    self.finishingOperation      = [NSBlockOperation blockOperationWithBlock:^{
+        [weakSelf completeOperation];
+    }];
+
+    [self.internalQueue addOperation:self.startingOperation];
+    
+    for (NSOperation * ops  in operations) {
+        [ops addDependency:self.startingOperation];
+        [self.finishingOperation addDependency:ops];
+        [self.internalQueue addOperation:ops];
+    }
 }
 
 -(BOOL)isConcurrent
@@ -145,7 +138,5 @@
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];
 }
-
-
 
 @end

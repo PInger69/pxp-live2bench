@@ -540,7 +540,6 @@
 		D83E8B301E2D9153000FC23F /* tempData.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E87EB1E2D914B000FC23F /* tempData.plist */; };
 		D83E8B311E2D9153000FC23F /* TempPxpFilterTabUI.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87ED1E2D914B000FC23F /* TempPxpFilterTabUI.m */; };
 		D83E8B321E2D9153000FC23F /* TestFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87EF1E2D914C000FC23F /* TestFilterViewController.m */; };
-		D83E8B331E2D9153000FC23F /* TestGroupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F11E2D914C000FC23F /* TestGroupOperation.m */; };
 		D83E8B351E2D9153000FC23F /* Ticker.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F51E2D914C000FC23F /* Ticker.m */; };
 		D83E8B361E2D9153000FC23F /* ToastObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F71E2D914C000FC23F /* ToastObserver.m */; };
 		D83E8B371E2D9153000FC23F /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87F91E2D914C000FC23F /* ToastObserverSettingViewController.m */; };
@@ -1694,8 +1693,6 @@
 		D83E87ED1E2D914B000FC23F /* TempPxpFilterTabUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TempPxpFilterTabUI.m; sourceTree = "<group>"; };
 		D83E87EE1E2D914C000FC23F /* TestFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFilterViewController.h; sourceTree = "<group>"; };
 		D83E87EF1E2D914C000FC23F /* TestFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestFilterViewController.m; sourceTree = "<group>"; };
-		D83E87F01E2D914C000FC23F /* TestGroupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGroupOperation.h; sourceTree = "<group>"; };
-		D83E87F11E2D914C000FC23F /* TestGroupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGroupOperation.m; sourceTree = "<group>"; };
 		D83E87F41E2D914C000FC23F /* Ticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ticker.h; sourceTree = "<group>"; };
 		D83E87F51E2D914C000FC23F /* Ticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ticker.m; sourceTree = "<group>"; };
 		D83E87F61E2D914C000FC23F /* ToastObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastObserver.h; sourceTree = "<group>"; };
@@ -2761,8 +2758,6 @@
 				D83E87ED1E2D914B000FC23F /* TempPxpFilterTabUI.m */,
 				D83E87EE1E2D914C000FC23F /* TestFilterViewController.h */,
 				D83E87EF1E2D914C000FC23F /* TestFilterViewController.m */,
-				D83E87F01E2D914C000FC23F /* TestGroupOperation.h */,
-				D83E87F11E2D914C000FC23F /* TestGroupOperation.m */,
 				D83E87F41E2D914C000FC23F /* Ticker.h */,
 				D83E87F51E2D914C000FC23F /* Ticker.m */,
 				D83E87F61E2D914C000FC23F /* ToastObserver.h */,
@@ -4350,7 +4345,6 @@
 				D83E83361E2D90A5000FC23F /* PxpClipContext.m in Sources */,
 				D83E834B1E2D90A5000FC23F /* PxpPlayerLight.m in Sources */,
 				D8799E281E53700900F60B78 /* GetUserTagsOperation.m in Sources */,
-				D83E8B331E2D9153000FC23F /* TestGroupOperation.m in Sources */,
 				D83E82211E2D90A5000FC23F /* BorderlessButton.m in Sources */,
 				D83E830D1E2D90A5000FC23F /* OBSlider.m in Sources */,
 				D83E82791E2D90A5000FC23F /* FakeEncoder.m in Sources */,

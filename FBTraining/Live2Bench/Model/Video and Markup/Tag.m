@@ -341,6 +341,10 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 }
 
+-(NSArray*) allSources {
+    return [self.feeds allKeys];
+}
+
 
 -(NSDictionary *)tagDictionary{
     NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];

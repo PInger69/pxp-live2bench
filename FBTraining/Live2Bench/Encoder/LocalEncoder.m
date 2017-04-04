@@ -346,8 +346,8 @@ static LocalEncoder * instance;
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
             // is the object what we ware downloading
             if (note.object == dli) {
-                NSLog(@"Download Complete");
-                [[LocalMediaManager getInstance] saveClip:videoName withData:tag.rawData];
+                NSLog(@"LocalEncoder onDownloadClip: -> Download Complete");
+                [[LocalMediaManager getInstance] recordVideoFile:videoName sourceKey:srcID tag:tag];
 
             }
         }];

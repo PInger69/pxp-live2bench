@@ -92,6 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign,nonatomic) NSInteger      role;
 @property (strong,nonatomic) NSString       * userTeam;
 @property (assign, nonatomic) BOOL          deleted;
+@property (readonly, nonatomic) NSArray*    allSources;
 
 /** @property userInitiated
  *  @brief "true" indicates that the tag was explicitly-created via 

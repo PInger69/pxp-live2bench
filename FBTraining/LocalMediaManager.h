@@ -28,6 +28,7 @@
 
 -(NSString*)bookmarkedVideosPath;
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData;
+-(void) recordVideoFile:(NSString*) videoFileName sourceKey:(NSString*) sourceKey tag:(Tag*) tag;
 -(Event*)getEventByName:(NSString*)eventName;
 -(void)assignEncoderVersionEvent:(NSDictionary *)allEvent;
 -(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey;

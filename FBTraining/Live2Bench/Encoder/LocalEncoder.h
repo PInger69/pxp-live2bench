@@ -55,15 +55,6 @@
 +(instancetype)getInstance;
 
 -(NSInteger)getBookmarkSpace;
-//-(NSString*)bookmarkPath;  // make readonly Props
-//-(NSString*)bookmarkedVideosPath; // make readonly Props
-//-(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData;//video file
-//-(void)deleteClip:(NSString*)aName;
-
-
-//-(NSString*)saveEvent:(Event*)aEvent;
-//-(void)deleteEvent:(Event*)aEvent;
-//-(Event*)getEventByName:(NSString*)eventName;
 
 
 // ActionListItem Methods

@@ -61,6 +61,8 @@
  */
 -(void)addSourceToClip:(NSDictionary*)aDict;
 
+-(void) addSource:(NSString*) source videoName:(NSString*) videoName;
+
 /**
  *  This method mods the clip GlobalID so that its no longer connected to live event
  */
