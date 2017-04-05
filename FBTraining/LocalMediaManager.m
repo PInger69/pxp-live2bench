@@ -656,8 +656,9 @@ static LocalMediaManager * instance;
 /*
  *  This saves the clip. This method only saves one source at a time
  *
- *  @param aName   !!! This name has to change
- *  @param tagData the data for the raw clip
+ *  @param videoFileName the name of the file that has been persisted
+ *  @param sourceKey the source (e.g. "s_00", "s_01"...) that the video was created from
+ *  @param tag the tag that the clip was created from
  */
 -(void) recordVideoFile:(NSString*) videoFileName sourceKey:(NSString*) sourceKey tag:(Tag*) tag {
     NSString* event     = tag.event;

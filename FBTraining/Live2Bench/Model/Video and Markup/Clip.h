@@ -59,7 +59,7 @@
  *
  *  @param aDict - the dictionary values of a source
  */
--(void)addSourceToClip:(NSDictionary*)aDict;
+-(void)addSourceToClip:(NSDictionary*)aDict DEPRECATED_MSG_ATTRIBUTE("Use addSource:videoName: instead.");
 
 -(void) addSource:(NSString*) source videoName:(NSString*) videoName;
 
