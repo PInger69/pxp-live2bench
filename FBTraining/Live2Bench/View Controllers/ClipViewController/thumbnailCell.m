@@ -12,6 +12,11 @@
 
 #define PADDING             5
 
+@interface thumbnailCell()
+
+@property (nonatomic, assign) BOOL weirdCase;
+@end
+
 @implementation thumbnailCell
 
 - (id)init
@@ -159,9 +164,11 @@
 -(void)setDeletingMode: (BOOL) mode{
     if (mode) {
         [self wiggleView];
+        NSLog(@"setDeletingMode addSubview");
         [self addSubview: self.thumbDeleteButton];
     }else{
         [self.layer removeAllAnimations];
+        NSLog(@"setDeletingMode removeFromSuperview");
         [self.thumbDeleteButton removeFromSuperview];
         self.checkmarkOverlay.hidden = YES;
         self.translucentEditingView.hidden = YES;
@@ -230,11 +237,17 @@
 // need this to capture button taps since they are outside of self.frame
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    
+    NSLog(@"Thumb hitTest for event type %lu, subtype %lu", event.type, event.subtype);
     if (!self.thumbDeleteButton.hidden && CGRectContainsPoint(self.thumbDeleteButton.frame, point)) {
+        if ([[self subviews] indexOfObject:self.thumbDeleteButton] == NSNotFound) {
+            self.weirdCase = YES;
+            NSLog(@"Thumb hitTest. Weird case now taking effect.");
+            NSLog(@"thumbDeleteButton.superView -> %@", self.thumbDeleteButton.superview == nil ? @"nil" : @"not nil");
+        }
         return self.thumbDeleteButton;
     }
     // use this to pass the 'touch' onward in case no subviews trigger the touch
+    NSLog(@"Thumb hitTest fall through");
     return [super hitTest:point withEvent:event];
 }
 

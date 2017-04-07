@@ -449,7 +449,6 @@
 		D83E8AAF1E2D9152000FC23F /* AnalyzeTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87061E2D9147000FC23F /* AnalyzeTabViewController.m */; };
 		D83E8AB91E2D9152000FC23F /* PxpLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87121E2D9147000FC23F /* PxpLogViewController.m */; };
 		D83E8ABB1E2D9152000FC23F /* LiveLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87161E2D9147000FC23F /* LiveLight.m */; };
-		D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87181E2D9147000FC23F /* LocalMediaManager.m */; };
 		D83E8ABD1E2D9152000FC23F /* LocalTagSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */; };
 		D83E8AC11E2D9152000FC23F /* MakeEventView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D83E87211E2D9147000FC23F /* MakeEventView.xib */; };
 		D83E8AC21E2D9152000FC23F /* MakeEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87231E2D9147000FC23F /* MakeEventViewController.m */; };
@@ -517,8 +516,6 @@
 		D83E8B141E2D9153000FC23F /* RicoView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87BA1E2D914A000FC23F /* RicoView.m */; };
 		D83E8B151E2D9153000FC23F /* RicoZoomContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87BC1E2D914A000FC23F /* RicoZoomContainer.m */; };
 		D83E8B161E2D9153000FC23F /* RJLFreezeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87BE1E2D914A000FC23F /* RJLFreezeMonitor.m */; };
-		D83E8B171E2D9153000FC23F /* RugbyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87C01E2D914A000FC23F /* RugbyBottomViewController.m */; };
-		D83E8B181E2D9153000FC23F /* RugbyBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83E87C11E2D914A000FC23F /* RugbyBottomViewController.plist */; };
 		D83E8B191E2D9153000FC23F /* SamplePxpFilterModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87C31E2D914A000FC23F /* SamplePxpFilterModule.m */; };
 		D83E8B1A1E2D9153000FC23F /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87C51E2D914B000FC23F /* ScreenController.m */; };
 		D83E8B1B1E2D9153000FC23F /* ScrollViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E87C71E2D914B000FC23F /* ScrollViewTest.m */; };
@@ -621,6 +618,9 @@
 		D8427A411E89B8F90093C50E /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A3F1E89B8F90093C50E /* DownloadItem.m */; };
 		D8427A451E89BE570093C50E /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D8427A441E89BE570093C50E /* UserCenter.m */; };
 		D8660EFE1E9439D500B8D5D6 /* GroupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8660EFD1E9439D500B8D5D6 /* GroupOperation.m */; };
+		D8660F011E96E6A200B8D5D6 /* LocalMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D8660F001E96E6A200B8D5D6 /* LocalMediaManager.m */; };
+		D8660F061E98079700B8D5D6 /* RugbyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8660F041E98079700B8D5D6 /* RugbyBottomViewController.m */; };
+		D8660F071E98079700B8D5D6 /* RugbyBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8660F051E98079700B8D5D6 /* RugbyBottomViewController.plist */; };
 		D8799E271E53700900F60B78 /* PostOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E241E53700900F60B78 /* PostOperation.m */; };
 		D8799E281E53700900F60B78 /* GetUserTagsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E261E53700900F60B78 /* GetUserTagsOperation.m */; };
 		D8799E2D1E5370CA00F60B78 /* BooleanOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D8799E2A1E5370CA00F60B78 /* BooleanOperation.m */; };
@@ -1522,8 +1522,6 @@
 		D83E87121E2D9147000FC23F /* PxpLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLogViewController.m; sourceTree = "<group>"; };
 		D83E87151E2D9147000FC23F /* LiveLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveLight.h; sourceTree = "<group>"; };
 		D83E87161E2D9147000FC23F /* LiveLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveLight.m; sourceTree = "<group>"; };
-		D83E87171E2D9147000FC23F /* LocalMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMediaManager.h; sourceTree = "<group>"; };
-		D83E87181E2D9147000FC23F /* LocalMediaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalMediaManager.m; sourceTree = "<group>"; };
 		D83E87191E2D9147000FC23F /* LocalTagSyncManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTagSyncManager.h; sourceTree = "<group>"; };
 		D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTagSyncManager.m; sourceTree = "<group>"; };
 		D83E87211E2D9147000FC23F /* MakeEventView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MakeEventView.xib; sourceTree = "<group>"; };
@@ -1651,9 +1649,6 @@
 		D83E87BC1E2D914A000FC23F /* RicoZoomContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoZoomContainer.m; sourceTree = "<group>"; };
 		D83E87BD1E2D914A000FC23F /* RJLFreezeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJLFreezeMonitor.h; sourceTree = "<group>"; };
 		D83E87BE1E2D914A000FC23F /* RJLFreezeMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJLFreezeMonitor.m; sourceTree = "<group>"; };
-		D83E87BF1E2D914A000FC23F /* RugbyBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RugbyBottomViewController.h; sourceTree = "<group>"; };
-		D83E87C01E2D914A000FC23F /* RugbyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RugbyBottomViewController.m; sourceTree = "<group>"; };
-		D83E87C11E2D914A000FC23F /* RugbyBottomViewController.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RugbyBottomViewController.plist; sourceTree = "<group>"; };
 		D83E87C21E2D914A000FC23F /* SamplePxpFilterModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SamplePxpFilterModule.h; sourceTree = "<group>"; };
 		D83E87C31E2D914A000FC23F /* SamplePxpFilterModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SamplePxpFilterModule.m; sourceTree = "<group>"; };
 		D83E87C41E2D914A000FC23F /* ScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenController.h; sourceTree = "<group>"; };
@@ -1858,6 +1853,11 @@
 		D8427A441E89BE570093C50E /* UserCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenter.m; sourceTree = "<group>"; };
 		D8660EFC1E9439D500B8D5D6 /* GroupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupOperation.h; sourceTree = "<group>"; };
 		D8660EFD1E9439D500B8D5D6 /* GroupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupOperation.m; sourceTree = "<group>"; };
+		D8660EFF1E96E6A200B8D5D6 /* LocalMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMediaManager.h; sourceTree = "<group>"; };
+		D8660F001E96E6A200B8D5D6 /* LocalMediaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalMediaManager.m; sourceTree = "<group>"; };
+		D8660F031E98079700B8D5D6 /* RugbyBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RugbyBottomViewController.h; sourceTree = "<group>"; };
+		D8660F041E98079700B8D5D6 /* RugbyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RugbyBottomViewController.m; sourceTree = "<group>"; };
+		D8660F051E98079700B8D5D6 /* RugbyBottomViewController.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RugbyBottomViewController.plist; sourceTree = "<group>"; };
 		D8799E231E53700900F60B78 /* PostOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostOperation.h; sourceTree = "<group>"; };
 		D8799E241E53700900F60B78 /* PostOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostOperation.m; sourceTree = "<group>"; };
 		D8799E251E53700900F60B78 /* GetUserTagsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetUserTagsOperation.h; sourceTree = "<group>"; };
@@ -2043,6 +2043,8 @@
 			isa = PBXGroup;
 			children = (
 				D8427A3B1E89B89A0093C50E /* Downloader */,
+				D8660EFF1E96E6A200B8D5D6 /* LocalMediaManager.h */,
+				D8660F001E96E6A200B8D5D6 /* LocalMediaManager.m */,
 				D81552A41E4B8E1A003010D4 /* UIImageView+TagThumbnail.h */,
 				D81552A51E4B8E1A003010D4 /* UIImageView+TagThumbnail.m */,
 			);
@@ -2594,8 +2596,6 @@
 				D83E87121E2D9147000FC23F /* PxpLogViewController.m */,
 				D83E87151E2D9147000FC23F /* LiveLight.h */,
 				D83E87161E2D9147000FC23F /* LiveLight.m */,
-				D83E87171E2D9147000FC23F /* LocalMediaManager.h */,
-				D83E87181E2D9147000FC23F /* LocalMediaManager.m */,
 				D83E87191E2D9147000FC23F /* LocalTagSyncManager.h */,
 				D83E871A1E2D9147000FC23F /* LocalTagSyncManager.m */,
 				D83E87211E2D9147000FC23F /* MakeEventView.xib */,
@@ -2718,9 +2718,6 @@
 				D83E87BC1E2D914A000FC23F /* RicoZoomContainer.m */,
 				D83E87BD1E2D914A000FC23F /* RJLFreezeMonitor.h */,
 				D83E87BE1E2D914A000FC23F /* RJLFreezeMonitor.m */,
-				D83E87BF1E2D914A000FC23F /* RugbyBottomViewController.h */,
-				D83E87C01E2D914A000FC23F /* RugbyBottomViewController.m */,
-				D83E87C11E2D914A000FC23F /* RugbyBottomViewController.plist */,
 				D83E87C21E2D914A000FC23F /* SamplePxpFilterModule.h */,
 				D83E87C31E2D914A000FC23F /* SamplePxpFilterModule.m */,
 				D83E87C41E2D914A000FC23F /* ScreenController.h */,
@@ -3689,6 +3686,9 @@
 				D884D24C1E78639200B1CDD4 /* FootballTrainingBottomViewController.m */,
 				D884D2411E7862C800B1CDD4 /* HockeyBottomViewController.h */,
 				D884D2421E7862C800B1CDD4 /* HockeyBottomViewController.m */,
+				D8660F031E98079700B8D5D6 /* RugbyBottomViewController.h */,
+				D8660F041E98079700B8D5D6 /* RugbyBottomViewController.m */,
+				D8660F051E98079700B8D5D6 /* RugbyBottomViewController.plist */,
 				D884D2431E7862C800B1CDD4 /* SoccerBottomViewController.h */,
 				D884D2441E7862C800B1CDD4 /* SoccerBottomViewController.m */,
 			);
@@ -3812,6 +3812,7 @@
 				D83E82281E2D90A5000FC23F /* camera.png in Resources */,
 				D83E82FE1E2D90A5000FC23F /* myplayXplay_phonecall@2x.png in Resources */,
 				D83E82F41E2D90A5000FC23F /* minusfiveseclarge@2x.png in Resources */,
+				D8660F071E98079700B8D5D6 /* RugbyBottomViewController.plist in Resources */,
 				D83E828E1E2D90A5000FC23F /* filter.png in Resources */,
 				D83E82E21E2D90A5000FC23F /* logo@2x.png in Resources */,
 				D83E82261E2D90A5000FC23F /* calendarTabSelect@2x.png in Resources */,
@@ -3936,7 +3937,6 @@
 				D83E82331E2D90A5000FC23F /* clip-back-just.png in Resources */,
 				D83E82D21E2D90A5000FC23F /* Live2BenchNative-Info.plist in Resources */,
 				D83E8B421E2D9153000FC23F /* VideoRecieptTableViewCell.xib in Resources */,
-				D83E8B181E2D9153000FC23F /* RugbyBottomViewController.plist in Resources */,
 				D83E8B601E2D9153000FC23F /* BottomViewController.plist in Resources */,
 				D83E8ACA1E2D9152000FC23F /* filter-icon@2x.png in Resources */,
 				D83E83251E2D90A5000FC23F /* playbackRateButtonForwardSelected.png in Resources */,
@@ -4182,6 +4182,7 @@
 				D83E83721E2D90A5000FC23F /* RJLVideoPlayer.m in Sources */,
 				D83E7F081E2D9097000FC23F /* LeagueTeam.m in Sources */,
 				D81552801E4908C4003010D4 /* ARCalendarTableViewCell.m in Sources */,
+				D8660F011E96E6A200B8D5D6 /* LocalMediaManager.m in Sources */,
 				D83E83DD1E2D90A5000FC23F /* Utility.m in Sources */,
 				D83E8B501E2D9153000FC23F /* AnalyzeLoader.m in Sources */,
 				D81552771E428F7E003010D4 /* CreditsViewController.m in Sources */,
@@ -4247,7 +4248,6 @@
 				D83E82D71E2D90A5000FC23F /* LiveButton.m in Sources */,
 				D81552A61E4B8E1A003010D4 /* UIImageView+TagThumbnail.m in Sources */,
 				D815527B1E49082B003010D4 /* CalendarViewController.m in Sources */,
-				D83E8ABC1E2D9152000FC23F /* LocalMediaManager.m in Sources */,
 				D83E82231E2D90A5000FC23F /* BreadCrumbsViewController.m in Sources */,
 				D8660EFE1E9439D500B8D5D6 /* GroupOperation.m in Sources */,
 				D83E8B8C1E2D9153000FC23F /* GroupDropboxActivity.m in Sources */,
@@ -4343,6 +4343,7 @@
 				D83E82A31E2D90A5000FC23F /* GraphView.m in Sources */,
 				D81552711E3C1570003010D4 /* LoginViewController.m in Sources */,
 				D83E83361E2D90A5000FC23F /* PxpClipContext.m in Sources */,
+				D8660F061E98079700B8D5D6 /* RugbyBottomViewController.m in Sources */,
 				D83E834B1E2D90A5000FC23F /* PxpPlayerLight.m in Sources */,
 				D8799E281E53700900F60B78 /* GetUserTagsOperation.m in Sources */,
 				D83E82211E2D90A5000FC23F /* BorderlessButton.m in Sources */,
@@ -4394,7 +4395,6 @@
 				D83E8ADE1E2D9153000FC23F /* PxpDropboxActivity.m in Sources */,
 				D83E8B041E2D9153000FC23F /* PxpURLResponse.m in Sources */,
 				D83E83011E2D90A5000FC23F /* NCGhostView.m in Sources */,
-				D83E8B171E2D9153000FC23F /* RugbyBottomViewController.m in Sources */,
 				D83E83511E2D90A5000FC23F /* PxpPlayerSwapView.m in Sources */,
 				D83E82391E2D90A5000FC23F /* ClipCornerView.m in Sources */,
 				D83E83B01E2D90A5000FC23F /* TabBarButton.m in Sources */,

@@ -70,9 +70,9 @@ static NSDictionary * _professionMapData;
     Profession * hockey = [Profession new];
     hockey.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:
                                 @[ //[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartOLine]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+                                  [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine],
 //                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartDLine]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                  [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine],
                                   [NSPredicate predicateWithFormat:@"userInitiated = YES"],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStart],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStop],
@@ -113,8 +113,6 @@ static NSDictionary * _professionMapData;
         }
         
          cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
-        
-        
     }];
     
     [hockey setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
@@ -266,7 +264,7 @@ static NSDictionary * _professionMapData;
         if (tagForData.type == TagTypeTele){
             cellToStyle.thumbDur.text = @"";
         }
-        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]];
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %@", tagForData.period];
         
     }];
     

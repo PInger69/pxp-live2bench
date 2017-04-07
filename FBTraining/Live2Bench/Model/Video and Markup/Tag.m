@@ -262,13 +262,6 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 -(void)setEventInstance:(Event *)eventInstance{
-
-    if (![eventInstance isKindOfClass:[Event class]]) {
-        NSLog(@"%s",__FUNCTION__);
-        
-    }
-    
-    
     _eventInstance = eventInstance;
 }
 

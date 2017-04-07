@@ -15,6 +15,43 @@
 #import "UserCenter.h"
 #import "TeamPlayer.h"
 
+@interface PxpTagMarker : NSObject
+
+@property (nonatomic, nonnull, strong) NSString* tagName;
+@property (nonatomic, assign) double time;
+@property (nonatomic, nonnull, readonly) NSNumber* timeAsNumber;
+@property (nonatomic, nullable, strong) Tag* tag;
+
+-(instancetype) initWithTag:(Tag*) tag;
+-(instancetype) initWithTagName:(NSString*) tagName time:(double) time;
+
+@end
+
+@implementation PxpTagMarker
+
+-(instancetype) initWithTag:(Tag*) tag {
+    if (self = [super init]) {
+        self.tagName = tag.name;
+        self.time = tag.time;
+        self.tag = tag;
+    }
+    return self;
+}
+
+-(instancetype) initWithTagName:(NSString*) tagName time:(double) time {
+    if (self = [super init]) {
+        self.tagName = tagName;
+        self.time = time;
+    }
+    return self;
+}
+
+-(NSNumber*) timeAsNumber {
+    return [NSNumber numberWithDouble:self.time];
+}
+
+@end
+
 @interface HockeyBottomViewController ()
 
 @end
@@ -368,13 +405,37 @@
     return nil;
 }
 
+-(NSArray*) findTagsByStartType:(TagType) openType orStopType:(TagType) closeType {
+    NSMutableArray* result = [NSMutableArray new];
+
+    for (Tag *tag in _currentEvent.tags) {
+        if (tag.type == openType || tag.type == closeType) {
+            [result addObject:[[PxpTagMarker alloc] initWithTag:tag]];
+        }
+    }
+    for (NSDictionary* tagData in currentlyPostingTags) {
+        if ([[tagData objectForKey:@"type"] intValue] == openType || [[tagData objectForKey:@"type"] intValue] == closeType) {
+            NSString* tagName = tagData[@"name"];
+            double time = [tagData[@"time"] doubleValue];
+            [result addObject:[[PxpTagMarker alloc] initWithTagName:tagName time:time]];
+        }
+    }
+    
+    return [result sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSNumber* first = ((PxpTagMarker*)a).timeAsNumber;
+        NSNumber* second = ((PxpTagMarker*)b).timeAsNumber;
+        return [first compare:second];
+    }];
+}
+
+
 // Get all the tags that was asked for in the order from highest time to lowest time as an array
 -(NSArray*)getTags:(TagType)type secondType:(TagType)secondType{
     // Get a dictionary with all the times and names
     NSMutableDictionary *timeDicUnordered = [[NSMutableDictionary alloc]init];
     for (Tag *tag in _currentEvent.tags) {
         if (tag.type == type || tag.type == secondType) {
-            timeDicUnordered[[NSNumber numberWithFloat:tag.time]] = tag.name;
+            timeDicUnordered[[NSNumber numberWithDouble:tag.time]] = tag.name;
         }
     }
     
@@ -440,7 +501,7 @@
 
     }
     
-    if ([self getTags:TagTypeHockeyStartDLine secondType:TagTypeHockeyStartDLine].count == 0) {
+    if ([self getTags:TagTypeHockeyStartDLine secondType:TagTypeHockeyStopDLine].count == 0) {
         NSDictionary *dic = @{@"name":@"line_d_1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":@"line_d_1", @"userInitiated":@"false"};
         UIButton *button = [defenseButton objectForKey:@"1"];
         button.backgroundColor = tintColor;
@@ -461,6 +522,11 @@
 }
 
 // get Current Period
+/*
+ * BCH: - I think I'd make the argument that this tweaking of period number from, say '1' to '0' 
+ *        is rather pointless, given that we later just adjust it back from '0' to '1' any time
+ *        we want to display it.
+ */
 -(NSString *)currentPeriod{
     CMTime cTime = kCMTimeZero;
     if (self.delegate) {
@@ -525,7 +591,7 @@
     }
     
     NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart],@"time":[NSString stringWithFormat:@"%f",time]};
-    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart], @"userInitiated": @"true"}];
+    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]}];
     [super postTag:tagDic];
     
 }
@@ -637,7 +703,7 @@
         button.selected = true;
         [offenseButton setValue:button forKey:@"current"];
         NSString *name =[[@"line_" stringByAppendingString:@"f_"] stringByAppendingString:button.titleLabel.text];
-        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":name, @"userInitiated":@"true"};
+        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":name, @"userInitiated":@"false"};
         [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine]}];
         [super postTag:dic];
 
@@ -721,11 +787,6 @@
 // Post an Defense Tag
 -(void)DefensePressed:(id)sender
 {
-    CMTime cTime = kCMTimeZero;
-    if (self.delegate) {
-        cTime = self.delegate.currentTime;
-    }
-    float time = CMTimeGetSeconds(cTime);
     CustomButton *button = (CustomButton*)sender;
     
     [_playerDrawerRight.view setHidden:true];
@@ -736,15 +797,23 @@
         button.backgroundColor = tintColor;
         button.selected = true;
         [defenseButton setValue:button forKey:@"current"];
-        NSString *name =[[@"line_" stringByAppendingString:@"d_"] stringByAppendingString:button.titleLabel.text];
-        NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":name, @"userInitiated":@"true"};
-        [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine]}];
-        [super postTag:dic];
-        
+        [self createRangeTags:[[@"line_" stringByAppendingString:@"d_"] stringByAppendingString:button.titleLabel.text] startType:TagTypeHockeyStartDLine stopType:TagTypeHockeyStopDLine];
     }
     
     stopUpdateDefense = false;
     
+}
+
+-(void) createRangeTags:(NSString*) newTagName startType:(TagType) startType stopType:(TagType) stopType {
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    float time = CMTimeGetSeconds(cTime);
+    
+    NSDictionary* tagData = @{@"name":newTagName,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:startType],@"period":[self currentPeriod],@"line":newTagName, @"userInitiated":@"false"};
+    [currentlyPostingTags addObject:@{@"name":newTagName,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:startType]}];
+    [self postTag:tagData];
 }
 
 // Actually Update Defense Buttons

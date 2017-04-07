@@ -105,8 +105,7 @@
     [self assignCurrentEvent:[note.object event]];
 }
 
--(void)onTagChanged:(NSNotification *)note{
-    NSLog(@"onTagChanged");
+-(void)onTagChanged:(NSNotification*) notification {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self loadAndDisplayTags];
     });
@@ -383,7 +382,7 @@
 }
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
-    NSLog(@"button pressed....");
+    NSLog(@"cellDeleteButtonPressed....");
     UICollectionViewCell* cell = (UICollectionViewCell*)sender.superview;
     NSIndexPath *pathToDelete = [self.collectionView indexPathForCell:cell];
     Tag *tag = [self tagForIndexPath:pathToDelete];

@@ -150,7 +150,6 @@ static LocalMediaManager * instance;
                         UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
                         if (thmb) {
                             [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
-                            NSLog(@"adding thumbnail for original path %@", orgFilePathName);
                             
                             [self prepopulateImageCache:thmb forEvent:anEvent location:orgFilePathName];
                         }
@@ -285,10 +284,7 @@ static LocalMediaManager * instance;
     }
     
     if (originalUrl != nil) {
-        NSLog(@"Saving image for original url %@", originalUrl);
         [[SDImageCache sharedImageCache] storeImage:image forKey:path];
-    } else {
-        NSLog(@"No sign of original url for %@", path);
     }
 }
 
