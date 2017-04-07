@@ -115,7 +115,6 @@ static NSDictionary * _professionMapData;
          cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
         
         
-        
     }];
     
     [hockey setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
@@ -267,7 +266,7 @@ static NSDictionary * _professionMapData;
         if (tagForData.type == TagTypeTele){
             cellToStyle.thumbDur.text = @"";
         }
-        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]];
         
     }];
     
