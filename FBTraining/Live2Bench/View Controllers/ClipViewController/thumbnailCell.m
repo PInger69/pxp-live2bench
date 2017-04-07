@@ -61,16 +61,19 @@
 - (void)setupView
 {
     
-    self.backgroundPlaneView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
-    [self.backgroundPlaneView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
-    [self addSubview:self.backgroundPlaneView];
-    self.backgroundPlaneView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
-    self.backgroundPlaneView.layer.borderWidth = 3;
+//    self.backgroundPlaneView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+//    [self.backgroundPlaneView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
+//    [self addSubview:self.backgroundPlaneView];
+//    self.backgroundPlaneView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+//    self.backgroundPlaneView.layer.borderWidth = 3;
+    
+    self.contentView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    self.contentView.layer.borderWidth = 3;
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defaultTagView"]];
 
-    [self.imageView setFrame:CGRectMake(2, 2, self.backgroundPlaneView.bounds.size.width - 5, 131.0f)];
+    [self.imageView setFrame:CGRectMake(3, 3, self.bounds.size.width - 6, 131.0f)];
 
-    [self.backgroundPlaneView addSubview:self.imageView];
+    [self addSubview:self.imageView];
     
     self.thumbColour = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width-30, 0.0f, 30, 30)];
     [self.thumbColour setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
@@ -144,7 +147,7 @@
     [self.checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self addSubview:self.checkmarkOverlay];
     
-    self.thumbDeleteButton = [[CustomButton alloc] initWithFrame: CGRectMake(-22, -17, 45, 45)];
+    self.thumbDeleteButton = [[UIButton alloc] initWithFrame: CGRectMake(-22, -17, 45, 45)];
     [self.thumbDeleteButton setImage: [self deleteImage] forState:UIControlStateNormal];
     [self.thumbDeleteButton setImage: [self deleteImageForHighlighted] forState:UIControlStateHighlighted];
     self.clipsToBounds = NO;
@@ -157,6 +160,7 @@
 -(void)prepareForReuse
 {
     self.data = nil;
+    [self setDeletingMode:NO];
     [super prepareForReuse];
 
 }
@@ -164,11 +168,9 @@
 -(void)setDeletingMode: (BOOL) mode{
     if (mode) {
         [self wiggleView];
-        NSLog(@"setDeletingMode addSubview");
         [self addSubview: self.thumbDeleteButton];
-    }else{
+    } else {
         [self.layer removeAllAnimations];
-        NSLog(@"setDeletingMode removeFromSuperview");
         [self.thumbDeleteButton removeFromSuperview];
         self.checkmarkOverlay.hidden = YES;
         self.translucentEditingView.hidden = YES;
@@ -235,19 +237,11 @@
 }
 
 // need this to capture button taps since they are outside of self.frame
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    NSLog(@"Thumb hitTest for event type %lu, subtype %lu", event.type, event.subtype);
-    if (!self.thumbDeleteButton.hidden && CGRectContainsPoint(self.thumbDeleteButton.frame, point)) {
-        if ([[self subviews] indexOfObject:self.thumbDeleteButton] == NSNotFound) {
-            self.weirdCase = YES;
-            NSLog(@"Thumb hitTest. Weird case now taking effect.");
-            NSLog(@"thumbDeleteButton.superView -> %@", self.thumbDeleteButton.superview == nil ? @"nil" : @"not nil");
-        }
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if (self.thumbDeleteButton.superview != nil && CGRectContainsPoint(self.thumbDeleteButton.frame, point)) {
         return self.thumbDeleteButton;
     }
     // use this to pass the 'touch' onward in case no subviews trigger the touch
-    NSLog(@"Thumb hitTest fall through");
     return [super hitTest:point withEvent:event];
 }
 

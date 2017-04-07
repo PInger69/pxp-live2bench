@@ -16,7 +16,7 @@
 @interface thumbnailCell : UICollectionViewCell
 
 @property (nonatomic,strong) UIImageView *backgroundPlaneView;
-@property(nonatomic,strong)  CustomButton *thumbDeleteButton;
+@property(nonatomic,strong)  UIButton* thumbDeleteButton;
 @property (nonatomic,strong) UIActivityIndicatorView *activityInd;
 @property (nonatomic,strong) ClipCornerView *thumbColour;
 @property (strong, nonatomic) UIImageView *imageView;
@@ -30,6 +30,8 @@
 @property (nonatomic,strong) UIImageView *checkmarkOverlay;
 @property (nonatomic,strong) Tag *data;
 @property (nonatomic,strong) RatingOutput *ratingscale;
+
+@property (nonatomic, assign) NSUInteger instanceNumber;
 
 -(void)setDeletingMode: (BOOL) mode;
 

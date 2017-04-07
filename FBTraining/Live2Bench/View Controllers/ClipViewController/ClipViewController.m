@@ -320,7 +320,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // Get the data from the array
-    Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+    Tag *tagSelect = [self.tagsToDisplay objectAtIndex:indexPath.row];
     
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
     cell.backgroundPlaneView = nil;
@@ -372,7 +372,6 @@
 
 -(void) deleteTag:(Tag*) tag {
     [self.tagsToDisplay removeObject:tag];
-    NSLog(@"deleting tag \"%@\".", tag.name);
     if (self.editingIndexPath) {
         [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
     }
@@ -382,7 +381,6 @@
 }
 
 -(void)cellDeleteButtonPressed: (UIButton *)sender{
-    NSLog(@"cellDeleteButtonPressed....");
     UICollectionViewCell* cell = (UICollectionViewCell*)sender.superview;
     NSIndexPath *pathToDelete = [self.collectionView indexPathForCell:cell];
     Tag *tag = [self tagForIndexPath:pathToDelete];
@@ -426,11 +424,11 @@
     }
     
     
+    thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     if (self.isEditing) {
-        thumbnailCell *cell = (thumbnailCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
-        cell.checkmarkOverlay.hidden = !cell.checkmarkOverlay.hidden;
-        cell.translucentEditingView.hidden = !cell.translucentEditingView.hidden;
-        if (!cell.checkmarkOverlay.hidden) {
+        selectedCell.checkmarkOverlay.hidden = !selectedCell.checkmarkOverlay.hidden;
+        selectedCell.translucentEditingView.hidden = !selectedCell.translucentEditingView.hidden;
+        if (!selectedCell.checkmarkOverlay.hidden) {
             [self.deleteTagIds addObject:tagSelect.ID];
         }else{
             [self.deleteTagIds removeObject:tagSelect.ID];
@@ -439,7 +437,6 @@
         return;
     }
     
-    thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     [self.sourceSelectPopover clear];
     
      if (selectedCell.data.eventInstance.feeds.count >=2 && !tagSelect.isTelestration) { // if is new
