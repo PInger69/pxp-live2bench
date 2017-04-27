@@ -53,7 +53,14 @@
 -(UIImage*) pxp_thumbnailFromImageCache:(NSString*) url {
     UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
     if (thumbnail == nil) {
-        thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
+        thumbnail = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:url];
+        if (thumbnail != nil) {
+            NSLog(@"Retreived image thumbnail %@ from disk cache", [url lastPathComponent]);
+        } else {
+            NSLog(@"Didn't retreive image thumbnail %@ from disk cache", [url lastPathComponent]);
+        }
+    } else {
+        NSLog(@"Fetching image thumbnail %@ from memory cache", [url lastPathComponent]);
     }
     return thumbnail;
 }
@@ -140,7 +147,7 @@
 //        after a cell has been reused. But this is the algorithm that was originally in place.
 -(void) pxp_generateLocalScreenCapture:(Tag*) tag source:(NSString*) source {
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        UIImage* thumbnail = [tag thumbnailForSource:source];
+        UIImage* thumbnail = [tag generateLocalThumbnailForSource:source];
         if (thumbnail && tag.isTelestration && [source isEqualToString:tag.telestration.sourceName]) {
             thumbnail = [tag.telestration renderOverImage:thumbnail view:self];
         }

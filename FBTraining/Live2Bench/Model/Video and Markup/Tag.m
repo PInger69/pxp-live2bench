@@ -590,7 +590,14 @@ static NSMutableDictionary * openDurationTagsWithID;
 //        return _cachedThumbnail;
 //    }
     
-    Feed *feed = source && self.eventInstance.feeds[source] ? self.eventInstance.feeds[source] : self.eventInstance.feeds.allValues.firstObject;
+
+    _cachedThumbnail = [self generateLocalThumbnailForSource:source];
+    
+    return _cachedThumbnail;
+}
+
+- (nullable UIImage*) generateLocalThumbnailForSource:(nullable NSString*) source {
+    Feed* feed = source && self.eventInstance.feeds[source] ? self.eventInstance.feeds[source] : self.eventInstance.feeds.allValues.firstObject;
     
     if (!source && self.telestration) {
         for (NSString *k in self.eventInstance.feeds.keyEnumerator) {
@@ -603,7 +610,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (feed.path) {
         NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
-
+        
         NSLog(@"Feed path: %@", feed.path);
         AVAsset *asset = [AVURLAsset URLAssetWithURL:feed.path options:nil];
         UIImage *thumb = [asset imageForTime:CMTimeMake(time, 1)];
@@ -617,11 +624,12 @@ static NSMutableDictionary * openDurationTagsWithID;
             thumb = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
         }
-        _cachedThumbnail = thumb;
+        return thumb;
+    } else {
+        return nil;
     }
-    
-    return _cachedThumbnail;
 }
+
 
 -(void)setIsLive:(BOOL)isLive
 {

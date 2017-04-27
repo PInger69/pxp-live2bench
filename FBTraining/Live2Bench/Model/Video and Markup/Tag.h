@@ -123,6 +123,7 @@ NS_ASSUME_NONNULL_END
 -(nonnull NSDictionary *) makeTagData;
 -(void) replaceDataWithDictionary: (nonnull NSDictionary *) tagData;
 
-- (nullable UIImage *)thumbnailForSource:(nullable NSString *)source;
+- (nullable UIImage*) thumbnailForSource:(nullable NSString*) source;
+- (nullable UIImage*) generateLocalThumbnailForSource:(nullable NSString*) source;
 
 @end
