@@ -256,9 +256,9 @@ static EncoderManager * instance;
             
             // Pool all thumb nails
             if (event.local){
-                [[ImageAssetManager getInstance]thumbnailsPreloadLocal:grabAllThumbNamesFromEvent(event)];
+//                [[ImageAssetManager getInstance]thumbnailsPreloadLocal:grabAllThumbNamesFromEvent(event)];
             } else {
-                [[ImageAssetManager getInstance]thumbnailsPreload:grabAllThumbNamesFromEvent(event)];
+//                [[ImageAssetManager getInstance]thumbnailsPreload:grabAllThumbNamesFromEvent(event)];
             }
             
         }

@@ -149,7 +149,7 @@ static LocalMediaManager * instance;
                         NSString    * imageLocation =  [thumbFolder stringByAppendingPathComponent:[orgFilePathName lastPathComponent]];
                         UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
                         if (thmb) {
-                            [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
+//                            [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
                             
                             [self prepopulateImageCache:thmb forEvent:anEvent location:orgFilePathName];
                         }
@@ -341,17 +341,17 @@ static LocalMediaManager * instance;
             BOOL isDir;
             BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:thumbFolder isDirectory:&isDir];
             
-            if (fileExists) {
+//            if (fileExists) {
                 // get all images from the folder
-                NSArray * thumbNails = grabAllThumbNamesFromEvent(anEvent);
-                for (NSString * orgFilePathName in thumbNails) {
+//                NSArray * thumbNails = grabAllThumbNamesFromEvent(anEvent);
+//                for (NSString * orgFilePathName in thumbNails) {
                     // all thumbs were saved on the device by the real file name but will be keyed by the download path
-                    NSString    * imageLocation =  [thumbFolder stringByAppendingPathComponent:[orgFilePathName lastPathComponent]];
-                    UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
-                    if (thmb) [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
-                }
+//                    NSString    * imageLocation =  [thumbFolder stringByAppendingPathComponent:[orgFilePathName lastPathComponent]];
+//                    UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
+//                    if (thmb) [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
+//                }
                 
-            }
+//            }
             
             NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
             [_allEvents setValue: eventFinal forKey:anEvent.name];// this is the new kind of build that events have their own feed

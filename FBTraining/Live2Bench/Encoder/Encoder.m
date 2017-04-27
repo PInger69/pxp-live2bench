@@ -1885,7 +1885,7 @@
         
             // Download Thumbnail for new tags
 
-            [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
+//            [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
     }
 }
 
@@ -1927,7 +1927,7 @@
             
             // Download Thumbnail for new tags
             
-            [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
+//            [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
             
             
             
