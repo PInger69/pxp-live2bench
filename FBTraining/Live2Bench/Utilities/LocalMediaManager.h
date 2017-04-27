@@ -35,6 +35,7 @@
 -(void)breakTagLink:(Clip*)aClip;
 -(Feed*)getFeedByEvent:(Event*)event scrKey:(NSString *)scrKey;
 
+-(NSString*) savedThumbnailFile:(NSString*) url forEvent:(Event*) event;
 
 -(void)refresh;
 

@@ -8,7 +8,7 @@
 
 #import "LocalMediaManager.h"
 
-#import <SDWebImage/SDImageCache.h>
+//#import <SDWebImage/SDImageCache.h>
 
 #import "Event.h"
 #import "Clip.h"
@@ -284,7 +284,7 @@ static LocalMediaManager * instance;
     }
     
     if (originalUrl != nil) {
-        [[SDImageCache sharedImageCache] storeImage:image forKey:path];
+//        [[SDImageCache sharedImageCache] storeImage:image forKey:path];
     }
 }
 
@@ -708,6 +708,18 @@ static LocalMediaManager * instance;
     _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
 }
 
+-(NSString*) savedThumbnailFile:(NSString*) url forEvent:(Event*) event {
+    NSString* eventFolderPath = [[self.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.datapath];
+
+    NSString* thumbnailFolder = [eventFolderPath stringByAppendingPathComponent:@"thumbnails"];
+    NSString* thumbnailFile = [thumbnailFolder stringByAppendingPathComponent:[url lastPathComponent]];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:thumbnailFile]) {
+        return thumbnailFile;
+    } else {
+        return nil;
+    }
+}
 
 /**
  *  This saves sent Events by taking the raw data and then making a dir to store the videos and then writes the plist

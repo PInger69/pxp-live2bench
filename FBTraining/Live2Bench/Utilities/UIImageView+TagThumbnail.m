@@ -14,6 +14,7 @@
 #import "UIImageView+TagThumbnail.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "Feed.h"
+#import "LocalMediaManager.h"
 
 @implementation UIImageView (TagThumbnail)
 
@@ -23,8 +24,7 @@
         self.image = [UIImage imageNamed:@"defaultTagView"];
         [self pxp_generateLocalScreenCapture:tag source:source];
     } else if (tag.eventInstance.local) {
-        
-        UIImage* thumbnail = [self pxp_thumbnailFromImageCache:url];
+        UIImage* thumbnail = [self pxp_thumbnailFromLocalMediaManager:tag url:url source:source];
         if (thumbnail != nil) {
             self.image = thumbnail;
         } else {
@@ -41,6 +41,17 @@
     }
 }
 
+-(UIImage*) pxp_thumbnailFromLocalMediaManager:(Tag*) tag url:(NSString*) url source:(NSString*) source {
+    LocalMediaManager* localMediaManager = [LocalMediaManager getInstance];
+    NSString* imagePath = [localMediaManager savedThumbnailFile:url forEvent:tag.eventInstance];
+    
+    if (imagePath != nil) {
+        return [UIImage imageWithContentsOfFile:imagePath];
+    } else {
+        return nil;
+    }
+}
+
 -(void) pxp_setTagThumbnail:(Tag*) tag withSource:(NSString*) source {
     
     if (tag.isTelestration && [source isEqualToString:tag.telestration.sourceName]) {
@@ -48,21 +59,6 @@
     } else {
         [self pxp_setTagThumbnail:tag fromUrl:[tag thumbnailUrlForSource:source] source:source];
     }
-}
-
--(UIImage*) pxp_thumbnailFromImageCache:(NSString*) url {
-    UIImage* thumbnail = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:url];
-    if (thumbnail == nil) {
-        thumbnail = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:url];
-        if (thumbnail != nil) {
-            NSLog(@"Retreived image thumbnail %@ from disk cache", [url lastPathComponent]);
-        } else {
-            NSLog(@"Didn't retreive image thumbnail %@ from disk cache", [url lastPathComponent]);
-        }
-    } else {
-        NSLog(@"Fetching image thumbnail %@ from memory cache", [url lastPathComponent]);
-    }
-    return thumbnail;
 }
 
 -(void) pxp_setTagTelestrationThumbnail:(Tag*) tag {
@@ -75,7 +71,7 @@
         self.image = [UIImage imageNamed:@"defaultTagView"];
         [self pxp_generateLocalScreenCapture:tag source:checkName];
     } else if (tag.eventInstance.local) {
-        UIImage* thumbnail = [self pxp_thumbnailFromImageCache:imageURL];
+        UIImage* thumbnail = [self pxp_thumbnailFromLocalMediaManager:tag url:imageURL source:checkName];
         if (thumbnail != nil) {
             UIImage* imageWithTelestration = [tele renderOverImage:thumbnail view:self];
             if (imageWithTelestration != nil) {
