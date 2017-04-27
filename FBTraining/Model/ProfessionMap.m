@@ -73,15 +73,15 @@ static NSDictionary * _professionMapData;
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine],
 //                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartDLine]
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine],
-                                  [NSPredicate predicateWithFormat:@"userInitiated = YES"],
+//                                  [NSPredicate predicateWithFormat:@"userInitiated = YES"],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStart],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyPeriodStop],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyOppOLineStart],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyOppOLineStop],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyOppDLineStart],
                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyOppDLineStop],
-                                  [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStart]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                  //[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStart]
+                                  [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
                                                                                    ]];
     
     
