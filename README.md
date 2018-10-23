@@ -14,3 +14,6 @@ The codebase has been updated to support CocoaPods. To get the code going:
 3. In the project base directory, run the `pod install` command.
 4. Open the `Live2Bench.xcworkspace` workspace file in XCode.
 
+Note that when this repository was moved to github, it containined a single binary file that exceeded Github's 100mb upload limit. Accordingly, the offending file was scrubbed from the repository and will need to be added manually. The filename is 'libavcodec.a' and should be placed in the following directory:
+- FBTraining/videokit/3rd-party/ffmpeg/lib/libavcodec.a 
+The .gitignore file has been updated to ignore this file, so it will not be included as a new file in your git status output.

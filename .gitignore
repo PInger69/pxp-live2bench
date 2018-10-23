@@ -26,3 +26,5 @@ DerivedData
 #Pods
 Pods/
 Podfile.lock
+# This file was removed from the repo to prevent issues uploading the repository to github.
+FBTraining/videokit/3rd-party/ffmpeg/lib/libavcodec.a
